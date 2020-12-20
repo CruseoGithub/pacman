@@ -21,6 +21,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.*;
+import com.vieth.pacman.Controller;
 import com.vieth.pacman.Scenes.Hud;
 import com.vieth.pacman.PacMan;
 import com.vieth.pacman.Sprites.Player;
@@ -34,6 +35,7 @@ public class GameScreen implements Screen {
     private TmxMapLoader maploader;
     public TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
+    public Controller controller;
 
     private World world;
     private Box2DDebugRenderer b2dr;
@@ -57,6 +59,7 @@ public class GameScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map);
         gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
 
+        controller = new Controller();
 
         world = new World(new Vector2(0,0), true);
         b2dr = new Box2DDebugRenderer();
@@ -74,16 +77,16 @@ public class GameScreen implements Screen {
 
     }
     public void handleInput(float dt){
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || controller.isRightPressed()){
             pacman.nextdirection = Player.Direction.RIGHT;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || controller.isLeftPressed()){
             pacman.nextdirection = Player.Direction.LEFT;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+        if(Gdx.input.isKeyPressed(Input.Keys.UP) || controller.isUpPressed()){
             pacman.nextdirection = Player.Direction.UP;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN) || controller.isDownPressed()){
             pacman.nextdirection = Player.Direction.DOWN;
         }
         pacman.move();
@@ -111,6 +114,7 @@ public class GameScreen implements Screen {
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 
+        controller.draw();
 
     }
 
@@ -120,6 +124,7 @@ public class GameScreen implements Screen {
         gamePort.update(width,height,false);
         gamePort.getCamera().position.set(PacMan.V_WIDTH/2f,PacMan.V_HEIGHT/2f,0);
         gamePort.getCamera().update();
+        controller.resize(width, height);
     }
 
     @Override

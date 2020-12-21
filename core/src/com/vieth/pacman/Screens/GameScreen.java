@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.*;
 import com.vieth.pacman.Scenes.Hud;
 import com.vieth.pacman.PacMan;
 import com.vieth.pacman.Sprites.Player;
+import com.vieth.pacman.Sprites.Tile;
 
 
 public class GameScreen implements Screen {
@@ -43,6 +44,7 @@ public class GameScreen implements Screen {
     private int playerX;
     private int playerY;
     Player pacman;
+    public Tile tileMatrix[][];
 
     public GameScreen(PacMan game){
         this.game = game;
@@ -57,14 +59,19 @@ public class GameScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map);
         gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
 
+        TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(0);
+        tileMatrix = new Tile[28][31];
+        for(int x = 0; x < 28; x++){
+            for(int y = 0; y < 31; y++){
+                if(layer.getCell(x, y) == null){
+                    tileMatrix[x][y] = new Tile(Tile.Type.PATH, ((x*8)), ((y*8)));
+                }
+                else {
+                    tileMatrix[x][y] = new Tile(Tile.Type.WALL, ((x*8)), ((y*8)));
+                }
 
-        world = new World(new Vector2(0,0), true);
-        b2dr = new Box2DDebugRenderer();
-
-        BodyDef bdef = new BodyDef();
-        PolygonShape shape = new PolygonShape();
-        FixtureDef fdef = new FixtureDef();
-        Body body;
+            }
+        }
 
         pacman = new Player(8, 8, this);
 

@@ -73,7 +73,7 @@ public class GameScreen implements Screen {
             }
         }
 
-        pacman = new Player(8, 8, this);
+        pacman = new Player(8, 136, this);
 
     }
     @Override

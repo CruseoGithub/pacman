@@ -29,7 +29,7 @@ public class Hud {
     Label livesLabel;
 
     public Hud(SpriteBatch sb){
-        time = 0;
+        time = 400;
         score = 0;
         lives = 3;
 
@@ -40,21 +40,22 @@ public class Hud {
         table.top();
         table.setFillParent(true);
 
-        scoreTextLabel = new Label("SCORE", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        timeTextLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        livesTextLabel = new Label("LIVES", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        scoreTextLabel = new Label("SCORE:", new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        timeTextLabel = new Label("TIME:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        livesTextLabel = new Label("LIVES:", new Label.LabelStyle(new BitmapFont(), Color.FIREBRICK));
 
-        scoreLabel = new Label(String.format("%d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        timeLabel = new Label(String.format("%d", time), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        livesLabel = new Label(String.format("%01d", lives), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        scoreLabel = new Label(String.format("%06d  ", score), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        timeLabel = new Label(String.format("%03d  ", time), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        livesLabel = new Label(String.format("%01d  ", lives), new Label.LabelStyle(new BitmapFont(), Color.FIREBRICK));
 
-        table.add(scoreTextLabel).expandX().padTop(10);
-        table.add(timeTextLabel).expandX().padTop(10);
-        table.add(livesTextLabel).expandX().padTop(10);
+        table.add(scoreTextLabel).expandX().padTop(0);
+        table.add(timeTextLabel).expandX().padTop(0);
+        table.add(livesTextLabel).expandX().padTop(0);
         table.row();
-        table.add(scoreLabel).expandX().padTop(10);
-        table.add(timeLabel).expandX().padTop(10);
-        table.add(livesLabel).expandX().padTop(10);
+        table.add(scoreLabel).expandX().padTop(0);
+        table.add(timeLabel).expandX().padTop(0);
+        table.add(livesLabel).expandX().padTop(0);
+        //
 
         stage.addActor(table);
     }

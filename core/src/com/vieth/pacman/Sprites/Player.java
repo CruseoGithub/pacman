@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.vieth.pacman.Screens.GameScreen;
 
@@ -20,6 +21,7 @@ public class Player extends Sprite {
 
     private Texture texture;
     public Sprite sprite;
+    private TiledMapTileLayer layerDots;
 
     private GameScreen screen;
 
@@ -35,6 +37,7 @@ public class Player extends Sprite {
         this.sprite = new Sprite(texture,0, 0, 64,64);
 
         this.screen = screen;
+        layerDots = (TiledMapTileLayer)screen.map.getLayers().get("Collectables");
     }
     public Tile getCell(){
         Tile tile = screen.tileMatrix[(int) x/8][(int)y/8];
@@ -64,37 +67,50 @@ public class Player extends Sprite {
     }
 
     public void move(){
-        if(nextdirection != direction && getNextCell(nextdirection).type != Tile.Type.WALL){
-            if(x == getCell().x && y == getCell().y){
-                direction = nextdirection;
+        if(x >= 8 && x <= 208){
+            if(nextdirection != direction && getNextCell(nextdirection).type != Tile.Type.WALL){
+                if(x == getCell().x && y == getCell().y){
+                    direction = nextdirection;
+                }
             }
+            if(getCell().isDot == true){
+                layerDots.setCell(getCell().x/8, getCell().y/8, null); //Löscht die Celle aus der Map
+                screen.hud.score++;
+                screen.hud.update();
+                getCell().isDot = false;
+            }
+
+            switch (direction) {
+                case RIGHT:
+                    if(getNextCell(direction).type != Tile.Type.WALL) {
+                        x++;
+                    }
+                    break;
+                case LEFT:
+                    if(getNextCell(direction).type == Tile.Type.WALL) {
+                        if(x > getCell().x) x--;
+                    }else{
+                        x--;
+                    }
+                    break;
+                case UP:
+                    if(getNextCell(direction).type != Tile.Type.WALL){
+                        y++;
+                    }
+                    break;
+                case DOWN:
+                    if(getNextCell(direction).type == Tile.Type.WALL){
+                        if(y > getCell().y) y--;
+                    }else{
+                        y--;
+                    }
+                    break;
+            }
+        }else{
+            if(x<=8) x=207;
+            if(x>=208) x=9;
         }
-        switch (direction) {
-            case RIGHT:
-                if(getNextCell(direction).type != Tile.Type.WALL) {
-                    x++;
-                }
-                break;
-            case LEFT:
-                if(getNextCell(direction).type == Tile.Type.WALL) {
-                     if(x > getCell().x) x--;
-                }else{
-                    x--;
-                }
-                break;
-            case UP:
-                if(getNextCell(direction).type != Tile.Type.WALL){
-                    y++;
-                }
-                break;
-            case DOWN:
-                if(getNextCell(direction).type == Tile.Type.WALL){
-                    if(y > getCell().y) y--;
-                }else{
-                    y--;
-                }
-                break;
-        }
+
     }
 
 }

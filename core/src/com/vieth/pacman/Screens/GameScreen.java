@@ -25,6 +25,7 @@ import com.vieth.pacman.Scenes.Hud;
 import com.vieth.pacman.PacMan;
 import com.vieth.pacman.Sprites.Player;
 import com.vieth.pacman.Sprites.Tile;
+import com.vieth.pacman.Sprites.Enemy;
 
 
 public class GameScreen implements Screen {
@@ -44,6 +45,7 @@ public class GameScreen implements Screen {
     private int playerX;
     private int playerY;
     Player pacman;
+    Enemy ghost;
     public Tile tileMatrix[][];
 
     public GameScreen(PacMan game){
@@ -76,6 +78,7 @@ public class GameScreen implements Screen {
         }
 
         pacman = new Player(8, 136, this);
+        ghost = new Enemy(120,224,this);
         //resize(720, 1280);
 
     }
@@ -97,6 +100,7 @@ public class GameScreen implements Screen {
             pacman.nextdirection = Player.Direction.DOWN;
         }
         pacman.move();
+
     }
     public void update(float dt){
         handleInput(dt);
@@ -108,11 +112,14 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         update(delta);
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        ghost.nextdirection = Enemy.Direction.getRandomDirection();
+        ghost.move();
         game.batch.begin();
         game.batch.draw(pacman.sprite, pacman.x , pacman.y , 8, 8);
+        game.batch.draw(ghost.sprite, ghost.x , ghost.y , 8, 8);
         game.batch.end();
 
         renderer.setView(gamecam);

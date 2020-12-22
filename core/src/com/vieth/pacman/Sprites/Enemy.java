@@ -1,74 +1,66 @@
 package com.vieth.pacman.Sprites;
 
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.vieth.pacman.Screens.GameScreen;
+import java.util.Random;
 
-public class Player extends Sprite {
+public class Enemy extends Sprite{
+
     public enum Direction {
-            RIGHT, LEFT, UP, DOWN
+        RIGHT, LEFT, UP, DOWN;
+        public static Direction getRandomDirection(){
+            Random random = new Random();
+            return values()[random.nextInt(values().length)];
+        }
     };
 
     public int x;
     public int y;
 
-    public Direction direction;
-    public Direction nextdirection;
+    public Enemy.Direction direction;
+    public Enemy.Direction nextdirection;
 
     private Texture texture;
     public Sprite sprite;
-    private TiledMapTileLayer layerDots;
 
     private GameScreen screen;
 
 
-    public Player(int initX, int initY, GameScreen screen){
-        this.direction = Direction.RIGHT;
-        this.nextdirection = Direction.RIGHT;
-
+    public Enemy(int initX, int initY, GameScreen screen){
+        this.direction = Enemy.Direction.RIGHT;
+        this.nextdirection = Enemy.Direction.RIGHT;
         this.x = initX;
         this.y = initY;
 
-        this.texture = new Texture("pacman1.png");
-        this.sprite = new Sprite(texture,180, 0, 64,64);
-
-        this.screen = screen;
-        layerDots = (TiledMapTileLayer)screen.map.getLayers().get("Collectables");
-    }
-
-    public void pacmanDir(String pacman, int x, int y){
-        this.texture = new Texture(pacman);
-        this.sprite = new Sprite(texture,x, y, 64,64);
+        this.texture = new Texture("enemies.png");
+        this.sprite = new Sprite(texture,0, 0, 200,200);
+        this.sprite.rotate90(true);
         this.screen = screen;
     }
-
     public Tile getCell(){
         Tile tile = screen.tileMatrix[(int) x/8][(int)y/8];
         return tile;
     }
-    public Tile getNextCell(Direction dir){
+    public Tile getNextCell(Enemy.Direction dir){
         int nextCellX = (int) ((x/8));
         int nextCellY = (int) ((y/8));
         Tile tile;
         switch (dir) {
             case RIGHT:
-                this.pacmanDir("pacman1.png", 180 , 0);
                 nextCellX = (int) ((x+8) / 8);
                 break;
             case LEFT:
-                this.pacmanDir("pacman2.png", 60, 0);
                 nextCellX = (int) ((x-8) / 8);
                 break;
             case UP:
-                this.pacmanDir("pacman3.png", 0, 0);
                 nextCellY = (int) ((y+8) / 8);
                 break;
             case DOWN:
-                this.pacmanDir("pacman4.png", 0, 180);
                 nextCellY = (int) ((y-8) / 8);
                 break;
 
@@ -83,12 +75,6 @@ public class Player extends Sprite {
                 if(x == getCell().x && y == getCell().y){
                     direction = nextdirection;
                 }
-            }
-            if(getCell().isDot == true){
-                layerDots.setCell(getCell().x/8, getCell().y/8, null); //Löscht die Celle aus der Map
-                screen.hud.score++;
-                screen.hud.update();
-                getCell().isDot = false;
             }
 
             switch (direction) {

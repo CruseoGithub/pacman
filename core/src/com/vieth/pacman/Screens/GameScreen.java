@@ -60,9 +60,9 @@ public class GameScreen implements Screen {
         gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
 
         TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(0);
-        tileMatrix = new Tile[28][31];
-        for(int x = 0; x < 28; x++){
-            for(int y = 0; y < 31; y++){
+        tileMatrix = new Tile[PacMan.V_WIDTH/8][PacMan.V_HEIGHT/8];
+        for(int x = 0; x < PacMan.V_WIDTH/8; x++){
+            for(int y = 0; y < PacMan.V_HEIGHT/8; y++){
                 if(layer.getCell(x, y) == null){
                     tileMatrix[x][y] = new Tile(Tile.Type.PATH, ((x*8)), ((y*8)));
                 }
@@ -73,7 +73,7 @@ public class GameScreen implements Screen {
             }
         }
 
-        pacman = new Player(8, 8, this);
+        pacman = new Player(8, 136, this);
 
     }
     @Override

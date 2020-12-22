@@ -31,7 +31,7 @@ public class GameScreen implements Screen {
     private PacMan game;
     private OrthographicCamera gamecam;
     private Viewport gamePort;
-    private Hud hud;
+    public Hud hud;
     private TmxMapLoader maploader;
     public TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
@@ -60,11 +60,13 @@ public class GameScreen implements Screen {
         gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
 
         TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(0);
+        TiledMapTileLayer layerDots = (TiledMapTileLayer)map.getLayers().get(1);
         tileMatrix = new Tile[PacMan.V_WIDTH/8][PacMan.V_HEIGHT/8];
         for(int x = 0; x < PacMan.V_WIDTH/8; x++){
             for(int y = 0; y < PacMan.V_HEIGHT/8; y++){
                 if(layer.getCell(x, y) == null){
                     tileMatrix[x][y] = new Tile(Tile.Type.PATH, ((x*8)), ((y*8)));
+                    if(layerDots.getCell(x,y) != null) tileMatrix[x][y].isDot = true;
                 }
                 else {
                     tileMatrix[x][y] = new Tile(Tile.Type.WALL, ((x*8)), ((y*8)));
@@ -74,6 +76,7 @@ public class GameScreen implements Screen {
         }
 
         pacman = new Player(8, 136, this);
+        //resize(720, 1280);
 
     }
     @Override
@@ -116,6 +119,8 @@ public class GameScreen implements Screen {
         renderer.render();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.time +=Gdx.graphics.getDeltaTime();
+        hud.update();
         hud.stage.draw();
 
 

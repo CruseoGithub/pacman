@@ -37,15 +37,11 @@ public class GameScreen implements Screen {
     public TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
-    private World world;
-    private Box2DDebugRenderer b2dr;
-
-    private Texture pacManTex;
-    private Sprite player;
-    private int playerX;
-    private int playerY;
     Player pacman;
     Enemy ghost;
+
+    private float tmpTimerAnimation = 0;
+
     public Tile tileMatrix[][];
 
     public GameScreen(PacMan game){
@@ -79,8 +75,6 @@ public class GameScreen implements Screen {
 
         pacman = new Player(8, 136, this);
         ghost = new Enemy(120,224,this);
-        //resize(720, 1280);
-
     }
     @Override
     public void show() {
@@ -115,10 +109,27 @@ public class GameScreen implements Screen {
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         ghost.nextdirection = Enemy.Direction.getRandomDirection();
         ghost.move();
+
+        //Animation alle 0.5 Sekunden
+        if((tmpTimerAnimation+0.5f) <= hud.time) {
+            if(pacman.texturePositionX == 0){
+                pacman.texturePositionX = 180;
+            }else{
+                pacman.texturePositionX = 0;
+            }
+            tmpTimerAnimation = hud.time;
+        }
+
         game.batch.begin();
-        game.batch.draw(pacman.sprite, pacman.x , pacman.y , 8, 8);
+
+        //Neuer Draw Befehl, der die Rotation mit berechnet
+        game.batch.draw(pacman.texture,pacman.x,pacman.y,pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+                8,8, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
+                pacman.texturePositionX,0,60,60,true,false);
+
         game.batch.draw(ghost.sprite, ghost.x , ghost.y , 8, 8);
         game.batch.end();
 

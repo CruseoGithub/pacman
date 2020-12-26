@@ -59,7 +59,10 @@ public class GameScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map);
         gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
 
+<<<<<<< HEAD
         controller = new Controller();
+=======
+>>>>>>> dev_Damir
 
         world = new World(new Vector2(0,0), true);
         b2dr = new Box2DDebugRenderer();

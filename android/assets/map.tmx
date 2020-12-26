@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="left-down" width="28" height="31" tilewidth="8" tileheight="8" infinite="0" nextlayerid="3" nextobjectid="1">
+=======
+>>>>>>> dev_Damir
  <tileset firstgid="1" name="maptileset" tilewidth="8" tileheight="8" tilecount="55" columns="11">
   <image source="maptileset.png" trans="ffffff" width="88" height="40"/>
   <tile id="4">
@@ -18,6 +21,7 @@
    </properties>
   </tile>
  </tileset>
+<<<<<<< HEAD
  <layer id="1" name="Walls" width="28" height="31">
   <data encoding="base64" compression="zlib">
    eJzlVtFthDAMTXu/QD9J/k6ZhFEYJaMwCqMwSp1zcjXGLg5Xqaoa6YnwIBg/23E655x3bmnBG6wBJJjfW9DhmuYREKl1nSf2BvzGkgHzhXOUp/aAuweCQeArR+2F/f+vnON8tQfXib1z4INgD/5hDgVD+S7lOA/YynyCZ1uFxFfOX4zf1WGJnxZLLWbW+El6ljit/HmEe0DiegXUsNpr1pPaE/gk8JPEUz2hBmfPQPMe/Fit9RD3/uUa3yi64qfwH08/YkN+Rrym6ouunG5P0lMbVM9X7fXIzze4viPSDeO/9aTGz+xJ+zHTbS3vqX76spdkbanO0p7d4POpPeN31Pyk9W70b1fvPD+9IT9J/Gam+1OjXqj3v5aflv3TYq9zxxyV8tOyf57l5386TwxEK6kHtfb3HMuq+Xf9qDUntSH1pmxvxH5Dc2yXk1f7O+u9j7VgaxqJzx9un5Ov9nei+WPd6L5qTdHkx/u7lJ8VEdHU3yPORb2185IGS35K+M3zp3ReMuLQa86Qz0ufI9f3+A==
@@ -26,6 +30,8 @@
  <layer id="2" name="Collectables" width="28" height="31">
   <data encoding="base64" compression="zlib">
    eJxjYKA/4CcRU0MfNjfgchsparCJSdHBPikC8rT0H6nxQC4mxT2EAKXm0do+UtI9qeLo8oTciwx0cbCJ0TtY7dMlElPTPkJgKNqHLazw2QfDQ8V/o/YNDfuGe3tiINovlIYVoTAn1EaiVn1LbFqlpX30rt9JyZ9DVR898EAAAK8nFII=
+=======
+>>>>>>> dev_Damir
   </data>
  </layer>
 </map>

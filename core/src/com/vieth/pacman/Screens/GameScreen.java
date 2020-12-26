@@ -25,26 +25,26 @@ import com.vieth.pacman.Controller;
 import com.vieth.pacman.Scenes.Hud;
 import com.vieth.pacman.PacMan;
 import com.vieth.pacman.Sprites.Player;
+import com.vieth.pacman.Sprites.Tile;
+import com.vieth.pacman.Sprites.Enemy;
 
 
 public class GameScreen implements Screen {
     private PacMan game;
     private OrthographicCamera gamecam;
     private Viewport gamePort;
-    private Hud hud;
+    public Hud hud;
     private TmxMapLoader maploader;
     public TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     public Controller controller;
 
-    private World world;
-    private Box2DDebugRenderer b2dr;
-
-    private Texture pacManTex;
-    private Sprite player;
-    private int playerX;
-    private int playerY;
     Player pacman;
+    Enemy ghost;
+
+    private float tmpTimerAnimation = 0;
+
+    public Tile tileMatrix[][];
 
     public GameScreen(PacMan game){
         this.game = game;
@@ -62,18 +62,25 @@ public class GameScreen implements Screen {
 <<<<<<< HEAD
         controller = new Controller();
 =======
+        TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(0);
+        TiledMapTileLayer layerDots = (TiledMapTileLayer)map.getLayers().get(1);
+        tileMatrix = new Tile[PacMan.V_WIDTH/8][PacMan.V_HEIGHT/8];
+        for(int x = 0; x < PacMan.V_WIDTH/8; x++){
+            for(int y = 0; y < PacMan.V_HEIGHT/8; y++){
+                if(layer.getCell(x, y) == null){
+                    tileMatrix[x][y] = new Tile(Tile.Type.PATH, ((x*8)), ((y*8)));
+                    if(layerDots.getCell(x,y) != null) tileMatrix[x][y].isDot = true;
+                }
+                else {
+                    tileMatrix[x][y] = new Tile(Tile.Type.WALL, ((x*8)), ((y*8)));
+                }
+
+            }
+        }
 >>>>>>> dev_Damir
 
-        world = new World(new Vector2(0,0), true);
-        b2dr = new Box2DDebugRenderer();
-
-        BodyDef bdef = new BodyDef();
-        PolygonShape shape = new PolygonShape();
-        FixtureDef fdef = new FixtureDef();
-        Body body;
-
-        pacman = new Player(8, 8, this);
-
+        pacman = new Player(8, 136, this);
+        ghost = new Enemy(120,224,this);
     }
     @Override
     public void show() {
@@ -93,6 +100,7 @@ public class GameScreen implements Screen {
             pacman.nextdirection = Player.Direction.DOWN;
         }
         pacman.move();
+
     }
     public void update(float dt){
         handleInput(dt);
@@ -104,17 +112,39 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         update(delta);
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        ghost.nextdirection = Enemy.Direction.getRandomDirection();
+        ghost.move();
+
+        //Animation alle 0.5 Sekunden
+        if((tmpTimerAnimation+0.5f) <= hud.time) {
+            if(pacman.texturePositionX == 0){
+                pacman.texturePositionX = 180;
+            }else{
+                pacman.texturePositionX = 0;
+            }
+            tmpTimerAnimation = hud.time;
+        }
+
         game.batch.begin();
-        game.batch.draw(pacman.sprite, pacman.x , pacman.y , 8, 8);
+
+        //Neuer Draw Befehl, der die Rotation mit berechnet
+        game.batch.draw(pacman.texture,pacman.x,pacman.y,pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+                8,8, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
+                pacman.texturePositionX,0,60,60,true,false);
+
+        game.batch.draw(ghost.sprite, ghost.x , ghost.y , 8, 8);
         game.batch.end();
 
         renderer.setView(gamecam);
         renderer.render();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.time +=Gdx.graphics.getDeltaTime();
+        hud.update();
         hud.stage.draw();
 
         controller.draw();

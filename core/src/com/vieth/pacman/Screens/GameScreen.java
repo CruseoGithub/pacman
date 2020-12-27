@@ -77,8 +77,8 @@ public class GameScreen implements Screen {
 
         controller = new Controller();
 
-        pacman = new Player(8, 136, this);
-        ghost = new Enemy(120,224,this);
+        pacman = new Player(8, 136, this, hud);
+        ghost = new Enemy(128,232,this);
     }
     @Override
     public void show() {
@@ -114,7 +114,7 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        ghost.nextdirection = Enemy.Direction.getRandomDirection();
+        ghost.nextdirection = ghost.findNextDirection(pacman);
         ghost.move();
 
         //Animation alle 0.5 Sekunden
@@ -130,7 +130,7 @@ public class GameScreen implements Screen {
         game.batch.begin();
 
         //Neuer Draw Befehl, der die Rotation mit berechnet
-        game.batch.draw(pacman.texture,pacman.x,pacman.y,pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+        game.batch.draw(pacman.texture,pacman.getXPosition(),pacman.getYPosition(),pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
                 8,8, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
                 pacman.texturePositionX,0,60,60,true,false);
 

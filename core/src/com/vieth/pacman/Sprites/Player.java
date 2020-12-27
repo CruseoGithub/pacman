@@ -9,14 +9,25 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.vieth.pacman.Controller;
 import com.vieth.pacman.Screens.GameScreen;
+import com.vieth.pacman.Scenes.Hud;
 
 public class Player extends Sprite {
     public enum Direction {
             RIGHT, LEFT, UP, DOWN
     };
 
-    public int x;
-    public int y;
+    private int xPosition;
+    private int yPosition;
+
+
+    public int getXPosition() {
+        return xPosition;
+    }
+
+    public int getYPosition() {
+        return yPosition;
+    }
+
 
     public float rotation;
     public int texturePositionX;
@@ -29,17 +40,18 @@ public class Player extends Sprite {
     public Texture texture;
     public Sprite sprite;
     private TiledMapTileLayer layerDots;
+    public Hud hud;
 
     private GameScreen screen;
 
 
-    public Player(int initX, int initY, GameScreen screen){
+    public Player(int initX, int initY, GameScreen screen, Hud hud){
         this.direction = Direction.RIGHT;
         this.nextdirection = Direction.RIGHT;
         this.prevdirection = Direction.RIGHT;
 
-        this.x = initX;
-        this.y = initY;
+        this.xPosition = initX;
+        this.yPosition = initY;
         this.rotation = 0;
 
         this.texture = new Texture("pacman.png");
@@ -53,29 +65,31 @@ public class Player extends Sprite {
         this.sprite = new Sprite(region);
         this.sprite.setOrigin(4, 4);
         this.screen = screen;
+        this.hud = hud;
         layerDots = (TiledMapTileLayer)screen.map.getLayers().get("Collectables");
     }
 
     public Tile getCell(){
-        Tile tile = screen.tileMatrix[(int) x/8][(int)y/8];
+        Tile tile = screen.tileMatrix[(int) xPosition/8][(int)yPosition/8];
         return tile;
     }
+
     public Tile getNextCell(Direction dir){
-        int nextCellX = (int) ((x/8));
-        int nextCellY = (int) ((y/8));
+        int nextCellX = (int) ((xPosition/8));
+        int nextCellY = (int) ((yPosition/8));
         Tile tile;
         switch (dir) {
             case RIGHT:
-                nextCellX = (int) ((x+8) / 8);
+                nextCellX = (int) ((xPosition+8) / 8);
                 break;
             case LEFT:
-                nextCellX = (int) ((x-8) / 8);
+                nextCellX = (int) ((xPosition-8) / 8);
                 break;
             case UP:
-                nextCellY = (int) ((y+8) / 8);
+                nextCellY = (int) ((yPosition+8) / 8);
                 break;
             case DOWN:
-                nextCellY = (int) ((y-8) / 8);
+                nextCellY = (int) ((yPosition-8) / 8);
                 break;
 
         }
@@ -84,10 +98,10 @@ public class Player extends Sprite {
     }
 
     public void move(){
-        if(x >= 8 && x <= 208){
+        if(xPosition >= 8 && xPosition <= 208){
             prevdirection = direction;
             if(nextdirection != direction && getNextCell(nextdirection).type != Tile.Type.WALL){
-                if(x == getCell().x && y == getCell().y){
+                if(xPosition == getCell().x && yPosition == getCell().y){
 
                     direction = nextdirection;
                 }
@@ -103,39 +117,44 @@ public class Player extends Sprite {
                 case RIGHT:
                     if(getNextCell(direction).type != Tile.Type.WALL) {
                         if(prevdirection != direction) this.rotation = 0;
-                        x++;
+                        xPosition++;
                     }
                     break;
                 case LEFT:
                     if(getNextCell(direction).type == Tile.Type.WALL) {
-                        if(x > getCell().x) x--;
+                        if(xPosition > getCell().x) xPosition--;
                     }else{
                         if(prevdirection != direction) {
                             this.rotation = 180;
                         }
-                        x--;
+                        xPosition--;
                     }
                     break;
                 case UP:
                     if(getNextCell(direction).type != Tile.Type.WALL){
                         if(prevdirection != direction) this.rotation = 90;
-                        y++;
+                        yPosition++;
                     }
                     break;
                 case DOWN:
                     if(getNextCell(direction).type == Tile.Type.WALL){
-                        if(y > getCell().y) y--;
+                        if(yPosition > getCell().y) yPosition--;
                     }else{
                         if(prevdirection != direction) this.rotation =270;
-                        y--;
+                        yPosition--;
                     }
                     break;
             }
         }else{
-            if(x<=8) x=207;
-            if(x>=208) x=9;
+            if(xPosition <= 8) xPosition = 207;
+            if(xPosition >= 208) xPosition = 9;
         }
 
     }
 
+    public void die(){
+        xPosition = 8;
+        yPosition = 136;
+        hud.lives--;
+    }
 }

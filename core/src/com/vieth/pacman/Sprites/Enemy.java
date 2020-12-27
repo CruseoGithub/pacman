@@ -42,10 +42,29 @@ public class Enemy extends Sprite{
         this.sprite.rotate90(true);
         this.screen = screen;
     }
+
+    public Direction findNextDirection(Player target){
+        int distanceX = this.x - target.getXPosition();
+        int distanceY = this.y - target.getYPosition();
+        if((Math.abs(distanceX) < 8) && (Math.abs(distanceY) < 8)){
+            target.die();
+            return Direction.RIGHT;
+        }
+        if(Math.abs(distanceX) > Math.abs(distanceY)){
+            if(distanceX > 0) return Direction.LEFT;
+            else return Direction.RIGHT;
+        }
+        else {
+            if (distanceY > 0) return Direction.DOWN;
+            else return Direction.UP;
+        }
+    }
+
     public Tile getCell(){
         Tile tile = screen.tileMatrix[(int) x/8][(int)y/8];
         return tile;
     }
+
     public Tile getNextCell(Enemy.Direction dir){
         int nextCellX = (int) ((x/8));
         int nextCellY = (int) ((y/8));

@@ -4,8 +4,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.vieth.pacman.Controller;
 import com.vieth.pacman.Screens.GameScreen;
 
 public class Player extends Sprite {
@@ -16,10 +18,15 @@ public class Player extends Sprite {
     public int x;
     public int y;
 
+    public float rotation;
+    public int texturePositionX;
     public Direction direction;
     public Direction nextdirection;
+    public Direction prevdirection;
 
-    private Texture texture;
+    public TextureRegion region;
+
+    public Texture texture;
     public Sprite sprite;
     private TiledMapTileLayer layerDots;
 
@@ -29,21 +36,24 @@ public class Player extends Sprite {
     public Player(int initX, int initY, GameScreen screen){
         this.direction = Direction.RIGHT;
         this.nextdirection = Direction.RIGHT;
+        this.prevdirection = Direction.RIGHT;
 
         this.x = initX;
         this.y = initY;
+        this.rotation = 0;
 
-        this.texture = new Texture("pacman1.png");
-        this.sprite = new Sprite(texture,180, 0, 64,64);
-
+        this.texture = new Texture("pacman.png");
+        region = new TextureRegion(texture);
+        region.setRegionX(0);
+        region.setRegionY(0);
+        region.setRegionWidth(60);
+        region.setRegionHeight(60);
+        texturePositionX = 0;
+        region.flip(true, false);
+        this.sprite = new Sprite(region);
+        this.sprite.setOrigin(4, 4);
         this.screen = screen;
         layerDots = (TiledMapTileLayer)screen.map.getLayers().get("Collectables");
-    }
-
-    public void pacmanDir(String pacman, int x, int y){
-        this.texture = new Texture(pacman);
-        this.sprite = new Sprite(texture,x, y, 64,64);
-        this.screen = screen;
     }
 
     public Tile getCell(){
@@ -56,19 +66,15 @@ public class Player extends Sprite {
         Tile tile;
         switch (dir) {
             case RIGHT:
-                this.pacmanDir("pacman1.png", 180 , 0);
                 nextCellX = (int) ((x+8) / 8);
                 break;
             case LEFT:
-                this.pacmanDir("pacman2.png", 60, 0);
                 nextCellX = (int) ((x-8) / 8);
                 break;
             case UP:
-                this.pacmanDir("pacman3.png", 0, 0);
                 nextCellY = (int) ((y+8) / 8);
                 break;
             case DOWN:
-                this.pacmanDir("pacman4.png", 0, 180);
                 nextCellY = (int) ((y-8) / 8);
                 break;
 
@@ -79,8 +85,10 @@ public class Player extends Sprite {
 
     public void move(){
         if(x >= 8 && x <= 208){
+            prevdirection = direction;
             if(nextdirection != direction && getNextCell(nextdirection).type != Tile.Type.WALL){
                 if(x == getCell().x && y == getCell().y){
+
                     direction = nextdirection;
                 }
             }
@@ -94,6 +102,7 @@ public class Player extends Sprite {
             switch (direction) {
                 case RIGHT:
                     if(getNextCell(direction).type != Tile.Type.WALL) {
+                        if(prevdirection != direction) this.rotation = 0;
                         x++;
                     }
                     break;
@@ -101,11 +110,15 @@ public class Player extends Sprite {
                     if(getNextCell(direction).type == Tile.Type.WALL) {
                         if(x > getCell().x) x--;
                     }else{
+                        if(prevdirection != direction) {
+                            this.rotation = 180;
+                        }
                         x--;
                     }
                     break;
                 case UP:
                     if(getNextCell(direction).type != Tile.Type.WALL){
+                        if(prevdirection != direction) this.rotation = 90;
                         y++;
                     }
                     break;
@@ -113,6 +126,7 @@ public class Player extends Sprite {
                     if(getNextCell(direction).type == Tile.Type.WALL){
                         if(y > getCell().y) y--;
                     }else{
+                        if(prevdirection != direction) this.rotation =270;
                         y--;
                     }
                     break;

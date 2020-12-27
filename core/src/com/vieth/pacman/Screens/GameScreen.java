@@ -21,6 +21,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.*;
+import com.vieth.pacman.Controller;
 import com.vieth.pacman.Scenes.Hud;
 import com.vieth.pacman.PacMan;
 import com.vieth.pacman.Sprites.Player;
@@ -36,16 +37,13 @@ public class GameScreen implements Screen {
     private TmxMapLoader maploader;
     public TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
+    public Controller controller;
 
-    private World world;
-    private Box2DDebugRenderer b2dr;
-
-    private Texture pacManTex;
-    private Sprite player;
-    private int playerX;
-    private int playerY;
     Player pacman;
     Enemy ghost;
+
+    private float tmpTimerAnimation = 0;
+
     public Tile tileMatrix[][];
 
     public GameScreen(PacMan game){
@@ -77,26 +75,26 @@ public class GameScreen implements Screen {
             }
         }
 
+        controller = new Controller();
+
         pacman = new Player(8, 136, this);
         ghost = new Enemy(120,224,this);
-        //resize(720, 1280);
-
     }
     @Override
     public void show() {
 
     }
     public void handleInput(float dt){
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || controller.isRightPressed()){
             pacman.nextdirection = Player.Direction.RIGHT;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || controller.isLeftPressed()){
             pacman.nextdirection = Player.Direction.LEFT;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+        if(Gdx.input.isKeyPressed(Input.Keys.UP) || controller.isUpPressed()){
             pacman.nextdirection = Player.Direction.UP;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN) || controller.isDownPressed()){
             pacman.nextdirection = Player.Direction.DOWN;
         }
         pacman.move();
@@ -115,12 +113,31 @@ public class GameScreen implements Screen {
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         ghost.nextdirection = Enemy.Direction.getRandomDirection();
         ghost.move();
+
+        //Animation alle 0.5 Sekunden
+        if((tmpTimerAnimation+0.5f) <= hud.time) {
+            if(pacman.texturePositionX == 0){
+                pacman.texturePositionX = 180;
+            }else{
+                pacman.texturePositionX = 0;
+            }
+            tmpTimerAnimation = hud.time;
+        }
+
         game.batch.begin();
-        game.batch.draw(pacman.sprite, pacman.x , pacman.y , 8, 8);
+
+        //Neuer Draw Befehl, der die Rotation mit berechnet
+        game.batch.draw(pacman.texture,pacman.x,pacman.y,pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+                8,8, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
+                pacman.texturePositionX,0,60,60,true,false);
+
         game.batch.draw(ghost.sprite, ghost.x , ghost.y , 8, 8);
         game.batch.end();
+
+        controller.draw();
 
         renderer.setView(gamecam);
         renderer.render();
@@ -139,6 +156,7 @@ public class GameScreen implements Screen {
         gamePort.update(width,height,false);
         gamePort.getCamera().position.set(PacMan.V_WIDTH/2f,PacMan.V_HEIGHT/2f,0);
         gamePort.getCamera().update();
+        controller.resize(width, height);
     }
 
     @Override

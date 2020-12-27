@@ -16,7 +16,7 @@ public class PacMan extends Game {
 	public static final int V_WIDTH = 8 * 28;
 	public static final int V_HEIGHT = 8 * 52;
 
-	public SpriteBatch batch;
+	public static SpriteBatch batch;
 	@Override
 	public void create() {
 		batch = new SpriteBatch();

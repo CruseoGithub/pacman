@@ -59,9 +59,8 @@ public class GameScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map);
         gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
 
-<<<<<<< HEAD
         controller = new Controller();
-=======
+
         TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(0);
         TiledMapTileLayer layerDots = (TiledMapTileLayer)map.getLayers().get(1);
         tileMatrix = new Tile[PacMan.V_WIDTH/8][PacMan.V_HEIGHT/8];
@@ -77,7 +76,6 @@ public class GameScreen implements Screen {
 
             }
         }
->>>>>>> dev_Damir
 
         pacman = new Player(8, 136, this);
         ghost = new Enemy(120,224,this);
@@ -139,6 +137,8 @@ public class GameScreen implements Screen {
         game.batch.draw(ghost.sprite, ghost.x , ghost.y , 8, 8);
         game.batch.end();
 
+        controller.draw();
+
         renderer.setView(gamecam);
         renderer.render();
 
@@ -147,7 +147,6 @@ public class GameScreen implements Screen {
         hud.update();
         hud.stage.draw();
 
-        controller.draw();
 
     }
 

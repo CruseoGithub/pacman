@@ -6,11 +6,14 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.vieth.pacman.PacMan;
+import com.vieth.pacman.Screens.GameScreen;
+import com.vieth.pacman.Sprites.Player;
 import com.vieth.pacman.Sprites.Tile;
 
 import java.util.Iterator;
 
 public class Map {
+    GameScreen screen;
     private TmxMapLoader maploader;
     private TiledMap tmxMap;
     public OrthogonalTiledMapRenderer renderer;
@@ -24,7 +27,8 @@ public class Map {
 
     public Tile matrix[][];
 
-    public Map(String path){
+    public Map(String path, GameScreen screen){
+        this.screen = screen;
         maploader = new TmxMapLoader();
         tmxMap = maploader.load(path);
         renderer = new OrthogonalTiledMapRenderer(tmxMap);
@@ -58,6 +62,47 @@ public class Map {
                 }
 
             }
+        }
+    }
+    public Tile getTile(int xPosition, int yPosition){
+        Tile tile = matrix[(int) xPosition/tileSize][(int)yPosition/tileSize];
+        return tile;
+    }
+
+    public Tile getTile(int xPosition, int yPosition, Player.Direction dir){
+        int nextCellX = (int) ((xPosition/tileSize));
+        int nextCellY = (int) ((yPosition/tileSize));
+        Tile tile;
+        switch (dir) {
+            case RIGHT:
+                nextCellX = (int) ((xPosition+tileSize) / tileSize);
+                break;
+            case LEFT:
+                nextCellX = (int) ((xPosition-tileSize) / tileSize);
+                break;
+            case UP:
+                nextCellY = (int) ((yPosition+tileSize) / tileSize);
+                break;
+            case DOWN:
+                nextCellY = (int) ((yPosition-tileSize) / tileSize);
+                break;
+
+        }
+        return matrix[nextCellX][nextCellY];
+    }
+    public void setTile(Tile tile, Tile.Type type){
+        tile.type = type;
+    }
+    public void collect(Tile tile){
+        if(tile.isDot){
+            screen.hud.score++;
+            screen.hud.update();
+            layerCollect.setCell(
+                    tile.x/tileSize,
+                    tile.y/tileSize,
+                    null
+            );
+            tile.isDot = false;
         }
     }
 }

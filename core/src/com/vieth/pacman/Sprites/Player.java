@@ -77,74 +77,42 @@ public class Player extends Sprite {
         this.hud = hud;
     }
 
-    public Tile getCell(){
-        Tile tile = screen.map.matrix[(int) xPosition/tileSize][(int)yPosition/tileSize];
-        return tile;
-    }
-
-    public Tile getNextCell(Direction dir){
-        int nextCellX = (int) ((xPosition/tileSize));
-        int nextCellY = (int) ((yPosition/tileSize));
-        Tile tile;
-        switch (dir) {
-            case RIGHT:
-                nextCellX = (int) ((xPosition+tileSize) / tileSize);
-                break;
-            case LEFT:
-                nextCellX = (int) ((xPosition-tileSize) / tileSize);
-                break;
-            case UP:
-                nextCellY = (int) ((yPosition+tileSize) / tileSize);
-                break;
-            case DOWN:
-                nextCellY = (int) ((yPosition-tileSize) / tileSize);
-                break;
-
-        }
-        tile = screen.map.matrix[nextCellX][nextCellY];
-        return tile;
-    }
-
     public void move(){
         if(xPosition >= 8 && xPosition <= 208){
             prevdirection = direction;
-            if(nextdirection != direction && getNextCell(nextdirection).type != Tile.Type.WALL){
-                if(xPosition == getCell().x && yPosition == getCell().y){
+            if(nextdirection != direction && screen.map.getTile(xPosition, yPosition, nextdirection).type != Tile.Type.WALL){
+                if(xPosition == screen.map.getTile(xPosition, yPosition).x && yPosition == screen.map.getTile(xPosition, yPosition).y){
 
                     direction = nextdirection;
                 }
             }
-            if(getCell().isDot == true){
-                screen.map.layerCollect.setCell(getCell().x/tileSize, getCell().y/tileSize, null); //Löscht die Celle aus der Map
-                screen.hud.score++;
-                screen.hud.update();
-                getCell().isDot = false;
-            }
+
+            screen.map.collect(screen.map.getTile(xPosition, yPosition)); //Dots einsammeln
 
             switch (direction) {
                 case RIGHT:
-                    if(getNextCell(direction).type != Tile.Type.WALL) {
+                    if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL) {
                         if(prevdirection != direction) this.rotation = 0;
                         xPosition++;
                     }
                     break;
                 case LEFT:
-                    if(getNextCell(direction).type == Tile.Type.WALL) {
-                        if(xPosition > getCell().x) xPosition--;
+                    if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL) {
+                        if(xPosition > screen.map.getTile(xPosition, yPosition).x) xPosition--;
                     }else{
                         if(prevdirection != direction) this.rotation = 180;
                         xPosition--;
                     }
                     break;
                 case UP:
-                    if(getNextCell(direction).type != Tile.Type.WALL){
+                    if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL){
                         if(prevdirection != direction) this.rotation = 90;
                         yPosition++;
                     }
                     break;
                 case DOWN:
-                    if(getNextCell(direction).type == Tile.Type.WALL){
-                        if(yPosition > getCell().y) yPosition--;
+                    if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL){
+                        if(yPosition > screen.map.getTile(xPosition, yPosition).y) yPosition--;
                     }else{
                         if(prevdirection != direction) this.rotation =270;
                         yPosition--;

@@ -50,7 +50,7 @@ public class GameScreen implements Screen {
         this.gamePort = new FitViewport(PacMan.V_WIDTH, PacMan.V_HEIGHT, gamecam);
         this.gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
 
-        this.map = new Map("map.tmx");
+        this.map = new Map("map.tmx", this);
         this.hud = new Hud(game.batch);
         this.controller = new Controller();
 
@@ -111,7 +111,7 @@ public class GameScreen implements Screen {
                 8,8, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
                 pacman.texturePositionX,0,60,60,true,false);
 
-        game.batch.draw(ghost.sprite, ghost.x , ghost.y , 8, 8);
+        game.batch.draw(ghost.sprite, ghost.xPosition , ghost.yPosition , 8, 8);
         game.batch.end();
 
         controller.draw();

@@ -21,6 +21,7 @@ public class Enemy extends Sprite{
 
     public int x;
     public int y;
+    private int tileSize;
 
     public Enemy.Direction direction;
     public Enemy.Direction nextdirection;
@@ -41,12 +42,13 @@ public class Enemy extends Sprite{
         this.sprite = new Sprite(texture,0, 0, 200,200);
         this.sprite.rotate90(true);
         this.screen = screen;
+        this.tileSize = screen.map.tileSize;
     }
 
     public Direction findNextDirection(Player target){
         int distanceX = this.x - target.getXPosition();
         int distanceY = this.y - target.getYPosition();
-        if((Math.abs(distanceX) < 8) && (Math.abs(distanceY) < 8)){
+        if((Math.abs(distanceX) < tileSize) && (Math.abs(distanceY) < tileSize)){
             target.die();
             return Direction.RIGHT;
         }
@@ -61,30 +63,30 @@ public class Enemy extends Sprite{
     }
 
     public Tile getCell(){
-        Tile tile = screen.tileMatrix[(int) x/8][(int)y/8];
+        Tile tile = screen.map.matrix[(int) x/tileSize][(int)y/tileSize];
         return tile;
     }
 
     public Tile getNextCell(Enemy.Direction dir){
-        int nextCellX = (int) ((x/8));
-        int nextCellY = (int) ((y/8));
+        int nextCellX = (int) ((x/tileSize));
+        int nextCellY = (int) ((y/tileSize));
         Tile tile;
         switch (dir) {
             case RIGHT:
-                nextCellX = (int) ((x+8) / 8);
+                nextCellX = (int) ((x+tileSize) / tileSize);
                 break;
             case LEFT:
-                nextCellX = (int) ((x-8) / 8);
+                nextCellX = (int) ((x-tileSize) / tileSize);
                 break;
             case UP:
-                nextCellY = (int) ((y+8) / 8);
+                nextCellY = (int) ((y+tileSize) / tileSize);
                 break;
             case DOWN:
-                nextCellY = (int) ((y-8) / 8);
+                nextCellY = (int) ((y-tileSize) / tileSize);
                 break;
 
         }
-        tile = screen.tileMatrix[nextCellX][nextCellY];
+        tile = screen.map.matrix[nextCellX][nextCellY];
         return tile;
     }
 

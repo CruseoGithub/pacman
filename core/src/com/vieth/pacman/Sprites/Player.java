@@ -15,6 +15,9 @@ public class Player extends Sprite {
     public enum Direction {
             RIGHT, LEFT, UP, DOWN
     };
+    public enum State {
+            RUNNING, STOPPING, EATING, DIEING
+    };
 
     private int xPosition;
     private int yPosition;
@@ -28,17 +31,20 @@ public class Player extends Sprite {
         return yPosition;
     }
 
-
+    private int tileSize;
     public float rotation;
     public int texturePositionX;
+
     public Direction direction;
     public Direction nextdirection;
     public Direction prevdirection;
 
-    public TextureRegion region;
+    public State state;
 
-    public Texture texture;
     public Sprite sprite;
+    public TextureRegion region;
+    public Texture texture;
+
     private TiledMapTileLayer layerDots;
     public Hud hud;
 
@@ -50,9 +56,12 @@ public class Player extends Sprite {
         this.nextdirection = Direction.RIGHT;
         this.prevdirection = Direction.RIGHT;
 
+        this.state = State.RUNNING;
+
         this.xPosition = initX;
         this.yPosition = initY;
         this.rotation = 0;
+        this.tileSize = screen.map.tileSize;
 
         this.texture = new Texture("pacman.png");
         region = new TextureRegion(texture);
@@ -63,37 +72,36 @@ public class Player extends Sprite {
         texturePositionX = 0;
         region.flip(true, false);
         this.sprite = new Sprite(region);
-        this.sprite.setOrigin(4, 4);
+        this.sprite.setOrigin(tileSize/2, tileSize/2);
         this.screen = screen;
         this.hud = hud;
-        layerDots = (TiledMapTileLayer)screen.map.getLayers().get("Collectables");
     }
 
     public Tile getCell(){
-        Tile tile = screen.tileMatrix[(int) xPosition/8][(int)yPosition/8];
+        Tile tile = screen.map.matrix[(int) xPosition/tileSize][(int)yPosition/tileSize];
         return tile;
     }
 
     public Tile getNextCell(Direction dir){
-        int nextCellX = (int) ((xPosition/8));
-        int nextCellY = (int) ((yPosition/8));
+        int nextCellX = (int) ((xPosition/tileSize));
+        int nextCellY = (int) ((yPosition/tileSize));
         Tile tile;
         switch (dir) {
             case RIGHT:
-                nextCellX = (int) ((xPosition+8) / 8);
+                nextCellX = (int) ((xPosition+tileSize) / tileSize);
                 break;
             case LEFT:
-                nextCellX = (int) ((xPosition-8) / 8);
+                nextCellX = (int) ((xPosition-tileSize) / tileSize);
                 break;
             case UP:
-                nextCellY = (int) ((yPosition+8) / 8);
+                nextCellY = (int) ((yPosition+tileSize) / tileSize);
                 break;
             case DOWN:
-                nextCellY = (int) ((yPosition-8) / 8);
+                nextCellY = (int) ((yPosition-tileSize) / tileSize);
                 break;
 
         }
-        tile = screen.tileMatrix[nextCellX][nextCellY];
+        tile = screen.map.matrix[nextCellX][nextCellY];
         return tile;
     }
 
@@ -107,7 +115,7 @@ public class Player extends Sprite {
                 }
             }
             if(getCell().isDot == true){
-                layerDots.setCell(getCell().x/8, getCell().y/8, null); //Löscht die Celle aus der Map
+                screen.map.layerCollect.setCell(getCell().x/tileSize, getCell().y/tileSize, null); //Löscht die Celle aus der Map
                 screen.hud.score++;
                 screen.hud.update();
                 getCell().isDot = false;
@@ -124,9 +132,7 @@ public class Player extends Sprite {
                     if(getNextCell(direction).type == Tile.Type.WALL) {
                         if(xPosition > getCell().x) xPosition--;
                     }else{
-                        if(prevdirection != direction) {
-                            this.rotation = 180;
-                        }
+                        if(prevdirection != direction) this.rotation = 180;
                         xPosition--;
                     }
                     break;
@@ -155,6 +161,7 @@ public class Player extends Sprite {
     public void die(){
         xPosition = 8;
         yPosition = 136;
-        hud.lives--;
+        if(hud.lives>0) hud.lives--;
+        //else {};
     }
 }

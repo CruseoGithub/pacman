@@ -1,16 +1,15 @@
 package com.vieth.pacman.Scenes;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.vieth.pacman.PacMan;
 import com.vieth.pacman.Screens.GameScreen;
 import com.vieth.pacman.Sprites.Player;
 import com.vieth.pacman.Sprites.Tile;
-
-import java.util.Iterator;
 
 public class Map {
     GameScreen screen;
@@ -19,6 +18,7 @@ public class Map {
     public OrthogonalTiledMapRenderer renderer;
 
     public TiledMapTileLayer layerWall;
+    public TiledMapTileLayer layerPath;
     public TiledMapTileLayer layerCollect;
 
     public int mapWidth;
@@ -38,32 +38,96 @@ public class Map {
         mapHeight = Integer.parseInt(tmxMap.getProperties().get("height").toString());
         tileSize = Integer.parseInt(tmxMap.getProperties().get("tilewidth").toString());
 
-
         layerWall = (TiledMapTileLayer)tmxMap.getLayers().get("Walls");
+        layerPath = (TiledMapTileLayer)tmxMap.getLayers().get("Path");
         layerCollect = (TiledMapTileLayer)tmxMap.getLayers().get("Collectables");
 
         matrix = new Tile[mapWidth][mapHeight];
+
+        generateWalls();
+        generateDots(150);
+    }
+
+    public TextureRegion createTextureRegion(Tile.Type type){
+        Texture tex = new Texture("maptileset.png");
+        TextureRegion region = new TextureRegion(tex);
+        switch (type) {
+            case DOT:
+                region.setRegionX(24); // Dot
+                region.setRegionWidth(8);
+                region.setRegionY(8);
+                region.setRegionHeight(8);
+                region.setU(0.27272728f);
+                region.setU2(0.36363637f);
+                region.setV(0.2f);
+                region.setV2(0.4f);
+                break;
+            /*case BUFF:
+                    Weitere Typen...
+                break;*/
+            default:
+                region.setRegionX(8); // Leer
+                region.setRegionWidth(8);
+                region.setRegionY(24);
+                region.setRegionHeight(8);
+                region.setU2(0.45454547f);
+                region.setU(0.36363637f);
+                region.setV(0.2f);
+                region.setV2(0.4f);
+                break;
+        }
+        return region;
+    }
+
+    private void generateWalls(){
         for(int x = 0; x < mapWidth; x++){
             for(int y = 0; y < mapHeight; y++){
                 if(layerWall.getCell(x, y) == null){
                     matrix[x][y] = new Tile(Tile.Type.PATH, ((x*tileSize)), ((y*tileSize)));
-                    if(layerCollect.getCell(x,y) != null){
-                        TextureRegion region = layerCollect.getCell(x,y).getTile().getTextureRegion();
-                        int regionX = region.getRegionX();
-                        int regionY = region.getRegionY();
-
-                        if(regionX == 24 && regionY == 8) matrix[x][y].isDot = true;        // Dot at x=24, y= 8
-                        else if(regionX == 24 && regionY == 16) matrix[x][y].isDot = true;  // Big Dot at x=24, y=16
-                        //else if();                                                        // Other Buffs
+                    if(layerPath.getCell(x,y) != null){
+                        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+                        Tile tile = new Tile(createTextureRegion(Tile.Type.PATH), Tile.Type.PATH, (x*tileSize), (y*tileSize));
+                        cell.setTile((TiledMapTile) tile); // Cast to original TiledMapTile da Cell meine Klasse nicht will
+                        layerPath.setCell(x,y, cell);
+                        matrix[x][y] = tile;
                     }
                 }
                 else {
-                    matrix[x][y] = new Tile(Tile.Type.WALL, (x*tileSize), (y*tileSize));
+                    TextureRegion wallRegion = layerWall.getCell(x,y).getTile().getTextureRegion();
+                    matrix[x][y] = new Tile(wallRegion, Tile.Type.WALL, (x*tileSize), (y*tileSize));
                 }
 
             }
         }
     }
+
+    private void generateDots(int total_Dots){
+        while(total_Dots > 0){
+            for(int x = 0; x < mapWidth; x++){
+                for(int y = 0; y < mapHeight; y++){
+                    if(layerWall.getCell(x, y) == null && total_Dots>0){
+                        if(layerPath.getCell(x,y) != null & !matrix[x][y].isDot && x>0 && x<(mapWidth-2)){ //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
+                            int max = 1;
+                            int min = 0;
+                            int random = (int) (Math.random() * (max - min + 1) + min); // random ist entweder 0 oder 1
+                            if(random > 0){
+                                TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+                                TiledMapTile t = new Tile(createTextureRegion(Tile.Type.DOT));
+                                cell.setTile(t);
+                                layerCollect.setCell(x,y, cell);
+                                matrix[x][y].isDot = true;
+                                total_Dots--;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+    }
+
     public Tile getTile(int xPosition, int yPosition){
         Tile tile = matrix[(int) xPosition/tileSize][(int)yPosition/tileSize];
         return tile;
@@ -90,13 +154,16 @@ public class Map {
         }
         return matrix[nextCellX][nextCellY];
     }
+
     public void setTile(Tile tile, Tile.Type type){
         tile.type = type;
     }
+
     public void collect(Tile tile){
         if(tile.isDot){
             screen.hud.score++;
             screen.hud.update();
+
             layerCollect.setCell(
                     tile.x/tileSize,
                     tile.y/tileSize,

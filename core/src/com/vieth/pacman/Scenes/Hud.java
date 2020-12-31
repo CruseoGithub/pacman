@@ -58,6 +58,7 @@ public class Hud {
 
         stage.addActor(table);
     }
+
     public void update(){
         scoreLabel.setText(String.format("%06d", score));
         timeLabel.setText(String.format("%03d", (int)time));

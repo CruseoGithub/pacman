@@ -9,38 +9,59 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.vieth.pacman.Controller;
 import com.vieth.pacman.Screens.GameScreen;
+import com.vieth.pacman.Scenes.Hud;
 
 public class Player extends Sprite {
     public enum Direction {
             RIGHT, LEFT, UP, DOWN
     };
+    public enum State {
+            RUNNING, STOPPING, EATING, DIEING
+    };
 
-    public int x;
-    public int y;
+    private int xPosition;
+    private int yPosition;
 
+
+    public int getXPosition() {
+        return xPosition;
+    }
+
+    public int getYPosition() {
+        return yPosition;
+    }
+
+    private int tileSize;
     public float rotation;
     public int texturePositionX;
+
     public Direction direction;
     public Direction nextdirection;
     public Direction prevdirection;
 
-    public TextureRegion region;
+    public State state;
 
-    public Texture texture;
     public Sprite sprite;
+    public TextureRegion region;
+    public Texture texture;
+
     private TiledMapTileLayer layerDots;
+    public Hud hud;
 
     private GameScreen screen;
 
 
-    public Player(int initX, int initY, GameScreen screen){
+    public Player(int initX, int initY, GameScreen screen, Hud hud){
         this.direction = Direction.RIGHT;
         this.nextdirection = Direction.RIGHT;
         this.prevdirection = Direction.RIGHT;
 
-        this.x = initX;
-        this.y = initY;
+        this.state = State.RUNNING;
+
+        this.xPosition = initX;
+        this.yPosition = initY;
         this.rotation = 0;
+        this.tileSize = screen.map.tileSize;
 
         this.texture = new Texture("pacman.png");
         region = new TextureRegion(texture);
@@ -51,91 +72,64 @@ public class Player extends Sprite {
         texturePositionX = 0;
         region.flip(true, false);
         this.sprite = new Sprite(region);
-        this.sprite.setOrigin(4, 4);
+        this.sprite.setOrigin(tileSize/2, tileSize/2);
         this.screen = screen;
-        layerDots = (TiledMapTileLayer)screen.map.getLayers().get("Collectables");
-    }
-
-    public Tile getCell(){
-        Tile tile = screen.tileMatrix[(int) x/8][(int)y/8];
-        return tile;
-    }
-    public Tile getNextCell(Direction dir){
-        int nextCellX = (int) ((x/8));
-        int nextCellY = (int) ((y/8));
-        Tile tile;
-        switch (dir) {
-            case RIGHT:
-                nextCellX = (int) ((x+8) / 8);
-                break;
-            case LEFT:
-                nextCellX = (int) ((x-8) / 8);
-                break;
-            case UP:
-                nextCellY = (int) ((y+8) / 8);
-                break;
-            case DOWN:
-                nextCellY = (int) ((y-8) / 8);
-                break;
-
-        }
-        tile = screen.tileMatrix[nextCellX][nextCellY];
-        return tile;
+        this.hud = hud;
     }
 
     public void move(){
-        if(x >= 8 && x <= 208){
+        if(xPosition >= 8 && xPosition <= 208){
             prevdirection = direction;
-            if(nextdirection != direction && getNextCell(nextdirection).type != Tile.Type.WALL){
-                if(x == getCell().x && y == getCell().y){
+            if(nextdirection != direction && screen.map.getTile(xPosition, yPosition, nextdirection).type != Tile.Type.WALL){
+                if(xPosition == screen.map.getTile(xPosition, yPosition).x && yPosition == screen.map.getTile(xPosition, yPosition).y){
 
                     direction = nextdirection;
                 }
             }
-            if(getCell().isDot == true){
-                layerDots.setCell(getCell().x/8, getCell().y/8, null); //Löscht die Celle aus der Map
-                screen.hud.score++;
-                screen.hud.update();
-                getCell().isDot = false;
-            }
+
+            screen.map.collect(screen.map.getTile(xPosition, yPosition)); //Dots einsammeln
 
             switch (direction) {
                 case RIGHT:
-                    if(getNextCell(direction).type != Tile.Type.WALL) {
+                    if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL) {
                         if(prevdirection != direction) this.rotation = 0;
-                        x++;
+                        xPosition++;
                     }
                     break;
                 case LEFT:
-                    if(getNextCell(direction).type == Tile.Type.WALL) {
-                        if(x > getCell().x) x--;
+                    if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL) {
+                        if(xPosition > screen.map.getTile(xPosition, yPosition).x) xPosition--;
                     }else{
-                        if(prevdirection != direction) {
-                            this.rotation = 180;
-                        }
-                        x--;
+                        if(prevdirection != direction) this.rotation = 180;
+                        xPosition--;
                     }
                     break;
                 case UP:
-                    if(getNextCell(direction).type != Tile.Type.WALL){
+                    if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL){
                         if(prevdirection != direction) this.rotation = 90;
-                        y++;
+                        yPosition++;
                     }
                     break;
                 case DOWN:
-                    if(getNextCell(direction).type == Tile.Type.WALL){
-                        if(y > getCell().y) y--;
+                    if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL){
+                        if(yPosition > screen.map.getTile(xPosition, yPosition).y) yPosition--;
                     }else{
                         if(prevdirection != direction) this.rotation =270;
-                        y--;
+                        yPosition--;
                     }
                     break;
             }
         }else{
-            if(x<=8) x=207;
-            if(x>=208) x=9;
+            if(xPosition <= 8) xPosition = 207;
+            if(xPosition >= 208) xPosition = 9;
         }
 
     }
 
+    public void die(){
+        xPosition = 8;
+        yPosition = 136;
+        if(hud.lives>0) hud.lives--;
+        //else {};
+    }
 }

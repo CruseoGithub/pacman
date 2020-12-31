@@ -11,19 +11,20 @@ import java.util.Random;
 
 public class Enemy extends Sprite{
 
-    public enum Direction {
+    /*public enum Direction {
         RIGHT, LEFT, UP, DOWN;
         public static Direction getRandomDirection(){
             Random random = new Random();
             return values()[random.nextInt(values().length)];
         }
-    };
+    };*/
 
-    public int x;
-    public int y;
+    public int xPosition;
+    public int yPosition;
+    private int tileSize;
 
-    public Enemy.Direction direction;
-    public Enemy.Direction nextdirection;
+    public Player.Direction direction;
+    public Player.Direction nextdirection;
 
     private Texture texture;
     public Sprite sprite;
@@ -32,80 +33,72 @@ public class Enemy extends Sprite{
 
 
     public Enemy(int initX, int initY, GameScreen screen){
-        this.direction = Enemy.Direction.RIGHT;
-        this.nextdirection = Enemy.Direction.RIGHT;
-        this.x = initX;
-        this.y = initY;
+        this.direction = Player.Direction.RIGHT;
+        this.nextdirection = Player.Direction.RIGHT;
+        this.xPosition = initX;
+        this.yPosition = initY;
 
         this.texture = new Texture("enemies.png");
         this.sprite = new Sprite(texture,0, 0, 200,200);
         this.sprite.rotate90(true);
         this.screen = screen;
+        this.tileSize = screen.map.tileSize;
     }
-    public Tile getCell(){
-        Tile tile = screen.tileMatrix[(int) x/8][(int)y/8];
-        return tile;
-    }
-    public Tile getNextCell(Enemy.Direction dir){
-        int nextCellX = (int) ((x/8));
-        int nextCellY = (int) ((y/8));
-        Tile tile;
-        switch (dir) {
-            case RIGHT:
-                nextCellX = (int) ((x+8) / 8);
-                break;
-            case LEFT:
-                nextCellX = (int) ((x-8) / 8);
-                break;
-            case UP:
-                nextCellY = (int) ((y+8) / 8);
-                break;
-            case DOWN:
-                nextCellY = (int) ((y-8) / 8);
-                break;
 
+    public Player.Direction findNextDirection(Player target){
+        int distanceX = this.xPosition - target.getXPosition();
+        int distanceY = this.yPosition - target.getYPosition();
+        if((Math.abs(distanceX) < tileSize) && (Math.abs(distanceY) < tileSize)){
+            target.die();
+            return Player.Direction.RIGHT;
         }
-        tile = screen.tileMatrix[nextCellX][nextCellY];
-        return tile;
+        if(Math.abs(distanceX) > Math.abs(distanceY)){
+            if(distanceX > 0) return Player.Direction.LEFT;
+            else return Player.Direction.RIGHT;
+        }
+        else {
+            if (distanceY > 0) return Player.Direction.DOWN;
+            else return Player.Direction.UP;
+        }
     }
 
     public void move(){
-        if(x >= 8 && x <= 208){
-            if(nextdirection != direction && getNextCell(nextdirection).type != Tile.Type.WALL){
-                if(x == getCell().x && y == getCell().y){
+        if(xPosition >= 8 && xPosition <= 208){
+            if(nextdirection != direction && screen.map.getTile(xPosition, yPosition, nextdirection).type != Tile.Type.WALL){
+                if(xPosition == screen.map.getTile(xPosition, yPosition).x && yPosition == screen.map.getTile(xPosition, yPosition).y){
                     direction = nextdirection;
                 }
             }
 
             switch (direction) {
                 case RIGHT:
-                    if(getNextCell(direction).type != Tile.Type.WALL) {
-                        x++;
+                    if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL) {
+                        xPosition++;
                     }
                     break;
                 case LEFT:
-                    if(getNextCell(direction).type == Tile.Type.WALL) {
-                        if(x > getCell().x) x--;
+                    if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL) {
+                        if(xPosition > screen.map.getTile(xPosition, yPosition).x) xPosition--;
                     }else{
-                        x--;
+                        xPosition--;
                     }
                     break;
                 case UP:
-                    if(getNextCell(direction).type != Tile.Type.WALL){
-                        y++;
+                    if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL){
+                        yPosition++;
                     }
                     break;
                 case DOWN:
-                    if(getNextCell(direction).type == Tile.Type.WALL){
-                        if(y > getCell().y) y--;
+                    if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL){
+                        if(yPosition > screen.map.getTile(xPosition, yPosition).y) yPosition--;
                     }else{
-                        y--;
+                        yPosition--;
                     }
                     break;
             }
         }else{
-            if(x<=8) x=207;
-            if(x>=208) x=9;
+            if(xPosition<=8) xPosition=207;
+            if(xPosition>=208) xPosition=9;
         }
 
     }

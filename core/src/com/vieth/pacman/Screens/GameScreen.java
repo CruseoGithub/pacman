@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.*;
 import com.vieth.pacman.Controller;
 import com.vieth.pacman.Scenes.Hud;
 import com.vieth.pacman.PacMan;
+import com.vieth.pacman.Scenes.Map;
 import com.vieth.pacman.Sprites.Player;
 import com.vieth.pacman.Sprites.Tile;
 import com.vieth.pacman.Sprites.Enemy;
@@ -33,10 +34,9 @@ public class GameScreen implements Screen {
     private PacMan game;
     private OrthographicCamera gamecam;
     private Viewport gamePort;
+
+    public Map map;
     public Hud hud;
-    private TmxMapLoader maploader;
-    public TiledMap map;
-    private OrthogonalTiledMapRenderer renderer;
     public Controller controller;
 
     Player pacman;
@@ -44,41 +44,18 @@ public class GameScreen implements Screen {
 
     private float tmpTimerAnimation = 0;
 
-    public Tile tileMatrix[][];
-
     public GameScreen(PacMan game){
         this.game = game;
+        this.gamecam = new OrthographicCamera();
+        this.gamePort = new FitViewport(PacMan.V_WIDTH, PacMan.V_HEIGHT, gamecam);
+        this.gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
 
-        gamecam = new OrthographicCamera();
-        gamePort = new FitViewport(PacMan.V_WIDTH, PacMan.V_HEIGHT, gamecam);
+        this.map = new Map("map.tmx", this);
+        this.hud = new Hud(game.batch);
+        this.controller = new Controller();
 
-        hud = new Hud(game.batch);
-
-        maploader = new TmxMapLoader();
-        map = maploader.load("map.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map);
-        gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
-
-        TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(0);
-        TiledMapTileLayer layerDots = (TiledMapTileLayer)map.getLayers().get(1);
-        tileMatrix = new Tile[PacMan.V_WIDTH/8][PacMan.V_HEIGHT/8];
-        for(int x = 0; x < PacMan.V_WIDTH/8; x++){
-            for(int y = 0; y < PacMan.V_HEIGHT/8; y++){
-                if(layer.getCell(x, y) == null){
-                    tileMatrix[x][y] = new Tile(Tile.Type.PATH, ((x*8)), ((y*8)));
-                    if(layerDots.getCell(x,y) != null) tileMatrix[x][y].isDot = true;
-                }
-                else {
-                    tileMatrix[x][y] = new Tile(Tile.Type.WALL, ((x*8)), ((y*8)));
-                }
-
-            }
-        }
-
-        controller = new Controller();
-
-        pacman = new Player(8, 136, this);
-        ghost = new Enemy(120,224,this);
+        this.pacman = new Player(8, 136, this, hud);
+        this.ghost = new Enemy(128,232,this);
     }
     @Override
     public void show() {
@@ -105,7 +82,7 @@ public class GameScreen implements Screen {
 
         gamecam.update();
 
-        renderer.setView(gamecam);
+        map.renderer.setView(gamecam);
     }
     @Override
     public void render(float delta) {
@@ -114,7 +91,7 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        ghost.nextdirection = Enemy.Direction.getRandomDirection();
+        ghost.nextdirection = ghost.findNextDirection(pacman);
         ghost.move();
 
         //Animation alle 0.5 Sekunden
@@ -130,17 +107,17 @@ public class GameScreen implements Screen {
         game.batch.begin();
 
         //Neuer Draw Befehl, der die Rotation mit berechnet
-        game.batch.draw(pacman.texture,pacman.x,pacman.y,pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+        game.batch.draw(pacman.texture,pacman.getXPosition(),pacman.getYPosition(),pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
                 8,8, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
                 pacman.texturePositionX,0,60,60,true,false);
 
-        game.batch.draw(ghost.sprite, ghost.x , ghost.y , 8, 8);
+        game.batch.draw(ghost.sprite, ghost.xPosition , ghost.yPosition , 8, 8);
         game.batch.end();
 
         controller.draw();
 
-        renderer.setView(gamecam);
-        renderer.render();
+        map.renderer.setView(gamecam);
+        map.renderer.render();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.time +=Gdx.graphics.getDeltaTime();

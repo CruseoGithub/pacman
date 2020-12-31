@@ -78,7 +78,8 @@ public class Player extends Sprite {
     }
 
     public void move(){
-        if(xPosition >= 8 && xPosition <= 208){
+        //if(xPosition >= 8 && xPosition <= 208){
+        if(xPosition >= tileSize && xPosition <= 26*tileSize){
             prevdirection = direction;
             if(nextdirection != direction && screen.map.getTile(xPosition, yPosition, nextdirection).type != Tile.Type.WALL){
                 if(xPosition == screen.map.getTile(xPosition, yPosition).x && yPosition == screen.map.getTile(xPosition, yPosition).y){
@@ -120,15 +121,15 @@ public class Player extends Sprite {
                     break;
             }
         }else{
-            if(xPosition <= 8) xPosition = 207;
-            if(xPosition >= 208) xPosition = 9;
+            if(xPosition <= tileSize) xPosition = (((26*tileSize)-1));
+            if(xPosition >= (26*tileSize)) xPosition = tileSize+1;
         }
 
     }
 
     public void die(){
-        xPosition = 8;
-        yPosition = 136;
+        xPosition = tileSize;
+        yPosition = 17*tileSize;
         if(hud.lives>0) hud.lives--;
         //else {};
     }

@@ -5,7 +5,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 
 public class Tile extends StaticTiledMapTile {
-    public enum Type { PATH, WALL, DOT}
+    public enum Type { EMPTY,PATH, PATHDOT, WALL, DOT}
     public Tile.Type type;
 
     public int x,y;

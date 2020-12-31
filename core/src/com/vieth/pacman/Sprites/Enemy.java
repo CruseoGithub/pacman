@@ -33,8 +33,8 @@ public class Enemy extends Sprite{
 
 
     public Enemy(int initX, int initY, GameScreen screen){
-        this.direction = Player.Direction.RIGHT;
-        this.nextdirection = Player.Direction.RIGHT;
+        this.direction = Player.Direction.DOWN;
+        this.nextdirection = Player.Direction.DOWN;
         this.xPosition = initX;
         this.yPosition = initY;
 
@@ -63,7 +63,7 @@ public class Enemy extends Sprite{
     }
 
     public void move(){
-        if(xPosition >= 8 && xPosition <= 208){
+        if(xPosition >= tileSize && xPosition <= 26*tileSize){
             if(nextdirection != direction && screen.map.getTile(xPosition, yPosition, nextdirection).type != Tile.Type.WALL){
                 if(xPosition == screen.map.getTile(xPosition, yPosition).x && yPosition == screen.map.getTile(xPosition, yPosition).y){
                     direction = nextdirection;
@@ -97,8 +97,8 @@ public class Enemy extends Sprite{
                     break;
             }
         }else{
-            if(xPosition<=8) xPosition=207;
-            if(xPosition>=208) xPosition=9;
+            if(xPosition <= tileSize) xPosition = (((26*tileSize)-1));
+            if(xPosition >= (26*tileSize)) xPosition = tileSize+1;
         }
 
     }

@@ -1,5 +1,6 @@
 package com.vieth.pacman.Scenes;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import com.vieth.pacman.PacMan;
+import com.vieth.pacman.Screens.GameScreen;
 
 public class Hud {
     public Stage stage;
@@ -28,12 +30,12 @@ public class Hud {
     Label livesTextLabel;
     Label livesLabel;
 
-    public Hud(SpriteBatch sb){
+    public Hud(SpriteBatch sb, GameScreen screen){
         time = 0;
         score = 0;
         lives = 3;
 
-        viewport = new FitViewport(PacMan.V_WIDTH, PacMan.V_HEIGHT, (new OrthographicCamera()));
+        viewport = new FitViewport(screen.map.mapWidth*screen.map.tileSize, screen.map.mapHeight*screen.map.tileSize, (new OrthographicCamera()));
         stage = new Stage(viewport, sb);
 
         Table table = new Table();

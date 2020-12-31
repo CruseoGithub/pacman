@@ -47,15 +47,17 @@ public class GameScreen implements Screen {
     public GameScreen(PacMan game){
         this.game = game;
         this.gamecam = new OrthographicCamera();
-        this.gamePort = new FitViewport(PacMan.V_WIDTH, PacMan.V_HEIGHT, gamecam);
+
+        this.map = new Map("map2.tmx", this);
+
+        this.gamePort = new FitViewport(map.mapWidth*map.tileSize, map.mapHeight*map.tileSize, gamecam);
         this.gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
 
-        this.map = new Map("map.tmx", this);
-        this.hud = new Hud(game.batch);
+        this.hud = new Hud(game.batch, this);
         this.controller = new Controller();
 
-        this.pacman = new Player(8, 136, this, hud);
-        this.ghost = new Enemy(128,232,this);
+        this.pacman = new Player(map.tileSize, 17*map.tileSize, this, hud);
+        this.ghost = new Enemy(map.tileSize,40*map.tileSize,this);
     }
     @Override
     public void show() {
@@ -103,26 +105,28 @@ public class GameScreen implements Screen {
             }
             tmpTimerAnimation = hud.time;
         }
+        map.renderer.setView(gamecam);
+        map.renderer.render();
 
         game.batch.begin();
 
         //Neuer Draw Befehl, der die Rotation mit berechnet
         game.batch.draw(pacman.texture,pacman.getXPosition(),pacman.getYPosition(),pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
-                8,8, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
+                map.tileSize,map.tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
                 pacman.texturePositionX,0,60,60,true,false);
 
-        game.batch.draw(ghost.sprite, ghost.xPosition , ghost.yPosition , 8, 8);
+        game.batch.draw(ghost.sprite, ghost.xPosition , ghost.yPosition , map.tileSize, map.tileSize);
         game.batch.end();
 
         controller.draw();
 
-        map.renderer.setView(gamecam);
-        map.renderer.render();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.time +=Gdx.graphics.getDeltaTime();
         hud.update();
         hud.stage.draw();
+
+
 
 
     }
@@ -131,9 +135,9 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         //gamePort.update(width, height);
         gamePort.update(width,height,false);
-        gamePort.getCamera().position.set(PacMan.V_WIDTH/2f,PacMan.V_HEIGHT/2f,0);
+        gamePort.getCamera().position.set(map.mapWidth*map.tileSize/2f, map.mapHeight*map.tileSize/2f,0);
         gamePort.getCamera().update();
-        controller.resize(width, height);
+        //controller.resize(width, height);
     }
 
     @Override

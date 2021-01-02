@@ -8,19 +8,25 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.vieth.pacman.Screens.GameScreen;
+import com.vieth.pacman.Screens.MenuScreen;
 
 
 public class PacMan extends Game {
 
 	public static final int V_WIDTH = 8 * 28;
 	public static final int V_HEIGHT = 8 * 52;
-
+	static public Skin gameSkin;
 	public static SpriteBatch batch;
+
+
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
-		setScreen(new GameScreen(this));
+		gameSkin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
+		//setScreen(new GameScreen(this));
+		setScreen(new MenuScreen(this));
 	}
 
 	@Override

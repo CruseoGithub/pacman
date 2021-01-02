@@ -44,6 +44,10 @@ public class GameScreen implements Screen {
 
     private float tmpTimerAnimation = 0;
 
+
+
+
+
     public GameScreen(PacMan game){
         this.game = game;
         this.gamecam = new OrthographicCamera();
@@ -77,6 +81,9 @@ public class GameScreen implements Screen {
         pacman.move();
 
     }
+
+
+
     public void update(float dt){
         handleInput(dt);
 

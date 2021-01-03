@@ -63,12 +63,12 @@ public class Player extends Sprite {
         this.rotation = 0;
         this.tileSize = screen.map.tileSize;
 
-        this.texture = new Texture("pacman.png");
+        this.texture = new Texture("pacman32.png");
         region = new TextureRegion(texture);
         region.setRegionX(0);
         region.setRegionY(0);
-        region.setRegionWidth(60);
-        region.setRegionHeight(60);
+        region.setRegionWidth(32);
+        region.setRegionHeight(32);
         texturePositionX = 0;
         region.flip(true, false);
         this.sprite = new Sprite(region);

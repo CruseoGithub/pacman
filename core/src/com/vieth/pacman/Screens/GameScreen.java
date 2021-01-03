@@ -1,5 +1,6 @@
 package com.vieth.pacman.Screens;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -45,10 +46,14 @@ public class GameScreen implements Screen {
     private float tmpTimerAnimation = 0;
 
     public GameScreen(PacMan game){
+        //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
+        if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
+            Gdx.graphics.setWindowedMode(450, 800);
+        }
         this.game = game;
         this.gamecam = new OrthographicCamera();
 
-        this.map = new Map("map2.tmx", this);
+        this.map = new Map("map5.tmx", this);
 
         this.gamePort = new FitViewport(map.mapWidth*map.tileSize, map.mapHeight*map.tileSize, gamecam);
         this.gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
@@ -99,7 +104,8 @@ public class GameScreen implements Screen {
         //Animation alle 0.5 Sekunden
         if((tmpTimerAnimation+0.5f) <= hud.time) {
             if(pacman.texturePositionX == 0){
-                pacman.texturePositionX = 180;
+                pacman.texturePositionX = 96;
+
             }else{
                 pacman.texturePositionX = 0;
             }
@@ -111,9 +117,12 @@ public class GameScreen implements Screen {
         game.batch.begin();
 
         //Neuer Draw Befehl, der die Rotation mit berechnet
+        /*game.batch.draw(pacman.texture,pacman.getXPosition(),pacman.getYPosition(),pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+                map.tileSize,map.tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
+                pacman.texturePositionX,0,60,60,true,false);*/
         game.batch.draw(pacman.texture,pacman.getXPosition(),pacman.getYPosition(),pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
                 map.tileSize,map.tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
-                pacman.texturePositionX,0,60,60,true,false);
+                pacman.texturePositionX,0,32,32,false,false);
 
         game.batch.draw(ghost.sprite, ghost.xPosition , ghost.yPosition , map.tileSize, map.tileSize);
         game.batch.end();

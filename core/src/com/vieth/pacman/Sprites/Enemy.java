@@ -6,10 +6,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.vieth.pacman.Pathfinder;
 import com.vieth.pacman.Screens.GameScreen;
 import java.util.Random;
 
 public class Enemy extends Sprite{
+
+
 
     public enum Direction {
         RIGHT, LEFT, UP, DOWN;
@@ -19,23 +22,40 @@ public class Enemy extends Sprite{
         }
     };
 
-    public int x;
-    public int y;
+    public int getXPosition() {
+        return xPosition;
+    }
+
+    public void setXPosition(int xPosition) {
+        this.xPosition = xPosition;
+    }
+
+    public int getYPosition() {
+        return yPosition;
+    }
+
+    public void setYPosition(int yPosition) {
+        this.yPosition = yPosition;
+    }
+
+    private int xPosition;
+    private int yPosition;
 
     public Enemy.Direction direction;
     public Enemy.Direction nextdirection;
 
     private Texture texture;
     public Sprite sprite;
-
+    private Pathfinder aStar;
     private GameScreen screen;
+
 
 
     public Enemy(int initX, int initY, GameScreen screen){
         this.direction = Enemy.Direction.RIGHT;
         this.nextdirection = Enemy.Direction.RIGHT;
-        this.x = initX;
-        this.y = initY;
+        this.xPosition = initX;
+        this.yPosition = initY;
 
         this.texture = new Texture("enemies.png");
         this.sprite = new Sprite(texture,0, 0, 200,200);
@@ -43,44 +63,86 @@ public class Enemy extends Sprite{
         this.screen = screen;
     }
 
-    public Direction findNextDirection(Player target){
-        int distanceX = this.x - target.getXPosition();
-        int distanceY = this.y - target.getYPosition();
+    private Direction UpOrDown(int distance){
+        if (distance > 0) return Direction.DOWN;
+        else return Direction.UP;
+    }
+
+    private Direction LeftOrRight(int distance){
+        if (distance > 0 ) return Direction.LEFT;
+        else return Direction.RIGHT;
+    }
+
+    public Direction findNextDirectionEasy(Player target){
+        int distanceX = this.xPosition - target.getXPosition();
+        int distanceY = this.yPosition - target.getYPosition();
+        if((Math.abs(distanceX)+Math.abs(distanceY)) > 128) return Direction.getRandomDirection();
         if((Math.abs(distanceX) < 8) && (Math.abs(distanceY) < 8)){
-            target.die();
+            target.die(this);
             return Direction.RIGHT;
         }
         if(Math.abs(distanceX) > Math.abs(distanceY)){
-            if(distanceX > 0) return Direction.LEFT;
-            else return Direction.RIGHT;
+            return LeftOrRight(distanceX);
         }
         else {
-            if (distanceY > 0) return Direction.DOWN;
-            else return Direction.UP;
+            return UpOrDown(distanceY);
         }
     }
 
+    public Direction findNextDirectionMedium(Player target){
+        int distanceX = this.xPosition - target.getXPosition();
+        int distanceY = this.yPosition - target.getYPosition();
+        if((Math.abs(distanceX)+Math.abs(distanceY)) > 128) return Direction.getRandomDirection();
+        if((Math.abs(distanceX) < 8) && (Math.abs(distanceY) < 8)){
+            target.die(this);
+            return Direction.RIGHT;
+        }
+        if(Math.abs(distanceX) > Math.abs(distanceY)){
+            if(getNextCell(LeftOrRight(distanceX)).type != Tile.Type.WALL) return LeftOrRight(distanceX);
+            else return UpOrDown(distanceY);
+        }
+        else {
+            if(getNextCell(UpOrDown(distanceY)).type != Tile.Type.WALL) return UpOrDown(distanceY);
+            else return LeftOrRight(distanceX);
+        }
+    }
+
+    public Direction findNextDirectionHard(Tile[][] matrix, Player target){
+        int distanceX = this.xPosition - target.getXPosition();
+        int distanceY = this.yPosition - target.getYPosition();
+        if((Math.abs(distanceX) < 8) && (Math.abs(distanceY) < 8)){
+            target.die(this);
+            return Direction.RIGHT;
+        }
+        aStar = new Pathfinder(matrix, this, target);
+        Tile temp = aStar.aStarResult();
+        if(temp.getY() > this.getYPosition()) return Direction.UP;
+        if(temp.getY() < this.getYPosition()) return Direction.DOWN;
+        if(temp.getX() > this.getXPosition()) return Direction.RIGHT;
+        else return Direction.LEFT;
+    }
+
     public Tile getCell(){
-        Tile tile = screen.tileMatrix[(int) x/8][(int)y/8];
+        Tile tile = screen.tileMatrix[(int) xPosition/8][(int)yPosition/8];
         return tile;
     }
 
     public Tile getNextCell(Enemy.Direction dir){
-        int nextCellX = (int) ((x/8));
-        int nextCellY = (int) ((y/8));
+        int nextCellX = (int) ((xPosition/8));
+        int nextCellY = (int) ((yPosition/8));
         Tile tile;
         switch (dir) {
             case RIGHT:
-                nextCellX = (int) ((x+8) / 8);
+                nextCellX = (int) ((xPosition+8) / 8);
                 break;
             case LEFT:
-                nextCellX = (int) ((x-8) / 8);
+                nextCellX = (int) ((xPosition-8) / 8);
                 break;
             case UP:
-                nextCellY = (int) ((y+8) / 8);
+                nextCellY = (int) ((yPosition+8) / 8);
                 break;
             case DOWN:
-                nextCellY = (int) ((y-8) / 8);
+                nextCellY = (int) ((yPosition-8) / 8);
                 break;
 
         }
@@ -89,44 +151,41 @@ public class Enemy extends Sprite{
     }
 
     public void move(){
-        if(x >= 8 && x <= 208){
+        if(xPosition >= 8 && xPosition <= 208){
             if(nextdirection != direction && getNextCell(nextdirection).type != Tile.Type.WALL){
-                if(x == getCell().x && y == getCell().y){
+                if(xPosition == getCell().x && yPosition == getCell().y){
                     direction = nextdirection;
                 }
             }
-
             switch (direction) {
                 case RIGHT:
                     if(getNextCell(direction).type != Tile.Type.WALL) {
-                        x++;
+                        xPosition++;
                     }
                     break;
                 case LEFT:
                     if(getNextCell(direction).type == Tile.Type.WALL) {
-                        if(x > getCell().x) x--;
+                        if(xPosition > getCell().x) xPosition--;
                     }else{
-                        x--;
+                        xPosition--;
                     }
                     break;
                 case UP:
                     if(getNextCell(direction).type != Tile.Type.WALL){
-                        y++;
+                        yPosition++;
                     }
                     break;
                 case DOWN:
                     if(getNextCell(direction).type == Tile.Type.WALL){
-                        if(y > getCell().y) y--;
+                        if(yPosition > getCell().y) yPosition--;
                     }else{
-                        y--;
+                        yPosition--;
                     }
                     break;
             }
         }else{
-            if(x<=8) x=207;
-            if(x>=208) x=9;
+            if(xPosition <= 8) xPosition = 207;
+            if(xPosition >= 208) xPosition = 9;
         }
-
     }
-
 }

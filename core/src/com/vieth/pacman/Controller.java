@@ -28,7 +28,7 @@ public class Controller {
 
         //Creating Up-Arrow
         Image upArrow = new Image(new Texture("UpArrow.png"));
-        upArrow.setSize(16, 16 );
+        upArrow.setSize(16, 16);
         upArrow.addListener(new InputListener(){
 
             @Override

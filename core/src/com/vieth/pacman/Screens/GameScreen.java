@@ -22,6 +22,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.*;
 import com.vieth.pacman.Controller;
+import com.vieth.pacman.Pathfinder;
 import com.vieth.pacman.Scenes.Hud;
 import com.vieth.pacman.PacMan;
 import com.vieth.pacman.Sprites.Player;
@@ -30,6 +31,11 @@ import com.vieth.pacman.Sprites.Enemy;
 
 
 public class GameScreen implements Screen {
+
+    public enum Difficulty{
+        RANDOM,EASY,MEDIUM,HARD;
+    };
+
     private PacMan game;
     private OrthographicCamera gamecam;
     private Viewport gamePort;
@@ -38,7 +44,7 @@ public class GameScreen implements Screen {
     public TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     public Controller controller;
-
+    private Difficulty difficulty;
     Player pacman;
     Enemy ghost;
 
@@ -48,7 +54,7 @@ public class GameScreen implements Screen {
 
     public GameScreen(PacMan game){
         this.game = game;
-
+        this.difficulty = Difficulty.HARD;
         gamecam = new OrthographicCamera();
         gamePort = new FitViewport(PacMan.V_WIDTH, PacMan.V_HEIGHT, gamecam);
 
@@ -114,7 +120,20 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        ghost.nextdirection = ghost.findNextDirection(pacman);
+        switch(difficulty){
+            case RANDOM:
+                ghost.nextdirection = Enemy.Direction.getRandomDirection();
+                break;
+            case EASY:
+                ghost.nextdirection = ghost.findNextDirectionEasy(pacman);
+                break;
+            case MEDIUM:
+                ghost.nextdirection = ghost.findNextDirectionMedium(pacman);
+                break;
+            case HARD:
+                ghost.nextdirection = ghost.findNextDirectionHard(tileMatrix, pacman);
+                break;
+        }
         ghost.move();
 
         //Animation alle 0.5 Sekunden
@@ -134,7 +153,7 @@ public class GameScreen implements Screen {
                 8,8, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
                 pacman.texturePositionX,0,60,60,true,false);
 
-        game.batch.draw(ghost.sprite, ghost.x , ghost.y , 8, 8);
+        game.batch.draw(ghost.sprite, ghost.getXPosition() , ghost.getYPosition() , 8, 8);
         game.batch.end();
 
         controller.draw();

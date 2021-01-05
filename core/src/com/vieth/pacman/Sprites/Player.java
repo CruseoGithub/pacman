@@ -152,9 +152,11 @@ public class Player extends Sprite {
 
     }
 
-    public void die(){
+    public void die(Enemy killer){
         xPosition = 8;
         yPosition = 136;
+        killer.setXPosition(128);
+        killer.setYPosition(232);
         hud.lives--;
     }
 }

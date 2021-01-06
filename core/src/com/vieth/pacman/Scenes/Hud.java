@@ -46,9 +46,17 @@ public class Hud {
         timeTextLabel = new Label("TIME:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         livesTextLabel = new Label("LIVES:", new Label.LabelStyle(new BitmapFont(), Color.FIREBRICK));
 
+        scoreTextLabel.setFontScale(4);
+        timeTextLabel.setFontScale(4);
+        livesTextLabel.setFontScale(4);
+
         scoreLabel = new Label(String.format("%06d  ", score), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
         timeLabel = new Label(String.format("%03d  ", (int)time), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         livesLabel = new Label(String.format("%01d  ", lives), new Label.LabelStyle(new BitmapFont(), Color.FIREBRICK));
+
+        scoreLabel.setFontScale(4);
+        timeLabel.setFontScale(4);
+        livesLabel.setFontScale(4);
 
         table.add(scoreTextLabel).expandX().padTop(0);
         table.add(timeTextLabel).expandX().padTop(0);

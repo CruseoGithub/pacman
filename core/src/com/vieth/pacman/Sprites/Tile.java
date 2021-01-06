@@ -72,13 +72,21 @@ public class Tile extends StaticTiledMapTile {
         this.isDot = false;
         this.x = 0;
         this.y = 0;
-        this.cost = 0;
+        this.cost = 1000000;
         this.heuristics = 0;
         this.total = 1000000;
     }
 
     public Tile(TextureRegion textureRegion) {
         super(textureRegion);
+        this.type = null;
+        this.prev = null;
+        this.isDot = false;
+        this.x = 0;
+        this.y = 0;
+        this.cost = 1000000;
+        this.heuristics = 0;
+        this.total = 1000000;
     }
 
     public Tile(TextureRegion textureRegion, Tile.Type type, int x, int y) {
@@ -88,14 +96,21 @@ public class Tile extends StaticTiledMapTile {
         this.isDot = false;
         this.x = x;
         this.y = y;
+        this.cost = 1000000;
+        this.heuristics = 0;
+        this.total = 1000000;
     }
 
     public Tile(TextureRegion textureRegion, Tile.Type type, int x, int y, boolean isDot){
         super(textureRegion);
         this.type = type;
+        this.prev = null;
         this.isDot = false;
         this.x = x;
         this.y = y;
+        this.cost = 1000000;
+        this.heuristics = 0;
+        this.total = 1000000;
         if(type == Tile.Type.PATH && isDot == true){
             this.isDot = isDot;
         }
@@ -108,7 +123,7 @@ public class Tile extends StaticTiledMapTile {
         this.isDot = false;
         this.x = x;
         this.y = y;
-        this.cost = 0;
+        this.cost = 1000000;
         this.heuristics = 0;
         this.total = 1000000;
     }
@@ -120,6 +135,9 @@ public class Tile extends StaticTiledMapTile {
         this.isDot = false;
         this.x = x;
         this.y = y;
+        this.cost = 1000000;
+        this.heuristics = 0;
+        this.total = 1000000;
         if(type == Type.PATH && isDot == true){
             this.isDot = isDot;
         }

@@ -1,14 +1,17 @@
 package com.vieth.pacman.Sprites;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 
-public class Tile extends TiledMapTileLayer.Cell {
-    public enum Type { PATH, WALL}
-    public Type type;
+public class Tile extends StaticTiledMapTile {
+    public enum Type { EMPTY,PATH, PATHDOT, WALL, DOT}
+    public Tile.Type type;
 
     public int x,y;
-    public boolean isDot; //noch keine Wirkung
+    public boolean isDot;
 
+<<<<<<< HEAD
     private int cost;
     private double heuristics;
     private double total;
@@ -75,6 +78,37 @@ public class Tile extends TiledMapTileLayer.Cell {
     }
 
     public Tile(Type type, int x, int y){
+=======
+    /**
+     * Creates a static tile with the given region
+     *
+     * @param textureRegion the {@link TextureRegion} to use.
+     */
+    public Tile(TextureRegion textureRegion) {
+        super(textureRegion);
+    }
+
+    public Tile(TextureRegion textureRegion, Tile.Type type, int x, int y) {
+
+        super(textureRegion);
+        this.type = type;
+        this.isDot = false;
+        this.x = x;
+        this.y = y;
+    }
+    public Tile(TextureRegion textureRegion, Tile.Type type, int x, int y, boolean isDot){
+        super(textureRegion);
+        this.type = type;
+        this.isDot = false;
+        this.x = x;
+        this.y = y;
+        if(type == Tile.Type.PATH && isDot == true){
+            this.isDot = isDot;
+        }
+    }
+    public Tile(Type type, int x, int y) {
+        super(new TextureRegion());
+>>>>>>> development_2
         this.type = type;
         this.prev = null;
         this.isDot = false;
@@ -85,6 +119,7 @@ public class Tile extends TiledMapTileLayer.Cell {
         this.total = 1000000;
     }
     public Tile(Type type, int x, int y, boolean isDot){
+        super(new TextureRegion());
         this.type = type;
         this.prev = null;
         this.isDot = false;

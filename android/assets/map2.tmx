@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="left-down" width="28" height="52" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="1">
+ <tileset firstgid="1" name="maptileset" tilewidth="8" tileheight="8" tilecount="55" columns="11">
+  <image source="maptileset.png" trans="ffffff" width="88" height="40"/>
+  <tile id="4">
+   <properties>
+    <property name="Empty" value="true"/>
+   </properties>
+  </tile>
+  <tile id="14">
+   <properties>
+    <property name="Coins" value="1"/>
+   </properties>
+  </tile>
+  <tile id="25">
+   <properties>
+    <property name="Coins" value="10"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="56" source="maptileset2.tsx"/>
+ <layer id="1" name="Walls" width="28" height="52">
+  <data encoding="base64" compression="zlib">
+   eJztkkEOwCAIBP1YT76ix/7/E73UiwFZxGKT7iRcUNhFKYUQnGNDzHqM1EkeNG+eO6O6+oSU6/PIHasuc74MvO9t7Vyk39t61vyRfH+O/nlkX1pUIVbpSb0RPZSVejP7ovVG6y8lPP5QED20T+Z82f/H/ZzXi+5oY0XdyK93DqvfDj1p5gij3pZ36e6K2iw9De3cm5fOLf+zc3+lLoOmdzp8RoMQQgj5Izd2zIuh
+  </data>
+ </layer>
+ <layer id="3" name="Path" width="28" height="52">
+  <data encoding="base64" compression="zlib">
+   eJztlVEOwCAIQz3kLrD7X2L/y6atBaKmL/EHwSJptDVj1uYmV0TdVw9/vTE5aN1pehWL6WeEel62HuN7Nv7eH/XL3KMXX1Uvwn+sXnR+lR47q6xzTpknWm9/4vnKvzJb1+uXvQfyP1TrqbNCZo72rvhl5k2J1mN9yMaV92DHuqvpfmQ8a4wxxphcHoNUcaA=
+  </data>
+ </layer>
+ <layer id="4" name="Collectables" width="28" height="52">
+  <data encoding="base64" compression="zlib">
+   eJztzgEJAAAIA7C3tH8TUxwRtgRLAAAAoGOuAwDAawvosgBY
+  </data>
+ </layer>
+</map>

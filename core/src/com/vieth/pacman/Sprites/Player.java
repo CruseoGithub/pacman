@@ -15,6 +15,9 @@ public class Player extends Sprite {
     public enum Direction {
             RIGHT, LEFT, UP, DOWN
     };
+    public enum State {
+            RUNNING, STOPPING, EATING, DIEING
+    };
 
     private int xPosition;
     private int yPosition;
@@ -28,17 +31,20 @@ public class Player extends Sprite {
         return yPosition;
     }
 
-
+    private int tileSize;
     public float rotation;
     public int texturePositionX;
+
     public Direction direction;
     public Direction nextdirection;
     public Direction prevdirection;
 
-    public TextureRegion region;
+    public State state;
 
-    public Texture texture;
     public Sprite sprite;
+    public TextureRegion region;
+    public Texture texture;
+
     private TiledMapTileLayer layerDots;
     public Hud hud;
 
@@ -50,95 +56,64 @@ public class Player extends Sprite {
         this.nextdirection = Direction.RIGHT;
         this.prevdirection = Direction.RIGHT;
 
+        this.state = State.RUNNING;
+
         this.xPosition = initX;
         this.yPosition = initY;
         this.rotation = 0;
+        this.tileSize = screen.map.tileSize;
 
-        this.texture = new Texture("pacman.png");
+        this.texture = new Texture("pacman32.png");
         region = new TextureRegion(texture);
         region.setRegionX(0);
         region.setRegionY(0);
-        region.setRegionWidth(60);
-        region.setRegionHeight(60);
+        region.setRegionWidth(32);
+        region.setRegionHeight(32);
         texturePositionX = 0;
         region.flip(true, false);
         this.sprite = new Sprite(region);
-        this.sprite.setOrigin(4, 4);
+        this.sprite.setOrigin(tileSize/2, tileSize/2);
         this.screen = screen;
         this.hud = hud;
-        layerDots = (TiledMapTileLayer)screen.map.getLayers().get("Collectables");
-    }
-
-    public Tile getCell(){
-        Tile tile = screen.tileMatrix[(int) xPosition/8][(int)yPosition/8];
-        return tile;
-    }
-
-    public Tile getNextCell(Direction dir){
-        int nextCellX = (int) ((xPosition/8));
-        int nextCellY = (int) ((yPosition/8));
-        Tile tile;
-        switch (dir) {
-            case RIGHT:
-                nextCellX = (int) ((xPosition+8) / 8);
-                break;
-            case LEFT:
-                nextCellX = (int) ((xPosition-8) / 8);
-                break;
-            case UP:
-                nextCellY = (int) ((yPosition+8) / 8);
-                break;
-            case DOWN:
-                nextCellY = (int) ((yPosition-8) / 8);
-                break;
-
-        }
-        tile = screen.tileMatrix[nextCellX][nextCellY];
-        return tile;
     }
 
     public void move(){
-        if(xPosition >= 8 && xPosition <= 208){
+        //if(xPosition >= 8 && xPosition <= 208){
+        if(xPosition >= tileSize && xPosition <= 26*tileSize){
             prevdirection = direction;
-            if(nextdirection != direction && getNextCell(nextdirection).type != Tile.Type.WALL){
-                if(xPosition == getCell().x && yPosition == getCell().y){
+            if(nextdirection != direction && screen.map.getTile(xPosition, yPosition, nextdirection).type != Tile.Type.WALL){
+                if(xPosition == screen.map.getTile(xPosition, yPosition).x && yPosition == screen.map.getTile(xPosition, yPosition).y){
 
                     direction = nextdirection;
                 }
             }
-            if(getCell().isDot == true){
-                layerDots.setCell(getCell().x/8, getCell().y/8, null); //Löscht die Celle aus der Map
-                screen.hud.score++;
-                screen.hud.update();
-                getCell().isDot = false;
-            }
+
+            screen.map.collect(screen.map.getTile(xPosition, yPosition)); //Dots einsammeln
 
             switch (direction) {
                 case RIGHT:
-                    if(getNextCell(direction).type != Tile.Type.WALL) {
+                    if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL) {
                         if(prevdirection != direction) this.rotation = 0;
                         xPosition++;
                     }
                     break;
                 case LEFT:
-                    if(getNextCell(direction).type == Tile.Type.WALL) {
-                        if(xPosition > getCell().x) xPosition--;
+                    if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL) {
+                        if(xPosition > screen.map.getTile(xPosition, yPosition).x) xPosition--;
                     }else{
-                        if(prevdirection != direction) {
-                            this.rotation = 180;
-                        }
+                        if(prevdirection != direction) this.rotation = 180;
                         xPosition--;
                     }
                     break;
                 case UP:
-                    if(getNextCell(direction).type != Tile.Type.WALL){
+                    if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL){
                         if(prevdirection != direction) this.rotation = 90;
                         yPosition++;
                     }
                     break;
                 case DOWN:
-                    if(getNextCell(direction).type == Tile.Type.WALL){
-                        if(yPosition > getCell().y) yPosition--;
+                    if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL){
+                        if(yPosition > screen.map.getTile(xPosition, yPosition).y) yPosition--;
                     }else{
                         if(prevdirection != direction) this.rotation =270;
                         yPosition--;
@@ -146,17 +121,25 @@ public class Player extends Sprite {
                     break;
             }
         }else{
-            if(xPosition <= 8) xPosition = 207;
-            if(xPosition >= 208) xPosition = 9;
+            if(xPosition <= tileSize) xPosition = (((26*tileSize)-1));
+            if(xPosition >= (26*tileSize)) xPosition = tileSize+1;
         }
 
     }
 
+<<<<<<< HEAD
     public void die(Enemy killer){
         xPosition = 8;
         yPosition = 136;
         killer.setXPosition(128);
         killer.setYPosition(232);
         hud.lives--;
+=======
+    public void die(){
+        xPosition = tileSize;
+        yPosition = 17*tileSize;
+        if(hud.lives>0) hud.lives--;
+        //else {};
+>>>>>>> development_2
     }
 }

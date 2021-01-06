@@ -12,14 +12,17 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.vieth.pacman.Screens.OptionScreen;
 import com.vieth.pacman.Screens.GameScreen;
+import com.badlogic.gdx.Game;
 
 public class Controller {
     Viewport viewport;
     Stage stage;
     boolean upPressed, downPressed, leftPressed, rightPressed;
     OrthographicCamera gamecam;
+    private Game game;
 
-    public Controller(){
+    public Controller(Game aGame){
+        game = aGame;
         gamecam = new OrthographicCamera();
         viewport = new FitViewport(PacMan.V_WIDTH, PacMan.V_WIDTH, gamecam);
         stage = new Stage(viewport, PacMan.batch);
@@ -53,6 +56,7 @@ public class Controller {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 downPressed = true;
+                game.setScreen(new OptionScreen(game));
                 return true;
             }
 

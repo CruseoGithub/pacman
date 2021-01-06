@@ -56,7 +56,7 @@ public class GameScreen implements Screen {
 
         this.map = new Map("map.tmx", this);
         this.hud = new Hud(game.batch);
-        this.controller = new Controller();
+        this.controller = new Controller(game);
 
         this.pacman = new Player(8, 136, this, hud);
         this.ghost = new Enemy(128,232,this);

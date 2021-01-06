@@ -32,10 +32,6 @@ import com.vieth.pacman.Sprites.Enemy;
 
 public class GameScreen implements Screen {
 
-    public enum Difficulty{
-        RANDOM,EASY,MEDIUM,HARD;
-    };
-
     private PacMan game;
     private OrthographicCamera gamecam;
     private Viewport gamePort;
@@ -44,9 +40,11 @@ public class GameScreen implements Screen {
     public TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     public Controller controller;
-    private Difficulty difficulty;
     Player pacman;
-    Enemy ghost;
+    Enemy blinky;
+/*    Enemy clyde;
+    Enemy inky;
+    Enemy pinky;*/
 
     private float tmpTimerAnimation = 0;
 
@@ -54,7 +52,6 @@ public class GameScreen implements Screen {
 
     public GameScreen(PacMan game){
         this.game = game;
-        this.difficulty = Difficulty.HARD;
         gamecam = new OrthographicCamera();
         gamePort = new FitViewport(PacMan.V_WIDTH, PacMan.V_HEIGHT, gamecam);
 
@@ -77,14 +74,16 @@ public class GameScreen implements Screen {
                 else {
                     tileMatrix[x][y] = new Tile(Tile.Type.WALL, ((x*8)), ((y*8)));
                 }
-
             }
         }
 
         controller = new Controller();
 
         pacman = new Player(8, 136, this, hud);
-        ghost = new Enemy(128,232,this);
+        blinky = new Enemy(128,232,this, "blinky.png", Enemy.Difficulty.HARD);
+/*        clyde = new Enemy(128,296,this, "clyde.png", Enemy.Difficulty.MEDIUM);
+        inky = new Enemy(200, 136, this, "inky.png", Enemy.Difficulty.EASY);
+        pinky = new Enemy(200, 360, this, "pinky.png", Enemy.Difficulty.EASY);*/
     }
     @Override
     public void show() {
@@ -120,21 +119,14 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        switch(difficulty){
-            case RANDOM:
-                ghost.nextdirection = Enemy.Direction.getRandomDirection();
-                break;
-            case EASY:
-                ghost.nextdirection = ghost.findNextDirectionEasy(pacman);
-                break;
-            case MEDIUM:
-                ghost.nextdirection = ghost.findNextDirectionMedium(pacman);
-                break;
-            case HARD:
-                ghost.nextdirection = ghost.findNextDirectionHard(tileMatrix, pacman);
-                break;
-        }
-        ghost.move();
+        blinky.findNextDirection(tileMatrix, pacman);
+        blinky.move();
+/*        clyde.findNextDirection(tileMatrix, pacman);
+        clyde.move();
+        inky.findNextDirection(tileMatrix, pacman);
+        inky.move();
+        pinky.findNextDirection(tileMatrix, pacman);
+        pinky.move();*/
 
         //Animation alle 0.5 Sekunden
         if((tmpTimerAnimation+0.5f) <= hud.time) {
@@ -153,7 +145,10 @@ public class GameScreen implements Screen {
                 8,8, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
                 pacman.texturePositionX,0,60,60,true,false);
 
-        game.batch.draw(ghost.sprite, ghost.getXPosition() , ghost.getYPosition() , 8, 8);
+        game.batch.draw(blinky.sprite, blinky.getXPosition() , blinky.getYPosition() , 10, 10);
+/*        game.batch.draw(clyde.sprite, clyde.getXPosition() , clyde.getYPosition() , 10, 10);
+        game.batch.draw(inky.sprite, inky.getXPosition() , inky.getYPosition() , 10, 10);
+        game.batch.draw(pinky.sprite, pinky.getXPosition() , pinky.getYPosition() , 10, 10); */
         game.batch.end();
 
         controller.draw();

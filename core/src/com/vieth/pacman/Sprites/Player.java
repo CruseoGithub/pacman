@@ -11,15 +11,9 @@ import com.vieth.pacman.Controller;
 import com.vieth.pacman.Screens.GameScreen;
 import com.vieth.pacman.Scenes.Hud;
 
-import java.util.Random;
-
 public class Player extends Sprite {
     public enum Direction {
-            RIGHT, LEFT, UP, DOWN;
-            public static Direction getRandomDirection(){
-                Random random = new Random();
-                return values()[random.nextInt(values().length)];
-            }
+            RIGHT, LEFT, UP, DOWN
     };
     public enum State {
             RUNNING, STOPPING, EATING, DIEING
@@ -84,10 +78,12 @@ public class Player extends Sprite {
     }
 
     public void move(){
+        //if(xPosition >= 8 && xPosition <= 208){
         if(xPosition >= tileSize && xPosition <= 26*tileSize){
             prevdirection = direction;
             if(nextdirection != direction && screen.map.getTile(xPosition, yPosition, nextdirection).type != Tile.Type.WALL){
-                if(xPosition == screen.map.getTile(xPosition, yPosition).getX() && yPosition == screen.map.getTile(xPosition, yPosition).getY()){
+                if(xPosition == screen.map.getTile(xPosition, yPosition).x && yPosition == screen.map.getTile(xPosition, yPosition).y){
+
                     direction = nextdirection;
                 }
             }
@@ -103,9 +99,7 @@ public class Player extends Sprite {
                     break;
                 case LEFT:
                     if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL) {
-                        if(xPosition > screen.map.getTile(xPosition, yPosition).getX()) {
-                            xPosition--;
-                        }
+                        if(xPosition > screen.map.getTile(xPosition, yPosition).x) xPosition--;
                     }else{
                         if(prevdirection != direction) this.rotation = 180;
                         xPosition--;
@@ -119,12 +113,10 @@ public class Player extends Sprite {
                     break;
                 case DOWN:
                     if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL){
-                        if(yPosition > screen.map.getTile(xPosition, yPosition).getY()) {
-                            yPosition--;
-                        }
+                        if(yPosition > screen.map.getTile(xPosition, yPosition).y) yPosition--;
                     }else{
-                        if(prevdirection != direction) this.rotation = 270;
-                            yPosition--;
+                        if(prevdirection != direction) this.rotation =270;
+                        yPosition--;
                     }
                     break;
             }
@@ -135,12 +127,19 @@ public class Player extends Sprite {
 
     }
 
+<<<<<<< HEAD
     public void die(Enemy killer){
+        xPosition = 8;
+        yPosition = 136;
+        killer.setXPosition(128);
+        killer.setYPosition(232);
+        hud.lives--;
+=======
+    public void die(){
         xPosition = tileSize;
         yPosition = 17*tileSize;
-        killer.setXPosition(tileSize);
-        killer.setYPosition(40*tileSize);
         if(hud.lives>0) hud.lives--;
         //else {};
+>>>>>>> development_2
     }
 }

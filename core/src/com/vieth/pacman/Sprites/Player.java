@@ -124,13 +124,13 @@ public class Player extends Sprite {
                         }
                     }else{
                         if(prevdirection != direction) this.rotation = 270;
-                            yPosition--;
+                        yPosition--;
                     }
                     break;
             }
         }else{
-            if(xPosition <= tileSize) xPosition = (((26*tileSize)-1));
-            if(xPosition >= (26*tileSize)) xPosition = tileSize+1;
+            if(xPosition < tileSize) xPosition = (((26*tileSize)-1));
+            if(xPosition > (26*tileSize)) xPosition = tileSize+1;
         }
 
     }

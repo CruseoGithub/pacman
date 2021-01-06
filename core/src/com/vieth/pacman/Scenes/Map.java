@@ -40,6 +40,8 @@ public class Map {
         mapWidth = Integer.parseInt(tmxMap.getProperties().get("width").toString());
         mapHeight = Integer.parseInt(tmxMap.getProperties().get("height").toString());
         tileSize = Integer.parseInt(tmxMap.getProperties().get("tilewidth").toString());
+        PacMan.V_WIDTH = mapWidth * tileSize;
+        PacMan.V_HEIGHT = mapHeight * tileSize;
 
         layerWall = (TiledMapTileLayer)tmxMap.getLayers().get("Walls");
         layerPath = (TiledMapTileLayer)tmxMap.getLayers().get("Path");

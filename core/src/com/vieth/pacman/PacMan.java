@@ -12,9 +12,8 @@ import com.vieth.pacman.Screens.GameScreen;
 
 
 public class PacMan extends Game {
-
-	public static final int V_WIDTH = 32 * 28;
-	public static final int V_HEIGHT = 32 * 50;
+	public static int V_WIDTH;
+	public static int V_HEIGHT;
 
 	public static SpriteBatch batch;
 	@Override

@@ -13,12 +13,16 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.vieth.pacman.Screens.GameScreen;
 
 public class Controller {
+    GameScreen screen;
     Viewport viewport;
     Stage stage;
     boolean upPressed, downPressed, leftPressed, rightPressed;
     OrthographicCamera gamecam;
+    private int tileSize;
 
-    public Controller(){
+    public Controller(GameScreen screen){
+        this.screen = screen;
+        this.tileSize = screen.map.tileSize;
         gamecam = new OrthographicCamera();
         viewport = new FitViewport(PacMan.V_WIDTH, PacMan.V_WIDTH, gamecam);
         stage = new Stage(viewport, PacMan.batch);
@@ -29,7 +33,7 @@ public class Controller {
 
         //Creating Up-Arrow
         Image upArrow = new Image(new Texture("UpArrow.png"));
-        upArrow.setSize(16, 16);
+        upArrow.setSize(tileSize*2, tileSize*2);
         upArrow.addListener(new InputListener(){
 
             @Override
@@ -46,7 +50,7 @@ public class Controller {
 
         //Creating Down-Arrow
         Image downArrow = new Image(new Texture("DownArrow.png"));
-        downArrow.setSize(16, 16 );
+        downArrow.setSize(tileSize*2, tileSize*2);
         downArrow.addListener(new InputListener(){
 
             @Override
@@ -63,7 +67,7 @@ public class Controller {
 
         //Creating Left-Arrow
         Image leftArrow = new Image(new Texture("LeftArrow.png"));
-        leftArrow.setSize(16, 16 );
+        leftArrow.setSize(tileSize*2, tileSize*2 );
         leftArrow.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -79,7 +83,7 @@ public class Controller {
 
         //Creating Right-Arrow
         Image rightArrow = new Image(new Texture("RightArrow.png"));
-        rightArrow.setSize(16, 16 );
+        rightArrow.setSize(tileSize*2, tileSize*2);
         rightArrow.addListener(new InputListener(){
 
             @Override

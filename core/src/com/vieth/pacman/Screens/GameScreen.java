@@ -63,7 +63,7 @@ public class GameScreen implements Screen {
         this.gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
 
         this.hud = new Hud(game.batch, this);
-        this.controller = new Controller();
+        this.controller = new Controller(this);
 
         this.pacman = new Player(map.tileSize, 17*map.tileSize, this, hud);
         this.blinky = new Enemy(map.tileSize, 40*map.tileSize, this, "blinky.png", Enemy.Difficulty.HARD);
@@ -161,7 +161,7 @@ public class GameScreen implements Screen {
         gamePort.update(width,height,false);
         gamePort.getCamera().position.set(map.mapWidth*map.tileSize/2f, map.mapHeight*map.tileSize/2f,0);
         gamePort.getCamera().update();
-        //controller.resize(width, height);
+        controller.resize(width, height);
     }
 
     @Override

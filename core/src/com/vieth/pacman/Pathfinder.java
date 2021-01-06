@@ -15,15 +15,13 @@ public class Pathfinder {
     private GameScreen screen;
     private int closedElements;
     private int tileSize;
-    public Map map;
 
 
     //A* Constructor
     public Pathfinder(GameScreen screen, Enemy hunter, Player prey, int tileSize){
         this.screen = screen;
         this.tileSize = tileSize;
-        this.map = new Map(screen.map.path, screen);
-        this.matrix = this.map.matrix;
+        this.matrix = screen.map.matrix;
         this.open = new Tile[(PacMan.V_WIDTH / this.tileSize) * (PacMan.V_HEIGHT / this.tileSize)];
         this.hunter = hunter;
         this.prey = prey;
@@ -39,20 +37,20 @@ public class Pathfinder {
                                 x,
                                 y,
                                 (int) this.prey.getXPosition()/this.tileSize,
-                                (int) (this.prey.getYPosition() - 16*this.tileSize) / this.tileSize)
+                                (int) (this.prey.getYPosition() - 15*this.tileSize) / this.tileSize)
                         );
             }
         }
         open[searchHunter()]
                 .setCost(0)
-                .setTotal(open[(((hunter.getYPosition() - 16*this.tileSize) / this.tileSize) * PacMan.V_WIDTH / this.tileSize) + hunter.getXPosition()].getHeuristics());
+                .setTotal(open[searchHunter()].getHeuristics());
         this.closed = new Tile[(PacMan.V_WIDTH / this.tileSize) * (PacMan.V_HEIGHT / this.tileSize)];
         this.closedElements = 0;
     }
 
     private int searchHunter(){
         int i = 0;
-        while(open[i] != map.getTile(hunter.getXPosition(), hunter.getYPosition())){
+        while(open[i] != screen.map.getTile(hunter.getXPosition(), hunter.getYPosition())){
             i++;
         }
         return i;
@@ -91,7 +89,7 @@ public class Pathfinder {
     private int aStarAlg(){
         Tile min = extractMinimum();
         closed[closedElements++] = min;
-        if(min == map.getTile(prey.getXPosition(), prey.getYPosition())) return 1;
+        if(min == screen.map.getTile(prey.getXPosition(), prey.getYPosition())) return 1;
         int x = min.getX() / tileSize;
         int y = min.getY() / tileSize;
         if(y < (PacMan.V_HEIGHT / tileSize) - 1) {
@@ -102,7 +100,7 @@ public class Pathfinder {
                 up.setPrev(min);
             }
         }
-        if(y > 16) {
+        if(y > 0) {
             Tile down = matrix[x][y - 1];
             if(down.getType() != Tile.Type.WALL && down.getCost() > min.getCost() + 1) {
                 down.setCost(min.getCost() + 1);
@@ -130,9 +128,9 @@ public class Pathfinder {
     }
 
     public Tile aStarResult(){
-        Tile temp = map.getTile(prey.getXPosition(), prey.getYPosition());
+        Tile temp = screen.map.getTile(prey.getXPosition(), prey.getYPosition());
         while(aStarAlg() == 0);
-        while(temp.getPrev() != map.getTile(hunter.getXPosition(), hunter.getYPosition())){
+        while(temp.getPrev() != screen.map.getTile(hunter.getXPosition(), hunter.getYPosition())){
             temp = temp.getPrev();
         }
         return temp;

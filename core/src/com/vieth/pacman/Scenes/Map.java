@@ -30,6 +30,7 @@ public class Map {
 
     public Tile matrix[][];
 
+
     public Map(String path, GameScreen screen){
         this.screen = screen;
         maploader = new TmxMapLoader();
@@ -91,7 +92,6 @@ public class Map {
                             }
                         }
                     }
-
                 }
             }
 

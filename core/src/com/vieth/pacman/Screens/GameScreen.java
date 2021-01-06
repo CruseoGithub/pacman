@@ -43,9 +43,10 @@ public class GameScreen implements Screen {
     public Controller controller;
     Player pacman;
     Enemy blinky;
-/*    Enemy clyde;
+/*  Enemy clyde;
     Enemy inky;
-    Enemy pinky;*/
+    Enemy pinky;
+*/
 
     private float tmpTimerAnimation = 0;
 
@@ -55,58 +56,26 @@ public class GameScreen implements Screen {
             Gdx.graphics.setWindowedMode(450, 800);
         }
         this.game = game;
-<<<<<<< HEAD
-        gamecam = new OrthographicCamera();
-        gamePort = new FitViewport(PacMan.V_WIDTH, PacMan.V_HEIGHT, gamecam);
-
-        hud = new Hud(game.batch);
-
-        maploader = new TmxMapLoader();
-        map = maploader.load("map.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map);
-        gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
-
-        TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(0);
-        TiledMapTileLayer layerDots = (TiledMapTileLayer)map.getLayers().get(1);
-        tileMatrix = new Tile[PacMan.V_WIDTH/8][PacMan.V_HEIGHT/8];
-        for(int x = 0; x < PacMan.V_WIDTH/8; x++){
-            for(int y = 0; y < PacMan.V_HEIGHT/8; y++){
-                if(layer.getCell(x, y) == null){
-                    tileMatrix[x][y] = new Tile(Tile.Type.PATH, ((x*8)), ((y*8)));
-                    if(layerDots.getCell(x,y) != null) tileMatrix[x][y].isDot = true;
-                }
-                else {
-                    tileMatrix[x][y] = new Tile(Tile.Type.WALL, ((x*8)), ((y*8)));
-                }
-            }
-        }
-=======
         this.gamecam = new OrthographicCamera();
-
         this.map = new Map("map5.tmx", this);
 
         this.gamePort = new FitViewport(map.mapWidth*map.tileSize, map.mapHeight*map.tileSize, gamecam);
         this.gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
->>>>>>> development_2
 
         this.hud = new Hud(game.batch, this);
         this.controller = new Controller();
 
-<<<<<<< HEAD
-        pacman = new Player(8, 136, this, hud);
-        blinky = new Enemy(128,232,this, "blinky.png", Enemy.Difficulty.HARD);
-/*        clyde = new Enemy(128,296,this, "clyde.png", Enemy.Difficulty.MEDIUM);
-        inky = new Enemy(200, 136, this, "inky.png", Enemy.Difficulty.EASY);
-        pinky = new Enemy(200, 360, this, "pinky.png", Enemy.Difficulty.EASY);*/
-=======
         this.pacman = new Player(map.tileSize, 17*map.tileSize, this, hud);
-        this.ghost = new Enemy(map.tileSize,40*map.tileSize,this);
->>>>>>> development_2
+        this.blinky = new Enemy(map.tileSize, 40*map.tileSize, this, "blinky.png", Enemy.Difficulty.HARD);
+/*        clyde = new Enemy(map.tileSize, 40*map.tileSize, this, "clyde.png", Enemy.Difficulty.MEDIUM);
+        inky = new Enemy(map.tileSize, 40*map.tileSize, this, "inky.png", Enemy.Difficulty.EASY);
+        pinky = new Enemy(map.tileSize, 40*map.tileSize, this, "pinky.png", Enemy.Difficulty.EASY);*/
     }
+
     @Override
     public void show() {
-
     }
+
     public void handleInput(float dt){
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || controller.isRightPressed()){
             pacman.nextdirection = Player.Direction.RIGHT;
@@ -121,8 +90,8 @@ public class GameScreen implements Screen {
             pacman.nextdirection = Player.Direction.DOWN;
         }
         pacman.move();
-
     }
+
     public void update(float dt){
         handleInput(dt);
 
@@ -130,6 +99,7 @@ public class GameScreen implements Screen {
 
         map.renderer.setView(gamecam);
     }
+
     @Override
     public void render(float delta) {
         update(delta);
@@ -137,7 +107,7 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        blinky.findNextDirection(tileMatrix, pacman);
+        blinky.findNextDirection(map.matrix, pacman);
         blinky.move();
 /*        clyde.findNextDirection(tileMatrix, pacman);
         clyde.move();
@@ -147,11 +117,11 @@ public class GameScreen implements Screen {
         pinky.move();*/
 
         //Animation alle 0.5 Sekunden
-        if((tmpTimerAnimation+0.5f) <= hud.time) {
-            if(pacman.texturePositionX == 0){
+        if ((tmpTimerAnimation + 0.5f) <= hud.time) {
+            if (pacman.texturePositionX == 0) {
                 pacman.texturePositionX = 96;
 
-            }else{
+            } else {
                 pacman.texturePositionX = 0;
             }
             tmpTimerAnimation = hud.time;
@@ -165,31 +135,24 @@ public class GameScreen implements Screen {
         /*game.batch.draw(pacman.texture,pacman.getXPosition(),pacman.getYPosition(),pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
                 map.tileSize,map.tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
                 pacman.texturePositionX,0,60,60,true,false);*/
-        game.batch.draw(pacman.texture,pacman.getXPosition(),pacman.getYPosition(),pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
-                map.tileSize,map.tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
-                pacman.texturePositionX,0,32,32,false,false);
+        game.batch.draw(pacman.texture, pacman.getXPosition(), pacman.getYPosition(), pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+                map.tileSize, map.tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
+                pacman.texturePositionX, 0, 32, 32, false, false);
 
-<<<<<<< HEAD
-        game.batch.draw(blinky.sprite, blinky.getXPosition() , blinky.getYPosition() , 10, 10);
-/*        game.batch.draw(clyde.sprite, clyde.getXPosition() , clyde.getYPosition() , 10, 10);
-        game.batch.draw(inky.sprite, inky.getXPosition() , inky.getYPosition() , 10, 10);
-        game.batch.draw(pinky.sprite, pinky.getXPosition() , pinky.getYPosition() , 10, 10); */
-=======
-        game.batch.draw(ghost.sprite, ghost.xPosition , ghost.yPosition , map.tileSize, map.tileSize);
->>>>>>> development_2
+
+        game.batch.draw(blinky.sprite, blinky.getXPosition(), blinky.getYPosition(), map.tileSize, map.tileSize);
+/*        game.batch.draw(clyde.sprite, clyde.getXPosition() , clyde.getYPosition() , map.tileSize, map.tileSize);
+        game.batch.draw(inky.sprite, inky.getXPosition() , inky.getYPosition() , map.tileSize, map.tileSize);
+        game.batch.draw(pinky.sprite, pinky.getXPosition() , pinky.getYPosition() , map.tileSize, map.tileSize); */
         game.batch.end();
 
         controller.draw();
 
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.time +=Gdx.graphics.getDeltaTime();
+        hud.time += Gdx.graphics.getDeltaTime();
         hud.update();
         hud.stage.draw();
-
-
-
-
     }
 
     @Override
@@ -202,22 +165,15 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() { }
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() { }
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() { }
 
     @Override
-    public void dispose() {
+    public void dispose() { }
 
-    }
 }

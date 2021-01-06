@@ -1,5 +1,7 @@
 package com.vieth.pacman;
 
+import com.vieth.pacman.Scenes.Map;
+import com.vieth.pacman.Screens.GameScreen;
 import com.vieth.pacman.Sprites.Enemy;
 import com.vieth.pacman.Sprites.Player;
 import com.vieth.pacman.Sprites.Tile;
@@ -10,36 +12,47 @@ public class Pathfinder {
     private Tile[] closed;
     private Enemy hunter;
     private Player prey;
+    private GameScreen screen;
     private int closedElements;
+    private int tileSize;
+    public Map map;
 
 
     //A* Constructor
-    public Pathfinder(Tile matrix[][], Enemy hunter, Player prey){
-        this.matrix = matrix;
-        this.open = new Tile[(PacMan.V_WIDTH / 8) * (PacMan.V_HEIGHT / 8)];
+    public Pathfinder(GameScreen screen, Enemy hunter, Player prey, int tileSize){
+        this.screen = screen;
+        this.tileSize = tileSize;
+        this.map = new Map(screen.map.path, screen);
+        this.matrix = this.map.matrix;
+        this.open = new Tile[(PacMan.V_WIDTH / this.tileSize) * (PacMan.V_HEIGHT / this.tileSize)];
         this.hunter = hunter;
         this.prey = prey;
         int i = 0;
-        for(int x = 0; x < PacMan.V_WIDTH / 8; x++){
-            for(int y = 0; y < PacMan.V_HEIGHT / 8; y++){
-                open[i] = matrix[x][y];
+        for(int x = 0; x < PacMan.V_WIDTH / this.tileSize; x++){
+            for(int y = 0; y < PacMan.V_HEIGHT / this.tileSize; y++){
+                open[i] = this.matrix[x][y];
                 open[i++]
                         .setCost(1000000)
                         .setTotal(1000000)
                         .setPrev(null)
-                        .setHeuristics(calcHeuristics(x, y, (int) this.prey.getXPosition() / 8, (int) (this.prey.getYPosition() - 128) / 8));
+                        .setHeuristics(calcHeuristics(
+                                x,
+                                y,
+                                (int) this.prey.getXPosition()/this.tileSize,
+                                (int) (this.prey.getYPosition() - 16*this.tileSize) / this.tileSize)
+                        );
             }
         }
         open[searchHunter()]
                 .setCost(0)
-                .setTotal(open[(((hunter.getYPosition() - 128) / 8) * PacMan.V_WIDTH / 8) + hunter.getXPosition()].getHeuristics());
-        this.closed = new Tile[(PacMan.V_WIDTH / 8) * (PacMan.V_HEIGHT / 8)];
+                .setTotal(open[(((hunter.getYPosition() - 16*this.tileSize) / this.tileSize) * PacMan.V_WIDTH / this.tileSize) + hunter.getXPosition()].getHeuristics());
+        this.closed = new Tile[(PacMan.V_WIDTH / this.tileSize) * (PacMan.V_HEIGHT / this.tileSize)];
         this.closedElements = 0;
     }
 
     private int searchHunter(){
         int i = 0;
-        while(open[i] != hunter.getCell()){
+        while(open[i] != map.getTile(hunter.getXPosition(), hunter.getYPosition())){
             i++;
         }
         return i;
@@ -75,22 +88,13 @@ public class Pathfinder {
         return copy;
     }
 
-    public Tile aStarResult(){
-        Tile temp = prey.getCell();
-        while(aStarAlg() == 0);
-        while(temp.getPrev() != hunter.getCell()){
-            temp = temp.getPrev();
-        }
-        return temp;
-    }
-
     private int aStarAlg(){
         Tile min = extractMinimum();
         closed[closedElements++] = min;
-        if(min == prey.getCell()) return 1;
-        int x = min.getX() / 8;
-        int y = min.getY() / 8;
-        if(y < (PacMan.V_HEIGHT / 8) - 1) {
+        if(min == map.getTile(prey.getXPosition(), prey.getYPosition())) return 1;
+        int x = min.getX() / tileSize;
+        int y = min.getY() / tileSize;
+        if(y < (PacMan.V_HEIGHT / tileSize) - 1) {
             Tile up = matrix[x][y + 1];
             if(up.getType() != Tile.Type.WALL && up.getCost() > min.getCost() + 1){
                 up.setCost(min.getCost() + 1);
@@ -114,7 +118,7 @@ public class Pathfinder {
                 left.setPrev(min);
             }
         }
-        if(x < (PacMan.V_WIDTH / 8) - 1) {
+        if(x < (PacMan.V_WIDTH / tileSize) - 1) {
             Tile right = matrix[x + 1][y];
             if(right.getType() != Tile.Type.WALL && right.getCost() > min.getCost() + 1) {
                 right.setCost(min.getCost() + 1);
@@ -125,19 +129,13 @@ public class Pathfinder {
         return 0;
     }
 
-    //Debugging Testmethode
-    public Enemy.Direction bestDirection(){
-        if( (Math.abs(hunter.getXPosition() - prey.getXPosition())) < 8 && (Math.abs(hunter.getYPosition() - prey.getYPosition())) < 8 ){
-            prey.die(hunter);
-            return Enemy.Direction.RIGHT;
+    public Tile aStarResult(){
+        Tile temp = map.getTile(prey.getXPosition(), prey.getYPosition());
+        while(aStarAlg() == 0);
+        while(temp.getPrev() != map.getTile(hunter.getXPosition(), hunter.getYPosition())){
+            temp = temp.getPrev();
         }
-        double up = calcHeuristics(hunter.getXPosition() / 8, ((hunter.getYPosition() - 128) / 8) + 8, prey.getXPosition() / 8, (prey.getYPosition() -128) / 8);
-        double down = calcHeuristics(hunter.getXPosition() / 8, ((hunter.getYPosition() - 128) /8) - 8, prey.getXPosition() / 8, (prey.getYPosition() - 128) / 8);
-        double left = calcHeuristics(hunter.getXPosition() / 8 - 8, (hunter.getYPosition() - 128) /8, prey.getXPosition() / 8, (prey.getYPosition() - 128) / 8);
-        double right = calcHeuristics(hunter.getXPosition() / 8 + 8, (hunter.getYPosition() -128) / 8, prey.getXPosition() / 8, (prey.getYPosition() - 128) / 8);
-        if(up <= down && up <= left && up <= right && hunter.getNextCell(Enemy.Direction.UP).type != Tile.Type.WALL) return Enemy.Direction.UP;
-        if(down <= up && down <= left && down <= right && hunter.getNextCell(Enemy.Direction.DOWN).type != Tile.Type.WALL) return Enemy.Direction.DOWN;
-        if(left <= up && left <= down && left <= right && hunter.getNextCell(Enemy.Direction.LEFT).type != Tile.Type.WALL) return Enemy.Direction.LEFT;
-        else return Enemy.Direction.RIGHT;
+        return temp;
     }
+
 }

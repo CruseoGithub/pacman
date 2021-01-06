@@ -94,10 +94,9 @@ public class Map {
                     }
                 }
             }
-
         }
-
     }
+
     public TextureRegion createTextureRegion(Tile.Type type){
         TextureRegion region = null;
         if(path.equals("map.tmx")){
@@ -150,7 +149,6 @@ public class Map {
             case DOWN:
                 nextCellY = (int) ((yPosition-tileSize) / tileSize);
                 break;
-
         }
         return matrix[nextCellX][nextCellY];
     }
@@ -165,8 +163,8 @@ public class Map {
             screen.hud.update();
 
             layerCollect.setCell(
-                    tile.x/tileSize,
-                    tile.y/tileSize,
+                    tile.getX()/tileSize,
+                    tile.getY()/tileSize,
                     null
             );
             tile.isDot = false;

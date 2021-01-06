@@ -1,7 +1,6 @@
-package com.vieth.pacman.Sprites;
+package uas.lntv.pacmangame.Scenes;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 
 public class Tile extends StaticTiledMapTile {
@@ -57,3 +56,4 @@ public class Tile extends StaticTiledMapTile {
     }
 
 }
+

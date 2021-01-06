@@ -1,4 +1,4 @@
-package com.vieth.pacman.Screens;
+package uas.lntv.pacmangame.Screens;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -6,33 +6,19 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.viewport.*;
-import com.vieth.pacman.Controller;
-import com.vieth.pacman.Scenes.Hud;
-import com.vieth.pacman.PacMan;
-import com.vieth.pacman.Scenes.Map;
-import com.vieth.pacman.Sprites.Player;
-import com.vieth.pacman.Sprites.Tile;
-import com.vieth.pacman.Sprites.Enemy;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
+import uas.lntv.pacmangame.PacManGame;
+import uas.lntv.pacmangame.Scenes.Controller;
+import uas.lntv.pacmangame.Scenes.Hud;
+import uas.lntv.pacmangame.Scenes.Map;
+import uas.lntv.pacmangame.Sprites.Actor;
+import uas.lntv.pacmangame.Sprites.Enemy;
+import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class GameScreen implements Screen {
-    private PacMan game;
+    private PacManGame game;
     private OrthographicCamera gamecam;
     private Viewport gamePort;
 
@@ -40,12 +26,12 @@ public class GameScreen implements Screen {
     public Hud hud;
     public Controller controller;
 
-    Player pacman;
+    PacMan pacman;
     Enemy ghost;
 
     private float tmpTimerAnimation = 0;
 
-    public GameScreen(PacMan game){
+    public GameScreen(PacManGame game){
         //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
         if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
             Gdx.graphics.setWindowedMode(450, 800);
@@ -59,9 +45,10 @@ public class GameScreen implements Screen {
         this.gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
 
         this.hud = new Hud(game.batch, this);
-        this.controller = new Controller();
+        this.controller = new Controller(this);
 
-        this.pacman = new Player(map.tileSize, 17*map.tileSize, this, hud);
+
+        this.pacman = new PacMan(map.tileSize, 17*map.tileSize, this, hud);
         this.ghost = new Enemy(map.tileSize,40*map.tileSize,this);
     }
     @Override
@@ -70,16 +57,16 @@ public class GameScreen implements Screen {
     }
     public void handleInput(float dt){
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || controller.isRightPressed()){
-            pacman.nextdirection = Player.Direction.RIGHT;
+            pacman.nextdirection = Actor.Direction.RIGHT;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || controller.isLeftPressed()){
-            pacman.nextdirection = Player.Direction.LEFT;
+            pacman.nextdirection = Actor.Direction.LEFT;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.UP) || controller.isUpPressed()){
-            pacman.nextdirection = Player.Direction.UP;
+            pacman.nextdirection = Actor.Direction.UP;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN) || controller.isDownPressed()){
-            pacman.nextdirection = Player.Direction.DOWN;
+            pacman.nextdirection = Actor.Direction.DOWN;
         }
         pacman.move();
 
@@ -166,6 +153,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        hud.dispose();
+        map.dispose();
+        controller.dispose();
     }
 }

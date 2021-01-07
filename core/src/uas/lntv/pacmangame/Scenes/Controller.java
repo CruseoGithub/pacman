@@ -1,4 +1,4 @@
-package com.vieth.pacman;
+package uas.lntv.pacmangame.Scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,7 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.vieth.pacman.Screens.GameScreen;
+
+import uas.lntv.pacmangame.PacManGame;
+import uas.lntv.pacmangame.Screens.GameScreen;
+import uas.lntv.pacmangame.Screens.MapScreen;
 
 public class Controller {
     GameScreen screen;
@@ -20,12 +23,18 @@ public class Controller {
     OrthographicCamera gamecam;
     private int tileSize;
 
+<<<<<<< HEAD:core/src/com/vieth/pacman/Controller.java
     public Controller(GameScreen screen){
         this.screen = screen;
         this.tileSize = screen.map.tileSize;
+=======
+    public Controller(MapScreen screen){
+>>>>>>> development_2:core/src/uas/lntv/pacmangame/Scenes/Controller.java
         gamecam = new OrthographicCamera();
-        viewport = new FitViewport(PacMan.V_WIDTH, PacMan.V_WIDTH, gamecam);
-        stage = new Stage(viewport, PacMan.batch);
+        viewport = new FitViewport(screen.map.mapWidth*screen.map.tileSize,
+                screen.map.mapHeight*screen.map.tileSize,
+                (new OrthographicCamera()));
+        stage = new Stage(viewport, PacManGame.batch);
         Gdx.input.setInputProcessor(stage);
 
         Table table = new Table();
@@ -112,6 +121,9 @@ public class Controller {
 
         stage.addActor(table);
     }
+    public void dispose(){
+        stage.dispose();
+    }
 
     public void draw(){
         stage.draw();
@@ -137,3 +149,4 @@ public class Controller {
         viewport.update(width, height);
     }
 }
+

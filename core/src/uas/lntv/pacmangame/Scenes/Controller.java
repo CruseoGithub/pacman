@@ -16,20 +16,16 @@ import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
 public class Controller {
-    GameScreen screen;
+    MapScreen screen;
     Viewport viewport;
     Stage stage;
     boolean upPressed, downPressed, leftPressed, rightPressed;
     OrthographicCamera gamecam;
     private int tileSize;
 
-<<<<<<< HEAD:core/src/com/vieth/pacman/Controller.java
-    public Controller(GameScreen screen){
+    public Controller(MapScreen screen){
         this.screen = screen;
         this.tileSize = screen.map.tileSize;
-=======
-    public Controller(MapScreen screen){
->>>>>>> development_2:core/src/uas/lntv/pacmangame/Scenes/Controller.java
         gamecam = new OrthographicCamera();
         viewport = new FitViewport(screen.map.mapWidth*screen.map.tileSize,
                 screen.map.mapHeight*screen.map.tileSize,

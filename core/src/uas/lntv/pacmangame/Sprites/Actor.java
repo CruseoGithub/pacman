@@ -6,15 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.Random;
 
-<<<<<<< HEAD:core/src/com/vieth/pacman/Sprites/Player.java
-public class Player extends Sprite {
-    public enum Direction {
-            RIGHT, LEFT, UP, DOWN;
-            public static Direction getRandomDirection(){
-                Random random = new Random();
-                return values()[random.nextInt(values().length)];
-            }
-=======
+
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
@@ -26,7 +18,6 @@ public abstract class Actor {
             Random random = new Random();
             return values()[random.nextInt(values().length)];
         }
->>>>>>> development_2:core/src/uas/lntv/pacmangame/Sprites/Actor.java
     };
     public enum State {
         RUNNING, STOPPING, EATING, DIEING
@@ -79,21 +70,12 @@ public abstract class Actor {
         this.tileSize = screen.map.tileSize;
         this.screen = screen;
     }
-
-<<<<<<< HEAD:core/src/com/vieth/pacman/Sprites/Player.java
-    public void move(){
-=======
     public void move() {
         //if(xPosition >= 8 && xPosition <= 208){
->>>>>>> development_2:core/src/uas/lntv/pacmangame/Sprites/Actor.java
         if(xPosition >= tileSize && xPosition <= 26*tileSize){
             prevdirection = direction;
             if(nextdirection != direction && screen.map.getTile(xPosition, yPosition, nextdirection).type != Tile.Type.WALL){
                 if(xPosition == screen.map.getTile(xPosition, yPosition).getX() && yPosition == screen.map.getTile(xPosition, yPosition).getY()){
-<<<<<<< HEAD:core/src/com/vieth/pacman/Sprites/Player.java
-=======
-
->>>>>>> development_2:core/src/uas/lntv/pacmangame/Sprites/Actor.java
                     direction = nextdirection;
                 }
             }
@@ -109,13 +91,7 @@ public abstract class Actor {
                     break;
                 case LEFT:
                     if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL) {
-<<<<<<< HEAD:core/src/com/vieth/pacman/Sprites/Player.java
-                        if(xPosition > screen.map.getTile(xPosition, yPosition).getX()) {
-                            xPosition--;
-                        }
-=======
                         if(xPosition > screen.map.getTile(xPosition, yPosition).getX()) xPosition-=speed;
->>>>>>> development_2:core/src/uas/lntv/pacmangame/Sprites/Actor.java
                     }else{
                         if(prevdirection != direction) this.rotation = 180;
                         xPosition-=speed;
@@ -129,42 +105,17 @@ public abstract class Actor {
                     break;
                 case DOWN:
                     if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL){
-<<<<<<< HEAD:core/src/com/vieth/pacman/Sprites/Player.java
-                        if(yPosition > screen.map.getTile(xPosition, yPosition).getY()) {
-                            yPosition--;
-                        }
-                    }else{
-                        if(prevdirection != direction) this.rotation = 270;
-                        yPosition--;
-=======
                         if(yPosition > screen.map.getTile(xPosition, yPosition).getY()) yPosition-=speed;
                     }else{
                         if(prevdirection != direction) this.rotation =270;
                         yPosition-=speed;
->>>>>>> development_2:core/src/uas/lntv/pacmangame/Sprites/Actor.java
                     }
                     break;
             }
         }else{
-<<<<<<< HEAD:core/src/com/vieth/pacman/Sprites/Player.java
-            if(xPosition < tileSize) xPosition = (((26*tileSize)-1));
-            if(xPosition > (26*tileSize)) xPosition = tileSize+1;
-        }
-
-    }
-
-    public void die(Enemy killer){
-        xPosition = tileSize;
-        yPosition = 17*tileSize;
-        killer.setXPosition(tileSize);
-        killer.setYPosition(40*tileSize);
-        if(hud.lives>0) hud.lives--;
-        //else {};
-=======
             if(xPosition <= tileSize) xPosition = (((26*tileSize)-speed));
             if(xPosition >= (26*tileSize)) xPosition = tileSize;
         }
->>>>>>> development_2:core/src/uas/lntv/pacmangame/Sprites/Actor.java
     }
     public abstract void die();
 }

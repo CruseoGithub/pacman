@@ -9,6 +9,7 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class MenuScreen extends MapScreen {
+
     public MenuScreen(PacManGame game, String mapPath){
         super(game, mapPath, Type.MENU);
 
@@ -17,6 +18,7 @@ public class MenuScreen extends MapScreen {
         this.ghost = new Enemy(16*map.tileSize,23*map.tileSize,this, Enemy.Difficulty.MEDIUM);
         this.hud = new Hud(game.batch, this, false); //Not Visable
     }
+
     @Override
     public void render(float delta) {
         update(delta);

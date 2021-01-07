@@ -49,7 +49,7 @@ public class GameScreen implements Screen {
 
 
         this.pacman = new PacMan(map.tileSize, 17*map.tileSize, this, hud);
-        this.ghost = new Enemy(map.tileSize,40*map.tileSize,this);
+        this.ghost = new Enemy(map.tileSize,40*map.tileSize,this, Enemy.Difficulty.HARD);
     }
     @Override
     public void show() {
@@ -85,7 +85,7 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        ghost.nextdirection = ghost.findNextDirection(pacman);
+        ghost.findNextDirection(map.matrix, pacman);
         ghost.move();
 
         //Animation alle 0.5 Sekunden

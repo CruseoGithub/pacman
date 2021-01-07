@@ -5,12 +5,18 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
+import java.util.Random;
+
 import uas.lntv.pacmangame.Scenes.Tile;
 import uas.lntv.pacmangame.Screens.GameScreen;
 
 public abstract class Actor {
     public enum Direction {
-        RIGHT, LEFT, UP, DOWN
+        RIGHT, LEFT, UP, DOWN;
+        public static Direction getRandomDirection(){
+            Random random = new Random();
+            return values()[random.nextInt(values().length)];
+        }
     };
     public enum State {
         RUNNING, STOPPING, EATING, DIEING
@@ -18,12 +24,6 @@ public abstract class Actor {
 
     public int xPosition;
     public int yPosition;
-    public int getXPosition() {
-        return xPosition;
-    }
-    public int getYPosition() {
-        return yPosition;
-    }
 
     protected int tileSize;
     public float rotation;
@@ -40,6 +40,19 @@ public abstract class Actor {
     public Texture texture;
     protected GameScreen screen;
 
+    public int getXPosition() {
+        return xPosition;
+    }
+    public void setXPosition(int xPosition) {
+        this.xPosition = xPosition;
+    }
+    public int getYPosition() {
+        return yPosition;
+    }
+    public void setYPosition(int yPosition) {
+        this.yPosition = yPosition;
+    }
+
     public Actor(int initX, int initY, GameScreen screen){
         this.direction = Direction.RIGHT;
         this.nextdirection = Direction.RIGHT;
@@ -51,12 +64,13 @@ public abstract class Actor {
         this.tileSize = screen.map.tileSize;
         this.screen = screen;
     }
+
     public void move() {
         //if(xPosition >= 8 && xPosition <= 208){
         if(xPosition >= tileSize && xPosition <= 26*tileSize){
             prevdirection = direction;
             if(nextdirection != direction && screen.map.getTile(xPosition, yPosition, nextdirection).type != Tile.Type.WALL){
-                if(xPosition == screen.map.getTile(xPosition, yPosition).x && yPosition == screen.map.getTile(xPosition, yPosition).y){
+                if(xPosition == screen.map.getTile(xPosition, yPosition).getX() && yPosition == screen.map.getTile(xPosition, yPosition).getY()){
 
                     direction = nextdirection;
                 }
@@ -73,7 +87,7 @@ public abstract class Actor {
                     break;
                 case LEFT:
                     if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL) {
-                        if(xPosition > screen.map.getTile(xPosition, yPosition).x) xPosition--;
+                        if(xPosition > screen.map.getTile(xPosition, yPosition).getX()) xPosition--;
                     }else{
                         if(prevdirection != direction) this.rotation = 180;
                         xPosition--;
@@ -87,7 +101,7 @@ public abstract class Actor {
                     break;
                 case DOWN:
                     if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL){
-                        if(yPosition > screen.map.getTile(xPosition, yPosition).y) yPosition--;
+                        if(yPosition > screen.map.getTile(xPosition, yPosition).getY()) yPosition--;
                     }else{
                         if(prevdirection != direction) this.rotation =270;
                         yPosition--;

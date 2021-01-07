@@ -172,8 +172,8 @@ public class Map {
                 screen.hud.update();
 
                 layerCollect.setCell(
-                        tile.x/tileSize,
-                        tile.y/tileSize,
+                        tile.getX()/tileSize,
+                        tile.getY()/tileSize,
                         null
                 );
                 tile.isDot = false;

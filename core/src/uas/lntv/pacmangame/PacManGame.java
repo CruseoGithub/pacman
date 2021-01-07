@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import uas.lntv.pacmangame.Screens.GameScreen;
 
 public class PacManGame extends Game {
+
 	public static SpriteBatch batch;
 	private GameScreen gameScreen;
 	@Override

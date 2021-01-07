@@ -26,8 +26,8 @@ public class PacMan extends Actor {
 
     @Override
     public void die() {
-        xPosition = tileSize;
-        yPosition = 17*tileSize;
+        this.setXPosition(tileSize);
+        this.setYPosition(17*tileSize);
         if(hud.lives>0) hud.lives--;
         //else {};
     }

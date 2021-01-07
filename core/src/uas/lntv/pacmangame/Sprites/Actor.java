@@ -27,6 +27,8 @@ public abstract class Actor {
 
     protected int tileSize;
     public float rotation;
+
+    private int speed;
     public int texturePositionX;
 
     public Direction direction;
@@ -40,6 +42,8 @@ public abstract class Actor {
     public Texture texture;
     protected GameScreen screen;
 
+    public int getSpeed() { return speed; }
+    public void setSpeed(int speed) { this.speed = speed; }
     public int getXPosition() {
         return xPosition;
     }
@@ -61,6 +65,7 @@ public abstract class Actor {
         this.xPosition = initX;
         this.yPosition = initY;
         this.rotation = 0;
+        this.speed = 2; // Values can be {0 == Stop , 1, 2 == Default, 4, 8, 16}
         this.tileSize = screen.map.tileSize;
         this.screen = screen;
     }
@@ -82,35 +87,35 @@ public abstract class Actor {
                 case RIGHT:
                     if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL) {
                         if(prevdirection != direction) this.rotation = 0;
-                        xPosition++;
+                        xPosition+=speed;
                     }
                     break;
                 case LEFT:
                     if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL) {
-                        if(xPosition > screen.map.getTile(xPosition, yPosition).getX()) xPosition--;
+                        if(xPosition > screen.map.getTile(xPosition, yPosition).getX()) xPosition-=speed;
                     }else{
                         if(prevdirection != direction) this.rotation = 180;
-                        xPosition--;
+                        xPosition-=speed;
                     }
                     break;
                 case UP:
                     if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL){
                         if(prevdirection != direction) this.rotation = 90;
-                        yPosition++;
+                        yPosition+=speed;
                     }
                     break;
                 case DOWN:
                     if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL){
-                        if(yPosition > screen.map.getTile(xPosition, yPosition).getY()) yPosition--;
+                        if(yPosition > screen.map.getTile(xPosition, yPosition).getY()) yPosition-=speed;
                     }else{
                         if(prevdirection != direction) this.rotation =270;
-                        yPosition--;
+                        yPosition-=speed;
                     }
                     break;
             }
         }else{
-            if(xPosition <= tileSize) xPosition = (((26*tileSize)-1));
-            if(xPosition >= (26*tileSize)) xPosition = tileSize+1;
+            if(xPosition <= tileSize) xPosition = (((26*tileSize)-speed));
+            if(xPosition >= (26*tileSize)) xPosition = tileSize;
         }
     }
     public abstract void die();

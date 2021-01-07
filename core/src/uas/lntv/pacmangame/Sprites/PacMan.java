@@ -6,10 +6,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Screens.GameScreen;
+import uas.lntv.pacmangame.Screens.MapScreen;
 
 public class PacMan extends Actor {
     Hud hud;
-    public PacMan(int initX, int initY, GameScreen screen, Hud hud){
+    public PacMan(int initX, int initY, MapScreen screen, Hud hud){
         super(initX, initY, screen);
         this.texture = new Texture("pacman32.png");
         region = new TextureRegion(texture);

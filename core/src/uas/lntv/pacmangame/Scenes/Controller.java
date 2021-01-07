@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
+import uas.lntv.pacmangame.Screens.MapScreen;
 
 public class Controller {
     Viewport viewport;
@@ -20,7 +21,7 @@ public class Controller {
     boolean upPressed, downPressed, leftPressed, rightPressed;
     OrthographicCamera gamecam;
 
-    public Controller(GameScreen screen){
+    public Controller(MapScreen screen){
         gamecam = new OrthographicCamera();
         viewport = new FitViewport(screen.map.mapWidth*screen.map.tileSize,
                 screen.map.mapHeight*screen.map.tileSize,

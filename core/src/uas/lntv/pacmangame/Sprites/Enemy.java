@@ -2,11 +2,11 @@ package uas.lntv.pacmangame.Sprites;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import uas.lntv.pacmangame.AI.Pathfinder;
-import uas.lntv.pacmangame.Scenes.Tile;
+import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Screens.GameScreen;
+import uas.lntv.pacmangame.Screens.MapScreen;
 
 public class Enemy extends Actor {
     public enum Difficulty{
@@ -16,7 +16,7 @@ public class Enemy extends Actor {
     private Pathfinder aStar;
     private Difficulty difficulty;
 
-    public Enemy(int initX, int initY, GameScreen screen, Difficulty difficulty){
+    public Enemy(int initX, int initY, MapScreen screen, Difficulty difficulty){
         super(initX, initY, screen);
         this.texture = new Texture("enemies.png");
         this.sprite = new Sprite(texture,0, 0, 200,200);

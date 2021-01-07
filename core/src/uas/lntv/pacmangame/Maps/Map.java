@@ -1,18 +1,16 @@
-package uas.lntv.pacmangame.Scenes;
+package uas.lntv.pacmangame.Maps;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 
-public class Map {
-        GameScreen screen;
+public abstract class Map {
+
         private TmxMapLoader maploader;
         private TiledMap tmxMap;
         public OrthogonalTiledMapRenderer renderer;
@@ -33,8 +31,7 @@ public class Map {
         public Tile matrix[][];
 
 
-        public Map(String path, GameScreen screen){
-            this.screen = screen;
+        public Map(String path){
             maploader = new TmxMapLoader();
             tmxMap = maploader.load(path);
             tmxControl = maploader.load("controller.tmx");
@@ -56,7 +53,7 @@ public class Map {
             matrix = new Tile[mapWidth][mapHeight];
             this.path = path;
             generateScreenMap();
-            generateDots(150);
+
         }
 
 
@@ -80,31 +77,7 @@ public class Map {
             }
         }
 
-        private void generateDots(int total_Dots){
-            while(total_Dots > 0){
-                for(int x = 0; x < mapWidth; x++){
-                    for(int y = 0; y < mapHeight; y++){
-                        if(layerWall.getCell(x, y) == null && total_Dots>0){
-                            if(layerPath.getCell(x,y) != null & !matrix[x][y].isDot && x>0 && x<(mapWidth-2)){ //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
-                                int max = 1;
-                                int min = 0;
-                                int random = (int) (Math.random() * (max - min + 1) + min); // random ist entweder 0 oder 1
-                                if(random > 0){
-                                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                                    TiledMapTile t = new Tile(createTextureRegion(Tile.Type.DOT));
-                                    cell.setTile(t);
-                                    layerCollect.setCell(x,y, cell);
-                                    matrix[x][y].isDot = true;
-                                    total_Dots--;
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-
-        }
+        public abstract void generateDots(int total_Dots);
         public TextureRegion createTextureRegion(Tile.Type type){
             TextureRegion region = null;
             if(path.equals("map.tmx")){
@@ -166,19 +139,7 @@ public class Map {
             tile.type = type;
         }
 
-        public void collect(Tile tile){
-            if(tile.isDot){
-                screen.hud.score++;
-                screen.hud.update();
-
-                layerCollect.setCell(
-                        tile.getX()/tileSize,
-                        tile.getY()/tileSize,
-                        null
-                );
-                tile.isDot = false;
-            }
-        }
+        public abstract void collect(Tile tile);
         public void dispose(){
 
             tmxMap.dispose();

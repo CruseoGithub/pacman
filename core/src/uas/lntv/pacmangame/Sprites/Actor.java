@@ -3,12 +3,12 @@ package uas.lntv.pacmangame.Sprites;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 import java.util.Random;
 
-import uas.lntv.pacmangame.Scenes.Tile;
+import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Screens.GameScreen;
+import uas.lntv.pacmangame.Screens.MapScreen;
 
 public abstract class Actor {
     public enum Direction {
@@ -40,7 +40,7 @@ public abstract class Actor {
     public Sprite sprite;
     public TextureRegion region;
     public Texture texture;
-    protected GameScreen screen;
+    protected MapScreen screen;
 
     public int getSpeed() { return speed; }
     public void setSpeed(int speed) { this.speed = speed; }
@@ -57,7 +57,7 @@ public abstract class Actor {
         this.yPosition = yPosition;
     }
 
-    public Actor(int initX, int initY, GameScreen screen){
+    public Actor(int initX, int initY, MapScreen screen){
         this.direction = Direction.RIGHT;
         this.nextdirection = Direction.RIGHT;
         this.prevdirection = Direction.RIGHT;

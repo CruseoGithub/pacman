@@ -1,8 +1,8 @@
 package uas.lntv.pacmangame.AI;
 
-import uas.lntv.pacmangame.PacManGame;
-import uas.lntv.pacmangame.Scenes.Tile;
+import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Screens.GameScreen;
+import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 
 public class Pathfinder {
@@ -11,13 +11,13 @@ public class Pathfinder {
     private Tile[] closed;
     private Actor hunter;
     private Actor prey;
-    private GameScreen screen;
+    private MapScreen screen;
     private int closedElements;
     private int tileSize;
 
 
     //A* Constructor
-    public Pathfinder(GameScreen screen, Actor hunter, Actor prey, int tileSize){
+    public Pathfinder(MapScreen screen, Actor hunter, Actor prey, int tileSize){
         this.screen = screen;
         this.tileSize = tileSize;
         this.matrix = screen.map.matrix;

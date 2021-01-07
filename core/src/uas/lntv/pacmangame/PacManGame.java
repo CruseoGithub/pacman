@@ -8,16 +8,19 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import uas.lntv.pacmangame.Screens.GameScreen;
+import uas.lntv.pacmangame.Screens.MenuScreen;
 
 public class PacManGame extends Game {
 
 	public static SpriteBatch batch;
-	private GameScreen gameScreen;
+	public GameScreen gameScreen;
+	public MenuScreen menuScreen;
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		gameScreen = new GameScreen(this);
-		setScreen(gameScreen);
+		gameScreen = new GameScreen(this, "map5.tmx");
+		menuScreen = new MenuScreen(this, "mainMenu.tmx");
+		setScreen(menuScreen);
 	}
 
 	@Override

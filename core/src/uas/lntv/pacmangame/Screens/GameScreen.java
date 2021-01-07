@@ -11,73 +11,26 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Controller;
+import uas.lntv.pacmangame.Maps.GameMap;
 import uas.lntv.pacmangame.Scenes.Hud;
-import uas.lntv.pacmangame.Scenes.Map;
+import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
-public class GameScreen implements Screen {
-    private PacManGame game;
-    private OrthographicCamera gamecam;
-    private Viewport gamePort;
+public class GameScreen extends MapScreen {
 
-    public Map map;
-    public Hud hud;
     public Controller controller;
 
-    PacMan pacman;
-    Enemy ghost;
+    public GameScreen(PacManGame game, String mapPath) {
+        super(game, mapPath, Type.GAME);
 
-    private float tmpTimerAnimation = 0;
+        this.hud = new Hud(game.batch, this, true);
 
-    public GameScreen(PacManGame game){
-        //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
-        if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
-            Gdx.graphics.setWindowedMode(450, 800);
-        }
-        this.game = game;
-        this.gamecam = new OrthographicCamera();
-
-        this.map = new Map("map5.tmx", this);
-
-        this.gamePort = new FitViewport(map.mapWidth*map.tileSize, map.mapHeight*map.tileSize, gamecam);
-        this.gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
-
-        this.hud = new Hud(game.batch, this);
-        this.controller = new Controller(this);
-
-
-        this.pacman = new PacMan(map.tileSize, 17*map.tileSize, this, hud);
-        this.ghost = new Enemy(map.tileSize,40*map.tileSize,this, Enemy.Difficulty.HARD);
+        this.pacman = new PacMan(map.tileSize, 17 * map.tileSize, this, hud);
+        this.ghost = new Enemy(map.tileSize, 40 * map.tileSize, this, Enemy.Difficulty.HARD);
     }
-    @Override
-    public void show() {
 
-    }
-    public void handleInput(float dt){
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || controller.isRightPressed()){
-            pacman.nextdirection = Actor.Direction.RIGHT;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || controller.isLeftPressed()){
-            pacman.nextdirection = Actor.Direction.LEFT;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.UP) || controller.isUpPressed()){
-            pacman.nextdirection = Actor.Direction.UP;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN) || controller.isDownPressed()){
-            pacman.nextdirection = Actor.Direction.DOWN;
-        }
-        pacman.move();
-
-    }
-    public void update(float dt){
-        handleInput(dt);
-
-        gamecam.update();
-
-        map.renderer.setView(gamecam);
-    }
     @Override
     public void render(float delta) {
         update(delta);
@@ -89,11 +42,11 @@ public class GameScreen implements Screen {
         ghost.move();
 
         //Animation alle 0.5 Sekunden
-        if((tmpTimerAnimation+0.5f) <= hud.time) {
-            if(pacman.texturePositionX == 0){
+        if ((tmpTimerAnimation + 0.5f) <= hud.time) {
+            if (pacman.texturePositionX == 0) {
                 pacman.texturePositionX = 96;
 
-            }else{
+            } else {
                 pacman.texturePositionX = 0;
             }
             tmpTimerAnimation = hud.time;
@@ -107,54 +60,20 @@ public class GameScreen implements Screen {
         /*game.batch.draw(pacman.texture,pacman.getXPosition(),pacman.getYPosition(),pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
                 map.tileSize,map.tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
                 pacman.texturePositionX,0,60,60,true,false);*/
-        game.batch.draw(pacman.texture,pacman.getXPosition(),pacman.getYPosition(),pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
-                map.tileSize,map.tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
-                pacman.texturePositionX,0,32,32,false,false);
+        game.batch.draw(pacman.texture, pacman.getXPosition(), pacman.getYPosition(), pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+                map.tileSize, map.tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
+                pacman.texturePositionX, 0, 32, 32, false, false);
 
-        game.batch.draw(ghost.sprite, ghost.xPosition , ghost.yPosition , map.tileSize, map.tileSize);
+        game.batch.draw(ghost.sprite, ghost.xPosition, ghost.yPosition, map.tileSize, map.tileSize);
         game.batch.end();
 
-        controller.draw();
 
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.time +=Gdx.graphics.getDeltaTime();
+        hud.time += Gdx.graphics.getDeltaTime();
         hud.update();
         hud.stage.draw();
 
 
-
-
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        //gamePort.update(width, height);
-        gamePort.update(width,height,false);
-        gamePort.getCamera().position.set(map.mapWidth*map.tileSize/2f, map.mapHeight*map.tileSize/2f,0);
-        gamePort.getCamera().update();
-        //controller.resize(width, height);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-        hud.dispose();
-        map.dispose();
-        controller.dispose();
     }
 }

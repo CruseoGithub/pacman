@@ -21,6 +21,10 @@ public class Map {
         public TiledMapTileLayer layerPath;
         public TiledMapTileLayer layerCollect;
 
+        private TiledMap tmxControl;
+        public TiledMapTileLayer layerControlButton;
+        //public TiledMapObjectL layerControlTouch;
+
         public int mapWidth;
         public int mapHeight;
         public int tileSize;
@@ -33,6 +37,7 @@ public class Map {
             this.screen = screen;
             maploader = new TmxMapLoader();
             tmxMap = maploader.load(path);
+            tmxControl = maploader.load("controller.tmx");
             renderer = new OrthogonalTiledMapRenderer(tmxMap);
 
             mapWidth = Integer.parseInt(tmxMap.getProperties().get("width").toString());
@@ -42,6 +47,10 @@ public class Map {
             layerWall = (TiledMapTileLayer)tmxMap.getLayers().get("Walls");
             layerPath = (TiledMapTileLayer)tmxMap.getLayers().get("Path");
             layerCollect = (TiledMapTileLayer)tmxMap.getLayers().get("Collectables");
+            layerControlButton = (TiledMapTileLayer)tmxControl.getLayers().get("ControllerButtons");
+            //layerControlTouch = (TiledMapTileLayer)tmxControl.getLayers().get("ControllerTouch");
+            tmxMap.getLayers().add(layerControlButton);
+            //tmxMap.getLayers().add(layerControlTouch);
 
             //layerPath.setOpacity(0.5f);
             matrix = new Tile[mapWidth][mapHeight];

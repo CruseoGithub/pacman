@@ -32,4 +32,11 @@ public class PacMan extends Actor {
         if(hud.lives > 0) hud.lives--;
         //else {};
     }
+
+    @Override
+    public void move(){
+        super.move();
+        screen.map.collect(screen.map.getTile(xPosition, yPosition)); //Dots einsammeln
+    }
+
 }

@@ -53,7 +53,6 @@ public abstract class Map {
             matrix = new Tile[mapWidth][mapHeight];
             this.path = path;
             generateScreenMap();
-
         }
 
 

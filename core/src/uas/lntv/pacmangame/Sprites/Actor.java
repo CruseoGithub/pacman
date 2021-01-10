@@ -80,8 +80,6 @@ public abstract class Actor {
                 }
             }
 
-            screen.map.collect(screen.map.getTile(xPosition, yPosition)); //Dots einsammeln
-
             switch (direction) {
                 case RIGHT:
                     if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL) {

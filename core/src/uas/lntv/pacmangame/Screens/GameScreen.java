@@ -19,8 +19,7 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class GameScreen extends MapScreen {
-
-    public Controller controller;
+    private Controller controller;
 
     public GameScreen(PacManGame game, String mapPath) {
         super(game, mapPath, Type.GAME);
@@ -29,6 +28,8 @@ public class GameScreen extends MapScreen {
 
         this.pacman = new PacMan(map.tileSize, 17 * map.tileSize, this, hud);
         this.ghost = new Enemy(map.tileSize, 40 * map.tileSize, this, Enemy.Difficulty.HARD);
+
+        this.controller = new Controller(this);
     }
 
     @Override
@@ -73,7 +74,6 @@ public class GameScreen extends MapScreen {
         hud.time += Gdx.graphics.getDeltaTime();
         hud.update();
         hud.stage.draw();
-
 
     }
 }

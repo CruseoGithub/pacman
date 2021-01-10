@@ -29,7 +29,7 @@ public class PacMan extends Actor {
     public void die() {
         this.setXPosition(tileSize);
         this.setYPosition(17*tileSize);
-        if(hud.lives>0) hud.lives--;
+        if(hud.lives > 0) hud.lives--;
         //else {};
     }
 }

@@ -20,7 +20,12 @@ public abstract class Map {
         public TiledMapTileLayer layerCollect;
 
         private TiledMap tmxControl;
-        public TiledMapTileLayer layerControlButton;
+        public TiledMapTileLayer layerControlBlack;
+        public TiledMapTileLayer layerControlUp;
+        public TiledMapTileLayer layerControlDown;
+        public TiledMapTileLayer layerControlRight;
+        public TiledMapTileLayer layerControlLeft;
+
         //public TiledMapObjectL layerControlTouch;
 
         public int mapWidth;
@@ -34,7 +39,7 @@ public abstract class Map {
         public Map(String path){
             maploader = new TmxMapLoader();
             tmxMap = maploader.load(path);
-            tmxControl = maploader.load("controller.tmx");
+            tmxControl = maploader.load("controller1.tmx");
             renderer = new OrthogonalTiledMapRenderer(tmxMap);
 
             mapWidth = Integer.parseInt(tmxMap.getProperties().get("width").toString());
@@ -44,10 +49,19 @@ public abstract class Map {
             layerWall = (TiledMapTileLayer)tmxMap.getLayers().get("Walls");
             layerPath = (TiledMapTileLayer)tmxMap.getLayers().get("Path");
             layerCollect = (TiledMapTileLayer)tmxMap.getLayers().get("Collectables");
-            layerControlButton = (TiledMapTileLayer)tmxControl.getLayers().get("ControllerButtons");
-            //layerControlTouch = (TiledMapTileLayer)tmxControl.getLayers().get("ControllerTouch");
-            tmxMap.getLayers().add(layerControlButton);
-            //tmxMap.getLayers().add(layerControlTouch);
+
+            layerControlBlack = (TiledMapTileLayer)tmxControl.getLayers().get("Black");
+            layerControlUp = (TiledMapTileLayer)tmxControl.getLayers().get("Up");
+            layerControlDown = (TiledMapTileLayer)tmxControl.getLayers().get("Down");
+            layerControlRight = (TiledMapTileLayer)tmxControl.getLayers().get("Right");
+            layerControlLeft = (TiledMapTileLayer)tmxControl.getLayers().get("Left");
+            tmxMap.getLayers().add(layerControlBlack);
+            tmxMap.getLayers().add(layerControlUp);
+            tmxMap.getLayers().add(layerControlDown);
+            tmxMap.getLayers().add(layerControlRight);
+            tmxMap.getLayers().add(layerControlLeft);
+
+
 
             //layerPath.setOpacity(0.5f);
             matrix = new Tile[mapWidth][mapHeight];

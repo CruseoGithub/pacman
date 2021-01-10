@@ -80,8 +80,8 @@ public abstract class Actor {
                     direction = nextdirection;
                 }
             }
-
-            screen.map.collect(screen.map.getTile(xPosition, yPosition)); //Dots einsammeln
+            //if(this.getClass() ==){ screen.map.collect(screen.map.getTile(xPosition, yPosition)); }//Dots einsammeln
+            screen.map.collect(screen.map.getTile(xPosition, yPosition));
 
             switch (direction) {
                 case RIGHT:

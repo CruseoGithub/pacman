@@ -20,7 +20,7 @@ public class Hud {
     public float time;
     public Integer score;
     public Integer lives;
-    public boolean visable;
+    public boolean visible;
 
     Label timeTextLabel;
     Label timeLabel;
@@ -29,11 +29,11 @@ public class Hud {
     Label livesTextLabel;
     Label livesLabel;
 
-    public Hud(SpriteBatch sb, MapScreen screen, boolean visable){
+    public Hud(SpriteBatch sb, MapScreen screen, boolean visible){
         time = 0;
         score = 0;
         lives = 3;
-        this.visable = visable;
+        this.visible = visible;
 
         viewport = new FitViewport(screen.map.mapWidth*screen.map.tileSize, screen.map.mapHeight*screen.map.tileSize, (new OrthographicCamera()));
         stage = new Stage(viewport, sb);
@@ -46,9 +46,17 @@ public class Hud {
         timeTextLabel = new Label("TIME:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         livesTextLabel = new Label("LIVES:", new Label.LabelStyle(new BitmapFont(), Color.FIREBRICK));
 
+        scoreTextLabel.setFontScale(4);
+        timeTextLabel.setFontScale(4);
+        livesTextLabel.setFontScale(4);
+
         scoreLabel = new Label(String.format("%06d  ", score), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
         timeLabel = new Label(String.format("%03d  ", (int)time), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         livesLabel = new Label(String.format("%01d  ", lives), new Label.LabelStyle(new BitmapFont(), Color.FIREBRICK));
+
+        scoreLabel.setFontScale(4);
+        timeLabel.setFontScale(4);
+        livesLabel.setFontScale(4);
 
         table.add(scoreTextLabel).expandX().padTop(0);
         table.add(timeTextLabel).expandX().padTop(0);
@@ -57,11 +65,11 @@ public class Hud {
         table.add(scoreLabel).expandX().padTop(0);
         table.add(timeLabel).expandX().padTop(0);
         table.add(livesLabel).expandX().padTop(0);
-        if(visable) stage.addActor(table);
+        if(visible) stage.addActor(table);
     }
 
     public void update(){
-        if(visable){
+        if(visible){
             scoreLabel.setText(String.format("%06d", score));
             timeLabel.setText(String.format("%03d", (int)time));
             livesLabel.setText(String.format("%01d", lives));

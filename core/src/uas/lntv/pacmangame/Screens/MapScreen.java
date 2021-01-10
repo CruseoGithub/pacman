@@ -4,9 +4,11 @@ package uas.lntv.pacmangame.Screens;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -23,7 +25,7 @@ import uas.lntv.pacmangame.Sprites.PacMan;
 public abstract class MapScreen implements Screen {
     public enum Type { GAME, MENU};
 
-    protected PacManGame game;
+    public PacManGame game;
     protected OrthographicCamera gamecam;
     protected Viewport gamePort;
 
@@ -55,6 +57,22 @@ public abstract class MapScreen implements Screen {
 
         this.gamePort = new FitViewport(map.mapWidth*map.tileSize, map.mapHeight*map.tileSize, gamecam);
         this.gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
+
+        Gdx.input.setInputProcessor(new InputAdapter(){
+
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
+                Vector3 touch = new Vector3(screenX, screenY, 0);
+                gamecam.unproject(touch);
+
+                System.out.println("Screen coordinates translated to world coordinates: "
+                        + "X: " + touch.x + " Y: " + touch.y);
+
+                if(touch.x >=6 * map.tileSize && touch.x <= 10 *map.tileSize) System.out.println("HURRA!!!");
+                return true;
+            }
+        });
 
     }
     @Override

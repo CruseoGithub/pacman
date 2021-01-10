@@ -60,6 +60,7 @@ public class MenuScreen extends MapScreen {
             }
             else if(pacman.getYPosition() >= 29*map.tileSize && pacman.getYPosition() <=33* map.tileSize ){
                 //SETTINGS (Momentan auch GameScreen)
+                game.resetScreens();
                 game.setScreen(game.gameScreen);
             }
         }

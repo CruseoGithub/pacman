@@ -13,10 +13,10 @@ public class MenuScreen extends MapScreen {
     public MenuScreen(PacManGame game, String mapPath){
         super(game, mapPath, Type.MENU);
 
-        this.pacman = new PacMan(2*map.tileSize, 26*map.tileSize, this, hud);
+        this.pacman = new PacMan(game, 2*map.tileSize, 26*map.tileSize, this, hud);
         this.pacman.setSpeed(4);
-        this.ghost = new Enemy(16*map.tileSize,23*map.tileSize,this, Enemy.Difficulty.MEDIUM);
-        this.hud = new Hud(game.batch, this, false); //Not Visable
+        this.ghost = new Enemy(16*map.tileSize,23*map.tileSize,this, Enemy.Difficulty.EASY);
+        this.hud = new Hud(game, this, false); //Not Visible
     }
 
     @Override
@@ -30,14 +30,14 @@ public class MenuScreen extends MapScreen {
         ghost.move();
 
         //Animation alle 0.5 Sekunden
-        if((tmpTimerAnimation+0.5f) <= hud.time) {
+        if((tmpTimerAnimation+0.5f) <= hud.animationTime) {
             if(pacman.texturePositionX == 0){
                 pacman.texturePositionX = 96;
 
             }else{
                 pacman.texturePositionX = 0;
             }
-            tmpTimerAnimation = hud.time;
+            tmpTimerAnimation = hud.animationTime;
         }
 
         map.renderer.setView(gamecam);
@@ -52,17 +52,19 @@ public class MenuScreen extends MapScreen {
 
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.time +=Gdx.graphics.getDeltaTime();
+        hud.animationTime += Gdx.graphics.getDeltaTime();
 
 
         if(pacman.getXPosition() == 12*map.tileSize){
             if(pacman.getYPosition() >= 19*map.tileSize && pacman.getYPosition() <=23* map.tileSize ){
                 // PLAY
-                game.setScreen(game.gameScreen);
+                //game.setScreen(game.gameScreen);
+                game.setScreen(new GameScreen(game, "map.tmx"));
             }
             else if(pacman.getYPosition() >= 29*map.tileSize && pacman.getYPosition() <=33* map.tileSize ){
                 //SETTINGS (Momentan auch GameScreen)
-                game.setScreen(game.gameScreen);
+                //game.setScreen(game.gameScreen);
+                game.setScreen(new GameScreen(game, "map.tmx"));
             }
         }
 

@@ -48,7 +48,7 @@ public abstract class MapScreen implements Screen {
 
         switch (type){
             case GAME:
-                this.map = new GameMap(mapPath, this);
+                this.map = new GameMap(game, mapPath, this);
                 break;
             case MENU:
                 this.map = new MenuMap(mapPath);

@@ -8,6 +8,7 @@ import java.util.Random;
 
 
 import uas.lntv.pacmangame.Maps.Tile;
+import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 

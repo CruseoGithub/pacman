@@ -19,17 +19,13 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class GameScreen extends MapScreen {
-    private Controller controller;
-
     public GameScreen(PacManGame game, String mapPath) {
         super(game, mapPath, Type.GAME);
 
-        this.hud = new Hud(game.batch, this, true);
+        this.hud = new Hud(game, this, true);
 
-        this.pacman = new PacMan(map.tileSize, 17 * map.tileSize, this, hud);
-        this.ghost = new Enemy(map.tileSize, 40 * map.tileSize, this, Enemy.Difficulty.HARD);
-
-        this.controller = new Controller(this);
+        this.pacman = new PacMan(game, map.tileSize, 17 * map.tileSize, this, hud);
+        this.ghost = new Enemy(map.tileSize, 40 * map.tileSize, this, Enemy.Difficulty.EASY);
     }
 
     @Override
@@ -43,15 +39,15 @@ public class GameScreen extends MapScreen {
         ghost.move();
 
         //Animation alle 0.5 Sekunden
-        if ((tmpTimerAnimation + 0.5f) <= hud.time) {
+        if ((tmpTimerAnimation + 0.5f) <= hud.animationTime) {
             if (pacman.texturePositionX == 0) {
                 pacman.texturePositionX = 96;
-
             } else {
                 pacman.texturePositionX = 0;
             }
-            tmpTimerAnimation = hud.time;
+            tmpTimerAnimation = hud.animationTime;
         }
+
         map.renderer.setView(gamecam);
         map.renderer.render();
 
@@ -71,9 +67,22 @@ public class GameScreen extends MapScreen {
 
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.time += Gdx.graphics.getDeltaTime();
+        hud.time -= Gdx.graphics.getDeltaTime();
+        hud.animationTime += Gdx.graphics.getDeltaTime();
         hud.update();
         hud.stage.draw();
+        if(hud.time == 0){
+            game.setScreen(new MenuScreen(game, "menuMap.tmx"));
+            game.resetLives();
+            game.resetScore();
+            game.resetLevel();
+        }
 
+        if(hud.levelScore == 150){
+            game.levelUp();
+            game.increaseScore((int)hud.time);
+            game.setScreen(new GameScreen(game, hud.getStage()));
+        }
     }
+
 }

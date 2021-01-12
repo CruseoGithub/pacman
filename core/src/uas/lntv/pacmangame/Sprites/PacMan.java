@@ -32,7 +32,6 @@ public class PacMan extends Actor {
         if(hud.lives>1) hud.lives--;
         else {
             hud.lives--;
-            screen.game.resetScreens();
             screen.game.setScreen(screen.game.menuScreen);
         };
     }

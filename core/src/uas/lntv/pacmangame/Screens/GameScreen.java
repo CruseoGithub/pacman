@@ -35,7 +35,7 @@ public class GameScreen extends MapScreen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        ghost.findNextDirection(map.matrix, pacman);
+        ghost.findNextDirection(pacman);
         ghost.move();
 
         //Animation alle 0.5 Sekunden

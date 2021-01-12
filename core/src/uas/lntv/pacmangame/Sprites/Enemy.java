@@ -52,14 +52,14 @@ public class Enemy extends Actor {
         }
     }
 
-    private Direction findNextDirectionMedium(Tile[][] matrix, Actor target){
+    private Direction findNextDirectionMedium(Actor target){
         int distanceX = this.xPosition - target.getXPosition();
         int distanceY = this.yPosition - target.getYPosition();
         if((Math.abs(distanceX)+Math.abs(distanceY)) > 16*tileSize ) return Direction.getRandomDirection();
-        return findNextDirectionHard(matrix, target);
+        return findNextDirectionHard(target);
     }
 
-    private Direction findNextDirectionHard(Tile[][] matrix, Actor target){
+    private Direction findNextDirectionHard(Actor target){
         int distanceX = this.xPosition - target.getXPosition();
         int distanceY = this.yPosition - target.getYPosition();
         if((Math.abs(distanceX) < tileSize) && (Math.abs(distanceY) < tileSize)){
@@ -75,7 +75,7 @@ public class Enemy extends Actor {
         else return Direction.LEFT;
     }
 
-    public void findNextDirection(Tile[][] matrix, Actor target) {
+    public void findNextDirection(Actor target) {
         switch (difficulty) {
             case RANDOM:
                 nextdirection = Direction.getRandomDirection();
@@ -84,10 +84,10 @@ public class Enemy extends Actor {
                 nextdirection = findNextDirectionEasy(target);
                 break;
             case MEDIUM:
-                nextdirection = findNextDirectionMedium(matrix, target);
+                nextdirection = findNextDirectionMedium(target);
                 break;
             case HARD:
-                nextdirection = findNextDirectionHard(matrix, target);
+                nextdirection = findNextDirectionHard(target);
                 break;
         }
     }

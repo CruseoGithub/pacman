@@ -29,10 +29,7 @@ public class PacMan extends Actor {
     public void die() {
         this.setXPosition(tileSize);
         this.setYPosition(17*tileSize);
-        if(hud.lives>1) hud.lives--;
-        else {
-            hud.lives--;
-            screen.game.setScreen(screen.game.menuScreen);
-        };
+        if(hud.lives>0) hud.lives--;
+        //else {};
     }
 }

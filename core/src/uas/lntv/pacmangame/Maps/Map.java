@@ -53,7 +53,6 @@ public abstract class Map {
             matrix = new Tile[mapWidth][mapHeight];
             this.path = path;
             generateScreenMap();
-
         }
 
 
@@ -140,6 +139,7 @@ public abstract class Map {
         }
 
         public abstract void collect(Tile tile);
+
         public void dispose(){
 
             tmxMap.dispose();

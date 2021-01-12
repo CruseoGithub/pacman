@@ -5,12 +5,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import uas.lntv.pacmangame.AI.Pathfinder;
 import uas.lntv.pacmangame.Maps.Tile;
+import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
 public class Enemy extends Actor {
     public enum Difficulty{
-        RANDOM,EASY,MEDIUM,HARD;
+        RUNAWAY,RANDOM,EASY,MEDIUM,HARD;
     };
 
     private Pathfinder aStar;
@@ -51,23 +52,11 @@ public class Enemy extends Actor {
         }
     }
 
-    private Direction findNextDirectionMedium(Actor target){
+    private Direction findNextDirectionMedium(Tile[][] matrix, Actor target){
         int distanceX = this.xPosition - target.getXPosition();
         int distanceY = this.yPosition - target.getYPosition();
         if((Math.abs(distanceX)+Math.abs(distanceY)) > 16*tileSize ) return Direction.getRandomDirection();
-        if((Math.abs(distanceX) < tileSize) && (Math.abs(distanceY) < tileSize)){
-            target.die();
-            this.die();
-            return Direction.RIGHT;
-        }
-        if(Math.abs(distanceX) > Math.abs(distanceY)){
-            if(screen.map.getTile(xPosition, yPosition, LeftOrRight(distanceX)).type != Tile.Type.WALL) return LeftOrRight(distanceX);
-            else return UpOrDown(distanceY);
-        }
-        else {
-            if(screen.map.getTile(xPosition, yPosition, UpOrDown(distanceY)).type != Tile.Type.WALL) return UpOrDown(distanceY);
-            else return LeftOrRight(distanceX);
-        }
+        return findNextDirectionHard(matrix, target);
     }
 
     private Direction findNextDirectionHard(Tile[][] matrix, Actor target){
@@ -95,7 +84,7 @@ public class Enemy extends Actor {
                 nextdirection = findNextDirectionEasy(target);
                 break;
             case MEDIUM:
-                nextdirection = findNextDirectionMedium(target);
+                nextdirection = findNextDirectionMedium(matrix, target);
                 break;
             case HARD:
                 nextdirection = findNextDirectionHard(matrix, target);

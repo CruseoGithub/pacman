@@ -33,6 +33,8 @@ public abstract class MapScreen implements Screen {
     public PacMan pacman;
     public Enemy ghost;
 
+    private Controller controller;
+
     protected float tmpTimerAnimation = 0;
 
     public MapScreen(PacManGame game, String mapPath, MapScreen.Type type){
@@ -46,7 +48,7 @@ public abstract class MapScreen implements Screen {
 
         switch (type){
             case GAME:
-                this.map = new GameMap(mapPath, this);
+                this.map = new GameMap(game, mapPath, this);
                 break;
             case MENU:
                 this.map = new MenuMap(mapPath);
@@ -56,29 +58,31 @@ public abstract class MapScreen implements Screen {
         this.gamePort = new FitViewport(map.mapWidth*map.tileSize, map.mapHeight*map.tileSize, gamecam);
         this.gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
 
+        this.controller = new Controller(this);
+
     }
     @Override
     public void show() {
 
     }
-    public void handleInput(float dt){
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+    public void handleInput(){
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || controller.isRightPressed()){
             pacman.nextdirection = Actor.Direction.RIGHT;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || controller.isLeftPressed()){
             pacman.nextdirection = Actor.Direction.LEFT;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+        if(Gdx.input.isKeyPressed(Input.Keys.UP) || controller.isUpPressed()){
             pacman.nextdirection = Actor.Direction.UP;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN) || controller.isDownPressed()){
             pacman.nextdirection = Actor.Direction.DOWN;
         }
         pacman.move();
-
     }
+
     public void update(float dt){
-        handleInput(dt);
+        handleInput();
 
         gamecam.update();
 
@@ -111,6 +115,7 @@ public abstract class MapScreen implements Screen {
 
     @Override
     public void dispose() {
+        controller.dispose();
         hud.dispose();
         map.dispose();
     }

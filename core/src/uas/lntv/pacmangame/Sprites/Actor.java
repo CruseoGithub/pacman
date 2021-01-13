@@ -8,6 +8,7 @@ import java.util.Random;
 
 
 import uas.lntv.pacmangame.Maps.Tile;
+import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
@@ -31,7 +32,7 @@ public abstract class Actor {
 
     private int speed;
     public int texturePositionX;
-
+    public int texturePositionY;
     public Direction direction;
     public Direction nextdirection;
     public Direction prevdirection;
@@ -42,6 +43,11 @@ public abstract class Actor {
     public TextureRegion region;
     public Texture texture;
     protected MapScreen screen;
+
+
+    public Animation animation;
+    public float animationSpeed;
+    boolean mouthOpen;
 
     public int getSpeed() { return speed; }
     public void setSpeed(int speed) { this.speed = speed; }
@@ -59,9 +65,6 @@ public abstract class Actor {
     }
 
     public Actor(int initX, int initY, MapScreen screen){
-        this.direction = Direction.RIGHT;
-        this.nextdirection = Direction.RIGHT;
-        this.prevdirection = Direction.RIGHT;
         this.state = State.RUNNING;
         this.xPosition = initX;
         this.yPosition = initY;
@@ -71,7 +74,7 @@ public abstract class Actor {
         this.screen = screen;
     }
     public void move() {
-        //if(xPosition >= 8 && xPosition <= 208){
+
         if(xPosition >= tileSize && xPosition <= 26*tileSize){
             prevdirection = direction;
             if(nextdirection != direction && screen.map.getTile(xPosition, yPosition, nextdirection).type != Tile.Type.WALL){
@@ -79,8 +82,6 @@ public abstract class Actor {
                     direction = nextdirection;
                 }
             }
-
-            screen.map.collect(screen.map.getTile(xPosition, yPosition)); //Dots einsammeln
 
             switch (direction) {
                 case RIGHT:
@@ -117,5 +118,12 @@ public abstract class Actor {
             if(xPosition >= (26*tileSize)) xPosition = tileSize;
         }
     }
-    public abstract void die();
+
+    public void die() {
+        this.state = State.DIEING;
+    }
+    public void update(float dt){
+        animation.update(dt);
+    }
+
 }

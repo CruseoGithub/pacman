@@ -9,16 +9,25 @@ import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
 public class PacMan extends Actor {
-    Hud hud;
+    public Hud hud;
+    Texture pac32 = new Texture("pacman32.png");
+
     public PacMan(int initX, int initY, MapScreen screen, Hud hud){
         super(initX, initY, screen);
-        this.texture = new Texture("pacman32.png");
+        this.direction = Direction.RIGHT;
+        this.nextdirection = Direction.UP;
+        this.prevdirection = Direction.UP;
+        this.texture = pac32;
         region = new TextureRegion(texture);
+
         region.setRegionX(0);
         region.setRegionY(0);
-        region.setRegionWidth(32);
-        region.setRegionHeight(32);
         texturePositionX = 0;
+        animationSpeed = 0.01f;
+        mouthOpen = true;
+
+        animation = new Animation(this,animationSpeed, this.screen,6);
+
         region.flip(true, false);
         this.sprite = new Sprite(region);
         this.sprite.setOrigin(tileSize/2, tileSize/2);
@@ -27,9 +36,13 @@ public class PacMan extends Actor {
 
     @Override
     public void die() {
-        this.setXPosition(tileSize);
-        this.setYPosition(17*tileSize);
+        super.die();
         if(hud.lives>0) hud.lives--;
-        //else {};
+    }
+
+    @Override
+    public void move(){
+        super.move();
+        screen.map.collect(screen.map.getTile(xPosition, yPosition)); //Dots einsammeln
     }
 }

@@ -2,6 +2,7 @@ package uas.lntv.pacmangame.Sprites;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import uas.lntv.pacmangame.AI.Pathfinder;
 import uas.lntv.pacmangame.Maps.Tile;
@@ -18,10 +19,25 @@ public class Enemy extends Actor {
 
     public Enemy(int initX, int initY, MapScreen screen, Difficulty difficulty){
         super(initX, initY, screen);
-        this.texture = new Texture("enemies.png");
-        this.sprite = new Sprite(texture,0, 0, 200,200);
-        this.sprite.rotate90(true);
+
         this.difficulty = difficulty;
+        this.direction = Direction.DOWN;
+        this.nextdirection = Direction.DOWN;
+        this.prevdirection = Direction.DOWN;
+
+        this.texture = new Texture("redghost.png");
+        region = new TextureRegion(texture);
+        region.setRegionX(0);
+        region.setRegionY(0);
+        texturePositionX = 0;
+        texturePositionY = 0;
+        this.animationSpeed = 0.1f;
+
+        animation = new Animation(this,animationSpeed, this.screen,4);
+
+        region.flip(true, false);
+        this.sprite = new Sprite(region);
+        this.sprite.setOrigin(tileSize/2, tileSize/2);
     }
 
     private Direction UpOrDown(int distance){
@@ -102,10 +118,16 @@ public class Enemy extends Actor {
                 break;
         }
     }
-
     @Override
     public void die() {
+        super.die();
         this.setXPosition(tileSize);
         this.setYPosition(40*tileSize);
+    }
+
+
+    @Override
+    public void move(){
+        super.move();
     }
 }

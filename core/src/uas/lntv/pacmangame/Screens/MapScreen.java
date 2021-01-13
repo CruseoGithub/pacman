@@ -74,11 +74,18 @@ public abstract class MapScreen implements Screen {
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
             pacman.nextdirection = Actor.Direction.DOWN;
         }
-        pacman.move();
 
     }
     public void update(float dt){
         handleInput(dt);
+
+        pacman.update(dt);
+        ghost.update(dt);
+
+        if(pacman.state != Actor.State.DIEING){
+            pacman.move();
+            ghost.move();
+        }
 
         gamecam.update();
 

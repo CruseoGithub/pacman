@@ -27,18 +27,6 @@ public class MenuScreen extends MapScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         ghost.findNextDirection(map.matrix, pacman);
-        ghost.move();
-
-        //Animation alle 0.5 Sekunden
-        if((tmpTimerAnimation+0.5f) <= hud.time) {
-            if(pacman.texturePositionX == 0){
-                pacman.texturePositionX = 96;
-
-            }else{
-                pacman.texturePositionX = 0;
-            }
-            tmpTimerAnimation = hud.time;
-        }
 
         map.renderer.setView(gamecam);
         map.renderer.render();
@@ -47,7 +35,13 @@ public class MenuScreen extends MapScreen {
         game.batch.draw(pacman.texture,pacman.getXPosition(),pacman.getYPosition(),pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
                 map.tileSize,map.tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
                 pacman.texturePositionX,0,32,32,false,false);
-        game.batch.draw(ghost.sprite, ghost.xPosition , ghost.yPosition , map.tileSize, map.tileSize);
+
+        //game.batch.draw(ghost.sprite, ghost.xPosition , ghost.yPosition , map.tileSize, map.tileSize);
+
+        game.batch.draw(ghost.texture,ghost.xPosition, ghost.yPosition,ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
+                map.tileSize,map.tileSize, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
+                ghost.texturePositionX,  ghost.texturePositionY,32,32,false,false);
+
         game.batch.end();
 
 

@@ -15,6 +15,7 @@ import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.MenuMap;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Controller;
+import uas.lntv.pacmangame.Scenes.ControllerSwipe;
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
@@ -58,7 +59,7 @@ public abstract class MapScreen implements Screen {
         this.gamePort = new FitViewport(map.mapWidth*map.tileSize, map.mapHeight*map.tileSize, gamecam);
         this.gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
 
-        this.controller = new Controller(this);
+        this.controller = new ControllerSwipe(this);
 
     }
     @Override

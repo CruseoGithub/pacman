@@ -7,14 +7,14 @@ public class Tile extends StaticTiledMapTile {
     public enum Type { EMPTY,PATH, PATHDOT, WALL, DOT}
     public Tile.Type type;
 
-    private int x,y;
+    protected int x,y;
     public boolean isDot;
 
-    private int cost;
-    private double heuristics;
-    private double total;
+    protected int cost;
+    protected double heuristics;
+    protected double total;
 
-    private Tile prev;
+    protected Tile prev;
 
     public int getX() {
         return x;

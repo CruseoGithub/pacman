@@ -1,5 +1,7 @@
 package uas.lntv.pacmangame.Sprites;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,11 +13,14 @@ import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Screens.MenuScreen;
 
 public class PacMan extends Actor {
-    Hud hud;
+    private Sound sound;
+    private Hud hud;
     private PacManGame game;
+
     public PacMan(PacManGame game, int initX, int initY, MapScreen screen, Hud hud){
         super(initX, initY, screen);
         this.game = game;
+
         this.texture = new Texture("pacman32.png");
         region = new TextureRegion(texture);
         region.setRegionX(0);
@@ -27,16 +32,19 @@ public class PacMan extends Actor {
         this.sprite = new Sprite(region);
         this.sprite.setOrigin(tileSize/2, tileSize/2);
         this.hud = hud;
+        this.sound = Gdx.audio.newSound(Gdx.files.internal("die.wav"));
     }
 
     @Override
     public void die() {
+        sound.play(0.5f);
         this.setXPosition(tileSize);
         this.setYPosition(17*tileSize);
         if(game.getLives() > 1) game.die();
         else {
             game.die();
             game.setScreen(new MenuScreen(game, "mainMenu.tmx"));
+            super.screen.dispose();
             game.resetScore();
             game.resetLives();
             game.resetLevel();

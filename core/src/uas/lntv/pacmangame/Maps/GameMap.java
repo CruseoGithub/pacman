@@ -51,13 +51,8 @@ public class GameMap extends Map {
             game.increaseScore(1);
             screen.hud.levelScore++;
             screen.hud.update();
-
-            layerCollect.setCell(
-                    tile.getX()/tileSize,
-                    tile.getY()/tileSize,
-                    null
-            );
-            tile.isDot = false;
         }
+        super.collect(tile);
     }
+
 }

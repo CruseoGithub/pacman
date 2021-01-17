@@ -1,5 +1,7 @@
 package uas.lntv.pacmangame.Maps;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -10,7 +12,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import uas.lntv.pacmangame.Sprites.Actor;
 
 public abstract class Map {
-
         private TmxMapLoader maploader;
         private TiledMap tmxMap;
         public OrthogonalTiledMapRenderer renderer;
@@ -29,6 +30,8 @@ public abstract class Map {
         public String path;
 
         public Tile matrix[][];
+
+        private Sound sound;
 
 
         public Map(String path){
@@ -53,6 +56,7 @@ public abstract class Map {
             matrix = new Tile[mapWidth][mapHeight];
             this.path = path;
             generateScreenMap();
+            this.sound = Gdx.audio.newSound(Gdx.files.internal("dot.wav"));
         }
 
 
@@ -138,7 +142,17 @@ public abstract class Map {
             tile.type = type;
         }
 
-        public abstract void collect(Tile tile);
+        public void collect(Tile tile){
+            if(tile.isDot){
+                sound.play(0.3f);
+                layerCollect.setCell(
+                        tile.getX()/tileSize,
+                        tile.getY()/tileSize,
+                        null
+                );
+                tile.isDot = false;
+            }
+        }
 
         public void dispose(){
 

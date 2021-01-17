@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -51,15 +52,20 @@ public abstract class MapScreen implements Screen {
         switch (type){
             case GAME:
                 this.map = new GameMap(game, mapPath, this);
-                this.music = Gdx.audio.newMusic(Gdx.files.internal("GameMusic.mp3"));
-                music.setVolume(0.2f);
+                if(((int)(game.getLevel()/5))%2 == 0) {
+                    this.music = Gdx.audio.newMusic(Gdx.files.internal("GameMusic.mp3"));
+                    music.setVolume(0.2f);
+                } else{
+                    this.music = Gdx.audio.newMusic(Gdx.files.internal("AmazingHorse.mp3"));
+                    music.setVolume(0.4f);
+                }
                 music.setLooping(true);
                 music.play();
                 break;
             case MENU:
                 this.map = new MenuMap(mapPath);
                 this.music = Gdx.audio.newMusic(Gdx.files.internal("MenuMusic.wav"));
-                music.setVolume(0.2f);
+                music.setVolume(0.3f);
                 music.setLooping(true);
                 music.play();
                 break;

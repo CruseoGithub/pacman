@@ -19,11 +19,11 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class GameScreen extends MapScreen {
+
     public GameScreen(PacManGame game, String mapPath) {
         super(game, mapPath, Type.GAME);
 
         this.hud = new Hud(game, this, true);
-
         this.pacman = new PacMan(game, map.tileSize, 17 * map.tileSize, this, hud);
         this.ghost = new Enemy(map.tileSize, 40 * map.tileSize, this, Enemy.Difficulty.EASY);
     }

@@ -60,13 +60,20 @@ public class MenuScreen extends MapScreen {
                 // PLAY
                 //game.setScreen(game.gameScreen);
                 game.setScreen(new GameScreen(game, "map.tmx"));
+                this.dispose();
             }
             else if(pacman.getYPosition() >= 29*map.tileSize && pacman.getYPosition() <=33* map.tileSize ){
                 //SETTINGS (Momentan auch GameScreen)
                 //game.setScreen(game.gameScreen);
                 game.setScreen(new GameScreen(game, "map.tmx"));
+                this.dispose();
             }
         }
 
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
     }
 }

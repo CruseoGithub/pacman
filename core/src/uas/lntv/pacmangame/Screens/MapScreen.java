@@ -5,6 +5,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -26,6 +27,7 @@ public abstract class MapScreen implements Screen {
     protected PacManGame game;
     protected OrthographicCamera gamecam;
     protected Viewport gamePort;
+    protected Music music;
 
     public Map map;
     public Hud hud;
@@ -49,9 +51,17 @@ public abstract class MapScreen implements Screen {
         switch (type){
             case GAME:
                 this.map = new GameMap(game, mapPath, this);
+                this.music = Gdx.audio.newMusic(Gdx.files.internal("GameMusic.mp3"));
+                music.setVolume(0.2f);
+                music.setLooping(true);
+                music.play();
                 break;
             case MENU:
                 this.map = new MenuMap(mapPath);
+                this.music = Gdx.audio.newMusic(Gdx.files.internal("MenuMusic.wav"));
+                music.setVolume(0.2f);
+                music.setLooping(true);
+                music.play();
                 break;
         }
 
@@ -118,5 +128,6 @@ public abstract class MapScreen implements Screen {
         controller.dispose();
         hud.dispose();
         map.dispose();
+        music.dispose();
     }
 }

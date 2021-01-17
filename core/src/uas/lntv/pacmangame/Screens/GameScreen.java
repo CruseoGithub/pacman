@@ -76,13 +76,20 @@ public class GameScreen extends MapScreen {
             game.resetLives();
             game.resetScore();
             game.resetLevel();
+            this.dispose();
         }
 
         if(hud.levelScore == 150){
             game.levelUp();
             game.increaseScore((int)hud.time);
             game.setScreen(new GameScreen(game, hud.getStage()));
+            this.dispose();
         }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
     }
 
 }

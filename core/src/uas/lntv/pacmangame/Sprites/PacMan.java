@@ -11,6 +11,7 @@ import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Screens.MenuScreen;
+import uas.lntv.pacmangame.Screens.ScoreScreen;
 
 public class PacMan extends Actor {
     private Sound sound;
@@ -37,13 +38,17 @@ public class PacMan extends Actor {
 
     @Override
     public void die() {
-        sound.play(0.5f);
+        sound.play(0.35f);
         this.setXPosition(tileSize);
         this.setYPosition(17*tileSize);
         if(game.getLives() > 1) game.die();
         else {
             game.die();
-            game.setScreen(new MenuScreen(game, "mainMenu.tmx"));
+            if(game.highScore.addScore(game.getScore())){
+                game.setScreen(new ScoreScreen(game, "HighScoreList.tmx"));
+            } else {
+                game.setScreen(new MenuScreen(game, "mainMenu.tmx"));
+            }
             super.screen.dispose();
             game.resetScore();
             game.resetLives();

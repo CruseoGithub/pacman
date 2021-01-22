@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import uas.lntv.pacmangame.Scenes.HighScore;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MenuScreen;
 
@@ -16,12 +17,15 @@ public class PacManGame extends Game {
 	private int lives;
 	public static SpriteBatch batch;
 	public MenuScreen menuScreen;
+	public HighScore highScore;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		level = 0;
 		score = 0;
 		lives = 3;
+		highScore = new HighScore();
 		menuScreen = new MenuScreen(this, "mainMenu.tmx");
 		setScreen(menuScreen);
 	}

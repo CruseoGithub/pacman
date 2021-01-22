@@ -53,7 +53,7 @@ public class PacMan extends Actor {
             game.resetScore();
             game.resetLives();
             game.resetLevel();
-        };
+        }
     }
 
     @Override

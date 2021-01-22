@@ -29,7 +29,7 @@ public class HighScore {
             int x = highScores.get(i);
             if(newScore > x){
                 highScores.add(i, newScore);
-                if(highScores.size()>10){
+                if(highScores.size() > 10){
                     highScores.remove(10);
                 }
                 newHighScore = true;

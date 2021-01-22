@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,11 +16,13 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
+import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class Hud {
     private PacManGame game;
     public Stage stage;
     private Viewport viewport;
+    private MapScreen screen;
 
     public float time;
     public float animationTime;
@@ -36,8 +39,17 @@ public class Hud {
     Label livesTextLabel;
     Label livesLabel;
 
+    private Sound timeWarning;
+    private boolean warned;
+    private boolean red;
+    private int warningTime;
+    private float timeStamp;
+
+    private PacMan pacman;
+
     public Hud(PacManGame game, MapScreen screen, boolean visible){
         this.game = game;
+        this.screen = screen;
         time = 300;
         animationTime = 0;
         levelScore = 0;
@@ -80,8 +92,21 @@ public class Hud {
         table.row();
         table.add(scoreLabel).expandX().padTop(0);
         table.add(timeLabel).expandX().padTop(0);
-        table.add(livesLabel).expandX().padTop(0);
+        //table.add(livesLabel).expandX().padTop(0);
         if(visible) stage.addActor(table);
+
+        pacman = new PacMan(
+                game,
+                20 * screen.map.tileSize,
+                (45 * screen.map.tileSize + screen.map.tileSize/2),
+                screen, this
+        );
+
+        timeWarning = Gdx.audio.newSound(Gdx.files.internal("timeWarning.wav"));
+        warned = false;
+        red = false;
+        warningTime = 30;
+        timeStamp = time;
     }
 
     public String getStage(){
@@ -89,10 +114,54 @@ public class Hud {
     }
 
     public void update(){
+        if(time < warningTime){
+            if(!warned){
+                timeWarning.play(0.4f);
+                warned = true;
+            }
+            if(timeStamp - 0.5 > time) {
+                if(!red) {
+                    timeTextLabel.setColor(Color.RED);
+                    timeLabel.setColor(Color.RED);
+                    red = true;
+                } else{
+                    timeTextLabel.setColor(Color.WHITE);
+                    timeLabel.setColor(Color.WHITE);
+                    red = false;
+                }
+                timeStamp = time;
+            }
+        }
         if(visible){
             scoreLabel.setText(String.format("%06d", game.getScore()));
             timeLabel.setText(String.format("%03d", (int)time));
-            livesLabel.setText(String.format("%01d", game.getLives()));
+            //livesLabel.setText(String.format("%01d", game.getLives()));
+            game.batch.begin();
+            if(game.getLives() >= 1) {
+                game.batch.draw(pacman.texture,
+                        pacman.getXPosition(), pacman.getYPosition(),
+                        pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+                        2 * screen.map.tileSize, 2 * screen.map.tileSize,
+                        pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
+                        pacman.texturePositionX + 96, 0, 32, 32, false, false);
+            }
+            if(game.getLives() >= 2) {
+                game.batch.draw(pacman.texture,
+                        pacman.getXPosition() + 2 * screen.map.tileSize, pacman.getYPosition(),
+                        pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+                        2 * screen.map.tileSize, 2 * screen.map.tileSize,
+                        pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
+                        pacman.texturePositionX + 96, 0, 32, 32, false, false);
+            }
+            if(game.getLives() >= 3) {
+                game.batch.draw(pacman.texture,
+                        pacman.getXPosition() + 4 * screen.map.tileSize, pacman.getYPosition(),
+                        pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+                        2 * screen.map.tileSize, 2 * screen.map.tileSize,
+                        pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
+                        pacman.texturePositionX + 96, 0, 32, 32, false, false);
+            }
+            game.batch.end();
         }
     }
 

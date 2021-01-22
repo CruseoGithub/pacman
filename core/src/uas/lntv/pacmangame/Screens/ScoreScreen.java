@@ -31,6 +31,12 @@ public class ScoreScreen extends MapScreen {
             font.draw(
                     game.batch,
                     game.highScore.getHighScores().get(i).toString(),
+                    map.tileSize * 15,
+                    (map.tileSize * 44)-3*map.tileSize*i
+            );
+            font.draw(
+                    game.batch,
+                    game.highScore.getNames().get(i),
                     map.tileSize * 3,
                     (map.tileSize * 44)-3*map.tileSize*i
             );

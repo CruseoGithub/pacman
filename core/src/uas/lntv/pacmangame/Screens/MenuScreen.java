@@ -1,7 +1,12 @@
 package uas.lntv.pacmangame.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.Json;
 
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Hud;
@@ -22,11 +27,29 @@ public class MenuScreen extends MapScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
+        if(!game.highScore.isNameSet()) {
+            Gdx.input.getTextInput(
+                    new Input.TextInputListener() {
+                        @Override
+                        public void input(String text) {
+                            game.highScore.setGamer(text);
+                        }
+
+                        @Override
+                        public void canceled() {
+                            game.highScore.setGamer("Anonymous Bastard");
+                        }
+                    },
+                    "Please enter your name", "", "Name"
+            );
+            game.highScore.nameIsSet();
+        }
 
         if(pacman.getXPosition() == 12*map.tileSize){
             if(pacman.getYPosition() >= 19*map.tileSize && pacman.getYPosition() <=23* map.tileSize ){
                 // PLAY
                 //game.setScreen(game.gameScreen);
+
                 game.setScreen(new GameScreen(game, "map.tmx"));
                 this.dispose();
             }

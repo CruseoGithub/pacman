@@ -81,7 +81,7 @@ public class Animation {
             }
             actor.rotation = 0;
             if (actor.texturePositionX <= 64) {
-                actor.texturePositionX = actor.texturePositionX + 32;
+                actor.texturePositionX = actor.texturePositionX + frameWidth;
             } else actor.texturePositionX = 0;
         }
     }

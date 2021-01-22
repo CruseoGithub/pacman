@@ -57,7 +57,7 @@ public class GameScreen extends MapScreen {
 
         game.batch.draw(ghost.texture,ghost.xPosition, ghost.yPosition,ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
                 map.tileSize,map.tileSize, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
-                ghost.texturePositionX,    ghost.texturePositionY,32,32,false,false);
+                ghost.texturePositionX, ghost.texturePositionY,32,32,false,false);
 
         game.batch.end();
 

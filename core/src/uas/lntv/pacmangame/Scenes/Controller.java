@@ -57,6 +57,12 @@ public class Controller {
                     if(touch.x >= 7 * tileSize && touch.x <= 11 * tileSize) leftPressed = true;
                     if(touch.x >= 17 * tileSize && touch.x <= 21 * tileSize) rightPressed = true;
                 }
+                if(touch.y >= 45 * tileSize && touch.y <= 50 * tileSize){
+                    if(touch.x >= 2 * tileSize && touch.x <= 26 * tileSize) {
+                        System.out.println("Pausebutton Layer");
+
+                    }
+                }
                 return true;
             }
 

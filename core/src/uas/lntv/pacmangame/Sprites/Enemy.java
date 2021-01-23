@@ -15,7 +15,7 @@ public class Enemy extends Actor {
     };
 
     private Pathfinder aStar;
-    private Difficulty difficulty;
+    private Difficulty difficulty ;
 
     public Enemy(int initX, int initY, MapScreen screen, Difficulty difficulty){
         super(initX, initY, screen);

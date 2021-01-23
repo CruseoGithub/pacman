@@ -25,6 +25,9 @@ public class Controller {
     private Viewport viewport;
     private Stage stage;
 
+    private float x;
+    private float y;
+
     private int tileSize;
 
     boolean upPressed, downPressed, leftPressed, rightPressed;
@@ -45,6 +48,8 @@ public class Controller {
                 Vector3 touch = new Vector3(screenX, screenY, 0);
                 gamecam.unproject(touch);
 
+                x = touch.x;
+                y = touch.y;
                 System.out.println("Screen coordinates translated to world coordinates: "
                         + "X: " + touch.x + " Y: " + touch.y);
 
@@ -62,10 +67,18 @@ public class Controller {
 
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                if(isLeftPressed()) leftPressed = false;
-                if(isRightPressed()) rightPressed = false;
-                if(isUpPressed()) upPressed = false;
-                if(isDownPressed()) downPressed = false;
+                Vector3 touch = new Vector3(screenX, screenY, 0);
+                gamecam.unproject(touch);
+                float compX = x - touch.x;
+                float compY = y - touch.y;
+                if(Math.abs(compX) <= Math.abs(compY)){
+                    if(compY > 50)  downPressed = true;
+                    if(compY < -50) upPressed = true;
+                } else{
+                    if(compX > 50) leftPressed = true;
+                    if(compX < -50) rightPressed = true;
+                }
+
                 return super.touchUp(screenX, screenY, pointer, button);
             }
 
@@ -95,6 +108,13 @@ public class Controller {
 
     public boolean isRightPressed() {
         return rightPressed;
+    }
+
+    public void pullInput(){
+        leftPressed = false;
+        rightPressed = false;
+        upPressed = false;
+        downPressed = false;
     }
 
     public void resize(int width, int height){

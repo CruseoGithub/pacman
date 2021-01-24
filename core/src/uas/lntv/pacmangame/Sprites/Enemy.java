@@ -6,12 +6,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import uas.lntv.pacmangame.AI.Pathfinder;
 import uas.lntv.pacmangame.Maps.Tile;
+import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
 public class Enemy extends Actor {
     public enum Difficulty{
-        RANDOM,EASY,MEDIUM,HARD;
+        RUNAWAY,RANDOM,EASY,MEDIUM,HARD;
     };
 
     private Pathfinder aStar;
@@ -75,22 +76,10 @@ public class Enemy extends Actor {
         int distanceX = this.xPosition - target.getXPosition();
         int distanceY = this.yPosition - target.getYPosition();
         if((Math.abs(distanceX)+Math.abs(distanceY)) > 16*tileSize ) return Direction.getRandomDirection();
-        if((Math.abs(distanceX) < tileSize) && (Math.abs(distanceY) < tileSize)){
-            target.die();
-            this.die();
-            return Direction.RIGHT;
-        }
-        if(Math.abs(distanceX) > Math.abs(distanceY)){
-            if(screen.map.getTile(xPosition, yPosition, LeftOrRight(distanceX)).type != Tile.Type.WALL) return LeftOrRight(distanceX);
-            else return UpOrDown(distanceY);
-        }
-        else {
-            if(screen.map.getTile(xPosition, yPosition, UpOrDown(distanceY)).type != Tile.Type.WALL) return UpOrDown(distanceY);
-            else return LeftOrRight(distanceX);
-        }
+        return findNextDirectionHard(target);
     }
 
-    private Direction findNextDirectionHard(Tile[][] matrix, Actor target){
+    private Direction findNextDirectionHard(Actor target){
         int distanceX = this.xPosition - target.getXPosition();
         int distanceY = this.yPosition - target.getYPosition();
         if((Math.abs(distanceX) < tileSize) && (Math.abs(distanceY) < tileSize)){
@@ -106,7 +95,7 @@ public class Enemy extends Actor {
         else return Direction.LEFT;
     }
 
-    public void findNextDirection(Tile[][] matrix, Actor target) {
+    public void findNextDirection(Actor target) {
         switch (difficulty) {
             case RANDOM:
                 nextdirection = Direction.getRandomDirection();
@@ -118,7 +107,7 @@ public class Enemy extends Actor {
                 nextdirection = findNextDirectionMedium(target);
                 break;
             case HARD:
-                nextdirection = findNextDirectionHard(matrix, target);
+                nextdirection = findNextDirectionHard(target);
                 break;
         }
     }

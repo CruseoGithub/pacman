@@ -3,15 +3,18 @@ package uas.lntv.pacmangame.Maps;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
+import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
 public class GameMap extends Map {
     MapScreen screen;
+    private PacManGame game;
 
 
-    public GameMap(String path, MapScreen screen){
+    public GameMap(PacManGame game, String path, MapScreen screen){
         super(path);
+        this.game = game;
         this.screen = screen;
         generateDots(150);
     }
@@ -45,15 +48,11 @@ public class GameMap extends Map {
     }
     public void collect(Tile tile){
         if(tile.isDot){
-            screen.hud.score++;
+            game.increaseScore(1);
+            screen.hud.levelScore++;
             screen.hud.update();
-
-            layerCollect.setCell(
-                    tile.getX()/tileSize,
-                    tile.getY()/tileSize,
-                    null
-            );
-            tile.isDot = false;
         }
+        super.collect(tile);
     }
+
 }

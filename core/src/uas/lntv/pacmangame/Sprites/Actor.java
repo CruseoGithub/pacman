@@ -9,6 +9,7 @@ import java.util.Random;
 
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Scenes.Hud;
+import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
@@ -69,7 +70,7 @@ public abstract class Actor {
         this.xPosition = initX;
         this.yPosition = initY;
         this.rotation = 0;
-        this.speed = 2; // Values can be {0 == Stop , 1, 2 == Default, 4, 8, 16}
+        this.speed = 4; // Values can be {0 == Stop , 1, 2 == Default, 4, 8, 16}
         this.tileSize = screen.map.tileSize;
         this.screen = screen;
     }

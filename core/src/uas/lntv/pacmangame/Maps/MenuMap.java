@@ -23,13 +23,7 @@ public class MenuMap extends Map {
 
     @Override
     public void collect(Tile tile) {
-        if(tile.isDot){
-            layerCollect.setCell(
-                    tile.getX()/tileSize,
-                    tile.getY()/tileSize,
-                    null
-            );
-            tile.isDot = false;
-        }
+        super.collect(tile);
     }
+
 }

@@ -21,17 +21,17 @@
  <tileset firstgid="56" source="maptileset2.tsx"/>
  <layer id="1" name="Walls" width="28" height="52">
   <data encoding="base64" compression="zlib">
-   eJztkkEOwCAIBP1YT76ix/7/E73UiwFZxGKT7iRcUNhFKYUQnGNDzHqM1EkeNG+eO6O6+oSU6/PIHasuc74MvO9t7Vyk39t61vyRfH+O/nlkX1pUIVbpSb0RPZSVejP7ovVG6y8lPP5QED20T+Z82f/H/ZzXi+5oY0XdyK93DqvfDj1p5gij3pZ36e6K2iw9De3cm5fOLf+zc3+lLoOmdzp8RoMQQgj5Izd2zIuh
+   eJztlwEKwzAIRXOxXmA9xQ64Q/RmY5CAyFd/kjbdhg+EYiQ/tmrbUpKE53WD9bJVG83tw64M+Zpf6lkxyKf1jmo78Em/1kMxaL8781uB1NuUReu98cw6uvb0vHith7DqvtffiHpyJA+di7YDWKTHnMnam9FjOVNP9tKjmteX3r2Lnl/Texpm6c3MakaPYXV+I8+Pmau/Vp+982y2Pkf0vv17YmZ+Mt8TrB4zP9n3u1yfAe3T9NC59HmY/kPxRewf6c30u6dnYdWhdc/Z97uMZfosqqnROrtSbwVX/f+cOcuSJEmS5B94A8+x/A8=
   </data>
  </layer>
  <layer id="3" name="Path" width="28" height="52">
   <data encoding="base64" compression="zlib">
-   eJztlVEOwCAIQz3kLrD7X2L/y6atBaKmL/EHwSJptDVj1uYmV0TdVw9/vTE5aN1pehWL6WeEel62HuN7Nv7eH/XL3KMXX1Uvwn+sXnR+lR47q6xzTpknWm9/4vnKvzJb1+uXvQfyP1TrqbNCZo72rvhl5k2J1mN9yMaV92DHuqvpfmQ8a4wxxphcHoNUcaA=
+   eJztlUEOwCAIBP1q//+J3ptWdwSJNTsJFwV3JURbM2ZvLhgZdW8evryRHLXuNL2KIH5GRM9brUfmnq4/90d+yT1667vqZcwf1cvOr9KjvVp1zin9VOs9n3p+5F+Zrev5pfdQ/odqvWivlJ6r3iPzMvOmZOvROaTrkffgr3UVYYwxxpgabumAca0=
   </data>
  </layer>
  <layer id="4" name="Collectables" width="28" height="52">
   <data encoding="base64" compression="zlib">
-   eJztzgEJAAAIA7C3tH8TUxwRtgRLAAAAoGOuAwDAawvosgBY
+   eJztwTEBAAAAwqD1T20ND6AAAAAAAODPABbAAAE=
   </data>
  </layer>
 </map>

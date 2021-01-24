@@ -64,16 +64,16 @@ public class Animation {
         if (actor instanceof Enemy) {
             switch (actor.direction) {
                 case RIGHT:
-                    actor.texturePositionY = 64;
+                    actor.texturePositionY = 0;
                     break;
                 case LEFT:
                     actor.texturePositionY = 32;
                     break;
                 case UP:
-                    actor.texturePositionY = 96;
+                    actor.texturePositionY = 64;
                     break;
                 case DOWN:
-                    actor.texturePositionY = 0;
+                    actor.texturePositionY = 96;
                     break;
             }
             actor.rotation = 0;

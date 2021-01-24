@@ -21,13 +21,10 @@ public class PacMan extends Actor {
 
 
     public PacMan(PacManGame game, int initX, int initY, MapScreen screen, Hud hud){
-
         super(initX, initY, screen);
         this.direction = Direction.RIGHT;
         this.nextdirection = Direction.RIGHT;
         this.prevdirection = Direction.RIGHT;
-
-
 
         this.game = game;
 
@@ -51,7 +48,6 @@ public class PacMan extends Actor {
 
     @Override
     public void die() {
-
         super.die();
         sound.play(0.35f);
         if(game.getLives() > 1) game.die();

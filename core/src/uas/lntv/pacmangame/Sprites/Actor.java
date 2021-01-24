@@ -70,7 +70,7 @@ public abstract class Actor {
         this.xPosition = initX;
         this.yPosition = initY;
         this.rotation = 0;
-        this.speed = 4; // Values can be {0 == Stop , 1, 2 == Default, 4, 8, 16}
+        this.speed = 1; // Values can be {0 == Stop , 1, 2 == Default, 4, 8, 16}
         this.tileSize = screen.map.tileSize;
         this.screen = screen;
     }

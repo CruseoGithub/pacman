@@ -64,6 +64,12 @@ public abstract class Controller {
         return rightPressed;
     }
 
+    public void pulledInput(){
+        upPressed = false;
+        downPressed = false;
+        leftPressed = false;
+        rightPressed = false;
+    }
 
     public void resize(int width, int height){
         viewport.update(width, height);

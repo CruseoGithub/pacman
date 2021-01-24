@@ -1,6 +1,5 @@
 package uas.lntv.pacmangame.Screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import uas.lntv.pacmangame.PacManGame;
@@ -16,7 +15,7 @@ public class ScoreScreen extends MapScreen {
         super(game, mapPath, Type.MENU);
         this.pacman = new PacMan(game, 25*map.tileSize, 47*map.tileSize, this, hud);
         this.pacman.setSpeed(16);
-        this.ghost = new Enemy(25*map.tileSize, 3*map.tileSize, this, Enemy.Difficulty.EASY);
+        this.ghosts.add(new Enemy(25*map.tileSize, 3*map.tileSize, this, Enemy.Difficulty.EASY, "white.png"));
         this.hud = new Hud(game, this, false);
         this.font = new BitmapFont();
         font.getData().setScale(font.getScaleX()*2);

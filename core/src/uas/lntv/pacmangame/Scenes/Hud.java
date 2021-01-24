@@ -107,7 +107,7 @@ public class Hud {
         timeStamp = time;
     }
 
-    public String getStage(){
+    public String getMap(){
         return stages[(game.getLevel() % 5)];
     }
 

@@ -70,30 +70,18 @@ public class ControllerSwipe extends Controller {
 
                 if (angle > -0.5 && angle < 0.5){
                     //unten
-                    if(isLeftPressed()) leftPressed = false;
-                    if(isRightPressed()) rightPressed = false;
-                    if(isUpPressed()) upPressed = false;
                     downPressed = true;
                 }
                 if (angle > 0.5 && angle < 2){
                     //rechts
-                    if(isLeftPressed()) leftPressed = false;
-                    if(isUpPressed()) upPressed = false;
-                    if(isDownPressed()) downPressed = false;
                     rightPressed = true;
                 }
                 if (angle > 2 || angle < -2.5){
                     //oben
-                    if(isLeftPressed()) leftPressed = false;
-                    if(isRightPressed()) rightPressed = false;
-                    if(isDownPressed()) downPressed = false;
                     upPressed = true;
                 }
                 if (angle > -2.5 && angle < -0.5){
                     //links
-                    if(isRightPressed()) rightPressed = false;
-                    if(isUpPressed()) upPressed = false;
-                    if(isDownPressed()) downPressed = false;
                     leftPressed = true;
                 }
             }

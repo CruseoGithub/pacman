@@ -18,7 +18,7 @@ public class Enemy extends Actor {
     private Pathfinder aStar;
     private Difficulty difficulty;
 
-    public Enemy(int initX, int initY, MapScreen screen, Difficulty difficulty){
+    public Enemy(int initX, int initY, MapScreen screen, Difficulty difficulty, String ghost){
         super(initX, initY, screen);
 
         this.difficulty = difficulty;
@@ -26,11 +26,7 @@ public class Enemy extends Actor {
         this.nextdirection = Direction.DOWN;
         this.prevdirection = Direction.DOWN;
 
-        this.texture = new Texture("enemies.png");
-        this.sprite = new Sprite(texture,0, 0, 200,200);
-        this.sprite.rotate90(true);
-
-        this.texture = new Texture("redghost.png");
+        this.texture = new Texture(ghost);
         region = new TextureRegion(texture);
         region.setRegionX(0);
         region.setRegionY(0);

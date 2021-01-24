@@ -6,11 +6,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.ArrayList;
 
 import uas.lntv.pacmangame.Maps.GameMap;
 import uas.lntv.pacmangame.Maps.Map;
@@ -35,7 +36,7 @@ public abstract class MapScreen implements Screen {
     public Hud hud;
 
     public PacMan pacman;
-    public Enemy ghost;
+    public ArrayList<Enemy> ghosts = new ArrayList<Enemy>();
 
     private Controller controller;
 
@@ -95,24 +96,30 @@ public abstract class MapScreen implements Screen {
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN) || controller.isDownPressed()){
             pacman.nextdirection = Actor.Direction.DOWN;
         }
-
+        controller.pulledInput();
     }
 
     public void update(float dt){
         handleInput();
 
         pacman.update(dt);
-        ghost.update(dt);
+        for (Enemy ghost : ghosts) {
+            ghost.update(dt);
+        }
+
 
         if(pacman.state != Actor.State.DIEING){
             pacman.move();
-            ghost.move();
+            for(Enemy ghost : ghosts){
+                ghost.move();
+            }
         }
 
         gamecam.update();
 
         map.renderer.setView(gamecam);
     }
+
     @Override
     public void render(float delta){
         update(delta);
@@ -120,8 +127,11 @@ public abstract class MapScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        ghost.findNextDirection(pacman);
-        ghost.move();
+
+        for (Enemy ghost : ghosts) {
+            ghost.findNextDirection(pacman);
+            ghost.move();
+        }
 
         map.renderer.setView(gamecam);
         map.renderer.render();
@@ -132,9 +142,11 @@ public abstract class MapScreen implements Screen {
                 map.tileSize, map.tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
                 pacman.texturePositionX, 0, 32, 32, false, false);
 
-        game.batch.draw(ghost.texture,ghost.xPosition, ghost.yPosition,ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
-                map.tileSize,map.tileSize, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
-                ghost.texturePositionX, ghost.texturePositionY,32,32,false,false);
+        for (Enemy ghost : ghosts) {
+            game.batch.draw(ghost.texture, ghost.xPosition, ghost.yPosition, ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
+                    map.tileSize, map.tileSize, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
+                    ghost.texturePositionX, ghost.texturePositionY, 32, 32, false, false);
+        }
 
         game.batch.end();
 

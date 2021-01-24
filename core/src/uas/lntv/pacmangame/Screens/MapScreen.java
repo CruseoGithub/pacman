@@ -95,7 +95,6 @@ public abstract class MapScreen implements Screen {
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN) || controller.isDownPressed()){
             pacman.nextdirection = Actor.Direction.DOWN;
         }
-        controller.pullInput();
         pacman.move();
     }
 

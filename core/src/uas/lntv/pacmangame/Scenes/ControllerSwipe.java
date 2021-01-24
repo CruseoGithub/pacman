@@ -30,15 +30,18 @@ public class ControllerSwipe extends Controller {
 
                 return true;
             }
+
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
-                getDirection(screenX, screenY, false);
+                if(touchEvent) getDirection(screenX, screenY, false);
                 return super.touchDragged(screenX, screenY, pointer);
             }
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                touchEvent = false;
-                getDirection(screenX, screenY, true);
+                if(touchEvent) {
+                    touchEvent = false;
+                    getDirection(screenX, screenY, true);
+                }
                 return super.touchUp(screenX, screenY, pointer, button);
             }
 

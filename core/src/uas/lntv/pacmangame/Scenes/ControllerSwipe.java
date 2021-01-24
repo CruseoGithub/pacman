@@ -24,10 +24,10 @@ public class ControllerSwipe extends Controller {
                 System.out.println("Screen coordinates translated to world coordinates: "
                         + "X: " + touch.x + " Y: " + touch.y);
 
-                if(touch.y >= 0 * tileSize && touch.y <= 15 * tileSize){
-                    touchEvent = true;
-                    touchDownPos = new Vector3(touch.x, touch.y, 0);
-                }
+
+                touchEvent = true;
+                touchDownPos = new Vector3(touch.x, touch.y, 0);
+
                 return true;
             }
             @Override

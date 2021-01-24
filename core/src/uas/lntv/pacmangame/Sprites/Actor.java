@@ -118,10 +118,13 @@ public abstract class Actor {
             if(xPosition >= (26*tileSize)) xPosition = tileSize;
         }
     }
+
     public void die() {
         this.state = State.DIEING;
     }
+
     public void update(float dt){
         animation.update(dt);
     }
+
 }

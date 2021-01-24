@@ -24,16 +24,14 @@ public class PacMan extends Actor {
 
         super(initX, initY, screen);
         this.direction = Direction.RIGHT;
-        this.nextdirection = Direction.UP;
-        this.prevdirection = Direction.UP;
-        this.texture = pac32;
+        this.nextdirection = Direction.RIGHT;
+        this.prevdirection = Direction.RIGHT;
 
 
 
         this.game = game;
 
-        this.texture = new Texture("pacman32.png");
-
+        this.texture = pac32;
         region = new TextureRegion(texture);
 
         region.setRegionX(0);
@@ -42,7 +40,7 @@ public class PacMan extends Actor {
         animationSpeed = 0.01f;
         mouthOpen = true;
 
-        animation = new Animation(this,animationSpeed, this.screen,6);
+        animation = new Animation(this, animationSpeed, this.screen,6);
 
         region.flip(true, false);
         this.sprite = new Sprite(region);
@@ -55,7 +53,6 @@ public class PacMan extends Actor {
     public void die() {
 
         super.die();
-        if(game.getLives()>0) game.reduceLive(game.getLives());
         sound.play(0.35f);
         if(game.getLives() > 1) game.die();
         else {

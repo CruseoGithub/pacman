@@ -47,11 +47,6 @@ public class PacManGame extends Game {
 	public void resetScore(){ score = 0; }
 
 	public int getLives(){ return lives; }
-	public void reduceLive(int life){
-		life = life--;
-	}
-
-
 
 	public void die(){ lives--; }
 

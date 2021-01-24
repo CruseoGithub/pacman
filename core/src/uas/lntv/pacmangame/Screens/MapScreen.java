@@ -123,16 +123,6 @@ public abstract class MapScreen implements Screen {
         ghost.findNextDirection(pacman);
         ghost.move();
 
-        //Animation alle 0.5 Sekunden
-        if ((tmpTimerAnimation + 0.5f) <= hud.animationTime) {
-            if (pacman.texturePositionX == 0) {
-                pacman.texturePositionX = 96;
-            } else {
-                pacman.texturePositionX = 0;
-            }
-            tmpTimerAnimation = hud.animationTime;
-        }
-
         map.renderer.setView(gamecam);
         map.renderer.render();
 
@@ -150,7 +140,6 @@ public abstract class MapScreen implements Screen {
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.time -= Gdx.graphics.getDeltaTime();
-        hud.animationTime += Gdx.graphics.getDeltaTime();
     }
 
     @Override

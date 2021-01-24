@@ -25,7 +25,6 @@ public class Hud {
     private MapScreen screen;
 
     public float time;
-    public float animationTime;
     public Integer levelScore;
     //public Integer lives;
     public boolean visible;
@@ -51,7 +50,6 @@ public class Hud {
         this.game = game;
         this.screen = screen;
         time = 300;
-        animationTime = 0;
         levelScore = 0;
         //lives = 3;
         stages = new String[5];

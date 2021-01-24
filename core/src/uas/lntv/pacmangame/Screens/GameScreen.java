@@ -55,11 +55,11 @@ public class GameScreen extends MapScreen {
         game.batch.end();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.time += Gdx.graphics.getDeltaTime();
+        hud.time -= Gdx.graphics.getDeltaTime();
         hud.update();
         hud.stage.draw();
 
-        hud.animationTime += Gdx.graphics.getDeltaTime();
+
         hud.update();
         hud.stage.draw();
         if(hud.time < 0){

@@ -121,5 +121,6 @@ public class Enemy extends Actor {
     @Override
     public void move(){
         super.move();
+        this.rotation = 0;
     }
 }

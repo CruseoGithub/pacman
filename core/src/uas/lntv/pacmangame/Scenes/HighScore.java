@@ -38,6 +38,7 @@ public class HighScore {
                 highScores.add(i, newScore);
                 if(highScores.size() > 10){
                     highScores.remove(10);
+                    names.remove(10);
                 }
                 newHighScore = true;
                 savePrefs();

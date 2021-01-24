@@ -47,11 +47,14 @@ public class GameScreen extends MapScreen {
             this.dispose();
         }
 
-        if(hud.levelScore == 150){
-            game.levelUp();
-            game.increaseScore((int)hud.time);
-            game.setScreen(new GameScreen(game, hud.getStage()));
-            this.dispose();
+        if(hud.levelScore == 15){
+            //game.levelUp();
+            //game.increaseScore((int)hud.time);
+            //game.setScreen(new GameScreen(game, hud.getStage()));
+            //this.dispose();
+            this.pause();
+            this.hide();
+            music.pause();
         }
     }
 

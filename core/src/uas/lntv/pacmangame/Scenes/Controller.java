@@ -1,7 +1,9 @@
 package uas.lntv.pacmangame.Scenes;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.PauseableThread;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -17,6 +20,8 @@ import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
+import uas.lntv.pacmangame.Scenes.Hud;
+import uas.lntv.pacmangame.Screens.ScoreScreen;
 
 public class Controller {
     private MapScreen screen;
@@ -28,8 +33,10 @@ public class Controller {
     private int tileSize;
 
     boolean upPressed, downPressed, leftPressed, rightPressed;
+     boolean touchpause = true;
 
-    public Controller(MapScreen screen){
+
+    public Controller(final MapScreen screen){
         this.screen = screen;
         this.map = screen.map;
         this.tileSize = map.tileSize;
@@ -59,8 +66,12 @@ public class Controller {
                 }
                 if(touch.y >= 45 * tileSize && touch.y <= 50 * tileSize){
                     if(touch.x >= 2 * tileSize && touch.x <= 26 * tileSize) {
-                        System.out.println("Pausebutton Layer");
-
+                        if(touchpause == true) {
+                            System.out.println("Pausebutton Controller Layer");
+                            //game.setScreen(new ScoreScreen(game, "HighScoreList.tmx"));
+                            screen.pause();
+                            screen.dispose();
+                        }
                     }
                 }
                 return true;

@@ -18,19 +18,23 @@ import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
-public class Controller {
-    private MapScreen screen;
-    private Map map;
-    private OrthographicCamera gamecam;
-    private Viewport viewport;
-    private Stage stage;
+public abstract class Controller {
+    protected MapScreen screen;
+    protected Map map;
+    protected OrthographicCamera gamecam;
+    protected Viewport viewport;
+    protected Stage stage;
 
+<<<<<<< HEAD
     private float x;
     private float y;
 
     private int tileSize;
+=======
+    protected int tileSize;
+>>>>>>> development_2
 
-    boolean upPressed, downPressed, leftPressed, rightPressed;
+    protected boolean upPressed, downPressed, leftPressed, rightPressed;
 
     public Controller(MapScreen screen){
         this.screen = screen;
@@ -42,6 +46,7 @@ public class Controller {
                 gamecam);
         stage = new Stage(viewport, PacManGame.batch);
 
+<<<<<<< HEAD
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -83,6 +88,9 @@ public class Controller {
             }
 
         });
+=======
+
+>>>>>>> development_2
 
     }
 

@@ -74,7 +74,6 @@ public abstract class Actor {
         this.screen = screen;
     }
     public void move() {
-
         if(xPosition >= tileSize && xPosition <= 26*tileSize){
             prevdirection = direction;
             if(nextdirection != direction && screen.map.getTile(xPosition, yPosition, nextdirection).type != Tile.Type.WALL){
@@ -124,5 +123,4 @@ public abstract class Actor {
     public void update(float dt){
         animation.update(dt);
     }
-
 }

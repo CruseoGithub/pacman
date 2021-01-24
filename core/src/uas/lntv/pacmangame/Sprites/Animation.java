@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 
 public class Animation {
-
     public Actor actor;
     public float animationSpeed;
     public MapScreen screen;
@@ -28,7 +27,6 @@ public class Animation {
 
     public void animate() {
         if (actor instanceof PacMan) {
-
             switch (actor.state) {
                 case RUNNING:
                     if (actor.texturePositionX <= 128 && actor.mouthOpen == true) {
@@ -70,7 +68,6 @@ public class Animation {
                     break;
                 case LEFT:
                     actor.texturePositionY = 32;
-
                     break;
                 case UP:
                     actor.texturePositionY = 96;
@@ -86,9 +83,7 @@ public class Animation {
         }
     }
 
-
     public void update(float dt) {
-
         tmpTimerAnimation += dt;
         if (actor instanceof PacMan && actor.state != State.DIEING) {
             this.animationSpeed = 0.005f;

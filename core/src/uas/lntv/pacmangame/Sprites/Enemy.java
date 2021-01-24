@@ -129,7 +129,6 @@ public class Enemy extends Actor {
         this.setYPosition(40*tileSize);
     }
 
-
     @Override
     public void move(){
         super.move();

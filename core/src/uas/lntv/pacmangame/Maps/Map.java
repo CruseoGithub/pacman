@@ -81,6 +81,7 @@ public abstract class Map {
         }
 
         public abstract void generateDots(int total_Dots);
+
         public TextureRegion createTextureRegion(Tile.Type type){
             TextureRegion region = null;
             if(path.equals("map.tmx")){
@@ -155,7 +156,6 @@ public abstract class Map {
         }
 
         public void dispose(){
-
             tmxMap.dispose();
         }
 }

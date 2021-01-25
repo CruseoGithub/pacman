@@ -9,6 +9,7 @@ public class Tile extends StaticTiledMapTile {
 
     protected int x,y;
     public boolean isDot;
+    private boolean item = false;
 
     protected int cost;
     protected double heuristics;
@@ -27,6 +28,12 @@ public class Tile extends StaticTiledMapTile {
     public Type getType() {
         return type;
     }
+
+    public boolean isItem(){ return item; }
+
+    public void placeItem(){ item = true; }
+
+    public void takeItem(){ item = false; }
 
     public int getCost() {
         return cost;
@@ -89,7 +96,6 @@ public class Tile extends StaticTiledMapTile {
     }
 
     public Tile(TextureRegion textureRegion, Tile.Type type, int x, int y) {
-
         super(textureRegion);
         this.type = type;
         this.isDot = false;

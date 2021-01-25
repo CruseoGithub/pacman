@@ -38,12 +38,9 @@ public class Hud {
     Label livesTextLabel;
     Label livesLabel;
 
-    private Sound firstWarning;
     private Sound timeWarning;
-    private boolean firstWarned;
     private boolean warned;
     private boolean red;
-    private int firstWarningTime;
     private int warningTime;
     private float timeStamp;
 
@@ -103,12 +100,9 @@ public class Hud {
                 screen, this
         );
 
-        firstWarning = Gdx.audio.newSound(Gdx.files.internal("ALARM.mp3"));
-        timeWarning = Gdx.audio.newSound(Gdx.files.internal("timeWarning.wav"));
-        firstWarned = false;
+        timeWarning = Gdx.audio.newSound(Gdx.files.internal("ALARM.mp3"));
         warned = false;
         red = false;
-        firstWarningTime = 50;
         warningTime = 30;
         timeStamp = time;
     }
@@ -118,12 +112,6 @@ public class Hud {
     }
 
     public void update(){
-        if(time < firstWarningTime){
-            if(!firstWarned){
-                firstWarning.play(0.45f);
-                firstWarned = true;
-            }
-        }
         if(time < warningTime){
             if(!warned){
                 timeWarning.play(0.4f);
@@ -142,6 +130,7 @@ public class Hud {
                 timeStamp = time;
             }
         }
+
         if(visible){
             scoreLabel.setText(String.format("%06d", game.getScore()));
             timeLabel.setText(String.format("%03d", (int)time));

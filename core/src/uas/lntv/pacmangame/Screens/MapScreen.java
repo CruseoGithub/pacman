@@ -66,7 +66,7 @@ public abstract class MapScreen implements Screen {
                 break;
             case MENU:
                 this.map = new MenuMap(mapPath);
-                this.music = Gdx.audio.newMusic(Gdx.files.internal("MenuMusic.wav"));
+                this.music = Gdx.audio.newMusic(Gdx.files.internal("MenuMusic.mp3"));
                 music.setVolume(0.3f);
                 music.setLooping(true);
                 music.play();
@@ -77,7 +77,6 @@ public abstract class MapScreen implements Screen {
         this.gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
 
         this.controller = new ControllerSwipe(this);
-
     }
     @Override
     public void show() {
@@ -107,7 +106,6 @@ public abstract class MapScreen implements Screen {
             ghost.update(dt);
         }
 
-
         if(pacman.state != Actor.State.DIEING){
             pacman.move();
             for(Enemy ghost : ghosts){
@@ -135,12 +133,14 @@ public abstract class MapScreen implements Screen {
 
         game.batch.draw(pacman.texture, pacman.getXPosition(), pacman.getYPosition(), pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
                 map.tileSize, map.tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
-                pacman.texturePositionX, 0, 32, 32, false, false);
+                pacman.texturePositionX, 0, 32, 32, false, false
+        );
 
         for (Enemy ghost : ghosts) {
             game.batch.draw(ghost.texture, ghost.xPosition, ghost.yPosition, ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
                     map.tileSize, map.tileSize, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
-                    ghost.texturePositionX, ghost.texturePositionY, 32, 32, false, false);
+                    ghost.texturePositionX, ghost.texturePositionY, 32, 32, false, false
+            );
         }
 
         game.batch.end();

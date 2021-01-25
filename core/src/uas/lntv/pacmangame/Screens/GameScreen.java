@@ -52,9 +52,10 @@ public class GameScreen extends MapScreen {
             //game.increaseScore((int)hud.time);
             //game.setScreen(new GameScreen(game, hud.getStage()));
             //this.dispose();
-            this.pause();
-            this.hide();
             music.pause();
+            //game.setScreen(new PauseScreen(game, "PauseMap.tmx"));
+            game.setScreen(new ScoreScreen(game, "Pausecopy.tmx"));
+
         }
     }
 

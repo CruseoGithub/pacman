@@ -21,6 +21,7 @@ import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Scenes.Hud;
+import uas.lntv.pacmangame.Screens.PauseScreen;
 import uas.lntv.pacmangame.Screens.ScoreScreen;
 
 public class Controller {
@@ -71,6 +72,7 @@ public class Controller {
                             //game.setScreen(new ScoreScreen(game, "HighScoreList.tmx"));
                             screen.pause();
                             screen.dispose();
+                            //game.setScreen(new PauseScreen(game, "PauseMap.tmx"));
                         }
                     }
                 }

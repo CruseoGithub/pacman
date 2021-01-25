@@ -36,7 +36,7 @@ public abstract class MapScreen implements Screen {
     public PacMan pacman;
     public Enemy ghost;
 
-    private Controller controller;
+    protected Controller controller;
 
     protected float tmpTimerAnimation = 0;
 

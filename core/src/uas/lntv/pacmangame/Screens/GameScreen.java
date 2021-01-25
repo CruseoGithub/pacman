@@ -20,6 +20,12 @@ import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class GameScreen extends MapScreen {
 
+    public boolean PauseActive = false;
+    private boolean paused= false;
+    public void setPauseActive(boolean bool) {
+        PauseActive = bool;
+    }
+
     public GameScreen(PacManGame game, String mapPath) {
         super(game, mapPath, Type.GAME);
 
@@ -31,7 +37,12 @@ public class GameScreen extends MapScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
-
+        if(paused) {
+            controller = new Controller(this);
+            music.play();
+            paused = false;
+            PauseActive = false;
+        }
         hud.animationTime += Gdx.graphics.getDeltaTime();
         hud.update();
         hud.stage.draw();
@@ -47,16 +58,19 @@ public class GameScreen extends MapScreen {
             this.dispose();
         }
 
-        if(hud.levelScore == 15){
-            //game.levelUp();
-            //game.increaseScore((int)hud.time);
-            //game.setScreen(new GameScreen(game, hud.getStage()));
-            //this.dispose();
-            music.pause();
-            //game.setScreen(new PauseScreen(game, "PauseMap.tmx"));
-            game.setScreen(new PauseScreen(game, "Pausecopy.tmx", this));
-            hud.levelScore++;
+        if(hud.levelScore == 150){
+            game.levelUp();
+            game.increaseScore((int)hud.time);
+            game.setScreen(new GameScreen(game, hud.getStage()));
+            this.dispose();
 
+        }
+
+        if(PauseActive){
+            controller.dispose();
+            music.pause();
+            game.setScreen(new PauseScreen(game, "Pausecopy.tmx", this));
+            paused = true;
         }
     }
 

@@ -34,10 +34,10 @@ public class Controller {
     private int tileSize;
 
     boolean upPressed, downPressed, leftPressed, rightPressed;
-     boolean touchpause = true;
+    boolean touchpause = true;
+    private boolean PauseReady = false;
 
-
-    public Controller(final MapScreen screen){
+    public Controller(MapScreen screen){
         this.screen = screen;
         this.map = screen.map;
         this.tileSize = map.tileSize;
@@ -56,42 +56,56 @@ public class Controller {
                 System.out.println("Screen coordinates translated to world coordinates: "
                         + "X: " + touch.x + " Y: " + touch.y);
 
-                if(touch.x >= 12 * tileSize && touch.x <= 16 * tileSize){
-                    if(touch.y >= 0 && touch.y <= 4 * tileSize) downPressed = true;
-                    if(touch.y >= 10 * tileSize && touch.y <= 14 * tileSize) upPressed = true;
+                if (touch.x >= 12 * tileSize && touch.x <= 16 * tileSize) {
+                    if (touch.y >= 0 && touch.y <= 4 * tileSize) downPressed = true;
+                    if (touch.y >= 10 * tileSize && touch.y <= 14 * tileSize) upPressed = true;
                 }
 
-                if(touch.y >= 5 * tileSize && touch.y <= 9 * tileSize){
-                    if(touch.x >= 7 * tileSize && touch.x <= 11 * tileSize) leftPressed = true;
-                    if(touch.x >= 17 * tileSize && touch.x <= 21 * tileSize) rightPressed = true;
+                if (touch.y >= 5 * tileSize && touch.y <= 9 * tileSize) {
+                    if (touch.x >= 7 * tileSize && touch.x <= 11 * tileSize) leftPressed = true;
+                    if (touch.x >= 17 * tileSize && touch.x <= 21 * tileSize) rightPressed = true;
                 }
-                if(touch.y >= 45 * tileSize && touch.y <= 50 * tileSize){
-                    if(touch.x >= 2 * tileSize && touch.x <= 26 * tileSize) {
-                        if(touchpause == true) {
-                            System.out.println("Pausebutton Controller Layer");
-                            //game.setScreen(new ScoreScreen(game, "HighScoreList.tmx"));
-                            screen.pause();
-                            screen.dispose();
-                            //game.setScreen(new PauseScreen(game, "PauseMap.tmx"));
-                        }
-                    }
-                }
+                ready(touch.x, touch.y);
+
                 return true;
             }
 
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                Vector3 touch = new Vector3(screenX, screenY, 0);
+                gamecam.unproject(touch);
                 if(isLeftPressed()) leftPressed = false;
                 if(isRightPressed()) rightPressed = false;
                 if(isUpPressed()) upPressed = false;
                 if(isDownPressed()) downPressed = false;
+                setPause(touch.x, touch.y);
                 return super.touchUp(screenX, screenY, pointer, button);
+
             }
 
         });
 
     }
 
+    public void ready(float x, float y){
+        if (screen instanceof GameScreen) {
+            if (y >= 45 * tileSize && y <= 50 * tileSize) {
+                if (x >= 2 * tileSize && x <= 26 * tileSize) {
+                    PauseReady = true;
+                }
+            }
+        }
+    }
+    public void setPause(float x, float y){
+        if (PauseReady) {
+            PauseReady = false;
+            if (y >= 45 * tileSize && y <= 50 * tileSize) {
+                if (x >= 2 * tileSize && x <= 26 * tileSize) {
+                    ((GameScreen) screen).setPauseActive(true);
+                }
+            }
+        }
+    }
     public void dispose(){
         stage.dispose();
     }

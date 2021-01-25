@@ -111,6 +111,7 @@ public abstract class MapScreen implements Screen {
         if(pacman.state != Actor.State.DIEING){
             pacman.move();
             for(Enemy ghost : ghosts){
+                ghost.findNextDirection(pacman);
                 ghost.move();
             }
         }
@@ -126,12 +127,6 @@ public abstract class MapScreen implements Screen {
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-
-        for (Enemy ghost : ghosts) {
-            ghost.findNextDirection(pacman);
-            ghost.move();
-        }
 
         map.renderer.setView(gamecam);
         map.renderer.render();

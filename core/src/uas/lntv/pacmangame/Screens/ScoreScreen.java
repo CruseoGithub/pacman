@@ -15,7 +15,7 @@ public class ScoreScreen extends MapScreen {
         super(game, mapPath, Type.MENU);
         this.pacman = new PacMan(game, 25*map.tileSize, 47*map.tileSize, this, hud);
         this.pacman.setSpeed(16);
-        this.ghosts.add(new Enemy(25*map.tileSize, 3*map.tileSize, this, Enemy.Difficulty.EASY, "white.png"));
+        this.ghosts.add(new Enemy(25*map.tileSize, 3*map.tileSize, this, "white.png"));
         this.hud = new Hud(game, this, false);
         this.font = new BitmapFont();
         font.getData().setScale(font.getScaleX()*2);
@@ -30,14 +30,14 @@ public class ScoreScreen extends MapScreen {
             font.draw(
                     game.batch,
                     game.highScore.getHighScores().get(i).toString(),
-                    map.tileSize * 15,
-                    (map.tileSize * 44)-3*map.tileSize*i
+                    15*map.tileSize,
+                    (44*map.tileSize) - (3*i)*map.tileSize
             );
             font.draw(
                     game.batch,
                     game.highScore.getNames().get(i),
-                    map.tileSize * 3,
-                    (map.tileSize * 44)-3*map.tileSize*i
+                    3*map.tileSize,
+                    (44*map.tileSize) - (3*i)*map.tileSize
             );
         }
         game.batch.end();

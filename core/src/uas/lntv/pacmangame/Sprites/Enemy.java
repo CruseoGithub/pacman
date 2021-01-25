@@ -18,10 +18,10 @@ public class Enemy extends Actor {
     private Pathfinder aStar;
     private Difficulty difficulty;
 
-    public Enemy(int initX, int initY, MapScreen screen, Difficulty difficulty, String ghost){
+    public Enemy(int initX, int initY, MapScreen screen, String ghost){
         super(initX, initY, screen);
 
-        this.difficulty = difficulty;
+        this.difficulty = Difficulty.EASY;
         this.direction = Direction.DOWN;
         this.nextdirection = Direction.DOWN;
         this.prevdirection = Direction.DOWN;
@@ -41,6 +41,8 @@ public class Enemy extends Actor {
         this.sprite.setOrigin(tileSize/2, tileSize/2);
     }
 
+    public void setDifficulty(Enemy.Difficulty difficulty){ this.difficulty = difficulty; }
+
     private Direction UpOrDown(int distance){
         if (distance > 0) return Direction.DOWN;
         else return Direction.UP;
@@ -54,7 +56,7 @@ public class Enemy extends Actor {
     private Direction findNextDirectionEasy(Actor target){
         int distanceX = this.xPosition - target.getXPosition();
         int distanceY = this.yPosition - target.getYPosition();
-        if((Math.abs(distanceX)+Math.abs(distanceY)) > 16*tileSize) return Direction.getRandomDirection();
+        if((Math.abs(distanceX) + Math.abs(distanceY)) > 16*tileSize) return Direction.getRandomDirection();
         if((Math.abs(distanceX) < tileSize) && (Math.abs(distanceY) < tileSize)){
             target.die();
             this.die();
@@ -119,4 +121,5 @@ public class Enemy extends Actor {
         super.move();
         this.rotation = 0;
     }
+
 }

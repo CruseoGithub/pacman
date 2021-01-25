@@ -70,7 +70,7 @@ public abstract class Actor {
         this.xPosition = initX;
         this.yPosition = initY;
         this.rotation = 0;
-        this.speed = 1; // Values can be {0 == Stop , 1, 2 == Default, 4, 8, 16}
+        this.speed = 4; // Values can be {0 == Stop , 1, 2 == Default, 4, 8, 16}
         this.tileSize = screen.map.tileSize;
         this.screen = screen;
     }
@@ -87,34 +87,34 @@ public abstract class Actor {
                 case RIGHT:
                     if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL) {
                         if(prevdirection != direction) this.rotation = 0;
-                        xPosition+=speed;
+                        xPosition += speed;
                     }
                     break;
                 case LEFT:
                     if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL) {
-                        if(xPosition > screen.map.getTile(xPosition, yPosition).getX()) xPosition-=speed;
+                        if(xPosition > screen.map.getTile(xPosition, yPosition).getX()) xPosition -= speed;
                     }else{
                         if(prevdirection != direction) this.rotation = 180;
-                        xPosition-=speed;
+                        xPosition -= speed;
                     }
                     break;
                 case UP:
                     if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL){
                         if(prevdirection != direction) this.rotation = 90;
-                        yPosition+=speed;
+                        yPosition += speed;
                     }
                     break;
                 case DOWN:
                     if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL){
-                        if(yPosition > screen.map.getTile(xPosition, yPosition).getY()) yPosition-=speed;
+                        if(yPosition > screen.map.getTile(xPosition, yPosition).getY()) yPosition -= speed;
                     }else{
-                        if(prevdirection != direction) this.rotation =270;
-                        yPosition-=speed;
+                        if(prevdirection != direction) this.rotation = 270;
+                        yPosition -= speed;
                     }
                     break;
             }
         }else{
-            if(xPosition <= tileSize) xPosition = (((26*tileSize)-speed));
+            if(xPosition <= tileSize) xPosition = (((26*tileSize) - speed));
             if(xPosition >= (26*tileSize)) xPosition = tileSize;
         }
     }

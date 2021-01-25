@@ -16,10 +16,35 @@ public class GameScreen extends MapScreen {
 
         this.hud = new Hud(game, this, true);
         this.pacman = new PacMan(game, map.tileSize, 17 * map.tileSize, this, hud);
-        this.pacman.setSpeed(4);
-        this.ghosts.add(new Enemy(map.tileSize, 40 * map.tileSize, this, Enemy.Difficulty.EASY, "redghost.png"));
-        this.ghosts.add(new Enemy(map.tileSize, 39 * map.tileSize, this, Enemy.Difficulty.EASY, "orange.png"));
-        this.ghosts.add(new Enemy(map.tileSize, 41 * map.tileSize, this, Enemy.Difficulty.EASY, "pinky.png"));
+        this.ghosts.add(new Enemy(map.tileSize, 40 * map.tileSize, this, "redghost.png"));
+        if(game.getLevel()/5 >= 1) {
+            this.ghosts.add(new Enemy(map.tileSize, 39 * map.tileSize, this, "orange.png"));
+            ghosts.get(0).setDifficulty(Enemy.Difficulty.MEDIUM);
+        }
+        if(game.getLevel()/5 >= 2) {
+            this.ghosts.add(new Enemy(map.tileSize, 41 * map.tileSize, this, "pinky.png"));
+            pacman.setSpeed(pacman.getSpeed()*2);
+            for(Enemy ghost : ghosts) ghost.setSpeed(ghost.getSpeed()*2);
+        }
+        if(game.getLevel()/5 >= 3){
+            ghosts.get(1).setDifficulty(Enemy.Difficulty.MEDIUM);
+        }
+        if(game.getLevel()/5 >= 4){
+            ghosts.get(2).setDifficulty(Enemy.Difficulty.MEDIUM);
+            pacman.setSpeed(pacman.getSpeed()*2);
+            for(Enemy ghost : ghosts) ghost.setSpeed(ghost.getSpeed()*2);
+        }
+        if(game.getLevel()/5 >= 5){
+            ghosts.get(0).setDifficulty(Enemy.Difficulty.HARD);
+        }
+        if(game.getLevel()/5 >= 6){
+            ghosts.get(1).setDifficulty(Enemy.Difficulty.HARD);
+            pacman.setSpeed(pacman.getSpeed()*2);
+            for(Enemy ghost : ghosts) ghost.setSpeed(ghost.getSpeed()*2);
+        }
+        if(game.getLevel()/5 >= 7){
+            ghosts.get(2).setDifficulty(Enemy.Difficulty.HARD);
+        }
     }
 
     @Override

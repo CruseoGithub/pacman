@@ -3,6 +3,10 @@ package uas.lntv.pacmangame.Maps;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 
+import uas.lntv.pacmangame.Sprites.Actor;
+import uas.lntv.pacmangame.Sprites.Enemy;
+import uas.lntv.pacmangame.Sprites.PacMan;
+
 public class Tile extends StaticTiledMapTile {
     public enum Type { EMPTY,PATH, PATHDOT, WALL, DOT}
     public Tile.Type type;
@@ -10,6 +14,8 @@ public class Tile extends StaticTiledMapTile {
     protected int x,y;
     public boolean isDot;
     private boolean item = false;
+    private boolean occupiedByPacMan = false;
+    private boolean occupiedByGhost = false;
 
     protected int cost;
     protected double heuristics;
@@ -69,6 +75,20 @@ public class Tile extends StaticTiledMapTile {
     public Tile setPrev(Tile prev) {
         this.prev = prev;
         return this;
+    }
+
+    public boolean isOccupiedByGhost(){ return occupiedByGhost; }
+
+    public boolean isOccupiedByPacMan(){ return occupiedByPacMan; }
+
+    public void enter(Actor actor){
+        if(actor instanceof PacMan) occupiedByPacMan = true;
+        if(actor instanceof Enemy) occupiedByGhost = true;
+    }
+
+    public void leave(Actor actor){
+        if(actor instanceof PacMan) occupiedByPacMan = false;
+        if(actor instanceof Enemy) occupiedByGhost = false;
     }
 
     public Tile(){

@@ -18,7 +18,7 @@ public class GameScreen extends MapScreen {
         super(game, mapPath, Type.GAME);
 
         this.hud = new Hud(game, this, true);
-        this.pacman = new PacMan(game, map.tileSize, 17*map.tileSize, this, hud, Actor.Direction.RIGHT, Actor.Direction.RIGHT, Actor.Direction.RIGHT);
+        this.pacman = new PacMan(game, map.tileSize, 17*map.tileSize, this, hud);
         this.ghosts.add(new Enemy(13*map.tileSize, 33*map.tileSize, this, "redghost.png"));
         if(game.getLevel()/5 >= 1) {
             this.ghosts.add(new Enemy(14*map.tileSize, 33*map.tileSize, this, "orange.png"));
@@ -26,11 +26,11 @@ public class GameScreen extends MapScreen {
         }
         if(game.getLevel()/5 >= 2) {
             this.ghosts.add(new Enemy(12*map.tileSize, 33*map.tileSize, this, "pinky.png"));
-            pacman.setSpeed(pacman.getSpeed()*2);
-            for(Enemy ghost : ghosts) ghost.setSpeed(pacman.getSpeed());
         }
         if(game.getLevel()/5 >= 3){
             ghosts.get(1).setDifficulty(Enemy.Difficulty.MEDIUM);
+           /* pacman.setSpeed(pacman.getSpeed()*2);
+            for(Enemy ghost : ghosts) ghost.setSpeed(pacman.getSpeed());*/
         }
         if(game.getLevel()/5 >= 4){
             ghosts.get(2).setDifficulty(Enemy.Difficulty.MEDIUM);

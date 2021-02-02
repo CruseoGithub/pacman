@@ -45,11 +45,12 @@ public class PacMan extends Actor {
         this.sound = Gdx.audio.newSound(Gdx.files.internal("die.wav"));
     }
 
-    public PacMan(PacManGame game, int initX, int initY, MapScreen screen, Hud hud,  Direction now, Direction next, Direction prev){
+    public PacMan(PacManGame game, int initX, int initY, int speed, MapScreen screen, Hud hud,  Direction now, Direction next, Direction prev){
         super(initX, initY, screen);
         this.direction = now;
         this.nextdirection = next;
         this.prevdirection = prev;
+        this.setSpeed(speed);
 
         this.game = game;
 
@@ -69,6 +70,20 @@ public class PacMan extends Actor {
         this.sprite.setOrigin(tileSize/2, tileSize/2);
         this.hud = hud;
         this.sound = Gdx.audio.newSound(Gdx.files.internal("die.wav"));
+        switch(direction){
+            case RIGHT:
+                this.rotation = 0;
+                break;
+            case UP:
+                this.rotation = 90;
+                break;
+            case LEFT:
+                this.rotation = 180;
+                break;
+            case DOWN:
+                this.rotation = 270;
+                break;
+        }
     }
 
     @Override

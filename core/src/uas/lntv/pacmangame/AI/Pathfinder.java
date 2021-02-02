@@ -4,21 +4,22 @@ import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
+import uas.lntv.pacmangame.Sprites.Enemy;
 
 public class Pathfinder {
     private Tile[][] matrix;
     private Tile[] open;
     private Tile[] closed;
-    private Actor hunter;
+    private Enemy hunter;
     private int targetX;
     private int targetY;
     private MapScreen screen;
     private int closedElements;
     private int tileSize;
-
+    private boolean findHome;
 
     //A* Constructor
-    public Pathfinder(MapScreen screen, Actor hunter, Actor prey, int tileSize){
+    public Pathfinder(MapScreen screen, Enemy hunter, Actor prey, int tileSize){
         this.screen = screen;
         this.tileSize = tileSize;
         this.matrix = screen.map.matrix;
@@ -50,7 +51,7 @@ public class Pathfinder {
         this.closedElements = 0;
     }
 
-    public Pathfinder(MapScreen screen, Actor hunter, int targetX, int targetY, int tileSize){
+    public Pathfinder(MapScreen screen, Enemy hunter, int targetX, int targetY, int tileSize, boolean findHome){
         this.screen = screen;
         this.tileSize = tileSize;
         this.matrix = screen.map.matrix;
@@ -58,6 +59,7 @@ public class Pathfinder {
         this.hunter = hunter;
         this.targetX = targetX;
         this.targetY = targetY;
+        this.findHome = findHome;
         int i = 0;
         for(int x = 0; x < screen.map.mapWidth; x++){
             for(int y = 0; y < screen.map.mapHeight; y++){
@@ -128,7 +130,15 @@ public class Pathfinder {
         int y = min.getY() / tileSize;
         if(y < (screen.map.mapHeight) - 1) {
             Tile up = matrix[x][y + 1];
-            if(up.getType() != Tile.Type.WALL && up.getCost() > min.getCost() + 1){
+            if(up.getType() != Tile.Type.WALL
+                    && up.getCost() > min.getCost() + 1
+                    && ((((hunter.getDifficulty() == Enemy.Difficulty.HARD || hunter.getDifficulty() == Enemy.Difficulty.MEDIUM)
+                        && !(up.isOccupiedByGhost())
+                        )
+                        || ((hunter.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(up.isOccupiedByPacMan()))
+                    ) || findHome
+                    )
+            ){
                 up.setCost(min.getCost() + 1);
                 up.setTotal(up.getCost() + up.getHeuristics());
                 up.setPrev(min);
@@ -136,7 +146,15 @@ public class Pathfinder {
         }
         if(y > 0) {
             Tile down = matrix[x][y - 1];
-            if(down.getType() != Tile.Type.WALL && down.getCost() > min.getCost() + 1) {
+            if(down.getType() != Tile.Type.WALL
+                    && down.getCost() > min.getCost() + 1
+                    && ((((hunter.getDifficulty() == Enemy.Difficulty.HARD || hunter.getDifficulty() == Enemy.Difficulty.MEDIUM)
+                        && !(down.isOccupiedByGhost())
+                        )
+                        || ((hunter.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(down.isOccupiedByPacMan()))
+                    ) || findHome
+                    )
+            ){
                 down.setCost(min.getCost() + 1);
                 down.setTotal(down.getCost() + down.getHeuristics());
                 down.setPrev(min);
@@ -144,7 +162,15 @@ public class Pathfinder {
         }
         if(x > 0) {
             Tile left = matrix[x - 1][y];
-            if(left.getType() != Tile.Type.WALL && left.getCost() > min.getCost() + 1) {
+            if(left.getType() != Tile.Type.WALL
+                    && left.getCost() > min.getCost() + 1
+                    && ((((hunter.getDifficulty() == Enemy.Difficulty.HARD || hunter.getDifficulty() == Enemy.Difficulty.MEDIUM)
+                        && !(left.isOccupiedByGhost())
+                        )
+                        || ((hunter.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(left.isOccupiedByPacMan()))
+                    ) || findHome
+                    )
+            ){
                 left.setCost(min.getCost() + 1);
                 left.setTotal(left.getCost() + left.getHeuristics());
                 left.setPrev(min);
@@ -152,7 +178,15 @@ public class Pathfinder {
         }
         if(x < (screen.map.mapWidth - 1)) {
             Tile right = matrix[x + 1][y];
-            if(right.getType() != Tile.Type.WALL && right.getCost() > min.getCost() + 1) {
+            if(right.getType() != Tile.Type.WALL
+                    && right.getCost() > min.getCost() + 1
+                    && ((((hunter.getDifficulty() == Enemy.Difficulty.HARD || hunter.getDifficulty() == Enemy.Difficulty.MEDIUM)
+                        && !(right.isOccupiedByGhost())
+                        )
+                        || ((hunter.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(right.isOccupiedByPacMan()))
+                    ) || findHome
+                    )
+            ){
                 right.setCost(min.getCost() + 1);
                 right.setTotal(right.getCost() + right.getHeuristics());
                 right.setPrev(min);

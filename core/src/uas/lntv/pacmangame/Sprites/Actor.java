@@ -81,7 +81,7 @@ public abstract class Actor {
         this.screen = screen;
     }
     public void move() {
-        if(xPosition >= tileSize && xPosition <= 26*tileSize && yPosition >= 15*tileSize && yPosition <= 44*tileSize || screen instanceof ScoreScreen){
+        if(xPosition >= tileSize && xPosition <= 26*tileSize && yPosition >= 15*tileSize && yPosition <= 44*tileSize || !(screen instanceof GameScreen)){
             prevdirection = direction;
             if(nextdirection != direction && screen.map.getTile(xPosition, yPosition, nextdirection).type != Tile.Type.WALL){
                 if(xPosition == screen.map.getTile(xPosition, yPosition).getX() && yPosition == screen.map.getTile(xPosition, yPosition).getY()){
@@ -93,37 +93,91 @@ public abstract class Actor {
                 case RIGHT:
                     if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL) {
                         if(prevdirection != direction) this.rotation = 0;
+                        int temp = xPosition;
                         xPosition += speed;
+                        if(temp/tileSize != xPosition/tileSize){
+                            screen.map.getTile(temp, yPosition).leave(this);
+                            screen.map.getTile(xPosition, yPosition).enter(this);
+                        }
                     }
                     break;
                 case LEFT:
                     if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL) {
-                        if(xPosition > screen.map.getTile(xPosition, yPosition).getX()) xPosition -= speed;
+                        if(xPosition > screen.map.getTile(xPosition, yPosition).getX()) {
+                            int temp = xPosition;
+                            xPosition -= speed;
+                            if(temp/tileSize != xPosition/tileSize){
+                                screen.map.getTile(temp, yPosition).leave(this);
+                                screen.map.getTile(xPosition, yPosition).enter(this);
+                            }
+                        }
                     }else{
                         if(prevdirection != direction) this.rotation = 180;
+                        int temp = xPosition;
                         xPosition -= speed;
+                        if(temp/tileSize != xPosition/tileSize){
+                            screen.map.getTile(temp, yPosition).leave(this);
+                            screen.map.getTile(xPosition, yPosition).enter(this);
+                        }
                     }
                     break;
                 case UP:
                     if(screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL){
                         if(prevdirection != direction) this.rotation = 90;
+                        int temp = yPosition;
                         yPosition += speed;
+                        if(temp/tileSize != yPosition/tileSize){
+                            screen.map.getTile(xPosition, temp).leave(this);
+                            screen.map.getTile(xPosition, yPosition).enter(this);
+                        }
                     }
                     break;
                 case DOWN:
                     if(screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL){
-                        if(yPosition > screen.map.getTile(xPosition, yPosition).getY()) yPosition -= speed;
+                        if(yPosition > screen.map.getTile(xPosition, yPosition).getY()){
+                            int temp = yPosition;
+                            yPosition -= speed;
+                            if(temp/tileSize != yPosition/tileSize){
+                                screen.map.getTile(xPosition, temp).leave(this);
+                                screen.map.getTile(xPosition, yPosition).enter(this);
+                            }
+                        }
                     }else{
                         if(prevdirection != direction) this.rotation = 270;
+                        int temp = yPosition;
                         yPosition -= speed;
+                        if(temp/tileSize != yPosition/tileSize){
+                            screen.map.getTile(xPosition, temp).leave(this);
+                            screen.map.getTile(xPosition, yPosition).enter(this);
+                        }
                     }
                     break;
             }
         }else if(screen instanceof GameScreen){
-            if(xPosition < tileSize) xPosition = 26*tileSize - speed;
-            if(xPosition > 26*tileSize) xPosition = tileSize + speed;
-            if(yPosition < 15*tileSize) yPosition = 44*tileSize - speed;
-            if(yPosition > 44*tileSize) yPosition = 15*tileSize + speed;
+            if(xPosition < tileSize){
+                int temp = xPosition;
+                xPosition = 26*tileSize - speed;
+                screen.map.getTile(temp, yPosition).leave(this);
+                screen.map.getTile(xPosition, yPosition).enter(this);
+            }
+            if(xPosition > 26*tileSize){
+                int temp = xPosition;
+                xPosition = tileSize + speed;
+                screen.map.getTile(temp, yPosition).leave(this);
+                screen.map.getTile(xPosition, yPosition).enter(this);
+            }
+            if(yPosition < 15*tileSize){
+                int temp = yPosition;
+                yPosition = 44*tileSize - speed;
+                screen.map.getTile(xPosition, temp).leave(this);
+                screen.map.getTile(xPosition, yPosition).enter(this);
+            }
+            if(yPosition > 44*tileSize){
+                int temp = yPosition;
+                yPosition = 15*tileSize + speed;
+                screen.map.getTile(xPosition, temp).leave(this);
+                screen.map.getTile(xPosition, yPosition).enter(this);
+            }
         }
     }
 

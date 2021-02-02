@@ -13,8 +13,7 @@ public class SuperPacMan extends PacMan{
     private float supStatusTime;
 
     public SuperPacMan(PacManGame game, int initX, int initY, int speed, MapScreen screen, Hud hud, Direction now, Direction next, Direction prev) {
-        super(game, initX, initY, screen, hud, now, next, prev);
-//        this.setSpeed(speed*2);
+        super(game, initX, initY, speed, screen, hud, now, next, prev);
         killSound = Gdx.audio.newSound(Gdx.files.internal("kill.wav"));
     }
 
@@ -24,7 +23,7 @@ public class SuperPacMan extends PacMan{
         supStatusTime += Gdx.graphics.getDeltaTime();
         if(supStatusTime > 10){
             screen.switchMusicGame();
-            screen.pacman = new PacMan(game, getXPosition(), getYPosition(), screen, hud, direction, nextdirection, prevdirection);
+            screen.pacman = new PacMan(game, getXPosition(), getYPosition(), getSpeed(), screen, hud, direction, nextdirection, prevdirection);
             for(Enemy ghost : screen.getGhosts()){
                 ghost.resetDifficulty();
             }

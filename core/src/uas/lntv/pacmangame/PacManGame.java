@@ -16,18 +16,16 @@ public class PacManGame extends Game {
 	private int score;
 	private int lives;
 	public static SpriteBatch batch;
-	public MenuScreen menuScreen;
 	public HighScore highScore;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		level = 0;
+		level = 50;
 		score = 0;
 		lives = 3;
 		highScore = new HighScore();
-		menuScreen = new MenuScreen(this, "mainMenu.tmx");
-		setScreen(menuScreen);
+		setScreen(new MenuScreen(this, "mainMenu.tmx"));
 	}
 
 	public int getLevel(){

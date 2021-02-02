@@ -129,11 +129,11 @@ public abstract class MapScreen implements Screen {
                         if(ghost == getGhosts().get(0)){
                             ghost.texture = new Texture("redghost.png");
                         }
-                        if(game.getLevel() > 5) {
+                        if(game.getLevel() >= 5) {
                             if (ghost == getGhosts().get(1)) {
                                 ghost.texture = new Texture("orange.png");
                             }
-                            if(game.getLevel() > 10) {
+                            if(game.getLevel() >= 10) {
                                 if (ghost == getGhosts().get(2)) {
                                     ghost.texture = new Texture("pinky.png");
                                 }

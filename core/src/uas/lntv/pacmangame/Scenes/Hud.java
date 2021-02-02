@@ -50,7 +50,7 @@ public class Hud {
     public Hud(PacManGame game, MapScreen screen, boolean visible){
         this.game = game;
         this.screen = screen;
-        time = 300;
+        time = 100;
         levelScore = 0;
         //lives = 3;
         stages = new String[5];
@@ -98,6 +98,7 @@ public class Hud {
                 game,
                 20 * screen.map.tileSize,
                 (45 * screen.map.tileSize + screen.map.tileSize/2),
+                0,
                 screen,
                 this,
                 Actor.Direction.RIGHT,

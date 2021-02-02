@@ -17,6 +17,7 @@ public class Pathfinder {
     private int closedElements;
     private int tileSize;
     private boolean findHome;
+    private boolean noWay = false;
 
     //A* Constructor
     public Pathfinder(MapScreen screen, Enemy hunter, Actor prey, int tileSize){
@@ -99,6 +100,7 @@ public class Pathfinder {
     private Tile extractMinimum(){
         Tile temp = new Tile();
         int len = open.length;
+        if(len == 0) return null;
         for(int i = 0; i < len - 1; i++) {
             if (temp.getTotal() > open[i].getTotal()) {
                 temp = open[i];
@@ -124,6 +126,10 @@ public class Pathfinder {
 
     private boolean aStarAlg(){
         Tile min = extractMinimum();
+        if(min == null) {
+            noWay = true;
+            return true;
+        }
         closed[closedElements++] = min;
         if(min == screen.map.getTile(targetX, targetY)) return true;
         int x = min.getX() / tileSize;
@@ -198,6 +204,7 @@ public class Pathfinder {
     public Tile aStarResult(){
         Tile temp = screen.map.getTile(targetX, targetY);
         while(!aStarAlg());
+        if(noWay) return null;
         if(temp == screen.map.getTile(hunter.getXPosition(), hunter.getYPosition())) return temp;
         while(temp.getPrev() != screen.map.getTile(hunter.getXPosition(), hunter.getYPosition())){
             temp = temp.getPrev();

@@ -85,7 +85,7 @@ public class Enemy extends Actor {
         if(collisionTest(target)) return Direction.RIGHT;
         aStar = new Pathfinder(screen, this, target, tileSize);
         Tile temp = aStar.aStarResult();
-        if(temp == screen.map.getTile(xPosition, yPosition)) return direction;
+        if(temp == screen.map.getTile(xPosition, yPosition) || temp == null) return direction;
         if(temp.getY() > this.getYPosition()) return Direction.UP;
         if(temp.getY() < this.getYPosition()) return Direction.DOWN;
         if(temp.getX() > this.getXPosition()) return Direction.RIGHT;
@@ -105,7 +105,7 @@ public class Enemy extends Actor {
             if(hunter.getYPosition() >= 30*tileSize) aStar = new Pathfinder(screen, this, tileSize, 15*tileSize , tileSize, false);
         }
         Tile temp = aStar.aStarResult();
-        if(temp == screen.map.getTile(xPosition, yPosition)) return direction;
+        if(temp == screen.map.getTile(xPosition, yPosition) || temp == null) return direction;
         if(temp.getY() > this.getYPosition()) return Direction.UP;
         if(temp.getY() < this.getYPosition()) return Direction.DOWN;
         if(temp.getX() > this.getXPosition()) return Direction.RIGHT;

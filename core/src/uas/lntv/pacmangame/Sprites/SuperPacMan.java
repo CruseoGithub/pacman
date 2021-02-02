@@ -22,7 +22,7 @@ public class SuperPacMan extends PacMan{
     public void update(float dt) {
         super.update(dt);
         supStatusTime += Gdx.graphics.getDeltaTime();
-        if(supStatusTime > 15){
+        if(supStatusTime > 10){
             screen.switchMusicGame();
             screen.pacman = new PacMan(game, getXPosition(), getYPosition(), screen, hud, direction, nextdirection, prevdirection);
             for(Enemy ghost : screen.getGhosts()){

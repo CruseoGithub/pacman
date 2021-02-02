@@ -12,7 +12,7 @@ public class ScoreScreen extends MapScreen {
     private BitmapFont font;
 
     public ScoreScreen(PacManGame game, String mapPath){
-        super(game, mapPath, Type.MENU);
+        super(game, mapPath, Type.SCORE);
         this.pacman = new PacMan(game, 25*map.tileSize, 47*map.tileSize, this, hud);
         this.pacman.setSpeed(16);
         this.ghosts.add(new Enemy(25*map.tileSize, 3*map.tileSize, this, "white.png"));

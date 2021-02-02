@@ -72,6 +72,11 @@ public abstract class MapScreen implements Screen {
                 this.music = Gdx.audio.newMusic(Gdx.files.internal("MenuMusic.mp3"));
                 music.setVolume(0.3f);
                 break;
+            case SCORE:
+                this.map = new MenuMap(mapPath);
+                this.music = Gdx.audio.newMusic(Gdx.files.internal("HeartOfCourage.mp3"));
+                music.setVolume(0.4f);
+                break;
         }
         music.setLooping(true);
         music.play();
@@ -224,5 +229,6 @@ public abstract class MapScreen implements Screen {
         hud.dispose();
         map.dispose();
         music.dispose();
+        if(this instanceof GameScreen) huntingMusic.dispose();
     }
 }

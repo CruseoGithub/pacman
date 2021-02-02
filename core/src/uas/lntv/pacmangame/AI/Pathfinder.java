@@ -10,7 +10,8 @@ public class Pathfinder {
     private Tile[] open;
     private Tile[] closed;
     private Actor hunter;
-    private Actor prey;
+    private int targetX;
+    private int targetY;
     private MapScreen screen;
     private int closedElements;
     private int tileSize;
@@ -23,7 +24,8 @@ public class Pathfinder {
         this.matrix = screen.map.matrix;
         this.open = new Tile[(screen.map.mapWidth * screen.map.mapHeight )];
         this.hunter = hunter;
-        this.prey = prey;
+        this.targetX = prey.getXPosition();
+        this.targetY = prey.getYPosition();
         int i = 0;
         for(int x = 0; x < screen.map.mapWidth; x++){
             for(int y = 0; y < screen.map.mapHeight; y++){
@@ -35,8 +37,41 @@ public class Pathfinder {
                         .setHeuristics(calcHeuristics(
                                 x,
                                 y,
-                                (int) this.prey.getXPosition()/this.tileSize,
-                                (int) (this.prey.getYPosition() - 15*this.tileSize) / this.tileSize)
+                                (int) this.targetX/this.tileSize,
+                                (int) this.targetY/this.tileSize
+                                )
+                        );
+            }
+        }
+        open[searchHunter()]
+                .setCost(0)
+                .setTotal(open[searchHunter()].getHeuristics());
+        this.closed = new Tile[(screen.map.mapWidth * screen.map.mapHeight)];
+        this.closedElements = 0;
+    }
+
+    public Pathfinder(MapScreen screen, Actor hunter, int targetX, int targetY, int tileSize){
+        this.screen = screen;
+        this.tileSize = tileSize;
+        this.matrix = screen.map.matrix;
+        this.open = new Tile[(screen.map.mapWidth * screen.map.mapHeight )];
+        this.hunter = hunter;
+        this.targetX = targetX;
+        this.targetY = targetY;
+        int i = 0;
+        for(int x = 0; x < screen.map.mapWidth; x++){
+            for(int y = 0; y < screen.map.mapHeight; y++){
+                open[i] = this.matrix[x][y];
+                open[i++]
+                        .setCost(1000000)
+                        .setTotal(1000000)
+                        .setPrev(null)
+                        .setHeuristics(calcHeuristics(
+                                x,
+                                y,
+                                (int) this.targetX/this.tileSize,
+                                (int) this.targetY/this.tileSize
+                                )
                         );
             }
         }
@@ -85,10 +120,10 @@ public class Pathfinder {
         return copy;
     }
 
-    private int aStarAlg(){
+    private boolean aStarAlg(){
         Tile min = extractMinimum();
         closed[closedElements++] = min;
-        if(min == screen.map.getTile(prey.getXPosition(), prey.getYPosition())) return 1;
+        if(min == screen.map.getTile(targetX, targetY)) return true;
         int x = min.getX() / tileSize;
         int y = min.getY() / tileSize;
         if(y < (screen.map.mapHeight) - 1) {
@@ -123,12 +158,13 @@ public class Pathfinder {
                 right.setPrev(min);
             }
         }
-        return 0;
+        return false;
     }
 
     public Tile aStarResult(){
-        Tile temp = screen.map.getTile(prey.getXPosition(), prey.getYPosition());
-        while(aStarAlg() == 0);
+        Tile temp = screen.map.getTile(targetX, targetY);
+        while(!aStarAlg());
+        if(temp == screen.map.getTile(hunter.getXPosition(), hunter.getYPosition())) return temp;
         while(temp.getPrev() != screen.map.getTile(hunter.getXPosition(), hunter.getYPosition())){
             temp = temp.getPrev();
         }

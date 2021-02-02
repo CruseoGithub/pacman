@@ -145,7 +145,7 @@ public abstract class Map {
 
         public void collect(Tile tile){
             if(tile.isDot){
-                sound.play(0.3f);
+                sound.play(0.25f);
                 layerCollect.setCell(
                         tile.getX()/tileSize,
                         tile.getY()/tileSize,

@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -31,12 +32,13 @@ public abstract class MapScreen implements Screen {
     protected OrthographicCamera gamecam;
     protected Viewport gamePort;
     protected Music music;
+    protected Music huntingMusic;
 
     public Map map;
     public Hud hud;
 
     public PacMan pacman;
-    public ArrayList<Enemy> ghosts = new ArrayList<Enemy>();
+    protected ArrayList<Enemy> ghosts = new ArrayList<Enemy>();
 
     private Controller controller;
 
@@ -61,17 +63,18 @@ public abstract class MapScreen implements Screen {
                     this.music = Gdx.audio.newMusic(Gdx.files.internal("AmazingHorse.mp3"));
                     music.setVolume(0.4f);
                 }
-                music.setLooping(true);
-                music.play();
+                this.huntingMusic = Gdx.audio.newMusic(Gdx.files.internal("hunting.mp3"));
+                huntingMusic.setVolume(0.25f);
+                huntingMusic.setLooping(true);
                 break;
             case MENU:
                 this.map = new MenuMap(mapPath);
                 this.music = Gdx.audio.newMusic(Gdx.files.internal("MenuMusic.mp3"));
                 music.setVolume(0.3f);
-                music.setLooping(true);
-                music.play();
                 break;
         }
+        music.setLooping(true);
+        music.play();
 
         this.gamePort = new FitViewport(map.mapWidth*map.tileSize, map.mapHeight*map.tileSize, gamecam);
         this.gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
@@ -109,8 +112,38 @@ public abstract class MapScreen implements Screen {
         if(pacman.state != Actor.State.DIEING){
             pacman.move();
             for(Enemy ghost : ghosts){
-                ghost.findNextDirection(pacman);
-                ghost.move();
+                if(ghost.state != Actor.State.KILLED) {
+                    ghost.findNextDirection(pacman);
+                    ghost.move();
+                } else{
+                    if(map.getTile(ghost.getXPosition(), ghost.getYPosition()) != map.getTile(ghost.getStartPosX(), ghost.getStartPosY())){
+                        ghost.texture = new Texture("blue.png");
+                        ghost.nextdirection = ghost.findHome();
+                        ghost.move();
+                    } else{
+                        if(ghost == getGhosts().get(0)){
+                            ghost.texture = new Texture("redghost.png");
+                        }
+                        if(game.getLevel() > 5) {
+                            if (ghost == getGhosts().get(1)) {
+                                ghost.texture = new Texture("orange.png");
+                            }
+                            if(game.getLevel() > 10) {
+                                if (ghost == getGhosts().get(2)) {
+                                    ghost.texture = new Texture("pinky.png");
+                                }
+                            }
+                        }
+                        ghost.state = Actor.State.RUNNING;
+                    }
+                }
+            }
+        } else{
+            for(Enemy ghost : ghosts){
+                if(map.getTile(ghost.getXPosition(), ghost.getYPosition()) != map.getTile(ghost.getStartPosX(), ghost.getStartPosY())){
+                    ghost.nextdirection = ghost.findHome();
+                    ghost.move();
+                }
             }
         }
 
@@ -149,6 +182,8 @@ public abstract class MapScreen implements Screen {
         hud.time -= Gdx.graphics.getDeltaTime();
     }
 
+    public ArrayList<Enemy> getGhosts(){ return ghosts; }
+
     @Override
     public void resize(int width, int height) {
         gamePort.update(width,height,false);
@@ -169,6 +204,18 @@ public abstract class MapScreen implements Screen {
     @Override
     public void hide() {
 
+    }
+
+    public void switchMusicHunting(){
+        if(music.isPlaying()){
+            music.pause();
+            huntingMusic.play();
+        }
+    }
+
+    public void switchMusicGame(){
+        huntingMusic.stop();
+        music.play();
     }
 
     @Override

@@ -8,6 +8,9 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
+import uas.lntv.pacmangame.Sprites.Actor;
+import uas.lntv.pacmangame.Sprites.Enemy;
+import uas.lntv.pacmangame.Sprites.SuperPacMan;
 
 public class GameMap extends Map {
     MapScreen screen;
@@ -66,7 +69,22 @@ public class GameMap extends Map {
                     null
             );
             tile.takeItem();
-            powerUp.play(0.4f);
+            powerUp.play(0.1f);
+            screen.switchMusicHunting();
+            screen.pacman = new SuperPacMan(
+                    game,
+                    screen.pacman.getXPosition(),
+                    screen.pacman.getYPosition(),
+                    screen.pacman.getSpeed(),
+                    screen,
+                    screen.hud,
+                    screen.pacman.direction,
+                    screen.pacman.nextdirection,
+                    screen.pacman.prevdirection
+            );
+            for(Enemy ghost : screen.getGhosts()){
+                ghost.setDifficulty(Enemy.Difficulty.RUNAWAY);
+            }
         }
         if(tile.isDot){
             game.increaseScore(1);

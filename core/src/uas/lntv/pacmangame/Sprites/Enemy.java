@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import uas.lntv.pacmangame.AI.Pathfinder;
 import uas.lntv.pacmangame.Maps.Tile;
-import uas.lntv.pacmangame.PacManGame;
-import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
 public class Enemy extends Actor {
@@ -17,6 +15,7 @@ public class Enemy extends Actor {
 
     private Pathfinder aStar;
     private Difficulty difficulty;
+    private Difficulty levelDiff;
 
     public Enemy(int initX, int initY, MapScreen screen, String ghost){
         super(initX, initY, screen);
@@ -41,7 +40,14 @@ public class Enemy extends Actor {
         this.sprite.setOrigin(tileSize/2, tileSize/2);
     }
 
-    public void setDifficulty(Enemy.Difficulty difficulty){ this.difficulty = difficulty; }
+    public void setDifficulty(Enemy.Difficulty difficulty){
+        if(difficulty == Difficulty.RUNAWAY && this.difficulty != Difficulty.RUNAWAY) levelDiff = this.difficulty;
+        this.difficulty = difficulty;
+    }
+
+    public void resetDifficulty(){
+        setDifficulty(levelDiff);
+    }
 
     private Direction UpOrDown(int distance){
         if (distance > 0) return Direction.DOWN;
@@ -57,11 +63,7 @@ public class Enemy extends Actor {
         int distanceX = this.xPosition - target.getXPosition();
         int distanceY = this.yPosition - target.getYPosition();
         if((Math.abs(distanceX) + Math.abs(distanceY)) > 16*tileSize) return Direction.getRandomDirection();
-        if((Math.abs(distanceX) < tileSize) && (Math.abs(distanceY) < tileSize)){
-            target.die();
-            this.die();
-            return Direction.RIGHT;
-        }
+        if(collisionTest(target)) return Direction.RIGHT;
         if(Math.abs(distanceX) > Math.abs(distanceY)){
             return LeftOrRight(distanceX);
         }
@@ -78,14 +80,36 @@ public class Enemy extends Actor {
     }
 
     private Direction findNextDirectionHard(Actor target){
-        int distanceX = this.xPosition - target.getXPosition();
-        int distanceY = this.yPosition - target.getYPosition();
-        if((Math.abs(distanceX) < tileSize) && (Math.abs(distanceY) < tileSize)){
-            target.die();
-            this.die();
+        if(collisionTest(target)) return Direction.RIGHT;
+        aStar = new Pathfinder(screen, this, target, tileSize);
+        Tile temp = aStar.aStarResult();
+        if(temp.getY() > this.getYPosition()) return Direction.UP;
+        if(temp.getY() < this.getYPosition()) return Direction.DOWN;
+        if(temp.getX() > this.getXPosition()) return Direction.RIGHT;
+        else return Direction.LEFT;
+    }
+
+    private Direction runAway(Actor hunter){
+        if(collisionTest(hunter)){
+            this.state = State.KILLED;
             return Direction.RIGHT;
         }
-        aStar = new Pathfinder(screen, this, target, tileSize);
+        if(hunter.getXPosition() < 13*tileSize){
+            if(hunter.getYPosition() < 30*tileSize) aStar = new Pathfinder(screen, this, 26*tileSize, 43*tileSize, tileSize);
+            if(hunter.getYPosition() >= 30*tileSize) aStar = new Pathfinder(screen, this, 26*tileSize, 15*tileSize, tileSize);
+        } else{
+            if(hunter.getYPosition() < 30*tileSize) aStar = new Pathfinder(screen, this, tileSize, 43*tileSize , tileSize);
+            if(hunter.getYPosition() >= 30*tileSize) aStar = new Pathfinder(screen, this, tileSize, 15*tileSize , tileSize);
+        }
+        Tile temp = aStar.aStarResult();
+        if(temp.getY() > this.getYPosition()) return Direction.UP;
+        if(temp.getY() < this.getYPosition()) return Direction.DOWN;
+        if(temp.getX() > this.getXPosition()) return Direction.RIGHT;
+        else return Direction.LEFT;
+    }
+
+    public Direction findHome(){
+        aStar = new Pathfinder(screen, this, getStartPosX(), getStartPosY(), tileSize);
         Tile temp = aStar.aStarResult();
         if(temp.getY() > this.getYPosition()) return Direction.UP;
         if(temp.getY() < this.getYPosition()) return Direction.DOWN;
@@ -107,14 +131,26 @@ public class Enemy extends Actor {
             case HARD:
                 nextdirection = findNextDirectionHard(target);
                 break;
+            case RUNAWAY:
+                nextdirection = runAway(target);
+                break;
         }
     }
-    @Override
-    public void die() {
-        super.die();
-        this.setXPosition(tileSize);
-        this.setYPosition(40*tileSize);
+
+    private boolean collisionTest(Actor target){
+        int distanceX = this.xPosition - target.getXPosition();
+        int distanceY = this.yPosition - target.getYPosition();
+        if((Math.abs(distanceX) < tileSize) && (Math.abs(distanceY) < tileSize)){
+            target.collide();
+            this.collide();
+            return true;
+        }
+        return false;
     }
+
+    @Override
+    public void collide() {    }
+
 
     @Override
     public void move(){

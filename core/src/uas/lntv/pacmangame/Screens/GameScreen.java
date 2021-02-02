@@ -3,8 +3,11 @@ package uas.lntv.pacmangame.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 
+import java.util.ArrayList;
+
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Hud;
+import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
@@ -15,14 +18,14 @@ public class GameScreen extends MapScreen {
         super(game, mapPath, Type.GAME);
 
         this.hud = new Hud(game, this, true);
-        this.pacman = new PacMan(game, map.tileSize, 17 * map.tileSize, this, hud);
-        this.ghosts.add(new Enemy(map.tileSize, 40 * map.tileSize, this, "redghost.png"));
+        this.pacman = new PacMan(game, map.tileSize, 17*map.tileSize, this, hud, Actor.Direction.RIGHT, Actor.Direction.RIGHT, Actor.Direction.RIGHT);
+        this.ghosts.add(new Enemy(13*map.tileSize, 33*map.tileSize, this, "redghost.png"));
         if(game.getLevel()/5 >= 1) {
-            this.ghosts.add(new Enemy(map.tileSize, 39 * map.tileSize, this, "orange.png"));
+            this.ghosts.add(new Enemy(14*map.tileSize, 33*map.tileSize, this, "orange.png"));
             ghosts.get(0).setDifficulty(Enemy.Difficulty.MEDIUM);
         }
         if(game.getLevel()/5 >= 2) {
-            this.ghosts.add(new Enemy(map.tileSize, 41 * map.tileSize, this, "pinky.png"));
+            this.ghosts.add(new Enemy(12*map.tileSize, 33*map.tileSize, this, "pinky.png"));
             pacman.setSpeed(pacman.getSpeed()*2);
             for(Enemy ghost : ghosts) ghost.setSpeed(pacman.getSpeed());
         }
@@ -34,8 +37,6 @@ public class GameScreen extends MapScreen {
         }
         if(game.getLevel()/5 >= 5){
             ghosts.get(0).setDifficulty(Enemy.Difficulty.HARD);
-            pacman.setSpeed(pacman.getSpeed()*2);
-            for(Enemy ghost : ghosts) ghost.setSpeed(pacman.getSpeed());
         }
         if(game.getLevel()/5 >= 6){
             ghosts.get(1).setDifficulty(Enemy.Difficulty.HARD);

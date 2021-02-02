@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
+import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class Hud {
@@ -97,7 +98,11 @@ public class Hud {
                 game,
                 20 * screen.map.tileSize,
                 (45 * screen.map.tileSize + screen.map.tileSize/2),
-                screen, this
+                screen,
+                this,
+                Actor.Direction.RIGHT,
+                Actor.Direction.RIGHT,
+                Actor.Direction.RIGHT
         );
 
         timeWarning = Gdx.audio.newSound(Gdx.files.internal("ALARM.mp3"));

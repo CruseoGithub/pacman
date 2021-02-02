@@ -12,6 +12,7 @@ import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
+import uas.lntv.pacmangame.Screens.ScoreScreen;
 
 public abstract class Actor {
     public enum Direction {
@@ -22,7 +23,7 @@ public abstract class Actor {
         }
     };
     public enum State {
-        RUNNING, STOPPING, EATING, DIEING
+        RUNNING, STOPPING, EATING, DIEING, KILLED
     };
 
     public int xPosition;
@@ -44,7 +45,8 @@ public abstract class Actor {
     public TextureRegion region;
     public Texture texture;
     protected MapScreen screen;
-
+    private int startPosX;
+    private int startPosY;
 
     public Animation animation;
     public float animationSpeed;
@@ -52,6 +54,8 @@ public abstract class Actor {
 
     public int getSpeed() { return speed; }
     public void setSpeed(int speed) { this.speed = speed; }
+    public int getStartPosX() { return startPosX; }
+    public int getStartPosY() { return startPosY; }
     public int getXPosition() {
         return xPosition;
     }
@@ -67,7 +71,9 @@ public abstract class Actor {
 
     public Actor(int initX, int initY, MapScreen screen){
         this.state = State.RUNNING;
+        this.startPosX = initX;
         this.xPosition = initX;
+        this.startPosY = initY;
         this.yPosition = initY;
         this.rotation = 0;
         this.speed = 4; // Values can be {0 == Stop , 1, 2, 4 == default, 8, 16}
@@ -75,7 +81,7 @@ public abstract class Actor {
         this.screen = screen;
     }
     public void move() {
-        if(xPosition >= tileSize && xPosition <= 26*tileSize){
+        if(xPosition >= tileSize && xPosition <= 26*tileSize && yPosition >= 15*tileSize && yPosition <= 44*tileSize || screen instanceof ScoreScreen){
             prevdirection = direction;
             if(nextdirection != direction && screen.map.getTile(xPosition, yPosition, nextdirection).type != Tile.Type.WALL){
                 if(xPosition == screen.map.getTile(xPosition, yPosition).getX() && yPosition == screen.map.getTile(xPosition, yPosition).getY()){
@@ -113,13 +119,15 @@ public abstract class Actor {
                     }
                     break;
             }
-        }else{
-            if(xPosition <= tileSize) xPosition = (((26*tileSize) - speed));
-            if(xPosition >= (26*tileSize)) xPosition = tileSize;
+        }else if(screen instanceof GameScreen){
+            if(xPosition < tileSize) xPosition = 26*tileSize - speed;
+            if(xPosition > 26*tileSize) xPosition = tileSize + speed;
+            if(yPosition < 15*tileSize) yPosition = 44*tileSize - speed;
+            if(yPosition > 44*tileSize) yPosition = 15*tileSize + speed;
         }
     }
 
-    public void die() {
+    public void collide() {
         this.state = State.DIEING;
     }
 

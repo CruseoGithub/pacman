@@ -8,17 +8,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Hud;
-import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Screens.MenuScreen;
 import uas.lntv.pacmangame.Screens.ScoreScreen;
 
 public class PacMan extends Actor {
     public Hud hud;
-    Texture pac32 = new Texture("pacman32.png");
+    Texture pac32 = new Texture("PacMan32.png");
+    Texture superPac = new Texture("SuperPacMan.png");
     private Sound sound;
-    private PacManGame game;
-
+    protected PacManGame game;
 
     public PacMan(PacManGame game, int initX, int initY, MapScreen screen, Hud hud){
         super(initX, initY, screen);
@@ -28,9 +27,35 @@ public class PacMan extends Actor {
 
         this.game = game;
 
-        this.texture = pac32;
+        if(!(this instanceof SuperPacMan)) this.texture = pac32;
+        else this.texture = superPac;
         region = new TextureRegion(texture);
+        region.setRegionX(0);
+        region.setRegionY(0);
+        texturePositionX = 0;
+        animationSpeed = 0.01f;
+        mouthOpen = true;
 
+        animation = new Animation(this, animationSpeed, this.screen,6);
+
+        region.flip(true, false);
+        this.sprite = new Sprite(region);
+        this.sprite.setOrigin(tileSize/2, tileSize/2);
+        this.hud = hud;
+        this.sound = Gdx.audio.newSound(Gdx.files.internal("die.wav"));
+    }
+
+    public PacMan(PacManGame game, int initX, int initY, MapScreen screen, Hud hud,  Direction now, Direction next, Direction prev){
+        super(initX, initY, screen);
+        this.direction = now;
+        this.nextdirection = next;
+        this.prevdirection = prev;
+
+        this.game = game;
+
+        if(!(this instanceof SuperPacMan)) this.texture = pac32;
+        else this.texture = superPac;
+        region = new TextureRegion(texture);
         region.setRegionX(0);
         region.setRegionY(0);
         texturePositionX = 0;
@@ -47,8 +72,8 @@ public class PacMan extends Actor {
     }
 
     @Override
-    public void die() {
-        super.die();
+    public void collide() {
+        super.collide();
         sound.play(0.35f);
         if(game.getLives() > 1) game.die();
         else {

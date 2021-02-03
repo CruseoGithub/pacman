@@ -50,7 +50,6 @@ public class HighScore {
 
     public void nameIsSet(){ nameSet = true; }
 
-
     public boolean isNameSet(){
         return nameSet;
     }
@@ -124,7 +123,6 @@ public class HighScore {
         prefs.putString("names_9", "nobody");
         prefs.putString("names_10", "nobody");
 */
-
 
         prefs.flush();
     }

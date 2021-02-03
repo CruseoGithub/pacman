@@ -14,7 +14,7 @@ import uas.lntv.pacmangame.Screens.ScoreScreen;
 
 public class PacMan extends Actor {
     public Hud hud;
-    Texture pac32 = new Texture("PacMan32.png");
+    Texture pac32 = new Texture("pacman32.png");
     Texture superPac = new Texture("SuperPacMan.png");
     private Sound sound;
     protected PacManGame game;

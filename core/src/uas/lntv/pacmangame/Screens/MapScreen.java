@@ -26,9 +26,7 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public abstract class MapScreen implements Screen {
-    public enum Type {GAME, MENU, SCORE}
-
-    ;
+    public enum Type {GAME, MENU, SCORE};
 
     protected PacManGame game;
     protected OrthographicCamera gamecam;
@@ -54,7 +52,6 @@ public abstract class MapScreen implements Screen {
         this.game = game;
         this.gamecam = new OrthographicCamera();
 
-
         switch (type) {
             case GAME:
                 this.map = new GameMap(game, mapPath, this);
@@ -71,7 +68,7 @@ public abstract class MapScreen implements Screen {
                 break;
             case MENU:
                 this.map = new MenuMap(mapPath);
-                this.music = Gdx.audio.newMusic(Gdx.files.internal("MenuMusic.mp3"));
+                this.music = Gdx.audio.newMusic(Gdx.files.internal("MenuMusic.MP3"));
                 music.setVolume(0.3f);
                 break;
             case SCORE:
@@ -189,15 +186,11 @@ public abstract class MapScreen implements Screen {
         hud.time -= Gdx.graphics.getDeltaTime();
     }
 
-    public ArrayList<Enemy> getGhosts() {
-        return ghosts;
-    }
+    public ArrayList<Enemy> getGhosts() { return ghosts; }
 
-    public void evolvePacMan() {
-    }
+    public void evolvePacMan() { }
 
-    public void shrinkPacMan() {
-    }
+    public void shrinkPacMan() { }
 
     @Override
     public void resize(int width, int height) {
@@ -205,6 +198,19 @@ public abstract class MapScreen implements Screen {
         gamePort.getCamera().position.set(map.mapWidth * map.tileSize / 2f, map.mapHeight * map.tileSize / 2f, 0);
         gamePort.getCamera().update();
     }
+
+    public void switchMusicHunting() {
+        if (music.isPlaying()) {
+            music.pause();
+            huntingMusic.play();
+        }
+    }
+
+    public void switchMusicGame() {
+        huntingMusic.stop();
+        music.play();
+    }
+
 
     @Override
     public void pause() {
@@ -219,18 +225,6 @@ public abstract class MapScreen implements Screen {
     @Override
     public void hide() {
 
-    }
-
-    public void switchMusicHunting() {
-        if (music.isPlaying()) {
-            music.pause();
-            huntingMusic.play();
-        }
-    }
-
-    public void switchMusicGame() {
-        huntingMusic.stop();
-        music.play();
     }
 
     @Override

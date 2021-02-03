@@ -21,7 +21,7 @@ public class PacManGame extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		level = 50;
+		level = 0;
 		score = 0;
 		lives = 3;
 		highScore = new HighScore();
@@ -51,13 +51,10 @@ public class PacManGame extends Game {
 	public void resetLives(){ lives = 3; }
 
 	@Override
-	public void render () {
-		super.render();
-	}
+	public void render () { super.render(); }
 	
 	@Override
 	public void dispose () {
-
 		//gameScreen.dispose();
 		batch.dispose();
 	}

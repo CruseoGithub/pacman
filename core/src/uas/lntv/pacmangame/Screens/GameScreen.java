@@ -10,9 +10,14 @@ import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
+import uas.lntv.pacmangame.Sprites.SuperPacMan;
 
 
 public class GameScreen extends MapScreen {
+
+    private boolean pacManSuper;
+
+    public boolean isPacManSuper() { return pacManSuper; }
 
     public GameScreen(PacManGame game, String mapPath) {
         super(game, mapPath, Type.GAME);
@@ -44,6 +49,7 @@ public class GameScreen extends MapScreen {
         if(game.getLevel()/5 >= 7){
             ghosts.get(2).setDifficulty(Enemy.Difficulty.HARD);
         }
+        this.pacManSuper = false;
     }
 
     @Override
@@ -71,4 +77,25 @@ public class GameScreen extends MapScreen {
         }
     }
 
+    public void evolvePacMan(){
+        if(!isPacManSuper()){
+            this.switchMusicHunting();
+            this.pacman = new SuperPacMan(
+                    game,
+                    this.pacman.getXPosition(),
+                    this.pacman.getYPosition(),
+                    this.pacman.getSpeed(),
+                    this,
+                    this.hud,
+                    this.pacman.direction,
+                    this.pacman.nextdirection,
+                    this.pacman.prevdirection
+            );
+            this.pacManSuper = true;
+        } else{
+            pacman.resetSupStatusTime();
+        }
+    }
+
+    public void shrinkPacMan(){ this.pacManSuper = false; }
 }

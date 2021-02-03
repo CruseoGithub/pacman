@@ -112,13 +112,21 @@ public class Enemy extends Actor {
         else return Direction.LEFT;
     }
 
-    public Direction findHome(){
+    private Direction findHome(){
         aStar = new Pathfinder(screen, this, getStartPosX(), getStartPosY(), tileSize, true);
         Tile temp = aStar.aStarResult();
         if(temp.getY() > this.getYPosition()) return Direction.UP;
         if(temp.getY() < this.getYPosition()) return Direction.DOWN;
         if(temp.getX() > this.getXPosition()) return Direction.RIGHT;
         else return Direction.LEFT;
+    }
+
+    public void getHome(){
+        correctPosition(direction);
+        setSpeed(getSpeed() * 2);
+        nextdirection = findHome();
+        move();
+        setSpeed(getSpeed() / 2);
     }
 
     public void findNextDirection(Actor target) {
@@ -146,20 +154,9 @@ public class Enemy extends Actor {
         int distanceY = this.yPosition - target.getYPosition();
         if((Math.abs(distanceX) < tileSize) && (Math.abs(distanceY) < tileSize)){
             target.collide();
-            this.collide();
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void collide() {    }
-
-
-    @Override
-    public void move(){
-        super.move();
-        this.rotation = 0;
     }
 
 }

@@ -70,18 +70,7 @@ public class GameMap extends Map {
             );
             tile.takeItem();
             powerUp.play(0.1f);
-            screen.switchMusicHunting();
-            screen.pacman = new SuperPacMan(
-                    game,
-                    screen.pacman.getXPosition(),
-                    screen.pacman.getYPosition(),
-                    screen.pacman.getSpeed(),
-                    screen,
-                    screen.hud,
-                    screen.pacman.direction,
-                    screen.pacman.nextdirection,
-                    screen.pacman.prevdirection
-            );
+            screen.evolvePacMan();
             for(Enemy ghost : screen.getGhosts()){
                 ghost.setDifficulty(Enemy.Difficulty.RUNAWAY);
             }

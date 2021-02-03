@@ -86,6 +86,10 @@ public class PacMan extends Actor {
         }
     }
 
+
+
+    public void resetSupStatusTime(){};
+
     @Override
     public void collide() {
         super.collide();

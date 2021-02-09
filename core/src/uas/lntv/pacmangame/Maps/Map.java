@@ -12,7 +12,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import uas.lntv.pacmangame.Sprites.Actor;
 
 public abstract class Map {
-        private TmxMapLoader maploader;
         private TiledMap tmxMap;
         public OrthogonalTiledMapRenderer renderer;
 
@@ -24,20 +23,23 @@ public abstract class Map {
         public TiledMapTileLayer layerControlButton;
         //public TiledMapObjectL layerControlTouch;
 
-        public int mapWidth;
-        public int mapHeight;
-        public int tileSize;
-        public String path;
+        protected final int mapWidth;
+        protected final int mapHeight;
+        protected final int tileSize;
+        private String path;
 
         public Tile matrix[][];
 
         private Sound sound;
 
+        public final int getMapWidth(){ return this.mapWidth; }
+        public final int getMapHeight(){ return this.mapHeight; }
+        public final int getTileSize(){ return this.tileSize; }
 
         public Map(String path){
-            maploader = new TmxMapLoader();
-            tmxMap = maploader.load(path);
-            tmxControl = maploader.load("controller.tmx");
+            TmxMapLoader mapLoader = new TmxMapLoader();
+            tmxMap = mapLoader.load(path);
+            tmxControl = mapLoader.load("controller.tmx");
             renderer = new OrthogonalTiledMapRenderer(tmxMap);
 
             mapWidth = Integer.parseInt(tmxMap.getProperties().get("width").toString());

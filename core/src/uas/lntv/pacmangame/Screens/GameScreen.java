@@ -1,13 +1,7 @@
 package uas.lntv.pacmangame.Screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-
-import java.util.ArrayList;
-
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Hud;
-import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 import uas.lntv.pacmangame.Sprites.SuperPacMan;
@@ -23,30 +17,34 @@ public class GameScreen extends MapScreen {
         super(game, mapPath, Type.GAME);
 
         this.hud = new Hud(game, this, true);
-        this.pacman = new PacMan(game, map.tileSize, 17*map.tileSize, this, hud);
-        this.ghosts.add(new Enemy(13*map.tileSize, 33*map.tileSize, this, "redghost.png"));
-        if(game.getLevel()/5 >= 1) {
-            this.ghosts.add(new Enemy(14*map.tileSize, 33*map.tileSize, this, "orange.png"));
+        this.pacman = new PacMan(game, tileSize, 17*tileSize, this, hud);
+        this.ghosts.add(new Enemy(13*tileSize, 33*tileSize, this, "redghost.png"));
+        if(game.getLevel() >= 2) {
+            this.ghosts.add(new Enemy(14*tileSize, 33*tileSize, this, "orange.png"));
+        }
+        if(game.getLevel() >= 4) {
+            this.ghosts.add(new Enemy(12*tileSize, 33*tileSize, this, "pinky.png"));
             ghosts.get(0).setDifficulty(Enemy.Difficulty.MEDIUM);
         }
-        if(game.getLevel()/5 >= 2) {
-            this.ghosts.add(new Enemy(12*map.tileSize, 33*map.tileSize, this, "pinky.png"));
-        }
-        if(game.getLevel()/5 >= 3){
+        if(game.getLevel() >= 6){
             ghosts.get(1).setDifficulty(Enemy.Difficulty.MEDIUM);
-           /* pacman.setSpeed(pacman.getSpeed()*2);
-            for(Enemy ghost : ghosts) ghost.setSpeed(pacman.getSpeed());*/
+            pacman.setSpeed(pacman.getSpeed()*2);
+            for(Enemy ghost : ghosts) ghost.setSpeed(pacman.getSpeed());
         }
-        if(game.getLevel()/5 >= 4){
+        if(game.getLevel() >= 8){
             ghosts.get(2).setDifficulty(Enemy.Difficulty.MEDIUM);
         }
-        if(game.getLevel()/5 >= 5){
+        if(game.getLevel() >= 12){
             ghosts.get(0).setDifficulty(Enemy.Difficulty.HARD);
         }
-        if(game.getLevel()/5 >= 6){
+        if(game.getLevel() >= 19){
             ghosts.get(1).setDifficulty(Enemy.Difficulty.HARD);
         }
-        if(game.getLevel()/5 >= 7){
+        if(game.getLevel() >= 24){
+            pacman.setSpeed(pacman.getSpeed()*2);
+            for(Enemy ghost : ghosts) ghost.setSpeed(pacman.getSpeed());
+        }
+        if(game.getLevel() >= 30){
             ghosts.get(2).setDifficulty(Enemy.Difficulty.HARD);
         }
         this.pacManSuper = false;
@@ -88,8 +86,8 @@ public class GameScreen extends MapScreen {
                     this,
                     this.hud,
                     this.pacman.direction,
-                    this.pacman.nextdirection,
-                    this.pacman.prevdirection
+                    this.pacman.nextDirection,
+                    this.pacman.prevDirection
             );
             this.pacManSuper = true;
         } else{

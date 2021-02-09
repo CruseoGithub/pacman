@@ -19,7 +19,7 @@ public class ControllerSwipe extends Controller {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 Vector3 touch = new Vector3(screenX, screenY, 0);
-                gamecam.unproject(touch);
+                gameCam.unproject(touch);
 
                 System.out.println("Screen coordinates translated to world coordinates: "
                         + "X: " + touch.x + " Y: " + touch.y);
@@ -49,7 +49,7 @@ public class ControllerSwipe extends Controller {
                 if(!touchUp){
                     int minSwipe = 50;
                     Vector3 touch = new Vector3(screenX, screenY, 0);
-                    gamecam.unproject(touch);
+                    gameCam.unproject(touch);
                     if((touch.x - touchDownPos.x) > minSwipe ||
                             (touch.x - touchDownPos.x) < -minSwipe ||
                             (touch.y - touchDownPos.y) > minSwipe ||
@@ -63,7 +63,7 @@ public class ControllerSwipe extends Controller {
             }
             public void getDirection(int screenX, int screenY){
                 Vector3 touch = new Vector3(screenX, screenY, 0);
-                gamecam.unproject(touch);
+                gameCam.unproject(touch);
 
                 double angle = Math.atan2((double) touch.x - touchDownPos.x, (double) touchDownPos.y - touch.y);
                 //System.out.println("Winkel: "+ angle);

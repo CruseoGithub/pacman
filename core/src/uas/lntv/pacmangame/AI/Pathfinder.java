@@ -6,6 +6,12 @@ import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 
+/**
+ * This class is generated to find the shortest Path from a starting point to a certain destination.
+ * In the PacMan game it is used by the ghosts to either find the shortest path to their prey
+ * PacMan, or to find the fastest way home or away from PacMan if he is in hunting mode,
+ * using the A*-Algorithm.
+ */
 public class Pathfinder {
     private Tile[][] matrix;
     private Tile[] open;
@@ -15,22 +21,35 @@ public class Pathfinder {
     private int targetY;
     private MapScreen screen;
     private int closedElements;
-    private int tileSize;
+    private final int mapWidth;
+    private final int mapHeight;
+    private final int tileSize;
     private boolean findHome;
     private boolean noWay = false;
 
-    //A* Constructor
-    public Pathfinder(MapScreen screen, Enemy hunter, Actor prey, int tileSize){
+    /**
+     * This constructor is used to find the shortest path to an actor, which will be PacMan in this
+     * game.
+     * It generates a matrix of the whole map and also calculates the heuristics to the target.
+     * It also prepares to search by creating a 'open' list with all tiles of the map, setting the
+     * cost of the starting tile to 0 and creating a yet empty 'closed' list.
+     * @param screen the screen in which the actor acts
+     * @param hunter actor that wants to find a shortest path
+     * @param prey target of the actor
+     */
+    public Pathfinder(MapScreen screen, Enemy hunter, Actor prey){
         this.screen = screen;
-        this.tileSize = tileSize;
+        this.mapWidth = screen.map.getMapWidth();
+        this.mapHeight = screen.map.getMapHeight();
+        this.tileSize = screen.map.getTileSize();
         this.matrix = screen.map.matrix;
-        this.open = new Tile[(screen.map.mapWidth * screen.map.mapHeight )];
+        this.open = new Tile[(mapWidth * mapHeight )];
         this.hunter = hunter;
         this.targetX = prey.getXPosition();
         this.targetY = prey.getYPosition();
         int i = 0;
-        for(int x = 0; x < screen.map.mapWidth; x++){
-            for(int y = 0; y < screen.map.mapHeight; y++){
+        for(int x = 0; x < mapWidth; x++){
+            for(int y = 0; y < mapHeight; y++){
                 open[i] = this.matrix[x][y];
                 open[i++]
                         .setCost(1000000)
@@ -48,22 +67,28 @@ public class Pathfinder {
         open[searchHunter()]
                 .setCost(0)
                 .setTotal(open[searchHunter()].getHeuristics());
-        this.closed = new Tile[(screen.map.mapWidth * screen.map.mapHeight)];
+        this.closed = new Tile[(mapWidth * mapHeight)];
         this.closedElements = 0;
     }
 
-    public Pathfinder(MapScreen screen, Enemy hunter, int targetX, int targetY, int tileSize, boolean findHome){
+    /**
+     *Does the same as the first constructor, but uses x-/y-coordinates instead of an actor.
+     * @see Pathfinder
+     */
+    public Pathfinder(MapScreen screen, Enemy hunter, int targetX, int targetY, boolean findHome){
         this.screen = screen;
-        this.tileSize = tileSize;
+        this.mapWidth = screen.map.getMapWidth();
+        this.mapHeight = screen.map.getMapHeight();
+        this.tileSize = screen.map.getTileSize();
         this.matrix = screen.map.matrix;
-        this.open = new Tile[(screen.map.mapWidth * screen.map.mapHeight )];
+        this.open = new Tile[(mapWidth * mapHeight)];
         this.hunter = hunter;
         this.targetX = targetX;
         this.targetY = targetY;
         this.findHome = findHome;
         int i = 0;
-        for(int x = 0; x < screen.map.mapWidth; x++){
-            for(int y = 0; y < screen.map.mapHeight; y++){
+        for(int x = 0; x < mapWidth; x++){
+            for(int y = 0; y < mapHeight; y++){
                 open[i] = this.matrix[x][y];
                 open[i++]
                         .setCost(1000000)
@@ -81,7 +106,7 @@ public class Pathfinder {
         open[searchHunter()]
                 .setCost(0)
                 .setTotal(open[searchHunter()].getHeuristics());
-        this.closed = new Tile[(screen.map.mapWidth * screen.map.mapHeight)];
+        this.closed = new Tile[(mapWidth * mapHeight)];
         this.closedElements = 0;
     }
 
@@ -97,10 +122,17 @@ public class Pathfinder {
         return Math.sqrt( Math.pow(xHunt - xPrey, 2) + Math.pow(yHunt - yPrey, 2));
     }
 
+    /**
+     * Runs through the whole 'open'-list and searches for the tile in the map with the lowest
+     * total-value, which is the sum of the costs and the heuristics.
+     * This tile is needed for the next step of the A*-algorithm and will be removed from the
+     * 'open'-list.
+     * @return Tile with lowest total-value
+     */
     private Tile extractMinimum(){
         Tile temp = new Tile();
         int len = open.length;
-        if(len == 0) return null;
+        if(len == 0) return null;                      //If the 'open'-list is empty, there is no possible path to the target.
         for(int i = 0; i < len - 1; i++) {
             if (temp.getTotal() > open[i].getTotal()) {
                 temp = open[i];
@@ -110,6 +142,12 @@ public class Pathfinder {
         return temp;
     }
 
+    /**
+     * This method is used to remove a special element of a given list.
+     * @param list the list to be edited
+     * @param element the tile that is supposed to be removed
+     * @return The new list without the tile.
+     */
     private Tile[] removeElement(Tile[] list, Tile element){
         Tile[] copy = new Tile[list.length - 1];
         int len = list.length;
@@ -124,6 +162,13 @@ public class Pathfinder {
         return copy;
     }
 
+    /**
+     * In this method the magic happens.
+     * It creates connections between tiles and tells every edited tile, which is the best
+     * tile on the way back to the starting point.
+     * Once it reaches the target, the shortest path is found.
+     * @return 'false' if it only did a calculating step or 'true' if it found either the shortest path or no path
+     */
     private boolean aStarAlg(){
         Tile min = extractMinimum();
         if(min == null) {
@@ -134,7 +179,7 @@ public class Pathfinder {
         if(min == screen.map.getTile(targetX, targetY)) return true;
         int x = min.getX() / tileSize;
         int y = min.getY() / tileSize;
-        if(y < (screen.map.mapHeight) - 1) {
+        if(y < (mapHeight - 1)) {
             Tile up = matrix[x][y + 1];
             if(up.getType() != Tile.Type.WALL
                     && up.getCost() > min.getCost() + 1
@@ -182,7 +227,7 @@ public class Pathfinder {
                 left.setPrev(min);
             }
         }
-        if(x < (screen.map.mapWidth - 1)) {
+        if(x < (mapWidth - 1)) {
             Tile right = matrix[x + 1][y];
             if(right.getType() != Tile.Type.WALL
                     && right.getCost() > min.getCost() + 1
@@ -201,6 +246,10 @@ public class Pathfinder {
         return false;
     }
 
+    /**
+     * Calculates the shortest path to the target.
+     * @return next tile from the actor on the way to its target.
+     */
     public Tile aStarResult(){
         Tile temp = screen.map.getTile(targetX, targetY);
         while(!aStarAlg());

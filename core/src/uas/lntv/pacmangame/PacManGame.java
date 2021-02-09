@@ -55,7 +55,6 @@ public class PacManGame extends Game {
 	
 	@Override
 	public void dispose () {
-		//gameScreen.dispose();
 		batch.dispose();
 	}
 }

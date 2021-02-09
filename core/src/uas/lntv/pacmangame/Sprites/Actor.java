@@ -8,11 +8,8 @@ import java.util.Random;
 
 
 import uas.lntv.pacmangame.Maps.Tile;
-import uas.lntv.pacmangame.Scenes.Hud;
-import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
-import uas.lntv.pacmangame.Screens.ScoreScreen;
 
 public abstract class Actor {
     public enum Direction {
@@ -31,15 +28,15 @@ public abstract class Actor {
     public int xPosition;
     public int yPosition;
 
-    protected int tileSize;
+    protected final int tileSize;
     public float rotation;
 
     private int speed;
     public int texturePositionX;
     public int texturePositionY;
     public Direction direction;
-    public Direction nextdirection;
-    public Direction prevdirection;
+    public Direction nextDirection;
+    public Direction prevDirection;
 
     public State state;
 
@@ -93,8 +90,8 @@ public abstract class Actor {
         this.startPosY = initY;
         this.yPosition = initY;
         this.rotation = 0;
-        this.speed = 4; // Values can be {0 == Stop , 1, 2, 4 == default, 8, 16}
-        this.tileSize = screen.map.tileSize;
+        this.speed = 2; // Values can be {0 == Stop , 1, 2 == default, 4, 8, 16}
+        this.tileSize = screen.map.getTileSize();
         this.screen = screen;
     }
 
@@ -117,17 +114,17 @@ public abstract class Actor {
 
     public void move() {
         if (xPosition >= tileSize && xPosition <= 26 * tileSize && yPosition >= 15 * tileSize && yPosition <= 44 * tileSize || !(screen instanceof GameScreen)) {
-            prevdirection = direction;
-            if (nextdirection != direction && screen.map.getTile(xPosition, yPosition, nextdirection).type != Tile.Type.WALL) {
+            prevDirection = direction;
+            if (nextDirection != direction && screen.map.getTile(xPosition, yPosition, nextDirection).type != Tile.Type.WALL) {
                 if (xPosition == screen.map.getTile(xPosition, yPosition).getX() && yPosition == screen.map.getTile(xPosition, yPosition).getY()) {
-                    direction = nextdirection;
+                    direction = nextDirection;
                 }
             }
 
             switch (direction) {
                 case RIGHT:
                     if (screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL) {
-                        if (prevdirection != direction && !(this instanceof Enemy)) this.rotation = 0;
+                        if (prevDirection != direction && !(this instanceof Enemy)) this.rotation = 0;
                         int temp = xPosition;
                         xPosition += speed;
                         if (temp / tileSize != xPosition / tileSize) {
@@ -147,7 +144,7 @@ public abstract class Actor {
                             }
                         }
                     } else {
-                        if (prevdirection != direction && !(this instanceof Enemy)) this.rotation = 180;
+                        if (prevDirection != direction && !(this instanceof Enemy)) this.rotation = 180;
                         int temp = xPosition;
                         xPosition -= speed;
                         if (temp / tileSize != xPosition / tileSize) {
@@ -158,7 +155,7 @@ public abstract class Actor {
                     break;
                 case UP:
                     if (screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL) {
-                        if (prevdirection != direction && !(this instanceof Enemy)) this.rotation = 90;
+                        if (prevDirection != direction && !(this instanceof Enemy)) this.rotation = 90;
                         int temp = yPosition;
                         yPosition += speed;
                         if (temp / tileSize != yPosition / tileSize) {
@@ -178,7 +175,7 @@ public abstract class Actor {
                             }
                         }
                     } else {
-                        if (prevdirection != direction && !(this instanceof Enemy)) this.rotation = 270;
+                        if (prevDirection != direction && !(this instanceof Enemy)) this.rotation = 270;
                         int temp = yPosition;
                         yPosition -= speed;
                         if (temp / tileSize != yPosition / tileSize) {

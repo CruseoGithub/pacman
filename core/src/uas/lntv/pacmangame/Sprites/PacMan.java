@@ -22,8 +22,8 @@ public class PacMan extends Actor {
     public PacMan(PacManGame game, int initX, int initY, MapScreen screen, Hud hud){
         super(initX, initY, screen);
         this.direction = Direction.RIGHT;
-        this.nextdirection = Direction.RIGHT;
-        this.prevdirection = Direction.RIGHT;
+        this.nextDirection = Direction.RIGHT;
+        this.prevDirection = Direction.RIGHT;
 
         this.game = game;
 
@@ -48,8 +48,8 @@ public class PacMan extends Actor {
     public PacMan(PacManGame game, int initX, int initY, int speed, MapScreen screen, Hud hud,  Direction now, Direction next, Direction prev){
         super(initX, initY, screen);
         this.direction = now;
-        this.nextdirection = next;
-        this.prevdirection = prev;
+        this.nextDirection = next;
+        this.prevDirection = prev;
         this.setSpeed(speed);
 
         this.game = game;

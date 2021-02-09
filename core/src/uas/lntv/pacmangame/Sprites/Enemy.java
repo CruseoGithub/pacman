@@ -8,6 +8,9 @@ import uas.lntv.pacmangame.AI.Pathfinder;
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
+/**
+ * The ghosts are made of pure evil with the only purpose to chase and kill PacMan.
+ */
 public class Enemy extends Actor {
     public enum Difficulty{
         RUNAWAY,RANDOM,EASY,MEDIUM,HARD;
@@ -17,13 +20,20 @@ public class Enemy extends Actor {
     private Difficulty difficulty;
     private Difficulty levelDiff;
 
+    /**
+     * Create a new ghost
+     * @param initX starting x-coordinate
+     * @param initY starting y-coordinate
+     * @param screen the screen in which the ghost will be created
+     * @param ghost name or path of the png-file that makes the ghost look beautiful
+     */
     public Enemy(int initX, int initY, MapScreen screen, String ghost){
         super(initX, initY, screen);
 
         this.difficulty = Difficulty.EASY;
         this.direction = Direction.DOWN;
-        this.nextdirection = Direction.DOWN;
-        this.prevdirection = Direction.DOWN;
+        this.nextDirection = Direction.DOWN;
+        this.prevDirection = Direction.DOWN;
 
         this.texture = new Texture(ghost);
         region = new TextureRegion(texture);
@@ -83,7 +93,7 @@ public class Enemy extends Actor {
 
     private Direction findNextDirectionHard(Actor target){
         if(collisionTest(target)) return Direction.RIGHT;
-        aStar = new Pathfinder(screen, this, target, tileSize);
+        aStar = new Pathfinder(screen, this, target);
         Tile temp = aStar.aStarResult();
         if(temp == screen.map.getTile(xPosition, yPosition) || temp == null) return direction;
         if(temp.getY() > this.getYPosition()) return Direction.UP;
@@ -92,17 +102,24 @@ public class Enemy extends Actor {
         else return Direction.LEFT;
     }
 
+    /**
+     * This method shows the next tile to visit on the way to the as most secure assumed corner.
+     * The map will be divided in four quarters and the targeted tile will be the one in the
+     * extreme corner of the opposite quarter in which SuperPacMan is right now.
+     * @param hunter RUN! It's SuperPacMan!!
+     * @return tile of retreat
+     */
     private Direction runAway(Actor hunter){
         if(collisionTest(hunter)){
             this.state = State.KILLED;
             return Direction.RIGHT;
         }
         if(hunter.getXPosition() < 13*tileSize){
-            if(hunter.getYPosition() < 30*tileSize) aStar = new Pathfinder(screen, this, 26*tileSize, 43*tileSize, tileSize, false);
-            if(hunter.getYPosition() >= 30*tileSize) aStar = new Pathfinder(screen, this, 26*tileSize, 15*tileSize, tileSize, false);
+            if(hunter.getYPosition() < 30*tileSize) aStar = new Pathfinder(screen, this, 26*tileSize, 43*tileSize, false);
+            if(hunter.getYPosition() >= 30*tileSize) aStar = new Pathfinder(screen, this, 26*tileSize, 15*tileSize, false);
         } else{
-            if(hunter.getYPosition() < 30*tileSize) aStar = new Pathfinder(screen, this, tileSize, 43*tileSize , tileSize, false);
-            if(hunter.getYPosition() >= 30*tileSize) aStar = new Pathfinder(screen, this, tileSize, 15*tileSize , tileSize, false);
+            if(hunter.getYPosition() < 30*tileSize) aStar = new Pathfinder(screen, this, tileSize, 43*tileSize , false);
+            if(hunter.getYPosition() >= 30*tileSize) aStar = new Pathfinder(screen, this, tileSize, 15*tileSize , false);
         }
         Tile temp = aStar.aStarResult();
         if(temp == screen.map.getTile(xPosition, yPosition) || temp == null) return direction;
@@ -113,7 +130,7 @@ public class Enemy extends Actor {
     }
 
     private Direction findHome(){
-        aStar = new Pathfinder(screen, this, getStartPosX(), getStartPosY(), tileSize, true);
+        aStar = new Pathfinder(screen, this, getStartPosX(), getStartPosY(), true);
         Tile temp = aStar.aStarResult();
         if(temp.getY() > this.getYPosition()) return Direction.UP;
         if(temp.getY() < this.getYPosition()) return Direction.DOWN;
@@ -124,7 +141,7 @@ public class Enemy extends Actor {
     public void getHome(){
         correctPosition(direction);
         setSpeed(getSpeed() * 2);
-        nextdirection = findHome();
+        nextDirection = findHome();
         move();
         setSpeed(getSpeed() / 2);
     }
@@ -132,19 +149,19 @@ public class Enemy extends Actor {
     public void findNextDirection(Actor target) {
         switch (difficulty) {
             case RANDOM:
-                nextdirection = Direction.getRandomDirection();
+                nextDirection = Direction.getRandomDirection();
                 break;
             case EASY:
-                nextdirection = findNextDirectionEasy(target);
+                nextDirection = findNextDirectionEasy(target);
                 break;
             case MEDIUM:
-                nextdirection = findNextDirectionMedium(target);
+                nextDirection = findNextDirectionMedium(target);
                 break;
             case HARD:
-                nextdirection = findNextDirectionHard(target);
+                nextDirection = findNextDirectionHard(target);
                 break;
             case RUNAWAY:
-                nextdirection = runAway(target);
+                nextDirection = runAway(target);
                 break;
         }
     }

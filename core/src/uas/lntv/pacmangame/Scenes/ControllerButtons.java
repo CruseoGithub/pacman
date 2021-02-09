@@ -14,7 +14,7 @@ public class ControllerButtons extends Controller {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 Vector3 touch = new Vector3(screenX, screenY, 0);
-                gamecam.unproject(touch);
+                gameCam.unproject(touch);
 
                 System.out.println("Screen coordinates translated to world coordinates: "
                         + "X: " + touch.x + " Y: " + touch.y);

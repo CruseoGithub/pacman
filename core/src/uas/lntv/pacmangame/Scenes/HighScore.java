@@ -16,18 +16,27 @@ public class HighScore {
     private String gamer;
     private boolean nameSet;
 
+    /**
+     * This constructor simply loads the saved high-scores from the preferences.
+     * It also checks, if the player's name has already been set before.
+     */
     public HighScore(){
         prefs = Gdx.app.getPreferences("PacManPreferences");
         loadPrefs();
         nameSet = false;
     }
 
-    public static ArrayList<Integer> getHighScores(){
-        return highScores;
-    }
+    public static ArrayList<Integer> getHighScores(){ return highScores; }
 
     public static ArrayList<String> getNames(){ return names; }
 
+    /**
+     * This method compares the new score to all values in the high-score list. If the new score is
+     * higher than an existing score, it will be put on the right place. The lower scores will
+     * increase their positions by one and the lowest score in the list will be deleted.
+     * @param newScore Achieved score that tries to be put into the high-score list
+     * @return boolean value, that tells you whether the score made it into the list or not
+     */
     public boolean addScore(int newScore){
         boolean newHighScore = false;
 
@@ -50,12 +59,13 @@ public class HighScore {
 
     public void nameIsSet(){ nameSet = true; }
 
-    public boolean isNameSet(){
-        return nameSet;
-    }
+    public boolean isNameSet(){ return nameSet; }
 
     public void setGamer(String name){ this.gamer = name;  }
 
+    /**
+     * Loads the scores from the preferences into the array list.
+     */
     public static void loadPrefs(){
         highScores.add(prefs.getInteger("high_score_1"));
         names.add(prefs.getString("names_1"));
@@ -79,6 +89,9 @@ public class HighScore {
         names.add(prefs.getString("names_10"));
     }
 
+    /**
+     * Safes the updated scores into the preferences.
+     */
     public static void savePrefs(){
         prefs.putInteger("high_score_1", highScores.get(0));
         prefs.putInteger("high_score_2", highScores.get(1));

@@ -96,4 +96,10 @@ public class GameScreen extends MapScreen {
     }
 
     public void shrinkPacMan(){ this.pacManSuper = false; }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        hud.dispose();
+    }
 }

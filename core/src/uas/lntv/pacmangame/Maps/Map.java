@@ -23,18 +23,18 @@ public abstract class Map {
         public TiledMapTileLayer layerControlButton;
         //public TiledMapObjectL layerControlTouch;
 
-        protected final int mapWidth;
-        protected final int mapHeight;
-        protected final int tileSize;
+        protected final int MAP_WIDTH;
+        protected final int MAP_HEIGHT;
+        protected final int TILE_SIZE;
         private String path;
 
         public Tile matrix[][];
 
         private Sound sound;
 
-        public final int getMapWidth(){ return this.mapWidth; }
-        public final int getMapHeight(){ return this.mapHeight; }
-        public final int getTileSize(){ return this.tileSize; }
+        public final int getMapWidth(){ return this.MAP_WIDTH; }
+        public final int getMapHeight(){ return this.MAP_HEIGHT; }
+        public final int getTileSize(){ return this.TILE_SIZE; }
 
         public Map(String path){
             TmxMapLoader mapLoader = new TmxMapLoader();
@@ -42,9 +42,9 @@ public abstract class Map {
             tmxControl = mapLoader.load("controller.tmx");
             renderer = new OrthogonalTiledMapRenderer(tmxMap);
 
-            mapWidth = Integer.parseInt(tmxMap.getProperties().get("width").toString());
-            mapHeight = Integer.parseInt(tmxMap.getProperties().get("height").toString());
-            tileSize = Integer.parseInt(tmxMap.getProperties().get("tilewidth").toString());
+            MAP_WIDTH = Integer.parseInt(tmxMap.getProperties().get("width").toString());
+            MAP_HEIGHT = Integer.parseInt(tmxMap.getProperties().get("height").toString());
+            TILE_SIZE = Integer.parseInt(tmxMap.getProperties().get("tilewidth").toString());
 
             layerWall = (TiledMapTileLayer)tmxMap.getLayers().get("Walls");
             layerPath = (TiledMapTileLayer)tmxMap.getLayers().get("Path");
@@ -55,27 +55,25 @@ public abstract class Map {
             //tmxMap.getLayers().add(layerControlTouch);
 
             //layerPath.setOpacity(0.5f);
-            matrix = new Tile[mapWidth][mapHeight];
+            matrix = new Tile[MAP_WIDTH][MAP_HEIGHT];
             this.path = path;
             generateScreenMap();
             this.sound = Gdx.audio.newSound(Gdx.files.internal("dot.wav"));
         }
 
-
-
         private void generateScreenMap(){
-            for(int x = 0; x < mapWidth; x++){
-                for(int y = 0; y < mapHeight; y++){
+            for(int x = 0; x < MAP_WIDTH; x++){
+                for(int y = 0; y < MAP_HEIGHT; y++){
                     if(layerWall.getCell(x, y) == null){
-                        matrix[x][y] = new Tile(Tile.Type.EMPTY, ((x*tileSize)), ((y*tileSize)));
+                        matrix[x][y] = new Tile(Tile.Type.EMPTY, ((x* TILE_SIZE)), ((y* TILE_SIZE)));
                         if(layerPath.getCell(x,y) != null){
-                            Tile tile = new Tile(layerPath.getCell(x,y).getTile().getTextureRegion(), Tile.Type.PATH, (x*tileSize), (y*tileSize));
+                            Tile tile = new Tile(layerPath.getCell(x,y).getTile().getTextureRegion(), Tile.Type.PATH, (x* TILE_SIZE), (y* TILE_SIZE));
                             matrix[x][y] = tile;
                         }
                     }
                     else {
                         TextureRegion wallRegion = layerWall.getCell(x,y).getTile().getTextureRegion();
-                        matrix[x][y] = new Tile(wallRegion, Tile.Type.WALL, (x*tileSize), (y*tileSize));
+                        matrix[x][y] = new Tile(wallRegion, Tile.Type.WALL, (x* TILE_SIZE), (y* TILE_SIZE));
                     }
 
                 }
@@ -115,26 +113,26 @@ public abstract class Map {
         }
 
         public Tile getTile(int xPosition, int yPosition){
-            Tile tile = matrix[(int) xPosition/tileSize][(int)yPosition/tileSize];
+            Tile tile = matrix[(int) xPosition/ TILE_SIZE][(int)yPosition/ TILE_SIZE];
             return tile;
         }
 
         public Tile getTile(int xPosition, int yPosition, Actor.Direction dir){
-            int nextCellX = (int) ((xPosition/tileSize));
-            int nextCellY = (int) ((yPosition/tileSize));
+            int nextCellX = (int) ((xPosition/ TILE_SIZE));
+            int nextCellY = (int) ((yPosition/ TILE_SIZE));
             Tile tile;
             switch (dir) {
                 case RIGHT:
-                    nextCellX = (int) ((xPosition+tileSize) / tileSize);
+                    nextCellX = (int) ((xPosition+ TILE_SIZE) / TILE_SIZE);
                     break;
                 case LEFT:
-                    nextCellX = (int) ((xPosition-tileSize) / tileSize);
+                    nextCellX = (int) ((xPosition- TILE_SIZE) / TILE_SIZE);
                     break;
                 case UP:
-                    nextCellY = (int) ((yPosition+tileSize) / tileSize);
+                    nextCellY = (int) ((yPosition+ TILE_SIZE) / TILE_SIZE);
                     break;
                 case DOWN:
-                    nextCellY = (int) ((yPosition-tileSize) / tileSize);
+                    nextCellY = (int) ((yPosition- TILE_SIZE) / TILE_SIZE);
                     break;
 
             }
@@ -149,8 +147,8 @@ public abstract class Map {
             if(tile.isDot){
                 sound.play(0.25f);
                 layerCollect.setCell(
-                        tile.getX()/tileSize,
-                        tile.getY()/tileSize,
+                        tile.getX()/ TILE_SIZE,
+                        tile.getY()/ TILE_SIZE,
                         null
                 );
                 tile.isDot = false;

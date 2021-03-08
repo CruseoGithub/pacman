@@ -42,9 +42,9 @@ public abstract class MapScreen implements Screen {
 
     private Controller controller;
 
-    private final int mapWidth;
-    private final int mapHeight;
-    protected final int tileSize;
+    private final int MAP_WIDTH;
+    private final int MAP_HEIGHT;
+    protected final int TILE_SIZE;
 
     public MapScreen(PacManGame game, String mapPath, MapScreen.Type type) {
         //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
@@ -80,11 +80,11 @@ public abstract class MapScreen implements Screen {
         }
         music.setLooping(true);
         music.play();
-        this.mapWidth = map.getMapWidth();
-        this.mapHeight = map.getMapHeight();
-        this.tileSize = map.getTileSize();
+        this.MAP_WIDTH = map.getMapWidth();
+        this.MAP_HEIGHT = map.getMapHeight();
+        this.TILE_SIZE = map.getTileSize();
 
-        this.gamePort = new FitViewport(mapWidth * tileSize, mapHeight * tileSize, gameCam);
+        this.gamePort = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, gameCam);
         this.gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
         this.controller = new ControllerSwipe(this);
@@ -97,16 +97,16 @@ public abstract class MapScreen implements Screen {
 
     public void handleInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || controller.isRightPressed()) {
-            pacman.nextDirection = Actor.Direction.RIGHT;
+            pacman.setNextDirection(Actor.Direction.RIGHT);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || controller.isLeftPressed()) {
-            pacman.nextDirection = Actor.Direction.LEFT;
+            pacman.setNextDirection(Actor.Direction.LEFT);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP) || controller.isUpPressed()) {
-            pacman.nextDirection = Actor.Direction.UP;
+            pacman.setNextDirection(Actor.Direction.UP);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || controller.isDownPressed()) {
-            pacman.nextDirection = Actor.Direction.DOWN;
+            pacman.setNextDirection(Actor.Direction.DOWN);
         }
         controller.pulledInput();
     }
@@ -119,10 +119,10 @@ public abstract class MapScreen implements Screen {
             ghost.update(dt);
         }
 
-        if (pacman.state != Actor.State.DIEING) {
+        if (pacman.getState() != Actor.State.DIEING) {
             pacman.move();
             for (Enemy ghost : ghosts) {
-                if (ghost.state != Actor.State.KILLED) {
+                if (ghost.getState() != Actor.State.KILLED) {
                     ghost.findNextDirection(pacman);
                     ghost.move();
                 } else {
@@ -143,7 +143,7 @@ public abstract class MapScreen implements Screen {
                                 }
                             }
                         }
-                        ghost.state = Actor.State.RUNNING;
+                        ghost.setState(Actor.State.RUNNING);
                     }
                 }
             }
@@ -173,14 +173,14 @@ public abstract class MapScreen implements Screen {
         game.batch.begin();
 
         game.batch.draw(pacman.texture, pacman.getXPosition(), pacman.getYPosition(), pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
-                tileSize, tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
-                pacman.texturePositionX, 0, 32, 32, false, false
+                TILE_SIZE, TILE_SIZE, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
+                pacman.getTexturePositionX(), 0, 32, 32, false, false
         );
 
         for (Enemy ghost : ghosts) {
-            game.batch.draw(ghost.texture, ghost.xPosition, ghost.yPosition, ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
-                    tileSize, tileSize, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
-                    ghost.texturePositionX, ghost.texturePositionY, 32, 32, false, false
+            game.batch.draw(ghost.texture, ghost.getXPosition(), ghost.getYPosition(), ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
+                    TILE_SIZE, TILE_SIZE, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
+                    ghost.getTexturePositionX(), ghost.getTexturePositionY(), 32, 32, false, false
             );
         }
 
@@ -199,7 +199,7 @@ public abstract class MapScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         gamePort.update(width, height, false);
-        gamePort.getCamera().position.set(mapWidth * tileSize / 2f, mapHeight * tileSize / 2f, 0);
+        gamePort.getCamera().position.set(MAP_WIDTH * TILE_SIZE / 2f, MAP_HEIGHT * TILE_SIZE / 2f, 0);
         gamePort.getCamera().update();
     }
 

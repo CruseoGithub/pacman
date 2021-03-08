@@ -13,9 +13,9 @@ public class ScoreScreen extends MapScreen {
 
     public ScoreScreen(PacManGame game, String mapPath){
         super(game, mapPath, Type.SCORE);
-        this.pacman = new PacMan(game, 25 * tileSize, 47 * tileSize, this, hud);
+        this.pacman = new PacMan(game, 25 * TILE_SIZE, 47 * TILE_SIZE, this, hud);
         this.pacman.setSpeed(16);
-        this.ghosts.add(new Enemy(25 * tileSize, 3 * tileSize, this, "white.png"));
+        this.ghosts.add(new Enemy(25 * TILE_SIZE, 3 * TILE_SIZE, this, "white.png"));
         this.hud = new Hud(game, this, false);
         this.font = new BitmapFont();
         font.getData().setScale(font.getScaleX()*2);
@@ -30,19 +30,19 @@ public class ScoreScreen extends MapScreen {
             font.draw(
                     game.batch,
                     game.highScore.getHighScores().get(i).toString(),
-                    15*tileSize,
-                    (44 * tileSize) - (3 * i) * tileSize
+                    15* TILE_SIZE,
+                    (44 * TILE_SIZE) - (3 * i) * TILE_SIZE
             );
             font.draw(
                     game.batch,
                     game.highScore.getNames().get(i),
-                    3 * tileSize,
-                    (44 * tileSize) - (3 * i) * tileSize
+                    3 * TILE_SIZE,
+                    (44 * TILE_SIZE) - (3 * i) * TILE_SIZE
             );
         }
         game.batch.end();
 
-        if(pacman.getXPosition() <= 2*tileSize) {
+        if(pacman.getXPosition() <= 2* TILE_SIZE) {
             game.setScreen(new MenuScreen(game, "mainMenu.tmx"));
             this.dispose();
         }

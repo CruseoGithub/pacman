@@ -1,8 +1,5 @@
 package uas.lntv.pacmangame.Maps;
 
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-
 public class MenuMap extends Map {
 
     public MenuMap(String path){
@@ -12,8 +9,8 @@ public class MenuMap extends Map {
 
     @Override
     public void generateDots(int total_Dots) {
-        for(int x = 0; x < mapWidth; x++){
-            for(int y = 0; y < mapHeight; y++){
+        for(int x = 0; x < MAP_WIDTH; x++){
+            for(int y = 0; y < MAP_HEIGHT; y++){
                 if(layerCollect.getCell(x, y) != null){
                     matrix[x][y].isDot = true;
                 }

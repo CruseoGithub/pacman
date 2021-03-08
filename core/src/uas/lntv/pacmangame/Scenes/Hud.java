@@ -4,9 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -14,7 +12,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import uas.lntv.pacmangame.PacManGame;
-import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.PacMan;
@@ -44,18 +41,18 @@ public class Hud {
     private boolean red;
     private int warningTime;
     private float timeStamp;
-    private final int mapWidth;
-    private final int mapHeight;
-    private final int tileSize;
+    private final int MAP_WIDTH;
+    private final int MAP_HEIGHT;
+    private final int TILE_SIZE;
 
     private PacMan pacman;
 
     public Hud(PacManGame game, MapScreen screen, boolean visible){
         this.game = game;
         this.screen = screen;
-        this. mapWidth = screen.map.getMapWidth();
-        this.mapHeight = screen.map.getMapHeight();
-        this.tileSize = screen.map.getTileSize();
+        this.MAP_WIDTH = screen.map.getMapWidth();
+        this.MAP_HEIGHT = screen.map.getMapHeight();
+        this.TILE_SIZE = screen.map.getTileSize();
         time = 100;
         levelScore = 0;
         //lives = 3;
@@ -68,7 +65,7 @@ public class Hud {
 
         this.visible = visible;
 
-        viewport = new FitViewport(mapWidth*tileSize, mapHeight*tileSize, (new OrthographicCamera()));
+        viewport = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, (new OrthographicCamera()));
         stage = new Stage(viewport, game.batch);
 
         Table table = new Table();
@@ -102,8 +99,8 @@ public class Hud {
 
         pacman = new PacMan(
                 game,
-                20 * tileSize,
-                (45 * tileSize + tileSize/2),
+                20 * TILE_SIZE,
+                (45 * TILE_SIZE + TILE_SIZE /2),
                 0,
                 screen,
                 this,
@@ -152,25 +149,25 @@ public class Hud {
                 game.batch.draw(pacman.texture,
                         pacman.getXPosition(), pacman.getYPosition(),
                         pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
-                        2 * tileSize, 2 * tileSize,
+                        2 * TILE_SIZE, 2 * TILE_SIZE,
                         pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
-                        pacman.texturePositionX + 96, 0, 32, 32, false, false);
+                        pacman.getTexturePositionX() + 96, 0, 32, 32, false, false);
             }
             if(game.getLives() >= 2) {
                 game.batch.draw(pacman.texture,
-                        pacman.getXPosition() + 2 * tileSize, pacman.getYPosition(),
+                        pacman.getXPosition() + 2 * TILE_SIZE, pacman.getYPosition(),
                         pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
-                        2 * tileSize, 2 * tileSize,
+                        2 * TILE_SIZE, 2 * TILE_SIZE,
                         pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
-                        pacman.texturePositionX + 96, 0, 32, 32, false, false);
+                        pacman.getTexturePositionX() + 96, 0, 32, 32, false, false);
             }
             if(game.getLives() >= 3) {
                 game.batch.draw(pacman.texture,
-                        pacman.getXPosition() + 4 * tileSize, pacman.getYPosition(),
+                        pacman.getXPosition() + 4 * TILE_SIZE, pacman.getYPosition(),
                         pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
-                        2 * tileSize, 2 * tileSize,
+                        2 * TILE_SIZE, 2 * TILE_SIZE,
                         pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
-                        pacman.texturePositionX + 96, 0, 32, 32, false, false);
+                        pacman.getTexturePositionX() + 96, 0, 32, 32, false, false);
             }
             game.batch.end();
         }

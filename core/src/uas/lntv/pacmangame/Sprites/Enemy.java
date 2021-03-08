@@ -61,16 +61,34 @@ public class Enemy extends Actor {
         setDifficulty(levelDiff);
     }
 
+    /**
+     * Simply detects if PacMan is above or beneath the ghost.
+     * @param distance insert y-distance between ghost and PacMan
+     * @return Direction UP or DOWN
+     */
     private Direction UpOrDown(int distance){
         if (distance > 0) return Direction.DOWN;
         else return Direction.UP;
     }
 
+    /**
+     * Simply detects if PacMan is left or right the ghost.
+     * @param distance insert x-distance between ghost and PacMan
+     * @return Direction LEFT or RIGHT
+     */
     private Direction LeftOrRight(int distance){
         if (distance > 0 ) return Direction.LEFT;
         else return Direction.RIGHT;
     }
 
+    /**
+     * If the ghost runs on EASY mode, it runs around randomly until it's close enough to PacMan.
+     * In the closer environment of PacMan the ghost calculates the x-/y-distance to PacMan
+     * primitively an chooses according to the result in which direction it will walk.
+     * It will also detect collisions with PacMan.
+     * @param target PacMan
+     * @return One of the four directions
+     */
     private Direction findNextDirectionEasy(Actor target){
         int distanceX = this.xPosition - target.getXPosition();
         int distanceY = this.yPosition - target.getYPosition();
@@ -84,6 +102,14 @@ public class Enemy extends Actor {
         }
     }
 
+    /**
+     * If the ghost runs on MEDIUM mode, it runs around randomly until it's close enough to PacMan.
+     * In the closer environment of PacMan the ghost uses the A*-algorithm to find the shortest
+     * path that leads directly to PacMan.
+     * It will also detect collisions with PacMan.
+     * @param target PacMan
+     * @return One of the four directions
+     */
     private Direction findNextDirectionMedium(Actor target){
         int distanceX = this.xPosition - target.getXPosition();
         int distanceY = this.yPosition - target.getYPosition();
@@ -91,6 +117,13 @@ public class Enemy extends Actor {
         return findNextDirectionHard(target);
     }
 
+    /**
+     * If the ghost runs on HARD mode, it uses the A*-algorithm to find the shortest path that
+     * leads directly to PacMan.
+     * It also detects collisions with PacMan.
+     * @param target PacMan
+     * @return One of the four directions
+     */
     private Direction findNextDirectionHard(Actor target){
         if(collisionTest(target)) return Direction.RIGHT;
         aStar = new Pathfinder(screen, this, target);
@@ -112,6 +145,7 @@ public class Enemy extends Actor {
     private Direction runAway(Actor hunter){
         if(collisionTest(hunter)){
             this.state = State.KILLED;
+            screen.map.getTile(xPosition, yPosition).leave(this);
             return Direction.RIGHT;
         }
         if(hunter.getXPosition() < 13*tileSize){
@@ -129,6 +163,11 @@ public class Enemy extends Actor {
         else return Direction.LEFT;
     }
 
+    /**
+     * The ghost never forgets where it's home is.
+     * If it killed PacMan or if it got killed, it will use the A*-algorithm to rush back home.
+     * @return One of the four directions
+     */
     private Direction findHome(){
         aStar = new Pathfinder(screen, this, getStartPosX(), getStartPosY(), true);
         Tile temp = aStar.aStarResult();
@@ -138,6 +177,9 @@ public class Enemy extends Actor {
         else return Direction.LEFT;
     }
 
+    /**
+     * Increase the ghosts speed and find it's way home.
+     */
     public void getHome(){
         correctPosition(direction);
         setSpeed(getSpeed() * 2);
@@ -146,6 +188,11 @@ public class Enemy extends Actor {
         setSpeed(getSpeed() / 2);
     }
 
+    /**
+     * Decide which method will be used to find the next direction to move
+     * depending on the difficulty.
+     * @param target PacMan
+     */
     public void findNextDirection(Actor target) {
         switch (difficulty) {
             case RANDOM:
@@ -166,6 +213,11 @@ public class Enemy extends Actor {
         }
     }
 
+    /**
+     * Calculates if the ghost is close enough to PacMan to detect a collision
+     * @param target PacMan
+     * @return true in case of a hit
+     */
     private boolean collisionTest(Actor target){
         int distanceX = this.xPosition - target.getXPosition();
         int distanceY = this.yPosition - target.getYPosition();

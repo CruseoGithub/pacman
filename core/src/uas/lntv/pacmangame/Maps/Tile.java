@@ -11,17 +11,17 @@ public class Tile extends StaticTiledMapTile {
     public enum Type { EMPTY,PATH, PATHDOT, WALL, DOT}
     public Tile.Type type;
 
-    protected int x,y;
+    private int x,y;
     public boolean isDot;
     private boolean item = false;
     private boolean occupiedByPacMan = false;
     private boolean occupiedByGhost = false;
 
-    protected int cost;
-    protected double heuristics;
-    protected double total;
+    private int cost;
+    private double heuristics;
+    private double total;
 
-    protected Tile prev;
+    private Tile prev;
 
     public int getX() {
         return x;

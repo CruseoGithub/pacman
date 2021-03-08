@@ -6,11 +6,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 import uas.lntv.pacmangame.PacManGame;
-import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
-import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
-import uas.lntv.pacmangame.Sprites.SuperPacMan;
 
 public class GameMap extends Map {
     MapScreen screen;
@@ -28,8 +25,8 @@ public class GameMap extends Map {
     }
 
     public void generateItems(){
-        for(int x = 0; x < mapWidth; x++){
-            for(int y = 0; y < mapHeight; y++){
+        for(int x = 0; x < MAP_WIDTH; x++){
+            for(int y = 0; y < MAP_HEIGHT; y++){
                 if(layerCollect.getCell(x,y) != null) {
                     matrix[x][y].placeItem();
                 }
@@ -39,10 +36,10 @@ public class GameMap extends Map {
 
     public void generateDots(int total_Dots){
         while(total_Dots > 0){
-            for(int x = 0; x < mapWidth; x++){
-                for(int y = 0; y < mapHeight; y++){
+            for(int x = 0; x < MAP_WIDTH; x++){
+                for(int y = 0; y < MAP_HEIGHT; y++){
                     if(layerWall.getCell(x, y) == null && total_Dots>0 && layerCollect.getCell(x,y) == null){
-                        if (layerPath.getCell(x, y) != null & !matrix[x][y].isDot && x > 0 && x < (mapWidth - 2)) { //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
+                        if (layerPath.getCell(x, y) != null & !matrix[x][y].isDot && x > 0 && x < (MAP_WIDTH - 2)) { //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
                             int max = 1;
                             int min = 0;
                             int random = (int) (Math.random() * (max - min + 1) + min); // random ist entweder 0 oder 1
@@ -64,8 +61,8 @@ public class GameMap extends Map {
     public void collect(Tile tile){
         if(tile.isItem()){
             layerCollect.setCell(
-                    tile.getX()/tileSize,
-                    tile.getY()/tileSize,
+                    tile.getX()/ TILE_SIZE,
+                    tile.getY()/ TILE_SIZE,
                     null
             );
             tile.takeItem();

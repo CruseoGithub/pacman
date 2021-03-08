@@ -25,27 +25,27 @@ public abstract class Actor {
         RUNNING, STOPPING, EATING, DIEING, KILLED
     };
 
-    public int xPosition;
-    public int yPosition;
+    protected int xPosition;
+    private final int START_POS_X;
+    protected int yPosition;
+    private final int START_POS_Y;
 
     protected final int tileSize;
     public float rotation;
 
     private int speed;
-    public int texturePositionX;
-    public int texturePositionY;
-    public Direction direction;
-    public Direction nextDirection;
-    public Direction prevDirection;
+    protected int texturePositionX;
+    protected int texturePositionY;
+    protected Direction direction;
+    protected Direction nextDirection;
+    protected Direction prevDirection;
 
-    public State state;
+    protected State state;
 
     public Sprite sprite;
-    public TextureRegion region;
+    protected TextureRegion region;
     public Texture texture;
     protected MapScreen screen;
-    private int startPosX;
-    private int startPosY;
 
     public Animation animation;
     public float animationSpeed;
@@ -60,11 +60,11 @@ public abstract class Actor {
     }
 
     public int getStartPosX() {
-        return startPosX;
+        return START_POS_X;
     }
 
     public int getStartPosY() {
-        return startPosY;
+        return START_POS_Y;
     }
 
     public int getXPosition() {
@@ -83,11 +83,29 @@ public abstract class Actor {
         this.yPosition = yPosition;
     }
 
+    public int getTexturePositionX(){ return this.texturePositionX; }
+
+    public int getTexturePositionY(){ return this.texturePositionY; }
+
+    public Direction getNextDirection() { return nextDirection; }
+
+    public Direction getDirection() { return direction; }
+
+    public Direction getPrevDirection() { return prevDirection; }
+
+    public void setNextDirection(Direction nextDirection) {
+        this.nextDirection = nextDirection;
+    }
+
+    public State getState(){ return this.state; }
+
+    public void setState(State state){ this.state = state; }
+
     public Actor(int initX, int initY, MapScreen screen) {
         this.state = State.RUNNING;
-        this.startPosX = initX;
+        this.START_POS_X = initX;
         this.xPosition = initX;
-        this.startPosY = initY;
+        this.START_POS_Y = initY;
         this.yPosition = initY;
         this.rotation = 0;
         this.speed = 2; // Values can be {0 == Stop , 1, 2 == default, 4, 8, 16}
@@ -121,66 +139,83 @@ public abstract class Actor {
                 }
             }
 
+            Tile tempTile = screen.map.getTile(xPosition, yPosition, direction);
             switch (direction) {
                 case RIGHT:
-                    if (screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL) {
-                        if (prevDirection != direction && !(this instanceof Enemy)) this.rotation = 0;
-                        int temp = xPosition;
-                        xPosition += speed;
-                        if (temp / tileSize != xPosition / tileSize) {
-                            screen.map.getTile(temp, yPosition).leave(this);
-                            screen.map.getTile(xPosition, yPosition).enter(this);
-                        }
-                    }
-                    break;
-                case LEFT:
-                    if (screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL) {
-                        if (xPosition > screen.map.getTile(xPosition, yPosition).getX()) {
+                    if (tempTile.type != Tile.Type.WALL) {
+                        if(!(this instanceof Enemy) || !(tempTile.isOccupiedByGhost())){
+                            if (prevDirection != direction && !(this instanceof Enemy))
+                                this.rotation = 0;
                             int temp = xPosition;
-                            xPosition -= speed;
-                            if (temp / tileSize != xPosition / tileSize) {
+                            xPosition += speed;
+                            if (temp / tileSize != xPosition / tileSize && this.state != State.KILLED) {
                                 screen.map.getTile(temp, yPosition).leave(this);
                                 screen.map.getTile(xPosition, yPosition).enter(this);
                             }
                         }
+                    }
+                    break;
+                case LEFT:
+                    if (tempTile.type == Tile.Type.WALL) {
+                        if(!(this instanceof Enemy) || !(tempTile.isOccupiedByGhost())) {
+                            if (xPosition > screen.map.getTile(xPosition, yPosition).getX()) {
+                                int temp = xPosition;
+                                xPosition -= speed;
+                                if (temp / tileSize != xPosition / tileSize && this.state != State.KILLED) {
+                                    screen.map.getTile(temp, yPosition).leave(this);
+                                    screen.map.getTile(xPosition, yPosition).enter(this);
+                                }
+                            }
+                        }
                     } else {
-                        if (prevDirection != direction && !(this instanceof Enemy)) this.rotation = 180;
-                        int temp = xPosition;
-                        xPosition -= speed;
-                        if (temp / tileSize != xPosition / tileSize) {
-                            screen.map.getTile(temp, yPosition).leave(this);
-                            screen.map.getTile(xPosition, yPosition).enter(this);
+                        if(!(this instanceof Enemy) || !(tempTile.isOccupiedByGhost())) {
+                            if (prevDirection != direction && !(this instanceof Enemy))
+                                this.rotation = 180;
+                            int temp = xPosition;
+                            xPosition -= speed;
+                            if (temp / tileSize != xPosition / tileSize && this.state != State.KILLED) {
+                                screen.map.getTile(temp, yPosition).leave(this);
+                                screen.map.getTile(xPosition, yPosition).enter(this);
+                            }
                         }
                     }
                     break;
                 case UP:
-                    if (screen.map.getTile(xPosition, yPosition, direction).type != Tile.Type.WALL) {
-                        if (prevDirection != direction && !(this instanceof Enemy)) this.rotation = 90;
-                        int temp = yPosition;
-                        yPosition += speed;
-                        if (temp / tileSize != yPosition / tileSize) {
-                            screen.map.getTile(xPosition, temp).leave(this);
-                            screen.map.getTile(xPosition, yPosition).enter(this);
-                        }
-                    }
-                    break;
-                case DOWN:
-                    if (screen.map.getTile(xPosition, yPosition, direction).type == Tile.Type.WALL) {
-                        if (yPosition > screen.map.getTile(xPosition, yPosition).getY()) {
+                    if (tempTile.type != Tile.Type.WALL) {
+                        if(!(this instanceof Enemy) || !(tempTile.isOccupiedByGhost())) {
+                            if (prevDirection != direction && !(this instanceof Enemy))
+                                this.rotation = 90;
                             int temp = yPosition;
-                            yPosition -= speed;
-                            if (temp / tileSize != yPosition / tileSize) {
+                            yPosition += speed;
+                            if (temp / tileSize != yPosition / tileSize && this.state != State.KILLED) {
                                 screen.map.getTile(xPosition, temp).leave(this);
                                 screen.map.getTile(xPosition, yPosition).enter(this);
                             }
                         }
+                    }
+                    break;
+                case DOWN:
+                    if (tempTile.type == Tile.Type.WALL) {
+                        if(!(this instanceof Enemy) || !(tempTile.isOccupiedByGhost())) {
+                            if (yPosition > screen.map.getTile(xPosition, yPosition).getY()) {
+                                int temp = yPosition;
+                                yPosition -= speed;
+                                if (temp / tileSize != yPosition / tileSize && this.state != State.KILLED) {
+                                    screen.map.getTile(xPosition, temp).leave(this);
+                                    screen.map.getTile(xPosition, yPosition).enter(this);
+                                }
+                            }
+                        }
                     } else {
-                        if (prevDirection != direction && !(this instanceof Enemy)) this.rotation = 270;
-                        int temp = yPosition;
-                        yPosition -= speed;
-                        if (temp / tileSize != yPosition / tileSize) {
-                            screen.map.getTile(xPosition, temp).leave(this);
-                            screen.map.getTile(xPosition, yPosition).enter(this);
+                        if(!(this instanceof Enemy) || !(tempTile.isOccupiedByGhost())) {
+                            if (prevDirection != direction && !(this instanceof Enemy))
+                                this.rotation = 270;
+                            int temp = yPosition;
+                            yPosition -= speed;
+                            if (temp / tileSize != yPosition / tileSize && this.state != State.KILLED) {
+                                screen.map.getTile(xPosition, temp).leave(this);
+                                screen.map.getTile(xPosition, yPosition).enter(this);
+                            }
                         }
                     }
                     break;

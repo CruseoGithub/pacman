@@ -19,14 +19,14 @@ public class ControllerButtons extends Controller {
                 System.out.println("Screen coordinates translated to world coordinates: "
                         + "X: " + touch.x + " Y: " + touch.y);
 
-                if(touch.x >= 12 * tileSize && touch.x <= 16 * tileSize){
-                    if(touch.y >= 0 && touch.y <= 4 * tileSize) downPressed = true;
-                    if(touch.y >= 10 * tileSize && touch.y <= 14 * tileSize) upPressed = true;
+                if(touch.x >= 12 * TILE_SIZE && touch.x <= 16 * TILE_SIZE){
+                    if(touch.y >= 0 && touch.y <= 4 * TILE_SIZE) downPressed = true;
+                    if(touch.y >= 10 * TILE_SIZE && touch.y <= 14 * TILE_SIZE) upPressed = true;
                 }
 
-                if(touch.y >= 5 * tileSize && touch.y <= 9 * tileSize){
-                    if(touch.x >= 7 * tileSize && touch.x <= 11 * tileSize) leftPressed = true;
-                    if(touch.x >= 17 * tileSize && touch.x <= 21 * tileSize) rightPressed = true;
+                if(touch.y >= 5 * TILE_SIZE && touch.y <= 9 * TILE_SIZE){
+                    if(touch.x >= 7 * TILE_SIZE && touch.x <= 11 * TILE_SIZE) leftPressed = true;
+                    if(touch.x >= 17 * TILE_SIZE && touch.x <= 21 * TILE_SIZE) rightPressed = true;
                 }
                 return true;
             }

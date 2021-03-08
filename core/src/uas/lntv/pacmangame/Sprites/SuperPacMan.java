@@ -13,12 +13,12 @@ import uas.lntv.pacmangame.Screens.GameScreen;
  */
 public class SuperPacMan extends PacMan {
 
-    private Sound killSound;
+    private final Sound KILL_SOUND;
     private float supStatusTime;
 
     /**
      * Let PacMan go Super!
-     * @param game
+     * @param game the running PacManGame
      * @param initX exact x-Position of PacMan
      * @param initY exact y-Position of PacMan
      * @param speed velocity of PacMan
@@ -33,7 +33,7 @@ public class SuperPacMan extends PacMan {
         super(game, initX, initY, speed, screen, hud, now, next, prev);
         correctPosition(now);                                       //avoids rushing through walls
         setSpeed(speed * 2);
-        killSound = Gdx.audio.newSound(Gdx.files.internal("kill.wav"));
+        KILL_SOUND = Gdx.audio.newSound(Gdx.files.internal("kill.wav"));
     }
 
     /**
@@ -71,7 +71,7 @@ public class SuperPacMan extends PacMan {
      */
     @Override
     public void collide() {
-        killSound.play(0.15f);
+        KILL_SOUND.play(0.15f);
         game.increaseScore(50);
     }
 

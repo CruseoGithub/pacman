@@ -19,18 +19,18 @@ public abstract class Actor {
             Random random = new Random();
             return values()[random.nextInt(values().length)];
         }
-    };
+    }
 
     public enum State {
-        RUNNING, STOPPING, EATING, DIEING, KILLED
-    };
+        RUNNING, DIEING, KILLED
+    }
 
     protected int xPosition;
     private final int START_POS_X;
     protected int yPosition;
     private final int START_POS_Y;
 
-    protected final int tileSize;
+    protected final int TILE_SIZE;
     public float rotation;
 
     private int speed;
@@ -47,8 +47,8 @@ public abstract class Actor {
     public Texture texture;
     protected MapScreen screen;
 
-    public Animation animation;
-    public float animationSpeed;
+    protected Animation animation;
+    protected float animationSpeed;
     boolean mouthOpen;
 
     public int getSpeed() {
@@ -109,7 +109,7 @@ public abstract class Actor {
         this.yPosition = initY;
         this.rotation = 0;
         this.speed = 2; // Values can be {0 == Stop , 1, 2 == default, 4, 8, 16}
-        this.tileSize = screen.map.getTileSize();
+        this.TILE_SIZE = screen.map.getTileSize();
         this.screen = screen;
     }
 
@@ -131,7 +131,7 @@ public abstract class Actor {
     }
 
     public void move() {
-        if (xPosition >= tileSize && xPosition <= 26 * tileSize && yPosition >= 15 * tileSize && yPosition <= 44 * tileSize || !(screen instanceof GameScreen)) {
+        if (xPosition >= TILE_SIZE && xPosition <= 26 * TILE_SIZE && yPosition >= 15 * TILE_SIZE && yPosition <= 44 * TILE_SIZE || !(screen instanceof GameScreen)) {
             prevDirection = direction;
             if (nextDirection != direction && screen.map.getTile(xPosition, yPosition, nextDirection).type != Tile.Type.WALL) {
                 if (xPosition == screen.map.getTile(xPosition, yPosition).getX() && yPosition == screen.map.getTile(xPosition, yPosition).getY()) {
@@ -148,7 +148,7 @@ public abstract class Actor {
                                 this.rotation = 0;
                             int temp = xPosition;
                             xPosition += speed;
-                            if (temp / tileSize != xPosition / tileSize && this.state != State.KILLED) {
+                            if (temp / TILE_SIZE != xPosition / TILE_SIZE && this.state != State.KILLED) {
                                 screen.map.getTile(temp, yPosition).leave(this);
                                 screen.map.getTile(xPosition, yPosition).enter(this);
                             }
@@ -161,7 +161,7 @@ public abstract class Actor {
                             if (xPosition > screen.map.getTile(xPosition, yPosition).getX()) {
                                 int temp = xPosition;
                                 xPosition -= speed;
-                                if (temp / tileSize != xPosition / tileSize && this.state != State.KILLED) {
+                                if (temp / TILE_SIZE != xPosition / TILE_SIZE && this.state != State.KILLED) {
                                     screen.map.getTile(temp, yPosition).leave(this);
                                     screen.map.getTile(xPosition, yPosition).enter(this);
                                 }
@@ -173,7 +173,7 @@ public abstract class Actor {
                                 this.rotation = 180;
                             int temp = xPosition;
                             xPosition -= speed;
-                            if (temp / tileSize != xPosition / tileSize && this.state != State.KILLED) {
+                            if (temp / TILE_SIZE != xPosition / TILE_SIZE && this.state != State.KILLED) {
                                 screen.map.getTile(temp, yPosition).leave(this);
                                 screen.map.getTile(xPosition, yPosition).enter(this);
                             }
@@ -187,7 +187,7 @@ public abstract class Actor {
                                 this.rotation = 90;
                             int temp = yPosition;
                             yPosition += speed;
-                            if (temp / tileSize != yPosition / tileSize && this.state != State.KILLED) {
+                            if (temp / TILE_SIZE != yPosition / TILE_SIZE && this.state != State.KILLED) {
                                 screen.map.getTile(xPosition, temp).leave(this);
                                 screen.map.getTile(xPosition, yPosition).enter(this);
                             }
@@ -200,7 +200,7 @@ public abstract class Actor {
                             if (yPosition > screen.map.getTile(xPosition, yPosition).getY()) {
                                 int temp = yPosition;
                                 yPosition -= speed;
-                                if (temp / tileSize != yPosition / tileSize && this.state != State.KILLED) {
+                                if (temp / TILE_SIZE != yPosition / TILE_SIZE && this.state != State.KILLED) {
                                     screen.map.getTile(xPosition, temp).leave(this);
                                     screen.map.getTile(xPosition, yPosition).enter(this);
                                 }
@@ -212,7 +212,7 @@ public abstract class Actor {
                                 this.rotation = 270;
                             int temp = yPosition;
                             yPosition -= speed;
-                            if (temp / tileSize != yPosition / tileSize && this.state != State.KILLED) {
+                            if (temp / TILE_SIZE != yPosition / TILE_SIZE && this.state != State.KILLED) {
                                 screen.map.getTile(xPosition, temp).leave(this);
                                 screen.map.getTile(xPosition, yPosition).enter(this);
                             }
@@ -221,27 +221,27 @@ public abstract class Actor {
                     break;
             }
         } else if (screen instanceof GameScreen) {
-            if (xPosition < tileSize) {
+            if (xPosition < TILE_SIZE) {
                 int temp = xPosition;
-                xPosition = 26 * tileSize - speed;
+                xPosition = 26 * TILE_SIZE - speed;
                 screen.map.getTile(temp, yPosition).leave(this);
                 screen.map.getTile(xPosition, yPosition).enter(this);
             }
-            if (xPosition > 26 * tileSize) {
+            if (xPosition > 26 * TILE_SIZE) {
                 int temp = xPosition;
-                xPosition = tileSize + speed;
+                xPosition = TILE_SIZE + speed;
                 screen.map.getTile(temp, yPosition).leave(this);
                 screen.map.getTile(xPosition, yPosition).enter(this);
             }
-            if (yPosition < 15 * tileSize) {
+            if (yPosition < 15 * TILE_SIZE) {
                 int temp = yPosition;
-                yPosition = 44 * tileSize - speed;
+                yPosition = 44 * TILE_SIZE - speed;
                 screen.map.getTile(xPosition, temp).leave(this);
                 screen.map.getTile(xPosition, yPosition).enter(this);
             }
-            if (yPosition > 44 * tileSize) {
+            if (yPosition > 44 * TILE_SIZE) {
                 int temp = yPosition;
-                yPosition = 15 * tileSize + speed;
+                yPosition = 15 * TILE_SIZE + speed;
                 screen.map.getTile(xPosition, temp).leave(this);
                 screen.map.getTile(xPosition, yPosition).enter(this);
             }

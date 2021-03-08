@@ -16,7 +16,7 @@ public class PacMan extends Actor {
     public Hud hud;
     Texture pac32 = new Texture("pacman32.png");
     Texture superPac = new Texture("SuperPacMan.png");
-    private Sound sound;
+    private final Sound SOUND;
     protected PacManGame game;
 
     public PacMan(PacManGame game, int initX, int initY, MapScreen screen, Hud hud){
@@ -40,9 +40,9 @@ public class PacMan extends Actor {
 
         region.flip(true, false);
         this.sprite = new Sprite(region);
-        this.sprite.setOrigin(tileSize/2, tileSize/2);
+        this.sprite.setOrigin(TILE_SIZE/2f, TILE_SIZE/2f);
         this.hud = hud;
-        this.sound = Gdx.audio.newSound(Gdx.files.internal("die.wav"));
+        this.SOUND = Gdx.audio.newSound(Gdx.files.internal("die.wav"));
     }
 
     public PacMan(PacManGame game, int initX, int initY, int speed, MapScreen screen, Hud hud,  Direction now, Direction next, Direction prev){
@@ -67,9 +67,9 @@ public class PacMan extends Actor {
 
         region.flip(true, false);
         this.sprite = new Sprite(region);
-        this.sprite.setOrigin(tileSize/2, tileSize/2);
+        this.sprite.setOrigin(TILE_SIZE/2f, TILE_SIZE/2f);
         this.hud = hud;
-        this.sound = Gdx.audio.newSound(Gdx.files.internal("die.wav"));
+        this.SOUND = Gdx.audio.newSound(Gdx.files.internal("die.wav"));
         switch(direction){
             case RIGHT:
                 this.rotation = 0;
@@ -88,12 +88,12 @@ public class PacMan extends Actor {
 
 
 
-    public void resetSupStatusTime(){};
+    public void resetSupStatusTime(){}
 
     @Override
     public void collide() {
         super.collide();
-        sound.play(0.35f);
+        SOUND.play(0.35f);
         if(game.getLives() > 1) game.die();
         else {
             game.die();

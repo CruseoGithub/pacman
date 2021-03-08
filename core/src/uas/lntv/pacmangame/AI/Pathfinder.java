@@ -244,6 +244,12 @@ public class Pathfinder {
      */
     public Tile aStarResult(){
         Tile temp = SCREEN.map.getTile(TARGET_X, TARGET_Y);
+        /*
+        This would be a solution without the warning, that the while statement has an empty body.
+        boolean found = aStarAlg();
+        while(!found) found = aStarAlg();
+        But we think the following line is equally easy to understand and it's more beautiful.
+        */
         while(!aStarAlg());
         if(noWay) return null;
         if(temp == SCREEN.map.getTile(HUNTER.getXPosition(), HUNTER.getYPosition())) return temp;

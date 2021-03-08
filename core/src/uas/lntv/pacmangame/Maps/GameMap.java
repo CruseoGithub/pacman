@@ -11,17 +11,17 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 
 public class GameMap extends Map {
     MapScreen screen;
-    private PacManGame game;
+    private final PacManGame GAME;
 
-    private Sound powerUp;
+    private final Sound POWER_UP;
 
     public GameMap(PacManGame game, String path, MapScreen screen){
         super(path);
-        this.game = game;
+        this.GAME = game;
         this.screen = screen;
         generateItems();
         generateDots(150);
-        powerUp = Gdx.audio.newSound(Gdx.files.internal("PowerUp.wav"));
+        POWER_UP = Gdx.audio.newSound(Gdx.files.internal("PowerUp.wav"));
     }
 
     public void generateItems(){
@@ -66,14 +66,14 @@ public class GameMap extends Map {
                     null
             );
             tile.takeItem();
-            powerUp.play(0.1f);
+            POWER_UP.play(0.1f);
             screen.evolvePacMan();
             for(Enemy ghost : screen.getGhosts()){
                 ghost.setDifficulty(Enemy.Difficulty.RUNAWAY);
             }
         }
         if(tile.isDot){
-            game.increaseScore(1);
+            GAME.increaseScore(1);
             screen.hud.levelScore++;
             screen.hud.update();
         }

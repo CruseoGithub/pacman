@@ -2,17 +2,17 @@ package uas.lntv.pacmangame.Scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import java.util.ArrayList;
 
-import uas.lntv.pacmangame.PacManGame;
-
+/**
+ * This class manages the high-score list.
+ */
 public class HighScore {
 
     private static Preferences prefs;
-    private static ArrayList<Integer> highScores = new ArrayList<Integer>();
-    private static ArrayList<String> names = new ArrayList<String>();
+    private static final ArrayList<Integer> highScores = new ArrayList<>();
+    private static final ArrayList<String> names = new ArrayList<>();
     private String gamer;
     private boolean nameSet;
 

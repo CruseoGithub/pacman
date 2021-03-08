@@ -26,12 +26,9 @@ public class Hud {
 
     private final String[] STAGES;
 
-    Label timeTextLabel;
-    Label timeLabel;
-    Label scoreTextLabel;
-    Label scoreLabel;
-    Label livesTextLabel;
-    Label livesLabel;
+    private final Label TIME_TEXT_LABEL;
+    private final Label TIME_LABEL;
+    private final Label SCORE_LABEL;
 
     private final Sound TIME_WARNING;
     private boolean warned;
@@ -48,7 +45,7 @@ public class Hud {
         int mapWidth = screen.map.getMapWidth();
         int mapHeight = screen.map.getMapHeight();
         this.TILE_SIZE = screen.map.getTileSize();
-        time = 100;
+        time = 120;
         levelScore = 0;
         STAGES = new String[5];
         STAGES[0] = "map.tmx";
@@ -66,29 +63,26 @@ public class Hud {
         table.top();
         table.setFillParent(true);
 
-        scoreTextLabel = new Label("SCORE:", new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
-        timeTextLabel = new Label("TIME:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        livesTextLabel = new Label("LIVES:", new Label.LabelStyle(new BitmapFont(), Color.FIREBRICK));
+        Label SCORE_TEXT_LABEL = new Label("SCORE:", new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        TIME_TEXT_LABEL = new Label("TIME:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Label LIVES_TEXT_LABEL = new Label("LIVES:", new Label.LabelStyle(new BitmapFont(), Color.FIREBRICK));
 
-        scoreTextLabel.setFontScale(4);
-        timeTextLabel.setFontScale(4);
-        livesTextLabel.setFontScale(4);
+        SCORE_TEXT_LABEL.setFontScale(4);
+        TIME_TEXT_LABEL.setFontScale(4);
+        LIVES_TEXT_LABEL.setFontScale(4);
 
-        scoreLabel = new Label(String.format("%06d  ", game.getScore()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
-        timeLabel = new Label(String.format("%03d  ", (int)time), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        livesLabel = new Label(String.format("%01d  ", game.getLives()), new Label.LabelStyle(new BitmapFont(), Color.FIREBRICK));
+        SCORE_LABEL = new Label(String.format("%06d  ", game.getScore()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        TIME_LABEL = new Label(String.format("%03d  ", (int)time), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
-        scoreLabel.setFontScale(4);
-        timeLabel.setFontScale(4);
-        livesLabel.setFontScale(4);
+        SCORE_LABEL.setFontScale(4);
+        TIME_LABEL.setFontScale(4);
 
-        table.add(scoreTextLabel).expandX().padTop(0);
-        table.add(timeTextLabel).expandX().padTop(0);
-        table.add(livesTextLabel).expandX().padTop(0);
+        table.add(SCORE_TEXT_LABEL).expandX().padTop(0);
+        table.add(TIME_TEXT_LABEL).expandX().padTop(0);
+        table.add(LIVES_TEXT_LABEL).expandX().padTop(0);
         table.row();
-        table.add(scoreLabel).expandX().padTop(0);
-        table.add(timeLabel).expandX().padTop(0);
-        //table.add(livesLabel).expandX().padTop(0);
+        table.add(SCORE_LABEL).expandX().padTop(0);
+        table.add(TIME_LABEL).expandX().padTop(0);
         if(visible) stage.addActor(table);
 
         PACMAN = new PacMan(
@@ -123,12 +117,12 @@ public class Hud {
             }
             if(timeStamp - 0.5 > time) {
                 if(!red) {
-                    timeTextLabel.setColor(Color.RED);
-                    timeLabel.setColor(Color.RED);
+                    TIME_TEXT_LABEL.setColor(Color.RED);
+                    TIME_LABEL.setColor(Color.RED);
                     red = true;
                 } else{
-                    timeTextLabel.setColor(Color.WHITE);
-                    timeLabel.setColor(Color.WHITE);
+                    TIME_TEXT_LABEL.setColor(Color.WHITE);
+                    TIME_LABEL.setColor(Color.WHITE);
                     red = false;
                 }
                 timeStamp = time;
@@ -136,9 +130,8 @@ public class Hud {
         }
 
         if(visible){
-            scoreLabel.setText(String.format("%06d", GAME.getScore()));
-            timeLabel.setText(String.format("%03d", (int)time));
-            //livesLabel.setText(String.format("%01d", game.getLives()));
+            SCORE_LABEL.setText(String.format("%06d", GAME.getScore()));
+            TIME_LABEL.setText(String.format("%03d", (int)time));
             PacManGame.batch.begin();
             if(GAME.getLives() >= 1) {
                 PacManGame.batch.draw(PACMAN.texture,

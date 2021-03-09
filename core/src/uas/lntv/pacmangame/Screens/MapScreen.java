@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import uas.lntv.pacmangame.Maps.GameMap;
 import uas.lntv.pacmangame.Maps.Map;
@@ -39,6 +40,7 @@ public abstract class MapScreen implements Screen {
 
     public PacMan pacman;
     protected ArrayList<Enemy> ghosts = new ArrayList<>();
+    private ArrayList<String> playlist = new ArrayList<>();
 
     private Controller controller;
 
@@ -48,6 +50,10 @@ public abstract class MapScreen implements Screen {
 
     public MapScreen(PacManGame game, String mapPath, MapScreen.Type type) {
         //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
+        playlist.add("GameMusic.mp3");
+        playlist.add("GameMusic2.mp3");
+        playlist.add("GameMusic3.mp3");
+        playlist.add("GameMusic4.mp3");
         if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
             Gdx.graphics.setWindowedMode(450, 800);
         }
@@ -56,13 +62,9 @@ public abstract class MapScreen implements Screen {
         switch (type) {
             case GAME:
                 this.map = new GameMap(game, mapPath, this);
-                if (((int) (game.getLevel() / 5)) % 2 == 0) {
-                    this.music = Gdx.audio.newMusic(Gdx.files.internal("GameMusic.mp3"));
-                    music.setVolume(0.2f);
-                } else {
-                    this.music = Gdx.audio.newMusic(Gdx.files.internal("AmazingHorse.mp3"));
-                    music.setVolume(0.4f);
-                }
+                Random random = new Random();
+                this.music = Gdx.audio.newMusic(Gdx.files.internal(playlist.get(random.nextInt(4))));
+                music.setVolume(0.3f);
                 break;
             case MENU:
                 this.map = new MenuMap(mapPath);

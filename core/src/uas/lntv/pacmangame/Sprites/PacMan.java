@@ -14,8 +14,6 @@ import uas.lntv.pacmangame.Screens.ScoreScreen;
 
 public class PacMan extends Actor {
     public Hud hud;
-    Texture pac32 = new Texture("pacman32.png");
-    Texture superPac = new Texture("SuperPacMan.png");
     private final Sound SOUND;
     protected PacManGame game;
 
@@ -29,8 +27,8 @@ public class PacMan extends Actor {
 
         this.game = game;
 
-        if(!(this instanceof SuperPacMan)) this.texture = pac32;
-        else this.texture = superPac;
+        if(!(this instanceof SuperPacMan)) this.texture = new Texture("PacMan32.png");
+        else this.texture = new Texture("SuperPacMan.png");
         region = new TextureRegion(texture);
         region.setRegionX(0);
         region.setRegionY(0);
@@ -56,8 +54,8 @@ public class PacMan extends Actor {
 
         this.game = game;
 
-        if(!(this instanceof SuperPacMan)) this.texture = pac32;
-        else this.texture = superPac;
+        if(!(this instanceof SuperPacMan)) this.texture = new Texture("PacMan32.png");
+        else this.texture = new Texture("SuperPacMan.png");
         region = new TextureRegion(texture);
         region.setRegionX(0);
         region.setRegionY(0);
@@ -114,7 +112,7 @@ public class PacMan extends Actor {
     @Override
     public void move(){
         super.move();
-        screen.map.collect(screen.map.getTile(xPosition, yPosition)); //Dots einsammeln
+        screen.map.collect(screen.map.getTile(xPosition, yPosition)); //collect Dots
     }
 
 }

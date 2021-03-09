@@ -55,8 +55,8 @@ public class Pathfinder {
                         .setHeuristics(calcHeuristics(
                                 x,
                                 y,
-                                (int) this.TARGET_X /this.TILE_SIZE,
-                                (int) this.TARGET_Y /this.TILE_SIZE
+                                this.TARGET_X /this.TILE_SIZE,
+                                this.TARGET_Y /this.TILE_SIZE
                                 )
                         );
             }
@@ -92,8 +92,8 @@ public class Pathfinder {
                         .setHeuristics(calcHeuristics(
                                 x,
                                 y,
-                                (int) this.TARGET_X /this.TILE_SIZE,
-                                (int) this.TARGET_Y /this.TILE_SIZE
+                                this.TARGET_X /this.TILE_SIZE,
+                                this.TARGET_Y /this.TILE_SIZE
                                 )
                         );
             }

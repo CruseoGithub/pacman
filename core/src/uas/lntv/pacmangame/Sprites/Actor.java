@@ -253,9 +253,7 @@ public abstract class Actor {
         }
     }
 
-    public void collide() {
-        this.state = State.DIEING;
-    }
+    public void collide() { this.state = State.DIEING; }
 
     public void update(float dt){ animation.update(dt); }
 

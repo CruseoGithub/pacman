@@ -45,11 +45,26 @@ public class Animation {
                     ACTOR.rotation = 0;
 
                     if (this.tmp <= 320) {
-                        tmp = tmp + FRAME_WIDTH;
+                        tmp += FRAME_WIDTH;
                         ACTOR.texturePositionX = tmp;
                     } else {
                         ACTOR.texture = new Texture("pacman32.png");
                         ACTOR.state = State.RUNNING;
+                        ACTOR.texturePositionX = 0;
+                        switch(ACTOR.direction) {
+                            case RIGHT:
+                                ACTOR.rotation = 0;
+                                break;
+                            case UP:
+                                ACTOR.rotation = 90;
+                                break;
+                            case LEFT:
+                                ACTOR.rotation = 180;
+                                break;
+                            case DOWN:
+                                ACTOR.rotation = 270;
+                                break;
+                        }
                         ACTOR.setXPosition(ACTOR.TILE_SIZE);
                         ACTOR.setYPosition(17 * ACTOR.TILE_SIZE);
                         tmp = 0;

@@ -156,6 +156,7 @@ public abstract class Map {
         }
 
         public void dispose(){
+            sound.dispose();
             tmxMap.dispose();
         }
 }

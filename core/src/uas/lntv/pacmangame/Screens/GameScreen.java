@@ -78,6 +78,7 @@ public class GameScreen extends MapScreen {
     public void evolvePacMan(){
         if(!isPacManSuper()){
             this.switchMusicHunting();
+            pacman.getSound().dispose();
             this.pacman = new SuperPacMan(
                     game,
                     this.pacman.getXPosition(),

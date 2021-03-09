@@ -59,6 +59,7 @@ public class SuperPacMan extends PacMan {
             screen.shrinkPacMan();
             screen.switchMusicGame();
             screen.pacman = new PacMan(game, getXPosition(), getYPosition(), (getSpeed() / 2), screen, hud, direction, nextDirection, prevDirection);
+            KILL_SOUND.dispose();
             for (Enemy ghost : screen.getGhosts()) {
                 ghost.resetDifficulty();
             }

@@ -80,4 +80,9 @@ public class GameMap extends Map {
         super.collect(tile);
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+        POWER_UP.dispose();
+    }
 }

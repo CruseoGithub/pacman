@@ -131,7 +131,12 @@ public abstract class Actor {
     }
 
     public void move() {
-        if (xPosition >= TILE_SIZE && xPosition <= 26 * TILE_SIZE && yPosition >= 15 * TILE_SIZE && yPosition <= 44 * TILE_SIZE || !(screen instanceof GameScreen)) {
+        if (xPosition >= TILE_SIZE
+                && xPosition <= 26 * TILE_SIZE
+                && yPosition >= 15 * TILE_SIZE
+                && yPosition <= 44 * TILE_SIZE
+                || !(screen instanceof GameScreen)
+        ){
             prevDirection = direction;
             if (nextDirection != direction && screen.map.getTile(xPosition, yPosition, nextDirection).type != Tile.Type.WALL) {
                 if (xPosition == screen.map.getTile(xPosition, yPosition).getX() && yPosition == screen.map.getTile(xPosition, yPosition).getY()) {
@@ -220,7 +225,7 @@ public abstract class Actor {
                     }
                     break;
             }
-        } else if (screen instanceof GameScreen) {
+        } else {
             if (xPosition < TILE_SIZE) {
                 int temp = xPosition;
                 xPosition = 26 * TILE_SIZE - speed;

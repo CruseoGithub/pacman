@@ -19,6 +19,8 @@ public class PacMan extends Actor {
     private final Sound SOUND;
     protected PacManGame game;
 
+    public final Sound getSound(){ return SOUND; }
+
     public PacMan(PacManGame game, int initX, int initY, MapScreen screen, Hud hud){
         super(initX, initY, screen);
         this.direction = Direction.RIGHT;

@@ -13,7 +13,7 @@ public class HighScore {
     private static Preferences prefs;
     private static final ArrayList<Integer> highScores = new ArrayList<>();
     private static final ArrayList<String> names = new ArrayList<>();
-    private String gamer;
+    private static String player;
     private boolean nameSet;
 
     /**
@@ -23,7 +23,8 @@ public class HighScore {
     public HighScore(){
         prefs = Gdx.app.getPreferences("PacManPreferences");
         loadPrefs();
-        nameSet = false;
+        if(player.isEmpty()) nameSet = false;
+        else nameIsSet();
     }
 
     public static ArrayList<Integer> getHighScores(){ return highScores; }
@@ -43,7 +44,7 @@ public class HighScore {
         for(int i = 0; i< highScores.size(); i++){
             int x = highScores.get(i);
             if(newScore > x){
-                names.add(i, gamer);
+                names.add(i, player);
                 highScores.add(i, newScore);
                 if(highScores.size() > 10){
                     highScores.remove(10);
@@ -61,7 +62,7 @@ public class HighScore {
 
     public boolean isNameSet(){ return nameSet; }
 
-    public void setGamer(String name){ this.gamer = name;  }
+    public static void setPlayer(String name){ player = name;  }
 
     /**
      * Loads the scores from the preferences into the array list.
@@ -87,6 +88,7 @@ public class HighScore {
         names.add(prefs.getString("names_9"));
         highScores.add(prefs.getInteger("high_score_10"));
         names.add(prefs.getString("names_10"));
+        setPlayer(prefs.getString("player"));
     }
 
     /**
@@ -113,6 +115,7 @@ public class HighScore {
         prefs.putString("names_8", names.get(7));
         prefs.putString("names_9", names.get(8));
         prefs.putString("names_10", names.get(9));
+        prefs.putString("player", player);
 
 /* This resets the list
         prefs.putInteger("high_score_1", 0);
@@ -135,8 +138,8 @@ public class HighScore {
         prefs.putString("names_8", "nobody");
         prefs.putString("names_9", "nobody");
         prefs.putString("names_10", "nobody");
+        prefs.putString("player", "");
 */
-
         prefs.flush();
     }
 }

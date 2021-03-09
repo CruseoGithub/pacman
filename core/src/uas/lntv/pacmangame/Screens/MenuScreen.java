@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 import uas.lntv.pacmangame.PacManGame;
+import uas.lntv.pacmangame.Scenes.HighScore;
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
@@ -27,12 +28,27 @@ public class MenuScreen extends MapScreen {
                     new Input.TextInputListener() {
                         @Override
                         public void input(String text) {
-                            game.highScore.setGamer(text);
+                            if(text.isEmpty()) {
+                                Gdx.input.getTextInput(
+                                    new Input.TextInputListener() {
+                                        @Override
+                                        public void input(String s) {
+                                            if(s.isEmpty()) anonymous();
+                                            HighScore.setPlayer(s);
+                                        }
+                                        @Override
+                                        public void canceled() {
+                                            anonymous();
+                                        }
+                                    },
+                                        "Are you sure?", "Anonymous Bastard", ""
+                                );
+                            } else HighScore.setPlayer(text);
                         }
 
                         @Override
                         public void canceled() {
-                            game.highScore.setGamer("Anonymous Bastard");
+                            anonymous();
                         }
                     },
                     "Please enter your name", "", "Name"
@@ -55,8 +71,9 @@ public class MenuScreen extends MapScreen {
                 this.dispose();
             }
         }
-
     }
+
+    private void anonymous(){ HighScore.setPlayer("Anonymous Bastard"); }
 
     @Override
     public void dispose() {

@@ -1,6 +1,7 @@
 package uas.lntv.pacmangame;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import uas.lntv.pacmangame.Scenes.HighScore;
@@ -51,5 +52,7 @@ public class PacManGame extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		System.exit(0);
+		Gdx.app.exit();
 	}
 }

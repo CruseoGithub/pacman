@@ -162,6 +162,7 @@ public class Hud {
     }
 
     public void dispose(){
+        TIME_WARNING.dispose();
         stage.dispose();
     }
 }

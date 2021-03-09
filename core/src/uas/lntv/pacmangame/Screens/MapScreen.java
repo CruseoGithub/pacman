@@ -38,7 +38,7 @@ public abstract class MapScreen implements Screen {
     public Hud hud;
 
     public PacMan pacman;
-    protected ArrayList<Enemy> ghosts = new ArrayList<Enemy>();
+    protected ArrayList<Enemy> ghosts = new ArrayList<>();
 
     private Controller controller;
 
@@ -63,9 +63,6 @@ public abstract class MapScreen implements Screen {
                     this.music = Gdx.audio.newMusic(Gdx.files.internal("AmazingHorse.mp3"));
                     music.setVolume(0.4f);
                 }
-                this.huntingMusic = Gdx.audio.newMusic(Gdx.files.internal("hunting.mp3"));
-                huntingMusic.setVolume(0.25f);
-                huntingMusic.setLooping(true);
                 break;
             case MENU:
                 this.map = new MenuMap(mapPath);
@@ -78,6 +75,9 @@ public abstract class MapScreen implements Screen {
                 music.setVolume(0.4f);
                 break;
         }
+        this.huntingMusic = Gdx.audio.newMusic(Gdx.files.internal("hunting.mp3"));
+        huntingMusic.setVolume(0.25f);
+        huntingMusic.setLooping(true);
         music.setLooping(true);
         music.play();
         this.MAP_WIDTH = map.getMapWidth();
@@ -233,9 +233,11 @@ public abstract class MapScreen implements Screen {
 
     @Override
     public void dispose() {
+        pacman.getSound().dispose();
+        map.dispose();
         controller.dispose();
         music.dispose();
-        if(this instanceof GameScreen) huntingMusic.dispose();
+        huntingMusic.dispose();
     }
 
 }

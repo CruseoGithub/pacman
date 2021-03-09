@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
+import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Enemy;
@@ -15,8 +16,8 @@ public class GameMap extends Map {
 
     private final Sound POWER_UP;
 
-    public GameMap(PacManGame game, String path, MapScreen screen){
-        super(path);
+    public GameMap(PacManGame game, Assets assets, String path, MapScreen screen){
+        super(path, assets);
         this.GAME = game;
         this.screen = screen;
         generateItems();
@@ -80,9 +81,4 @@ public class GameMap extends Map {
         super.collect(tile);
     }
 
-    @Override
-    public void dispose() {
-        super.dispose();
-        POWER_UP.dispose();
-    }
 }

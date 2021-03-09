@@ -1,11 +1,10 @@
 package uas.lntv.pacmangame.Sprites;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Screens.MapScreen;
@@ -14,18 +13,17 @@ import uas.lntv.pacmangame.Screens.ScoreScreen;
 
 public class PacMan extends Actor {
     public Hud hud;
-    private final Sound SOUND;
     protected PacManGame game;
+    protected Assets assets;
 
-    public final Sound getSound(){ return SOUND; }
-
-    public PacMan(PacManGame game, int initX, int initY, MapScreen screen, Hud hud){
+    public PacMan(PacManGame game, Assets assets, int initX, int initY, MapScreen screen, Hud hud){
         super(initX, initY, screen);
         this.direction = Direction.RIGHT;
         this.nextDirection = Direction.RIGHT;
         this.prevDirection = Direction.RIGHT;
 
         this.game = game;
+        this.assets = assets;
 
         if(!(this instanceof SuperPacMan)) this.texture = new Texture("PacMan32.png");
         else this.texture = new Texture("SuperPacMan.png");
@@ -42,10 +40,9 @@ public class PacMan extends Actor {
         this.sprite = new Sprite(region);
         this.sprite.setOrigin(TILE_SIZE/2f, TILE_SIZE/2f);
         this.hud = hud;
-        this.SOUND = Gdx.audio.newSound(Gdx.files.internal("die.wav"));
     }
 
-    public PacMan(PacManGame game, int initX, int initY, int speed, MapScreen screen, Hud hud,  Direction now, Direction next, Direction prev){
+    public PacMan(PacManGame game, Assets assets, int initX, int initY, int speed, MapScreen screen, Hud hud,  Direction now, Direction next, Direction prev){
         super(initX, initY, screen);
         this.direction = now;
         this.nextDirection = next;
@@ -53,6 +50,7 @@ public class PacMan extends Actor {
         this.setSpeed(speed);
 
         this.game = game;
+        this.assets = assets;
 
         if(!(this instanceof SuperPacMan)) this.texture = new Texture("PacMan32.png");
         else this.texture = new Texture("SuperPacMan.png");
@@ -69,7 +67,6 @@ public class PacMan extends Actor {
         this.sprite = new Sprite(region);
         this.sprite.setOrigin(TILE_SIZE/2f, TILE_SIZE/2f);
         this.hud = hud;
-        this.SOUND = Gdx.audio.newSound(Gdx.files.internal("die.wav"));
         switch(direction){
             case RIGHT:
                 this.rotation = 0;
@@ -93,14 +90,14 @@ public class PacMan extends Actor {
     @Override
     public void collide() {
         super.collide();
-        SOUND.play(0.35f);
+        assets.manager.get(assets.DIE).play(0.35f);
         if(game.getLives() > 1) game.die();
         else {
             game.die();
             if(game.highScore.addScore(game.getScore())){
-                game.setScreen(new ScoreScreen(game, "HighScoreList.tmx"));
+                game.setScreen(new ScoreScreen(game, assets, "HighScoreList.tmx"));
             } else {
-                game.setScreen(new MenuScreen(game, "mainMenu.tmx"));
+                game.setScreen(new MenuScreen(game, assets, "MainMenu.tmx"));
             }
             super.screen.dispose();
             game.resetScore();

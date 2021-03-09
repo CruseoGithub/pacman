@@ -1,16 +1,18 @@
 package uas.lntv.pacmangame.Scenes;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
+
+import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
@@ -19,18 +21,18 @@ import uas.lntv.pacmangame.Sprites.PacMan;
 public class Hud {
     private final PacManGame GAME;
     public Stage stage;
+    private final Assets assets;
 
     public float time;
     public Integer levelScore;
     public boolean visible;
 
-    private final String[] STAGES;
+    private final ArrayList<String> STAGES = new ArrayList<>();
 
     private final Label TIME_TEXT_LABEL;
     private final Label TIME_LABEL;
     private final Label SCORE_LABEL;
 
-    private final Sound TIME_WARNING;
     private boolean warned;
     private boolean red;
     private final int WARNING_TIME;
@@ -40,19 +42,19 @@ public class Hud {
     private final PacMan PACMAN;
 
     @SuppressWarnings("DefaultLocale")
-    public Hud(PacManGame game, MapScreen screen, boolean visible){
+    public Hud(PacManGame game, Assets assets, MapScreen screen, boolean visible){
         this.GAME = game;
+        this.assets = assets;
         int mapWidth = screen.map.getMapWidth();
         int mapHeight = screen.map.getMapHeight();
         this.TILE_SIZE = screen.map.getTileSize();
         time = 120;
         levelScore = 0;
-        STAGES = new String[5];
-        STAGES[0] = "map.tmx";
-        STAGES[1] = "map2.tmx";
-        STAGES[2] = "map3.tmx";
-        STAGES[3] = "map4.tmx";
-        STAGES[4] = "map5.tmx";
+        STAGES.add("map.tmx");
+        STAGES.add("map2.tmx");
+        STAGES.add("map3.tmx");
+        STAGES.add("map4.tmx");
+        STAGES.add("map5.tmx");
 
         this.visible = visible;
 
@@ -87,6 +89,7 @@ public class Hud {
 
         PACMAN = new PacMan(
                 game,
+                assets,
                 20 * TILE_SIZE,
                 (45 * TILE_SIZE + TILE_SIZE /2),
                 0,
@@ -97,22 +100,19 @@ public class Hud {
                 Actor.Direction.RIGHT
         );
 
-        TIME_WARNING = Gdx.audio.newSound(Gdx.files.internal("ALARM.mp3"));
         warned = false;
         red = false;
         WARNING_TIME = 30;
         timeStamp = time;
     }
 
-    public String getMap(){
-        return STAGES[(GAME.getLevel() % 5)];
-    }
+    public final String getMap(){ return STAGES.get(GAME.getLevel() % 5); }
 
     @SuppressWarnings("DefaultLocale")
     public void update(){
         if(time < WARNING_TIME){
             if(!warned){
-                TIME_WARNING.play(0.4f);
+                assets.manager.get(assets.ALARM).play(0.4f);
                 warned = true;
             }
             if(timeStamp - 0.5 > time) {
@@ -162,7 +162,6 @@ public class Hud {
     }
 
     public void dispose(){
-        TIME_WARNING.dispose();
         stage.dispose();
     }
 }

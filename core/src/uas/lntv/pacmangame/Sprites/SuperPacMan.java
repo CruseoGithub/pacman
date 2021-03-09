@@ -3,6 +3,7 @@ package uas.lntv.pacmangame.Sprites;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
+import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Screens.GameScreen;
@@ -13,7 +14,6 @@ import uas.lntv.pacmangame.Screens.GameScreen;
  */
 public class SuperPacMan extends PacMan {
 
-    private final Sound KILL_SOUND;
     private float supStatusTime;
 
     /**
@@ -22,18 +22,17 @@ public class SuperPacMan extends PacMan {
      * @param initX exact x-Position of PacMan
      * @param initY exact y-Position of PacMan
      * @param speed velocity of PacMan
-     * @param screen generally the GameScreen
+     * @param screen should be the GameScreen
      * @param hud HUD of the screen
      * @param now the momentarily direction in which PacMan is moving
      * @param next the direction which is earmarked for PacMan
      * @param prev the last direction PacMan was moving
      * @see PacMan
      */
-    public SuperPacMan(PacManGame game, int initX, int initY, int speed, GameScreen screen, Hud hud, Direction now, Direction next, Direction prev) {
-        super(game, initX, initY, speed, screen, hud, now, next, prev);
+    public SuperPacMan(PacManGame game, Assets assets, int initX, int initY, int speed, GameScreen screen, Hud hud, Direction now, Direction next, Direction prev) {
+        super(game, assets, initX, initY, speed, screen, hud, now, next, prev);
         correctPosition(now);                                       //avoids rushing through walls
         setSpeed(speed * 2);
-        KILL_SOUND = Gdx.audio.newSound(Gdx.files.internal("kill.wav"));
     }
 
     /**
@@ -58,8 +57,7 @@ public class SuperPacMan extends PacMan {
         if (supStatusTime > 10) {
             screen.shrinkPacMan();
             screen.switchMusicGame();
-            screen.pacman = new PacMan(game, getXPosition(), getYPosition(), (getSpeed() / 2), screen, hud, direction, nextDirection, prevDirection);
-            KILL_SOUND.dispose();
+            screen.pacman = new PacMan(game, assets, getXPosition(), getYPosition(), (getSpeed() / 2), screen, hud, direction, nextDirection, prevDirection);
             for (Enemy ghost : screen.getGhosts()) {
                 ghost.resetDifficulty();
             }
@@ -72,7 +70,7 @@ public class SuperPacMan extends PacMan {
      */
     @Override
     public void collide() {
-        KILL_SOUND.play(0.15f);
+        assets.manager.get(assets.KILL).play(0.15f);
         game.increaseScore(50);
     }
 

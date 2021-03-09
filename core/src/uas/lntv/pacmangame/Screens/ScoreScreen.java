@@ -2,6 +2,7 @@ package uas.lntv.pacmangame.Screens;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
+import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.HighScore;
 import uas.lntv.pacmangame.Scenes.Hud;
@@ -21,15 +22,15 @@ public class ScoreScreen extends MapScreen {
     /**
      * This screen is a separate room where you can see the high-score list.
      * @param game Insert the running game
-     * @param mapPath name of the map that's supposed to be loaded
+     * @param path the path where the map is stored
      * @see MapScreen
      */
-    public ScoreScreen(PacManGame game, String mapPath){
-        super(game, mapPath, Type.SCORE);
-        this.pacman = new PacMan(game, 25 * TILE_SIZE, 47 * TILE_SIZE, this, hud);
+    public ScoreScreen(PacManGame game, Assets assets, String path){
+        super(game, assets, path, Type.SCORE);
+        this.pacman = new PacMan(game, assets, 25 * TILE_SIZE, 47 * TILE_SIZE, this, hud);
         this.pacman.setSpeed(16);
         this.ghosts.add(new Enemy(25 * TILE_SIZE, 3 * TILE_SIZE, this, "white.png"));
-        this.hud = new Hud(game, this, false);
+        this.hud = new Hud(game, assets,this, false);
         this.FONT = new BitmapFont();
         FONT.getData().setScale(FONT.getScaleX()*2);
     }
@@ -64,7 +65,7 @@ public class ScoreScreen extends MapScreen {
         PacManGame.batch.end();
 
         if(pacman.getXPosition() <= 2* TILE_SIZE) {
-            game.setScreen(new MenuScreen(game, "mainMenu.tmx"));
+            game.setScreen(new MenuScreen(game, assets, "MainMenu.tmx"));
             this.dispose();
         }
     }

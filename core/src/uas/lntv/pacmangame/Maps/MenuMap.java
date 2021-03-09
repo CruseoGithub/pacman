@@ -1,9 +1,11 @@
 package uas.lntv.pacmangame.Maps;
 
+import uas.lntv.pacmangame.Assets;
+
 public class MenuMap extends Map {
 
-    public MenuMap(String path){
-        super(path);
+    public MenuMap(String path, Assets assets){
+        super(path, assets);
         generateDots(0);
     }
 

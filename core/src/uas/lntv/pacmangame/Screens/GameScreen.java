@@ -1,5 +1,6 @@
 package uas.lntv.pacmangame.Screens;
 
+import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Sprites.Enemy;
@@ -13,11 +14,11 @@ public class GameScreen extends MapScreen {
 
     public boolean isPacManSuper() { return pacManSuper; }
 
-    public GameScreen(PacManGame game, String mapPath) {
-        super(game, mapPath, Type.GAME);
+    public GameScreen(PacManGame game, Assets assets, String path) {
+        super(game, assets, path, Type.GAME);
 
-        this.hud = new Hud(game, this, true);
-        this.pacman = new PacMan(game, TILE_SIZE, 17* TILE_SIZE, this, hud);
+        this.hud = new Hud(game, assets, this, true);
+        this.pacman = new PacMan(game, assets, TILE_SIZE, 17* TILE_SIZE, this, hud);
         this.ghosts.add(new Enemy(13* TILE_SIZE, 33* TILE_SIZE, this, "redghost.png"));
         if(game.getLevel() >= 2) {
             this.ghosts.add(new Enemy(14* TILE_SIZE, 33* TILE_SIZE, this, "orange.png"));
@@ -57,9 +58,9 @@ public class GameScreen extends MapScreen {
         hud.stage.draw();
         if(hud.time < 0){
             if(game.highScore.addScore(game.getScore())){
-                game.setScreen(new ScoreScreen(game, "HighScoreList.tmx"));
+                game.setScreen(new ScoreScreen(game, assets, "HighScoreList.tmx"));
             } else {
-                game.setScreen(new MenuScreen(game, "mainMenu.tmx"));
+                game.setScreen(new MenuScreen(game, assets, "MainMenu.tmx"));
             }
             game.resetLives();
             game.resetScore();
@@ -70,7 +71,7 @@ public class GameScreen extends MapScreen {
         if(hud.levelScore == 150){
             game.levelUp();
             game.increaseScore((int)hud.time);
-            game.setScreen(new GameScreen(game, hud.getMap()));
+            game.setScreen(new GameScreen(game, assets, hud.getMap()));
             this.dispose();
         }
     }
@@ -78,9 +79,9 @@ public class GameScreen extends MapScreen {
     public void evolvePacMan(){
         if(!isPacManSuper()){
             this.switchMusicHunting();
-            pacman.getSound().dispose();
             this.pacman = new SuperPacMan(
                     game,
+                    assets,
                     this.pacman.getXPosition(),
                     this.pacman.getYPosition(),
                     this.pacman.getSpeed(),

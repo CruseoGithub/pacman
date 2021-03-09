@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.Random;
 
+import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.Maps.GameMap;
 import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.MenuMap;
@@ -27,7 +28,7 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public abstract class MapScreen implements Screen {
-    public enum Type {GAME, MENU, SCORE};
+    public enum Type {GAME, MENU, SCORE}
 
     protected PacManGame game;
     protected OrthographicCamera gameCam;
@@ -35,25 +36,28 @@ public abstract class MapScreen implements Screen {
     protected Music music;
     protected Music huntingMusic;
 
+    protected final Assets assets;
+
     public Map map;
     public Hud hud;
 
     public PacMan pacman;
     protected ArrayList<Enemy> ghosts = new ArrayList<>();
-    private ArrayList<String> playlist = new ArrayList<>();
 
-    private Controller controller;
+    private final Controller CONTROLLER;
 
     private final int MAP_WIDTH;
     private final int MAP_HEIGHT;
     protected final int TILE_SIZE;
 
-    public MapScreen(PacManGame game, String mapPath, MapScreen.Type type) {
+    public MapScreen(PacManGame game, Assets assets, String path, MapScreen.Type type) {
         //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
-        playlist.add("GameMusic.mp3");
-        playlist.add("GameMusic2.mp3");
-        playlist.add("GameMusic3.mp3");
-        playlist.add("GameMusic4.mp3");
+        this.assets = assets;
+        ArrayList<Music> playlist = new ArrayList<>();
+        playlist.add(assets.manager.get(assets.GAME_MUSIC));
+        playlist.add(assets.manager.get(assets.GAME_MUSIC_2));
+        playlist.add(assets.manager.get(assets.GAME_MUSIC_3));
+        playlist.add(assets.manager.get(assets.GAME_MUSIC_4));
         if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
             Gdx.graphics.setWindowedMode(450, 800);
         }
@@ -61,35 +65,35 @@ public abstract class MapScreen implements Screen {
         this.gameCam = new OrthographicCamera();
         switch (type) {
             case GAME:
-                this.map = new GameMap(game, mapPath, this);
+                this.map = new GameMap(game, assets, path, this);
                 Random random = new Random();
-                this.music = Gdx.audio.newMusic(Gdx.files.internal(playlist.get(random.nextInt(4))));
-                music.setVolume(0.3f);
+                this.music = playlist.get(random.nextInt(4));
+                this.music.setVolume(0.3f);
                 break;
             case MENU:
-                this.map = new MenuMap(mapPath);
-                this.music = Gdx.audio.newMusic(Gdx.files.internal("MenuMusic.MP3"));
+                this.map = new MenuMap(path, assets);
+                this.music = assets.manager.get(assets.MENU_MUSIC);
                 music.setVolume(0.3f);
                 break;
             case SCORE:
-                this.map = new MenuMap(mapPath);
-                this.music = Gdx.audio.newMusic(Gdx.files.internal("HeartOfCourage.mp3"));
+                this.map = new MenuMap(path, assets);
+                this.music = assets.manager.get(assets.SCORE_MUSIC);
                 music.setVolume(0.4f);
                 break;
         }
-        this.huntingMusic = Gdx.audio.newMusic(Gdx.files.internal("hunting.mp3"));
+        this.huntingMusic = assets.manager.get(assets.HUNTING_MUSIC);
         huntingMusic.setVolume(0.25f);
         huntingMusic.setLooping(true);
         music.setLooping(true);
         music.play();
-        this.MAP_WIDTH = map.getMapWidth();
-        this.MAP_HEIGHT = map.getMapHeight();
-        this.TILE_SIZE = map.getTileSize();
+        this.MAP_WIDTH = this.map.getMapWidth();
+        this.MAP_HEIGHT = this.map.getMapHeight();
+        this.TILE_SIZE = this.map.getTileSize();
 
         this.gamePort = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, gameCam);
         this.gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-        this.controller = new ControllerSwipe(this);
+        this.CONTROLLER = new ControllerSwipe(this);
     }
 
     @Override
@@ -98,19 +102,19 @@ public abstract class MapScreen implements Screen {
     }
 
     public void handleInput() {
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || controller.isRightPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || CONTROLLER.isRightPressed()) {
             pacman.setNextDirection(Actor.Direction.RIGHT);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || controller.isLeftPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || CONTROLLER.isLeftPressed()) {
             pacman.setNextDirection(Actor.Direction.LEFT);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) || controller.isUpPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) || CONTROLLER.isUpPressed()) {
             pacman.setNextDirection(Actor.Direction.UP);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || controller.isDownPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || CONTROLLER.isDownPressed()) {
             pacman.setNextDirection(Actor.Direction.DOWN);
         }
-        controller.pulledInput();
+        CONTROLLER.pulledInput();
     }
 
     public void update(float dt) {
@@ -172,23 +176,23 @@ public abstract class MapScreen implements Screen {
         map.renderer.setView(gameCam);
         map.renderer.render();
 
-        game.batch.begin();
+        PacManGame.batch.begin();
 
-        game.batch.draw(pacman.texture, pacman.getXPosition(), pacman.getYPosition(), pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+        PacManGame.batch.draw(pacman.texture, pacman.getXPosition(), pacman.getYPosition(), pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
                 TILE_SIZE, TILE_SIZE, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
                 pacman.getTexturePositionX(), 0, 32, 32, false, false
         );
 
         for (Enemy ghost : ghosts) {
-            game.batch.draw(ghost.texture, ghost.getXPosition(), ghost.getYPosition(), ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
+            PacManGame.batch.draw(ghost.texture, ghost.getXPosition(), ghost.getYPosition(), ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
                     TILE_SIZE, TILE_SIZE, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
                     ghost.getTexturePositionX(), ghost.getTexturePositionY(), 32, 32, false, false
             );
         }
 
-        game.batch.end();
+        PacManGame.batch.end();
 
-        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        PacManGame.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.time -= Gdx.graphics.getDeltaTime();
     }
 
@@ -235,9 +239,7 @@ public abstract class MapScreen implements Screen {
 
     @Override
     public void dispose() {
-        pacman.getSound().dispose();
-        map.dispose();
-        controller.dispose();
+        CONTROLLER.dispose();
         music.dispose();
         huntingMusic.dispose();
     }

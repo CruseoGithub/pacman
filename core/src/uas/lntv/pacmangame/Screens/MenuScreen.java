@@ -3,6 +3,7 @@ package uas.lntv.pacmangame.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
+import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.HighScore;
 import uas.lntv.pacmangame.Scenes.Hud;
@@ -11,13 +12,12 @@ import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class MenuScreen extends MapScreen {
 
-    public MenuScreen(PacManGame game, String mapPath){
-        super(game, mapPath, Type.MENU);
-
-        this.pacman = new PacMan(game, 2* TILE_SIZE, 26* TILE_SIZE, this, hud);
+    public MenuScreen(PacManGame game, Assets assets, String path){
+        super(game, assets, path, Type.MENU);
+        this.pacman = new PacMan(game, assets, 2* TILE_SIZE, 26* TILE_SIZE, this, hud);
         this.pacman.setSpeed(8);
         this.ghosts.add(new Enemy(16* TILE_SIZE,23* TILE_SIZE,this, "blue.png"));
-        this.hud = new Hud(game, this, false); //Not Visible
+        this.hud = new Hud(game, assets,this, false); //Not Visible
     }
 
     @Override
@@ -58,16 +58,11 @@ public class MenuScreen extends MapScreen {
 
         if(pacman.getXPosition() == 12* TILE_SIZE){
             if(pacman.getYPosition() >= 19* TILE_SIZE && pacman.getYPosition() <= 23* TILE_SIZE){
-                // PLAY
-                //game.setScreen(game.gameScreen);
-
-                game.setScreen(new GameScreen(game, "map.tmx"));
+                game.setScreen(new GameScreen(game, assets, "map.tmx"));
                 this.dispose();
             }
             else if(pacman.getYPosition() >= 29* TILE_SIZE && pacman.getYPosition() <= 33* TILE_SIZE){
-                //SETTINGS (Momentan auch GameScreen)
-                //game.setScreen(game.gameScreen);
-                game.setScreen(new ScoreScreen(game, "HighScoreList.tmx"));
+                game.setScreen(new ScoreScreen(game, assets, "HighScoreList.tmx"));
                 this.dispose();
             }
         }

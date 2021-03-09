@@ -13,15 +13,20 @@ public class PacManGame extends Game {
 	private int lives;
 	public static SpriteBatch batch;
 	public HighScore highScore;
+	private final Assets assets = new Assets();
 
 	@Override
 	public void create () {
+		assets.load();
+		while(!assets.manager.update()){
+			System.out.println(assets.manager.getProgress() * 100 + "%");
+		}
 		batch = new SpriteBatch();
 		level = 0;
 		score = 0;
 		lives = 3;
 		highScore = new HighScore();
-		setScreen(new MenuScreen(this, "mainMenu.tmx"));
+		setScreen(new MenuScreen(this, assets, "MainMenu.tmx"));
 	}
 
 	public int getLevel(){
@@ -51,6 +56,7 @@ public class PacManGame extends Game {
 	
 	@Override
 	public void dispose () {
+		assets.dispose();
 		batch.dispose();
 		System.exit(0);
 		Gdx.app.exit();

@@ -1,7 +1,5 @@
 package uas.lntv.pacmangame.Maps;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -15,7 +13,7 @@ import uas.lntv.pacmangame.Sprites.Actor;
 public abstract class Map {
         private final boolean firstMap;
         public OrthogonalTiledMapRenderer renderer;
-        private final Assets assets;
+        protected final Assets ASSETS;
 
         public TiledMapTileLayer layerWall;
         public TiledMapTileLayer layerPath;
@@ -36,11 +34,11 @@ public abstract class Map {
         public final int getTileSize(){ return this.TILE_SIZE; }
 
         public Map(String path, Assets assets){
-            this.assets = assets;
-            firstMap = path.equals("map.tmx");
-            TmxMapLoader mapLoader = new TmxMapLoader();
-            TiledMap tmxMap = mapLoader.load(path);
-            tmxControl = mapLoader.load("controller.tmx");
+            this.ASSETS = assets;
+            firstMap = path.equals("maps/map.tmx");
+            TmxMapLoader tmxMapLoader = new TmxMapLoader();
+            TiledMap tmxMap = tmxMapLoader.load(path);
+            tmxControl = assets.manager.get(assets.CONTROL);
             renderer = new OrthogonalTiledMapRenderer(tmxMap);
 
             MAP_WIDTH = Integer.parseInt(tmxMap.getProperties().get("width").toString());
@@ -89,10 +87,10 @@ public abstract class Map {
                 }
             }
             else {
-                Texture tex = new Texture("tiles.png");
+                Texture tex = ASSETS.manager.get(ASSETS.TILES);
                 region = new TextureRegion(tex);
                 if(type == Tile.Type.DOT) {
-                        tex = new Texture("coin_gold.png");
+                        tex = ASSETS.manager.get(ASSETS.COIN_GOLD);
                         region = new TextureRegion(tex);
                         region.setRegionX(128);
                         region.setRegionWidth(32);
@@ -134,7 +132,7 @@ public abstract class Map {
 
         public void collect(Tile tile){
             if(tile.isDot){
-                assets.manager.get(assets.DOT).play(0.25f);
+                ASSETS.manager.get(ASSETS.DOT).play(0.25f);
                 layerCollect.setCell(
                         tile.getX()/ TILE_SIZE,
                         tile.getY()/ TILE_SIZE,

@@ -8,7 +8,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -52,15 +51,15 @@ public abstract class MapScreen implements Screen {
 
     public MapScreen(PacManGame game, Assets assets, String path, MapScreen.Type type) {
         //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
+        if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
+            Gdx.graphics.setWindowedMode(450, 800);
+        }
         this.assets = assets;
         ArrayList<Music> playlist = new ArrayList<>();
         playlist.add(assets.manager.get(assets.GAME_MUSIC));
         playlist.add(assets.manager.get(assets.GAME_MUSIC_2));
         playlist.add(assets.manager.get(assets.GAME_MUSIC_3));
         playlist.add(assets.manager.get(assets.GAME_MUSIC_4));
-        if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
-            Gdx.graphics.setWindowedMode(450, 800);
-        }
         this.game = game;
         this.gameCam = new OrthographicCamera();
         switch (type) {
@@ -133,19 +132,19 @@ public abstract class MapScreen implements Screen {
                     ghost.move();
                 } else {
                     if (map.getTile(ghost.getXPosition(), ghost.getYPosition()) != map.getTile(ghost.getStartPosX(), ghost.getStartPosY())) {
-                        ghost.texture = new Texture("blue.png");
+                        ghost.texture = assets.manager.get(assets.BLUE_DEAD);
                         ghost.getHome();
                     } else {
                         if (ghost == getGhosts().get(0)) {
-                            ghost.texture = new Texture("redghost.png");
+                            ghost.texture = assets.manager.get(assets.GHOST_1);
                         }
-                        if (game.getLevel() >= 2) {
+                        if (getGhosts().size() > 1) {
                             if (ghost == getGhosts().get(1)) {
-                                ghost.texture = new Texture("orange.png");
+                                ghost.texture = assets.manager.get(assets.GHOST_2);
                             }
-                            if (game.getLevel() >= 4) {
+                            if (getGhosts().size() > 2) {
                                 if (ghost == getGhosts().get(2)) {
-                                    ghost.texture = new Texture("pinky.png");
+                                    ghost.texture = assets.manager.get(assets.GHOST_3);
                                 }
                             }
                         }

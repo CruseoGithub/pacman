@@ -29,7 +29,7 @@ public class ScoreScreen extends MapScreen {
         super(game, assets, path, Type.SCORE);
         this.pacman = new PacMan(game, assets, 25 * TILE_SIZE, 47 * TILE_SIZE, this, hud);
         this.pacman.setSpeed(16);
-        this.ghosts.add(new Enemy(25 * TILE_SIZE, 3 * TILE_SIZE, this, "white.png"));
+        this.ghosts.add(new Enemy(25 * TILE_SIZE, 3 * TILE_SIZE,  assets, this, assets.manager.get(assets.WHITE_DEAD)));
         this.hud = new Hud(game, assets,this, false);
         this.FONT = new BitmapFont();
         FONT.getData().setScale(FONT.getScaleX()*2);
@@ -65,7 +65,7 @@ public class ScoreScreen extends MapScreen {
         PacManGame.batch.end();
 
         if(pacman.getXPosition() <= 2* TILE_SIZE) {
-            game.setScreen(new MenuScreen(game, assets, "MainMenu.tmx"));
+            game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
             this.dispose();
         }
     }

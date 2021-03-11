@@ -16,7 +16,7 @@ public class MenuScreen extends MapScreen {
         super(game, assets, path, Type.MENU);
         this.pacman = new PacMan(game, assets, 2* TILE_SIZE, 26* TILE_SIZE, this, hud);
         this.pacman.setSpeed(8);
-        this.ghosts.add(new Enemy(16* TILE_SIZE,23* TILE_SIZE,this, "blue.png"));
+        this.ghosts.add(new Enemy(16* TILE_SIZE,23* TILE_SIZE, assets,this, assets.manager.get(assets.BLUE_DEAD)));
         this.hud = new Hud(game, assets,this, false); //Not Visible
     }
 
@@ -58,11 +58,11 @@ public class MenuScreen extends MapScreen {
 
         if(pacman.getXPosition() == 12* TILE_SIZE){
             if(pacman.getYPosition() >= 19* TILE_SIZE && pacman.getYPosition() <= 23* TILE_SIZE){
-                game.setScreen(new GameScreen(game, assets, "map.tmx"));
+                game.setScreen(new GameScreen(game, assets, assets.MAP_1));
                 this.dispose();
             }
             else if(pacman.getYPosition() >= 29* TILE_SIZE && pacman.getYPosition() <= 33* TILE_SIZE){
-                game.setScreen(new ScoreScreen(game, assets, "HighScoreList.tmx"));
+                game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
                 this.dispose();
             }
         }

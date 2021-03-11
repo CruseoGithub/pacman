@@ -1,7 +1,5 @@
 package uas.lntv.pacmangame.Maps;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
@@ -14,15 +12,12 @@ public class GameMap extends Map {
     MapScreen screen;
     private final PacManGame GAME;
 
-    private final Sound POWER_UP;
-
     public GameMap(PacManGame game, Assets assets, String path, MapScreen screen){
         super(path, assets);
         this.GAME = game;
         this.screen = screen;
         generateItems();
         generateDots(150);
-        POWER_UP = Gdx.audio.newSound(Gdx.files.internal("PowerUp.wav"));
     }
 
     public void generateItems(){
@@ -67,7 +62,7 @@ public class GameMap extends Map {
                     null
             );
             tile.takeItem();
-            POWER_UP.play(0.1f);
+            ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
             screen.evolvePacMan();
             for(Enemy ghost : screen.getGhosts()){
                 ghost.setDifficulty(Enemy.Difficulty.RUNAWAY);

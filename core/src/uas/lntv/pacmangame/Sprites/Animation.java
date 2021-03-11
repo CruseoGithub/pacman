@@ -1,4 +1,5 @@
 package uas.lntv.pacmangame.Sprites;
+import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import com.badlogic.gdx.graphics.Texture;
 import uas.lntv.pacmangame.Maps.Tile;
@@ -7,6 +8,7 @@ import uas.lntv.pacmangame.Sprites.Actor.State;
 
 public class Animation {
     private final Actor ACTOR;
+    private final Assets ASSETS;
     private float animationSpeed;
     private final MapScreen SCREEN;
     private final int FRAME_WIDTH;
@@ -15,8 +17,9 @@ public class Animation {
     private int tmp = 0;
 
 
-    public Animation(Actor actor, float animationSpeed, MapScreen screen, int frameCount) {
+    public Animation(Actor actor, final Assets ASSETS, float animationSpeed, MapScreen screen, int frameCount) {
         this.ACTOR = actor;
+        this.ASSETS = ASSETS;
         this.animationSpeed = animationSpeed;
         this.SCREEN = screen;
         this.FRAME_WIDTH = actor.region.getRegionWidth() / frameCount;
@@ -41,14 +44,14 @@ public class Animation {
 
                 case DIEING:
                     ACTOR.texturePositionX = tmp;
-                    ACTOR.texture = new Texture("pacman_death.png");
+                    ACTOR.texture = ASSETS.manager.get(ASSETS.DEATH_PAC);
                     ACTOR.rotation = 0;
 
                     if (this.tmp <= 320) {
                         tmp += FRAME_WIDTH;
                         ACTOR.texturePositionX = tmp;
                     } else {
-                        ACTOR.texture = new Texture("pacman32.png");
+                        ACTOR.texture = ASSETS.manager.get(ASSETS.PAC_MAN);
                         ACTOR.state = State.RUNNING;
                         ACTOR.texturePositionX = 0;
                         switch(ACTOR.direction) {

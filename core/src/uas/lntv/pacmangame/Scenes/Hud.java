@@ -50,11 +50,11 @@ public class Hud {
         this.TILE_SIZE = screen.map.getTileSize();
         time = 120;
         levelScore = 0;
-        STAGES.add("map.tmx");
-        STAGES.add("map2.tmx");
-        STAGES.add("map3.tmx");
-        STAGES.add("map4.tmx");
-        STAGES.add("map5.tmx");
+        STAGES.add(assets.MAP_1);
+        STAGES.add(assets.MAP_2);
+        STAGES.add(assets.MAP_3);
+        STAGES.add(assets.MAP_4);
+        STAGES.add(assets.MAP_5);
 
         this.visible = visible;
 

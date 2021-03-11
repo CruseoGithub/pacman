@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import uas.lntv.pacmangame.Scenes.HighScore;
-import uas.lntv.pacmangame.Screens.MenuScreen;
+import uas.lntv.pacmangame.Screens.SplashScreen;
 
 public class PacManGame extends Game {
 	private int level;
@@ -13,20 +13,16 @@ public class PacManGame extends Game {
 	private int lives;
 	public static SpriteBatch batch;
 	public HighScore highScore;
-	private final Assets assets = new Assets();
+	private final Assets ASSETS = new Assets();
 
 	@Override
 	public void create () {
-		assets.load();
-		while(!assets.manager.update()){
-			System.out.println(assets.manager.getProgress() * 100 + "%");
-		}
 		batch = new SpriteBatch();
 		level = 0;
 		score = 0;
 		lives = 3;
 		highScore = new HighScore();
-		setScreen(new MenuScreen(this, assets, "MainMenu.tmx"));
+		setScreen(new SplashScreen(this, ASSETS));
 	}
 
 	public int getLevel(){
@@ -56,7 +52,8 @@ public class PacManGame extends Game {
 	
 	@Override
 	public void dispose () {
-		assets.dispose();
+		super.dispose();
+		ASSETS.dispose();
 		batch.dispose();
 		System.exit(0);
 		Gdx.app.exit();

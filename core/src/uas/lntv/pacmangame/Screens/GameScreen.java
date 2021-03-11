@@ -19,12 +19,12 @@ public class GameScreen extends MapScreen {
 
         this.hud = new Hud(game, assets, this, true);
         this.pacman = new PacMan(game, assets, TILE_SIZE, 17* TILE_SIZE, this, hud);
-        this.ghosts.add(new Enemy(13* TILE_SIZE, 33* TILE_SIZE, this, "redghost.png"));
+        this.ghosts.add(new Enemy(13* TILE_SIZE, 33* TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_1)));
         if(game.getLevel() >= 2) {
-            this.ghosts.add(new Enemy(14* TILE_SIZE, 33* TILE_SIZE, this, "orange.png"));
+            this.ghosts.add(new Enemy(14* TILE_SIZE, 33* TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_2)));
         }
         if(game.getLevel() >= 4) {
-            this.ghosts.add(new Enemy(12* TILE_SIZE, 33* TILE_SIZE, this, "pinky.png"));
+            this.ghosts.add(new Enemy(12* TILE_SIZE, 33* TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_3)));
             ghosts.get(0).setDifficulty(Enemy.Difficulty.MEDIUM);
         }
         if(game.getLevel() >= 6){
@@ -58,9 +58,9 @@ public class GameScreen extends MapScreen {
         hud.stage.draw();
         if(hud.time < 0){
             if(game.highScore.addScore(game.getScore())){
-                game.setScreen(new ScoreScreen(game, assets, "HighScoreList.tmx"));
+                game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
             } else {
-                game.setScreen(new MenuScreen(game, assets, "MainMenu.tmx"));
+                game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
             }
             game.resetLives();
             game.resetScore();
@@ -71,6 +71,7 @@ public class GameScreen extends MapScreen {
         if(hud.levelScore == 150){
             game.levelUp();
             game.increaseScore((int)hud.time);
+            music.stop();
             game.setScreen(new GameScreen(game, assets, hud.getMap()));
             this.dispose();
         }

@@ -25,8 +25,8 @@ public class PacMan extends Actor {
         this.game = game;
         this.assets = assets;
 
-        if(!(this instanceof SuperPacMan)) this.texture = new Texture("PacMan32.png");
-        else this.texture = new Texture("SuperPacMan.png");
+        if(!(this instanceof SuperPacMan)) this.texture = assets.manager.get(assets.PAC_MAN);
+        else this.texture = assets.manager.get(assets.SUPER_PAC);
         region = new TextureRegion(texture);
         region.setRegionX(0);
         region.setRegionY(0);
@@ -34,7 +34,7 @@ public class PacMan extends Actor {
         animationSpeed = 0.01f;
         mouthOpen = true;
 
-        animation = new Animation(this, animationSpeed, this.screen,6);
+        animation = new Animation(this, assets, animationSpeed, this.screen,6);
 
         region.flip(true, false);
         this.sprite = new Sprite(region);
@@ -52,8 +52,8 @@ public class PacMan extends Actor {
         this.game = game;
         this.assets = assets;
 
-        if(!(this instanceof SuperPacMan)) this.texture = new Texture("PacMan32.png");
-        else this.texture = new Texture("SuperPacMan.png");
+        if(!(this instanceof SuperPacMan)) this.texture = assets.manager.get(assets.PAC_MAN);
+        else this.texture = assets.manager.get(assets.SUPER_PAC);
         region = new TextureRegion(texture);
         region.setRegionX(0);
         region.setRegionY(0);
@@ -61,7 +61,7 @@ public class PacMan extends Actor {
         animationSpeed = 0.01f;
         mouthOpen = true;
 
-        animation = new Animation(this, animationSpeed, this.screen,6);
+        animation = new Animation(this, assets, animationSpeed, this.screen,6);
 
         region.flip(true, false);
         this.sprite = new Sprite(region);
@@ -95,9 +95,9 @@ public class PacMan extends Actor {
         else {
             game.die();
             if(game.highScore.addScore(game.getScore())){
-                game.setScreen(new ScoreScreen(game, assets, "HighScoreList.tmx"));
+                game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
             } else {
-                game.setScreen(new MenuScreen(game, assets, "MainMenu.tmx"));
+                game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
             }
             super.screen.dispose();
             game.resetScore();

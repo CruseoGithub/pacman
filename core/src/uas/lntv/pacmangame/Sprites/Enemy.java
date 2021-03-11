@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import uas.lntv.pacmangame.AI.Pathfinder;
+import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
@@ -27,7 +28,7 @@ public class Enemy extends Actor {
      * @param screen the screen in which the ghost will be created
      * @param ghost name or path of the png-file that makes the ghost look beautiful
      */
-    public Enemy(int initX, int initY, MapScreen screen, String ghost){
+    public Enemy(int initX, int initY, Assets assets, MapScreen screen, Texture ghost){
         super(initX, initY, screen);
 
         this.difficulty = Difficulty.EASY;
@@ -35,7 +36,7 @@ public class Enemy extends Actor {
         this.nextDirection = Direction.DOWN;
         this.prevDirection = Direction.DOWN;
 
-        this.texture = new Texture(ghost);
+        this.texture = ghost;
         region = new TextureRegion(texture);
         region.setRegionX(0);
         region.setRegionY(0);
@@ -43,7 +44,7 @@ public class Enemy extends Actor {
         texturePositionY = 0;
         this.animationSpeed = 0.1f;
 
-        animation = new Animation(this, animationSpeed, this.screen,4);
+        animation = new Animation(this, assets, animationSpeed, this.screen,4);
 
         region.flip(true, false);
         this.sprite = new Sprite(region);

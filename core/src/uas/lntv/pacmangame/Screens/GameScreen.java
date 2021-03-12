@@ -57,7 +57,7 @@ public class GameScreen extends MapScreen {
         hud.update();
         hud.stage.draw();
         if(hud.time < 0){
-            if(game.highScore.addScore(game.getScore())){
+            if(game.highScore.addScore(game.getScore(), "Timed out", game.getLevel() + 1)){
                 game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
             } else {
                 game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));

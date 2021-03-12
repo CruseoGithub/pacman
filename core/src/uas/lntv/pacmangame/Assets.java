@@ -50,7 +50,7 @@ public class Assets {
     public final String MAP_3 = "maps/map3.tmx";
     public final String MAP_4 = "maps/map4.tmx";
     public final String MAP_5 = "maps/map5.tmx";
-    public final String MENU_MAP = "maps/MainMenu.tmx";
+    public final String MENU_MAP = "maps/mainMenu.tmx";
     public final String SCORE_MAP = "maps/HighScoreList.tmx";
     public final String CONTROL = "maps/controller.tmx";
 

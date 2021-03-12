@@ -51,14 +51,20 @@ public class ScoreScreen extends MapScreen {
             int yPos = (44 * TILE_SIZE) - (3 * i) * TILE_SIZE;
             FONT.draw(
                     PacManGame.batch,
-                    HighScore.getHighScores().get(i).toString(),
-                    15* TILE_SIZE,
+                    HighScore.getNames().get(i),
+                    3 * TILE_SIZE,
                     yPos
             );
             FONT.draw(
                     PacManGame.batch,
-                    HighScore.getNames().get(i),
-                    3 * TILE_SIZE,
+                    HighScore.getHighScores().get(i).toString(),
+                    11* TILE_SIZE,
+                    yPos
+            );
+            FONT.draw(
+                    PacManGame.batch,
+                    HighScore.getCauseOfDeath().get(i) + " at level " + HighScore.getLevel().get(i).toString(),
+                    15* TILE_SIZE,
                     yPos
             );
         }

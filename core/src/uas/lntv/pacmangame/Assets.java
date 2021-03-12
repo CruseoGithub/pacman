@@ -13,6 +13,12 @@ public class Assets {
 
     public final AssetManager manager = new AssetManager();
 
+    public final AssetDescriptor<Sound> DIAL_UP = new AssetDescriptor<>("setup/DialUp.mp3", Sound.class);
+    public final AssetDescriptor<Texture> LNTV_Logo = new AssetDescriptor<>("setup/LNTVLogo.png", Texture.class);
+    public final AssetDescriptor<Texture> GDX = new AssetDescriptor<>("setup/libGDXLogoDark.png", Texture.class);
+    public final AssetDescriptor<Texture> LOADING = new AssetDescriptor<>("setup/LoadingPacMan256.png", Texture.class);
+
+
     public final AssetDescriptor<Music> GAME_MUSIC = new AssetDescriptor<>("music/GameMusic.mp3", Music.class);
     public final AssetDescriptor<Music> GAME_MUSIC_2 = new AssetDescriptor<>("music/GameMusic2.mp3", Music.class);
     public final AssetDescriptor<Music> GAME_MUSIC_3 = new AssetDescriptor<>("music/GameMusic3.mp3", Music.class);
@@ -47,6 +53,13 @@ public class Assets {
     public final String MENU_MAP = "maps/MainMenu.tmx";
     public final String SCORE_MAP = "maps/HighScoreList.tmx";
     public final String CONTROL = "maps/controller.tmx";
+
+    public void loadSetup(){
+        manager.load(DIAL_UP);
+        manager.load(LNTV_Logo);
+        manager.load(GDX);
+        manager.load(LOADING);
+    }
 
     public void load(){
         manager.load(GAME_MUSIC);

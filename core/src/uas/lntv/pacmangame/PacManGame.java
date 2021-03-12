@@ -22,6 +22,8 @@ public class PacManGame extends Game {
 		score = 0;
 		lives = 3;
 		highScore = new HighScore();
+		ASSETS.loadSetup();
+		ASSETS.manager.finishLoading();
 		setScreen(new SplashScreen(this, ASSETS));
 	}
 

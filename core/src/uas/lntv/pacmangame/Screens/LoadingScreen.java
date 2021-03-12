@@ -3,7 +3,6 @@ package uas.lntv.pacmangame.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 
@@ -26,7 +25,7 @@ public class LoadingScreen implements Screen {
         this.GAME = GAME;
         this.ASSETS = ASSETS;
         this.ASSETS.load();
-        this.SPRITE = new Sprite(new Texture("setup/LoadingPacMan.png"));
+        this.SPRITE = new Sprite(this.ASSETS.manager.get(ASSETS.LOADING));
         this.CAM = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         CAM.translate(CAM.viewportWidth/2, CAM.viewportHeight/2);
     }
@@ -35,13 +34,13 @@ public class LoadingScreen implements Screen {
     public void show() {  }
 
     private void update(){
-        progress = MathUtils.lerp(progress, ASSETS.manager.getProgress(), 0.05f);
+        progress = MathUtils.lerp(progress, ASSETS.manager.getProgress(), 0.025f);
         if(progress > checkpoint){
             checkpoint += 0.04f;
-            if(texturePositionX < 128) texturePositionX += 32;
+            if(texturePositionX < 1024) texturePositionX += 256;
             else{
                 texturePositionX = 0;
-                texturePositionY += 32;
+                texturePositionY += 256;
             }
         }
         if(ASSETS.manager.update() && progress > 0.99f){
@@ -58,9 +57,9 @@ public class LoadingScreen implements Screen {
 
         PacManGame.batch.begin();
         PacManGame.batch.setProjectionMatrix(CAM.combined);
-        PacManGame.batch.draw(SPRITE.getTexture(), 300, 300, SPRITE.getOriginX(), SPRITE.getOriginY(),
-                96, 96, SPRITE.getScaleX(), SPRITE.getScaleY(), 0,
-                texturePositionX, texturePositionY, 32, 32, false, false
+        PacManGame.batch.draw(SPRITE.getTexture(), 0, 0, SPRITE.getOriginX(), SPRITE.getOriginY(),
+                256, 256, SPRITE.getScaleX(), SPRITE.getScaleY(), 0,
+                texturePositionX, texturePositionY, 256, 256, false, false
         );
         PacManGame.batch.end();
     }

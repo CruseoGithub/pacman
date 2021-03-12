@@ -15,7 +15,6 @@ public class SplashScreen implements Screen {
     private final PacManGame GAME;
     private final Assets ASSETS;
     private final OrthographicCamera CAM;
-    private final Texture libGDX;
     private final Sprite SPLASHY;
     private float timer = 0;
     private float alpha = 0;
@@ -25,12 +24,10 @@ public class SplashScreen implements Screen {
         this.ASSETS = ASSETS;
         this.CAM = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         CAM.translate(CAM.viewportWidth/2, CAM.viewportHeight/2);
-        Texture logo = new Texture("setup/LNTVLogo.png");
-        this.libGDX = new Texture("setup/libGDXLogoDark.png");
+        Texture logo = this.ASSETS.manager.get(ASSETS.LNTV_Logo);
         this.SPLASHY = new Sprite(logo);
         this.SPLASHY.setSize(200, 200);
-        Sound dialUp = Gdx.audio.newSound(Gdx.files.internal("setup/DialUp.mp3"));
-        dialUp.play(0.6f);
+        this.ASSETS.manager.get(ASSETS.DIAL_UP).play(0.6f);
     }
 
     @Override
@@ -40,10 +37,10 @@ public class SplashScreen implements Screen {
         float time = Gdx.graphics.getDeltaTime();
         timer += time;
 
-        if(timer > 8 && SPLASHY.getTexture() != libGDX) {
+        if(timer > 8 && SPLASHY.getTexture() != this.ASSETS.manager.get(ASSETS.GDX)) {
             alpha = 0;
             SPLASHY.getTexture().dispose();
-            SPLASHY.setTexture(libGDX);
+            SPLASHY.setTexture(this.ASSETS.manager.get(ASSETS.GDX));
             SPLASHY.setSize(390, 65);
         }
 
@@ -88,8 +85,6 @@ public class SplashScreen implements Screen {
     public void hide() {  }
 
     @Override
-    public void dispose() {
-        libGDX.dispose();
-    }
+    public void dispose() {  }
 
 }

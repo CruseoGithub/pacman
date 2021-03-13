@@ -1,7 +1,6 @@
 package uas.lntv.pacmangame.Sprites;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
@@ -71,7 +70,7 @@ public class SuperPacMan extends PacMan {
     @Override
     public void collide() {
         assets.manager.get(assets.KILL).play(0.15f);
-        game.increaseScore(50);
+        PacManGame.increaseScore(50);
     }
 
 }

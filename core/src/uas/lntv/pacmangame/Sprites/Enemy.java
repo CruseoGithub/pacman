@@ -170,7 +170,7 @@ public class Enemy extends Actor {
      * @return One of the four directions
      */
     private Direction findHome(){
-        aStar = new Pathfinder(screen, this, getStartPosX(), getStartPosY(), true);
+        aStar = new Pathfinder(screen, this, START_POS_X, START_POS_Y, true);
         Tile temp = aStar.aStarResult();
         if(temp.getY() > this.getYPosition()) return Direction.UP;
         if(temp.getY() < this.getYPosition()) return Direction.DOWN;

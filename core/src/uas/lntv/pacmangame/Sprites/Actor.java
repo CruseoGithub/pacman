@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.Random;
 
-
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
@@ -26,9 +25,9 @@ public abstract class Actor {
     }
 
     protected int xPosition;
-    private final int START_POS_X;
     protected int yPosition;
-    private final int START_POS_Y;
+    protected final int START_POS_X;
+    protected final int START_POS_Y;
 
     protected final int TILE_SIZE;
     public float rotation;

@@ -1,6 +1,5 @@
 package uas.lntv.pacmangame.Sprites;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -91,18 +90,18 @@ public class PacMan extends Actor {
     public void collide() {
         super.collide();
         assets.manager.get(assets.DIE).play(0.35f);
-        if(game.getLives() > 1) game.die();
+        if(PacManGame.getLives() > 1) PacManGame.die();
         else {
-            game.die();
-            if(game.highScore.addScore(game.getScore(), "Killed", game.getLevel() + 1)){
+            PacManGame.die();
+            if(PacManGame.highScore.addScore(PacManGame.getScore(), "Killed", PacManGame.getLevel() + 1)){
                 game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
             } else {
                 game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
             }
             super.screen.dispose();
-            game.resetScore();
-            game.resetLives();
-            game.resetLevel();
+            PacManGame.resetScore();
+            PacManGame.resetLives();
+            PacManGame.resetLevel();
         }
     }
 

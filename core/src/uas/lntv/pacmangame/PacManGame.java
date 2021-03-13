@@ -8,11 +8,11 @@ import uas.lntv.pacmangame.Scenes.HighScore;
 import uas.lntv.pacmangame.Screens.SplashScreen;
 
 public class PacManGame extends Game {
-	private int level;
-	private int score;
-	private int lives;
+	private static int level;
+	private static int score;
+	private static int lives;
 	public static SpriteBatch batch;
-	public HighScore highScore;
+	public static HighScore highScore;
 	private final Assets ASSETS = new Assets();
 
 	@Override
@@ -23,31 +23,30 @@ public class PacManGame extends Game {
 		lives = 3;
 		highScore = new HighScore();
 		ASSETS.loadSetup();
-		ASSETS.manager.finishLoading();
 		setScreen(new SplashScreen(this, ASSETS));
 	}
 
-	public int getLevel(){
+	public static int getLevel(){
 		return level;
 	}
 
-	public void levelUp(){
+	public static void levelUp(){
 		level++;
 	}
 
-	public void resetLevel(){ level = 0; }
+	public static void resetLevel(){ level = 0; }
 
-	public int getScore(){ return score; }
+	public static int getScore(){ return score; }
 
-	public void increaseScore(int value){ score += value; }
+	public static void increaseScore(int value){ score += value; }
 
-	public void resetScore(){ score = 0; }
+	public static void resetScore(){ score = 0; }
 
-	public int getLives(){ return lives; }
+	public static int getLives(){ return lives; }
 
-	public void die(){ lives--; }
+	public static void die(){ lives--; }
 
-	public void resetLives(){ lives = 3; }
+	public static void resetLives(){ lives = 3; }
 
 	@Override
 	public void render () { super.render(); }

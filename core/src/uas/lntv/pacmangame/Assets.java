@@ -9,6 +9,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
+/**
+ * !WARNING!
+ * Assets are NOT supposed to run static! This can cause problems on Android devices!
+ * This class is used to manage the assets. It loads all needed assets once in the beginning and
+ * disposes them when the application is closed.
+ */
 public class Assets {
 
     public final AssetManager manager = new AssetManager();
@@ -54,13 +60,21 @@ public class Assets {
     public final String SCORE_MAP = "maps/HighScoreList.tmx";
     public final String CONTROL = "maps/controller.tmx";
 
+    /**
+     * Small method, that puts everything in the loading queue, that is needed for the splash- and
+     * loading screen. The method will also block everything until loading is finished.
+     */
     public void loadSetup(){
         manager.load(DIAL_UP);
         manager.load(LNTV_Logo);
         manager.load(GDX);
         manager.load(LOADING);
+        manager.finishLoading();
     }
 
+    /**
+     * This method puts everything in the loading queue, that is needed in the application.
+     */
     public void load(){
         manager.load(GAME_MUSIC);
         manager.load(GAME_MUSIC_2);
@@ -91,5 +105,8 @@ public class Assets {
         manager.load(CONTROL, TiledMap.class);
     }
 
+    /**
+     * Disposes everything, that has been loaded by this manager before.
+     */
     public void dispose(){ manager.dispose(); }
 }

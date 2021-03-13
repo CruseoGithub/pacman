@@ -11,6 +11,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
 
+/**
+ * The SplashScreen is the first thing shown when the application starts.
+ */
 public class SplashScreen implements Screen {
     private final PacManGame GAME;
     private final Assets ASSETS;
@@ -19,6 +22,11 @@ public class SplashScreen implements Screen {
     private float timer = 0;
     private float alpha = 0;
 
+    /**
+     * Main constructor of the SplashScreen
+     * @param GAME running game
+     * @param ASSETS asset management
+     */
     public SplashScreen(final PacManGame GAME, final Assets ASSETS){
         this.GAME = GAME;
         this.ASSETS = ASSETS;
@@ -33,6 +41,10 @@ public class SplashScreen implements Screen {
     @Override
     public void show() { }
 
+    /**
+     * Checks the time, the SplashScreen is shown yet and reacts according to it.
+     * It changes the used logo and simulates the fade-effects.
+     */
     private void update(){
         float time = Gdx.graphics.getDeltaTime();
         timer += time;
@@ -59,6 +71,10 @@ public class SplashScreen implements Screen {
         CAM.update();
     }
 
+    /**
+     * Uses the update method to check the time and draws the logo on the screen.
+     * @param delta time parameter used by libGDX
+     */
     @Override
     public void render(float delta) {
         update();

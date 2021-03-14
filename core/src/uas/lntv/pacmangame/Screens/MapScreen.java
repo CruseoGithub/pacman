@@ -64,7 +64,7 @@ public abstract class MapScreen implements Screen {
         this.gameCam = new OrthographicCamera();
         switch (type) {
             case GAME:
-                this.map = new GameMap(game, assets, path, this);
+                this.map = new GameMap(assets, path, this);
                 Random random = new Random();
                 this.music = playlist.get(random.nextInt(4));
                 this.music.setVolume(0.3f);

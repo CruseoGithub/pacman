@@ -10,11 +10,9 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 
 public class GameMap extends Map {
     MapScreen screen;
-    private final PacManGame GAME;
 
-    public GameMap(PacManGame game, Assets assets, String path, MapScreen screen){
+    public GameMap(Assets assets, String path, MapScreen screen){
         super(path, assets);
-        this.GAME = game;
         this.screen = screen;
         generateItems();
         generateDots(150);
@@ -69,7 +67,7 @@ public class GameMap extends Map {
             }
         }
         if(tile.isDot){
-            GAME.increaseScore(1);
+            PacManGame.increaseScore(1);
             screen.hud.levelScore++;
             screen.hud.update();
         }

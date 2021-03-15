@@ -2,7 +2,6 @@ package uas.lntv.pacmangame.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
+import uas.lntv.pacmangame.Scenes.PrefManager;
 
 /**
  * The SplashScreen is the first thing shown when the application starts.
@@ -35,7 +35,7 @@ public class SplashScreen implements Screen {
         Texture logo = this.ASSETS.manager.get(ASSETS.LNTV_Logo);
         this.SPLASHY = new Sprite(logo);
         this.SPLASHY.setSize(200, 200);
-        this.ASSETS.manager.get(ASSETS.DIAL_UP).play(0.6f);
+        if(PrefManager.isSfxOn()) this.ASSETS.manager.get(ASSETS.DIAL_UP).play(0.6f);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class SplashScreen implements Screen {
         if(timer > 3 && timer < 5) alpha = 1;
         if(timer > 5 && timer < 8) alpha -= time / 3;
         if(timer > 8 && timer < 11) alpha +=  time / 3;
-        if(timer > 11 && timer < 12 ) alpha = 1;
+        if(timer > 11 && timer < 12) alpha = 1;
         if(timer > 12 && timer < 14) alpha -= time / 2;
 
         CAM.update();

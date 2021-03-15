@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
-import uas.lntv.pacmangame.Scenes.HighScore;
+import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
@@ -23,7 +23,7 @@ public class MenuScreen extends MapScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
-        if(!game.highScore.isNameSet()) {
+        if(!game.prefManager.isNameSet()) {
             Gdx.input.getTextInput(
                     new Input.TextInputListener() {
                         @Override
@@ -34,7 +34,7 @@ public class MenuScreen extends MapScreen {
                                         @Override
                                         public void input(String s) {
                                             if(s.isEmpty()) anonymous();
-                                            HighScore.setPlayer(s);
+                                            PrefManager.setPlayer(s);
                                         }
                                         @Override
                                         public void canceled() {
@@ -43,7 +43,7 @@ public class MenuScreen extends MapScreen {
                                     },
                                         "Are you sure?", "Anonymous Bastard", ""
                                 );
-                            } else HighScore.setPlayer(text);
+                            } else PrefManager.setPlayer(text);
                         }
 
                         @Override
@@ -53,7 +53,7 @@ public class MenuScreen extends MapScreen {
                     },
                     "Please enter your name", "", "Name"
             );
-            game.highScore.nameIsSet();
+            game.prefManager.nameIsSet();
         }
 
         if(pacman.getXPosition() == 12* TILE_SIZE){
@@ -62,13 +62,13 @@ public class MenuScreen extends MapScreen {
                 this.dispose();
             }
             else if(pacman.getYPosition() >= 29* TILE_SIZE && pacman.getYPosition() <= 33* TILE_SIZE){
-                game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
+                game.setScreen(new SettingsScreen(game, assets, assets.SETTINGS_MAP));
                 this.dispose();
             }
         }
     }
 
-    private void anonymous(){ HighScore.setPlayer("Anonymous Bastard"); }
+    private void anonymous(){ PrefManager.setPlayer("Anonymous Bastard"); }
 
     @Override
     public void dispose() {

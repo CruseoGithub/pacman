@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Hud;
+import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Screens.GameScreen;
 
 /**
@@ -69,7 +70,7 @@ public class SuperPacMan extends PacMan {
      */
     @Override
     public void collide() {
-        assets.manager.get(assets.KILL).play(0.15f);
+        if(PrefManager.isSfxOn()) assets.manager.get(assets.KILL).play(0.15f);
         PacManGame.increaseScore(50);
     }
 

@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import uas.lntv.pacmangame.Scenes.HighScore;
+import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Screens.SplashScreen;
 
 public class PacManGame extends Game {
@@ -12,13 +12,13 @@ public class PacManGame extends Game {
 	private static int score;
 	private static int lives;
 	public static SpriteBatch batch;
-	public static HighScore highScore;
+	public static PrefManager prefManager;
 	private Assets assets;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		highScore = new HighScore();
+		prefManager = new PrefManager();
 		assets = new Assets();
 		assets.loadSetup();
 		level = 0;

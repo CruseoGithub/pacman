@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
+import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Enemy;
 
@@ -60,7 +61,7 @@ public class GameMap extends Map {
                     null
             );
             tile.takeItem();
-            ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
+            if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
             screen.evolvePacMan();
             for(Enemy ghost : screen.getGhosts()){
                 ghost.setDifficulty(Enemy.Difficulty.RUNAWAY);

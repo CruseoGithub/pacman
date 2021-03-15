@@ -112,7 +112,7 @@ public class Hud {
     public void update(){
         if(time < WARNING_TIME){
             if(!warned){
-                assets.manager.get(assets.ALARM).play(0.4f);
+                if(PrefManager.isSfxOn()) assets.manager.get(assets.ALARM).play(0.4f);
                 warned = true;
             }
             if(timeStamp - 0.5 > time) {

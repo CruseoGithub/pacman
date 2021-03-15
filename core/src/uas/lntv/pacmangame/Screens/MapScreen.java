@@ -22,12 +22,13 @@ import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Controller;
 import uas.lntv.pacmangame.Scenes.ControllerSwipe;
 import uas.lntv.pacmangame.Scenes.Hud;
+import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public abstract class MapScreen implements Screen {
-    public enum Type {GAME, MENU, SCORE}
+    public enum Type {GAME, MENU, SCORE, SETTINGS}
 
     protected PacManGame game;
     protected OrthographicCamera gameCam;
@@ -62,10 +63,10 @@ public abstract class MapScreen implements Screen {
         playlist.add(assets.manager.get(assets.GAME_MUSIC_4));
         this.game = game;
         this.gameCam = new OrthographicCamera();
+        Random random = new Random();
         switch (type) {
             case GAME:
                 this.map = new GameMap(assets, path, this);
-                Random random = new Random();
                 this.music = playlist.get(random.nextInt(4));
                 this.music.setVolume(0.3f);
                 break;
@@ -79,12 +80,17 @@ public abstract class MapScreen implements Screen {
                 this.music = assets.manager.get(assets.SCORE_MUSIC);
                 music.setVolume(0.4f);
                 break;
+            case SETTINGS:
+                this.map = new MenuMap(path, assets);
+                this.music = playlist.get(random.nextInt(4));
+                this.music.setVolume(0.3f);
+                break;
         }
         this.huntingMusic = assets.manager.get(assets.HUNTING_MUSIC);
         huntingMusic.setVolume(0.25f);
         huntingMusic.setLooping(true);
         music.setLooping(true);
-        music.play();
+        if(PrefManager.isMusicOn()) music.play();
         this.MAP_WIDTH = this.map.getMapWidth();
         this.MAP_HEIGHT = this.map.getMapHeight();
         this.TILE_SIZE = this.map.getTileSize();
@@ -100,20 +106,24 @@ public abstract class MapScreen implements Screen {
 
     }
 
-    public void handleInput() {
+    public boolean handleInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || CONTROLLER.isRightPressed()) {
             pacman.setNextDirection(Actor.Direction.RIGHT);
+            return true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || CONTROLLER.isLeftPressed()) {
             pacman.setNextDirection(Actor.Direction.LEFT);
+            return true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP) || CONTROLLER.isUpPressed()) {
             pacman.setNextDirection(Actor.Direction.UP);
+            return true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || CONTROLLER.isDownPressed()) {
             pacman.setNextDirection(Actor.Direction.DOWN);
+            return true;
         }
-        CONTROLLER.pulledInput();
+        return CONTROLLER.pulledInput();
     }
 
     public void update(float dt) {
@@ -167,7 +177,7 @@ public abstract class MapScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        update(delta);
+        if(!(this instanceof SettingsScreen)) update(delta);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -209,15 +219,17 @@ public abstract class MapScreen implements Screen {
     }
 
     public void switchMusicHunting() {
-        if (music.isPlaying()) {
+        if (music.isPlaying() && PrefManager.isMusicOn()) {
             music.pause();
             huntingMusic.play();
         }
     }
 
     public void switchMusicGame() {
-        huntingMusic.stop();
-        music.play();
+        if(PrefManager.isMusicOn()) {
+            huntingMusic.stop();
+            music.play();
+        }
     }
 
 

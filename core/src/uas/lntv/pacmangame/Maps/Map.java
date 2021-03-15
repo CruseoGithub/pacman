@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Sprites.Actor;
 
 public abstract class Map {
@@ -132,7 +133,7 @@ public abstract class Map {
 
         public void collect(Tile tile){
             if(tile.isDot){
-                ASSETS.manager.get(ASSETS.DOT).play(0.25f);
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.DOT).play(0.25f);
                 layerCollect.setCell(
                         tile.getX()/ TILE_SIZE,
                         tile.getY()/ TILE_SIZE,

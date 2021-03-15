@@ -9,11 +9,13 @@ import com.badlogic.gdx.math.MathUtils;
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
 
+/**
+ * The LoadingScreen shows the progress of asset loading in a visual way.
+ */
 public class LoadingScreen implements Screen {
     private final PacManGame GAME;
     private final Assets ASSETS;
     private final OrthographicCamera CAM;
-
     private final Sprite SPRITE;
 
     private float checkpoint = 0.04f;
@@ -21,6 +23,11 @@ public class LoadingScreen implements Screen {
     private int texturePositionY = 0;
     private float progress = 0;
 
+    /**
+     * Main constructor of the LoadingScreen
+     * @param GAME running game
+     * @param ASSETS asset management
+     */
     public LoadingScreen(final PacManGame GAME, final Assets ASSETS){
         this.GAME = GAME;
         this.ASSETS = ASSETS;
@@ -33,6 +40,10 @@ public class LoadingScreen implements Screen {
     @Override
     public void show() {  }
 
+    /**
+     * Checks the progress of the loading process of the asset-manager and changes the shown
+     * part of the loading texture
+     */
     private void update(){
         progress = MathUtils.lerp(progress, ASSETS.manager.getProgress(), 0.025f);
         if(progress > checkpoint){
@@ -50,6 +61,11 @@ public class LoadingScreen implements Screen {
         CAM.update();
     }
 
+    /**
+     * Uses the update method to check the progress and draws the loading progress visualization
+     * on the screen
+     * @param delta time parameter used by libGDX
+     */
     @Override
     public void render(float delta) {
         update();
@@ -77,8 +93,6 @@ public class LoadingScreen implements Screen {
     public void hide() {  }
 
     @Override
-    public void dispose() {
-        SPRITE.getTexture().dispose();
-    }
+    public void dispose() {  }
 
 }

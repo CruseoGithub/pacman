@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
+import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Enemy;
 
@@ -14,8 +15,7 @@ import uas.lntv.pacmangame.Sprites.Enemy;
  */
 public class GameMap extends Map {
     MapScreen screen;
-    private final PacManGame GAME;
-
+	
     /**
      * does the same as the parent constructor.
      * Additionaly it generates collectables and provides a method to collect them.
@@ -24,9 +24,8 @@ public class GameMap extends Map {
      * @param path  string value which contains the path to a tmx-Mapfile.
      * @param screen instance of a Screen which contains this map
      */
-    public GameMap(PacManGame game, Assets assets, String path, MapScreen screen){
+    public GameMap(Assets assets, String path, MapScreen screen){
         super(path, assets);
-        this.GAME = game;
         this.screen = screen;
         generateItems();
         generateDots(150);
@@ -88,14 +87,14 @@ public class GameMap extends Map {
                     null
             );
             tile.takeItem();
-            ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
+            if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
             screen.evolvePacMan();
             for(Enemy ghost : screen.getGhosts()){
                 ghost.setDifficulty(Enemy.Difficulty.RUNAWAY);
             }
         }
         if(tile.isDot){
-            GAME.increaseScore(1);
+            PacManGame.increaseScore(1);
             screen.hud.levelScore++;
             screen.hud.update();
         }

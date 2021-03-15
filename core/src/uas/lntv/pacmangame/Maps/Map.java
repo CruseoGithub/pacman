@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Sprites.Actor;
 
 /**
@@ -24,7 +25,7 @@ public abstract class Map {
         public TiledMapTileLayer layerPath;
         public TiledMapTileLayer layerCollect;
 
-        private TiledMap tmxControl;
+        private final TiledMap TMX_CONTROL;
         public TiledMapTileLayer layerControlButton;
         //public TiledMapObjectL layerControlTouch;
 
@@ -32,7 +33,7 @@ public abstract class Map {
         protected final int MAP_HEIGHT;
         protected final int TILE_SIZE;
 
-        public Tile matrix[][];
+        public Tile[][] matrix;
 
         public final int getMapWidth(){ return this.MAP_WIDTH; }
         public final int getMapHeight(){ return this.MAP_HEIGHT; }
@@ -50,7 +51,7 @@ public abstract class Map {
             firstMap = path.equals("maps/map.tmx");
             TmxMapLoader tmxMapLoader = new TmxMapLoader();
             TiledMap tmxMap = tmxMapLoader.load(path);
-            tmxControl = assets.manager.get(assets.CONTROL);
+            TMX_CONTROL = assets.manager.get(assets.CONTROL);
             renderer = new OrthogonalTiledMapRenderer(tmxMap);
 
             MAP_WIDTH = Integer.parseInt(tmxMap.getProperties().get("width").toString());
@@ -60,7 +61,7 @@ public abstract class Map {
             layerWall = (TiledMapTileLayer)tmxMap.getLayers().get("Walls");
             layerPath = (TiledMapTileLayer)tmxMap.getLayers().get("Path");
             layerCollect = (TiledMapTileLayer)tmxMap.getLayers().get("Collectables");
-            layerControlButton = (TiledMapTileLayer)tmxControl.getLayers().get("ControllerButtons");
+            layerControlButton = (TiledMapTileLayer) TMX_CONTROL.getLayers().get("ControllerButtons");
             //layerControlTouch = (TiledMapTileLayer)tmxControl.getLayers().get("ControllerTouch");
             tmxMap.getLayers().add(layerControlButton);
             //tmxMap.getLayers().add(layerControlTouch);
@@ -182,7 +183,7 @@ public abstract class Map {
          */
         public void collect(Tile tile){
             if(tile.isDot){
-                ASSETS.manager.get(ASSETS.DOT).play(0.25f);
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.DOT).play(0.25f);
                 layerCollect.setCell(
                         tile.getX()/ TILE_SIZE,
                         tile.getY()/ TILE_SIZE,

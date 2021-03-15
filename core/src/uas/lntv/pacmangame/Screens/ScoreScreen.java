@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
-import uas.lntv.pacmangame.Scenes.HighScore;
+import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
@@ -36,6 +36,19 @@ public class ScoreScreen extends MapScreen {
     }
 
     /**
+     * Checks the position of PacMan for quitting this screen
+     * @param dt time parameter used by libGDX
+     */
+    @Override
+    public void update(float dt) {
+        super.update(dt);
+        if(pacman.getXPosition() <= 2* TILE_SIZE) {
+            game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
+            this.dispose();
+        }
+    }
+
+    /**
      * This method draws and animates PacMan on the high-score board and writes the scores with the
      * associated names on the screen. It also detects, if PacMan moved over the threshold, that
      * makes you return to the MenuScreen.
@@ -51,29 +64,24 @@ public class ScoreScreen extends MapScreen {
             int yPos = (44 * TILE_SIZE) - (3 * i) * TILE_SIZE;
             FONT.draw(
                     PacManGame.batch,
-                    HighScore.getNames().get(i),
+                    PrefManager.getNames().get(i),
                     3 * TILE_SIZE,
                     yPos
             );
             FONT.draw(
                     PacManGame.batch,
-                    HighScore.getHighScores().get(i).toString(),
+                    PrefManager.getHighScores().get(i).toString(),
                     11* TILE_SIZE,
                     yPos
             );
             FONT.draw(
                     PacManGame.batch,
-                    HighScore.getCauseOfDeath().get(i) + " at level " + HighScore.getLevel().get(i).toString(),
+                    PrefManager.getCauseOfDeath().get(i) + " at level " + PrefManager.getLevel().get(i).toString(),
                     15* TILE_SIZE,
                     yPos
             );
         }
         PacManGame.batch.end();
-
-        if(pacman.getXPosition() <= 2* TILE_SIZE) {
-            game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
-            this.dispose();
-        }
     }
 
     @Override

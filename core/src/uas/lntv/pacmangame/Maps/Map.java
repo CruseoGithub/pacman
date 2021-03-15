@@ -1,7 +1,5 @@
 package uas.lntv.pacmangame.Maps;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -9,71 +7,71 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
+import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Sprites.Actor;
 
 public abstract class Map {
-        private TmxMapLoader maploader;
-        private TiledMap tmxMap;
+        private final boolean firstMap;
         public OrthogonalTiledMapRenderer renderer;
+        protected final Assets ASSETS;
 
         public TiledMapTileLayer layerWall;
         public TiledMapTileLayer layerPath;
         public TiledMapTileLayer layerCollect;
 
-        private TiledMap tmxControl;
+        private final TiledMap TMX_CONTROL;
         public TiledMapTileLayer layerControlButton;
         //public TiledMapObjectL layerControlTouch;
 
-        public int mapWidth;
-        public int mapHeight;
-        public int tileSize;
-        public String path;
+        protected final int MAP_WIDTH;
+        protected final int MAP_HEIGHT;
+        protected final int TILE_SIZE;
 
-        public Tile matrix[][];
+        public Tile[][] matrix;
 
-        private Sound sound;
+        public final int getMapWidth(){ return this.MAP_WIDTH; }
+        public final int getMapHeight(){ return this.MAP_HEIGHT; }
+        public final int getTileSize(){ return this.TILE_SIZE; }
 
-
-        public Map(String path){
-            maploader = new TmxMapLoader();
-            tmxMap = maploader.load(path);
-            tmxControl = maploader.load("controller.tmx");
+        public Map(String path, Assets assets){
+            this.ASSETS = assets;
+            firstMap = path.equals("maps/map.tmx");
+            TmxMapLoader tmxMapLoader = new TmxMapLoader();
+            TiledMap tmxMap = tmxMapLoader.load(path);
+            TMX_CONTROL = assets.manager.get(assets.CONTROL);
             renderer = new OrthogonalTiledMapRenderer(tmxMap);
 
-            mapWidth = Integer.parseInt(tmxMap.getProperties().get("width").toString());
-            mapHeight = Integer.parseInt(tmxMap.getProperties().get("height").toString());
-            tileSize = Integer.parseInt(tmxMap.getProperties().get("tilewidth").toString());
+            MAP_WIDTH = Integer.parseInt(tmxMap.getProperties().get("width").toString());
+            MAP_HEIGHT = Integer.parseInt(tmxMap.getProperties().get("height").toString());
+            TILE_SIZE = Integer.parseInt(tmxMap.getProperties().get("tilewidth").toString());
 
             layerWall = (TiledMapTileLayer)tmxMap.getLayers().get("Walls");
             layerPath = (TiledMapTileLayer)tmxMap.getLayers().get("Path");
             layerCollect = (TiledMapTileLayer)tmxMap.getLayers().get("Collectables");
-            layerControlButton = (TiledMapTileLayer)tmxControl.getLayers().get("ControllerButtons");
+            layerControlButton = (TiledMapTileLayer) TMX_CONTROL.getLayers().get("ControllerButtons");
             //layerControlTouch = (TiledMapTileLayer)tmxControl.getLayers().get("ControllerTouch");
             tmxMap.getLayers().add(layerControlButton);
             //tmxMap.getLayers().add(layerControlTouch);
 
             //layerPath.setOpacity(0.5f);
-            matrix = new Tile[mapWidth][mapHeight];
-            this.path = path;
+            matrix = new Tile[MAP_WIDTH][MAP_HEIGHT];
             generateScreenMap();
-            this.sound = Gdx.audio.newSound(Gdx.files.internal("dot.wav"));
         }
 
-
-
         private void generateScreenMap(){
-            for(int x = 0; x < mapWidth; x++){
-                for(int y = 0; y < mapHeight; y++){
+            for(int x = 0; x < MAP_WIDTH; x++){
+                for(int y = 0; y < MAP_HEIGHT; y++){
                     if(layerWall.getCell(x, y) == null){
-                        matrix[x][y] = new Tile(Tile.Type.EMPTY, ((x*tileSize)), ((y*tileSize)));
+                        matrix[x][y] = new Tile(Tile.Type.EMPTY, ((x* TILE_SIZE)), ((y* TILE_SIZE)));
                         if(layerPath.getCell(x,y) != null){
-                            Tile tile = new Tile(layerPath.getCell(x,y).getTile().getTextureRegion(), Tile.Type.PATH, (x*tileSize), (y*tileSize));
+                            Tile tile = new Tile(layerPath.getCell(x,y).getTile().getTextureRegion(), Tile.Type.PATH, (x* TILE_SIZE), (y* TILE_SIZE));
                             matrix[x][y] = tile;
                         }
                     }
                     else {
                         TextureRegion wallRegion = layerWall.getCell(x,y).getTile().getTextureRegion();
-                        matrix[x][y] = new Tile(wallRegion, Tile.Type.WALL, (x*tileSize), (y*tileSize));
+                        matrix[x][y] = new Tile(wallRegion, Tile.Type.WALL, (x* TILE_SIZE), (y* TILE_SIZE));
                     }
 
                 }
@@ -81,57 +79,48 @@ public abstract class Map {
         }
 
         public abstract void generateDots(int total_Dots);
+
         public TextureRegion createTextureRegion(Tile.Type type){
             TextureRegion region = null;
-            if(path.equals("map.tmx")){
-                switch (type) {
-                    case DOT:
+            if(firstMap){
+                if(type == Tile.Type.DOT) {
                         region = layerPath.getCell(1,17).getTile().getTextureRegion();
-                        break;
-                    default:
-                        break;
                 }
             }
-            else if( !path.equals("map.tmx")){
-                Texture tex = new Texture("tiles.png");
+            else {
+                Texture tex = ASSETS.manager.get(ASSETS.TILES);
                 region = new TextureRegion(tex);
-                switch (type) {
-                    case DOT:
-                        tex = new Texture("coin_gold.png");
+                if(type == Tile.Type.DOT) {
+                        tex = ASSETS.manager.get(ASSETS.COIN_GOLD);
                         region = new TextureRegion(tex);
                         region.setRegionX(128);
                         region.setRegionWidth(32);
                         region.setRegionY(0);
                         region.setRegionHeight(32);
-                        break;
-                    default:
-                        break;
                 }
             }
             return region;
         }
 
         public Tile getTile(int xPosition, int yPosition){
-            Tile tile = matrix[(int) xPosition/tileSize][(int)yPosition/tileSize];
-            return tile;
+            return matrix[xPosition / TILE_SIZE][yPosition / TILE_SIZE];
         }
 
         public Tile getTile(int xPosition, int yPosition, Actor.Direction dir){
-            int nextCellX = (int) ((xPosition/tileSize));
-            int nextCellY = (int) ((yPosition/tileSize));
-            Tile tile;
+            int nextCellX = ((xPosition/ TILE_SIZE));
+            int nextCellY = ((yPosition/ TILE_SIZE));
             switch (dir) {
                 case RIGHT:
-                    nextCellX = (int) ((xPosition+tileSize) / tileSize);
+                    nextCellX = ((xPosition+ TILE_SIZE) / TILE_SIZE);
                     break;
                 case LEFT:
-                    nextCellX = (int) ((xPosition-tileSize) / tileSize);
+                    nextCellX = ((xPosition- TILE_SIZE) / TILE_SIZE);
                     break;
                 case UP:
-                    nextCellY = (int) ((yPosition+tileSize) / tileSize);
+                    nextCellY = ((yPosition+ TILE_SIZE) / TILE_SIZE);
                     break;
                 case DOWN:
-                    nextCellY = (int) ((yPosition-tileSize) / tileSize);
+                    nextCellY = ((yPosition- TILE_SIZE) / TILE_SIZE);
                     break;
 
             }
@@ -144,19 +133,15 @@ public abstract class Map {
 
         public void collect(Tile tile){
             if(tile.isDot){
-                sound.play(0.3f);
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.DOT).play(0.25f);
                 layerCollect.setCell(
-                        tile.getX()/tileSize,
-                        tile.getY()/tileSize,
+                        tile.getX()/ TILE_SIZE,
+                        tile.getY()/ TILE_SIZE,
                         null
                 );
                 tile.isDot = false;
             }
         }
 
-        public void dispose(){
-
-            tmxMap.dispose();
-        }
 }
 

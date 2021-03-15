@@ -3,12 +3,19 @@ package uas.lntv.pacmangame.Maps;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 
+import uas.lntv.pacmangame.Sprites.Actor;
+import uas.lntv.pacmangame.Sprites.Enemy;
+import uas.lntv.pacmangame.Sprites.PacMan;
+
 public class Tile extends StaticTiledMapTile {
     public enum Type { EMPTY,PATH, PATHDOT, WALL, DOT}
     public Tile.Type type;
 
     private int x,y;
     public boolean isDot;
+    private boolean item = false;
+    private boolean occupiedByPacMan = false;
+    private boolean occupiedByGhost = false;
 
     private int cost;
     private double heuristics;
@@ -27,6 +34,12 @@ public class Tile extends StaticTiledMapTile {
     public Type getType() {
         return type;
     }
+
+    public boolean isItem(){ return item; }
+
+    public void placeItem(){ item = true; }
+
+    public void takeItem(){ item = false; }
 
     public int getCost() {
         return cost;
@@ -64,6 +77,20 @@ public class Tile extends StaticTiledMapTile {
         return this;
     }
 
+    public boolean isOccupiedByGhost(){ return occupiedByGhost; }
+
+    public boolean isOccupiedByPacMan(){ return occupiedByPacMan; }
+
+    public void enter(Actor actor){
+        if(actor instanceof PacMan) occupiedByPacMan = true;
+        if(actor instanceof Enemy) occupiedByGhost = true;
+    }
+
+    public void leave(Actor actor){
+        if(actor instanceof PacMan) occupiedByPacMan = false;
+        if(actor instanceof Enemy) occupiedByGhost = false;
+    }
+
     public Tile(){
         super(new TextureRegion());
         this.type = null;
@@ -89,7 +116,6 @@ public class Tile extends StaticTiledMapTile {
     }
 
     public Tile(TextureRegion textureRegion, Tile.Type type, int x, int y) {
-
         super(textureRegion);
         this.type = type;
         this.isDot = false;

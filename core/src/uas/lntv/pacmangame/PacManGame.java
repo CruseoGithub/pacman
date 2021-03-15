@@ -1,66 +1,63 @@
 package uas.lntv.pacmangame;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import uas.lntv.pacmangame.Scenes.HighScore;
-import uas.lntv.pacmangame.Screens.GameScreen;
-import uas.lntv.pacmangame.Screens.MenuScreen;
+import uas.lntv.pacmangame.Scenes.PrefManager;
+import uas.lntv.pacmangame.Screens.SplashScreen;
 
 public class PacManGame extends Game {
-	private int level;
-	private int score;
-	private int lives;
+	private static int level;
+	private static int score;
+	private static int lives;
 	public static SpriteBatch batch;
-	public MenuScreen menuScreen;
-	public HighScore highScore;
+	public static PrefManager prefManager;
+	private Assets assets;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+		prefManager = new PrefManager();
+		assets = new Assets();
+		assets.loadSetup();
 		level = 0;
 		score = 0;
 		lives = 3;
-		highScore = new HighScore();
-		menuScreen = new MenuScreen(this, "mainMenu.tmx");
-		setScreen(menuScreen);
+		setScreen(new SplashScreen(this, assets));
 	}
 
-	public int getLevel(){
+	public static int getLevel(){
 		return level;
 	}
 
-	public void levelUp(){
+	public static void levelUp(){
 		level++;
 	}
 
-	public void resetLevel(){ level = 0; }
+	public static void resetLevel(){ level = 0; }
 
-	public int getScore(){ return score; }
+	public static int getScore(){ return score; }
 
-	public void increaseScore(int value){ score += value; }
+	public static void increaseScore(int value){ score += value; }
 
-	public void resetScore(){ score = 0; }
+	public static void resetScore(){ score = 0; }
 
-	public int getLives(){ return lives; }
+	public static int getLives(){ return lives; }
 
-	public void die(){ lives--; }
+	public static void die(){ lives--; }
 
-	public void resetLives(){ lives = 3; }
+	public static void resetLives(){ lives = 3; }
 
 	@Override
-	public void render () {
-		super.render();
-	}
+	public void render () { super.render(); }
 	
 	@Override
 	public void dispose () {
-
-		//gameScreen.dispose();
+		super.dispose();
+		assets.dispose();
 		batch.dispose();
+		System.exit(0);
+		Gdx.app.exit();
 	}
 }

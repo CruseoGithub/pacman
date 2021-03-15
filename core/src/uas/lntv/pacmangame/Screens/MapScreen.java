@@ -6,172 +6,254 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
+import java.util.Random;
+
+import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.Maps.GameMap;
 import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.MenuMap;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Controller;
+import uas.lntv.pacmangame.Scenes.ControllerSwipe;
 import uas.lntv.pacmangame.Scenes.Hud;
+import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public abstract class MapScreen implements Screen {
-    public enum Type { GAME, MENU, SCORE};
+    public enum Type {GAME, MENU, SCORE, SETTINGS}
 
     protected PacManGame game;
-    protected OrthographicCamera gamecam;
+    protected OrthographicCamera gameCam;
     protected Viewport gamePort;
     protected Music music;
+    protected Music huntingMusic;
+
+    protected final Assets assets;
 
     public Map map;
     public Hud hud;
 
     public PacMan pacman;
-    public Enemy ghost;
+    protected ArrayList<Enemy> ghosts = new ArrayList<>();
 
+    private final Controller CONTROLLER;
+
+<<<<<<< HEAD
     protected Controller controller;
+=======
+    private final int MAP_WIDTH;
+    private final int MAP_HEIGHT;
+    protected final int TILE_SIZE;
+>>>>>>> dev_Denis
 
-    protected float tmpTimerAnimation = 0;
+    protected boolean ready = false;
 
-    public MapScreen(PacManGame game, String mapPath, MapScreen.Type type){
+    public MapScreen(PacManGame game, Assets assets, String path, MapScreen.Type type) {
         //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
         if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
             Gdx.graphics.setWindowedMode(450, 800);
         }
+        this.assets = assets;
+        ArrayList<Music> playlist = new ArrayList<>();
+        playlist.add(assets.manager.get(assets.GAME_MUSIC));
+        playlist.add(assets.manager.get(assets.GAME_MUSIC_2));
+        playlist.add(assets.manager.get(assets.GAME_MUSIC_3));
+        playlist.add(assets.manager.get(assets.GAME_MUSIC_4));
         this.game = game;
-        this.gamecam = new OrthographicCamera();
-
-
-        switch (type){
+        this.gameCam = new OrthographicCamera();
+        Random random = new Random();
+        switch (type) {
             case GAME:
-                this.map = new GameMap(game, mapPath, this);
-                if(((int)(game.getLevel()/5))%2 == 0) {
-                    this.music = Gdx.audio.newMusic(Gdx.files.internal("GameMusic.mp3"));
-                    music.setVolume(0.2f);
-                } else{
-                    this.music = Gdx.audio.newMusic(Gdx.files.internal("AmazingHorse.mp3"));
-                    music.setVolume(0.4f);
-                }
-                music.setLooping(true);
-                music.play();
+                this.map = new GameMap(assets, path, this);
+                this.music = playlist.get(random.nextInt(4));
+                this.music.setVolume(0.3f);
                 break;
             case MENU:
-                this.map = new MenuMap(mapPath);
-                this.music = Gdx.audio.newMusic(Gdx.files.internal("MenuMusic.wav"));
+                this.map = new MenuMap(path, assets);
+                this.music = assets.manager.get(assets.MENU_MUSIC);
                 music.setVolume(0.3f);
-                music.setLooping(true);
-                music.play();
+                break;
+            case SCORE:
+                this.map = new MenuMap(path, assets);
+                this.music = assets.manager.get(assets.SCORE_MUSIC);
+                music.setVolume(0.4f);
+                break;
+            case SETTINGS:
+                this.map = new MenuMap(path, assets);
+                this.music = playlist.get(random.nextInt(4));
+                this.music.setVolume(0.3f);
                 break;
         }
+        this.huntingMusic = assets.manager.get(assets.HUNTING_MUSIC);
+        huntingMusic.setVolume(0.25f);
+        huntingMusic.setLooping(true);
+        music.setLooping(true);
+        if(PrefManager.isMusicOn()) music.play();
+        this.MAP_WIDTH = this.map.getMapWidth();
+        this.MAP_HEIGHT = this.map.getMapHeight();
+        this.TILE_SIZE = this.map.getTileSize();
 
-        this.gamePort = new FitViewport(map.mapWidth*map.tileSize, map.mapHeight*map.tileSize, gamecam);
-        this.gamecam.position.set(gamePort.getWorldWidth() / 2,gamePort.getWorldHeight() /2, 0);
+        this.gamePort = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, gameCam);
+        this.gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-        this.controller = new Controller(this);
-
+        this.CONTROLLER = new ControllerSwipe(this);
     }
+
     @Override
-    public void show() {
+    public void show() {  }
 
+    public boolean handleInput() {
+        boolean action = false;
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || CONTROLLER.isRightPressed()) {
+            pacman.setNextDirection(Actor.Direction.RIGHT);
+            action = true;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || CONTROLLER.isLeftPressed()) {
+            pacman.setNextDirection(Actor.Direction.LEFT);
+            action = true;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) || CONTROLLER.isUpPressed()) {
+            pacman.setNextDirection(Actor.Direction.UP);
+            action = true;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || CONTROLLER.isDownPressed()) {
+            pacman.setNextDirection(Actor.Direction.DOWN);
+            action = true;
+        }
+        CONTROLLER.pulledInput();
+        return action;
     }
-    public void handleInput(){
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || controller.isRightPressed()){
-            pacman.nextdirection = Actor.Direction.RIGHT;
+
+    public void update(float dt) {
+        if(handleInput()) ready = true;
+
+        pacman.update(dt);
+        for (Enemy ghost : ghosts) {
+            ghost.update(dt);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || controller.isLeftPressed()){
-            pacman.nextdirection = Actor.Direction.LEFT;
+
+        if(!(this instanceof GameScreen) || ready) {
+            if (pacman.getState() != Actor.State.DIEING) {
+                pacman.move();
+                for (Enemy ghost : ghosts) {
+                    if (ghost.getState() != Actor.State.KILLED) {
+                        ghost.findNextDirection(pacman);
+                        ghost.move();
+                    } else {
+                        if (map.getTile(ghost.getXPosition(), ghost.getYPosition()) != map.getTile(ghost.getStartPosX(), ghost.getStartPosY())) {
+                            ghost.texture = assets.manager.get(assets.BLUE_DEAD);
+                            ghost.getHome();
+                        } else {
+                            if (ghost == getGhosts().get(0)) {
+                                ghost.texture = assets.manager.get(assets.GHOST_1);
+                            }
+                            if (getGhosts().size() > 1) {
+                                if (ghost == getGhosts().get(1)) {
+                                    ghost.texture = assets.manager.get(assets.GHOST_2);
+                                }
+                                if (getGhosts().size() > 2) {
+                                    if (ghost == getGhosts().get(2)) {
+                                        ghost.texture = assets.manager.get(assets.GHOST_3);
+                                    }
+                                }
+                            }
+                            ghost.setState(Actor.State.RUNNING);
+                        }
+                    }
+                }
+            } else {
+                for (Enemy ghost : ghosts) {
+                    if (map.getTile(ghost.getXPosition(), ghost.getYPosition()) != map.getTile(ghost.getStartPosX(), ghost.getStartPosY())) {
+                        ghost.getHome();
+                    }
+                }
+            }
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.UP) || controller.isUpPressed()){
-            pacman.nextdirection = Actor.Direction.UP;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN) || controller.isDownPressed()){
-            pacman.nextdirection = Actor.Direction.DOWN;
-        }
-        pacman.move();
+
+        gameCam.update();
+
+        map.renderer.setView(gameCam);
     }
 
-    public void update(float dt){
-        handleInput();
-
-        gamecam.update();
-
-        map.renderer.setView(gamecam);
-    }
     @Override
-    public void render(float delta){
-        update(delta);
-
+    public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        ghost.findNextDirection(pacman);
-        ghost.move();
-
-        //Animation alle 0.5 Sekunden
-        if ((tmpTimerAnimation + 0.5f) <= hud.animationTime) {
-            if (pacman.texturePositionX == 0) {
-                pacman.texturePositionX = 96;
-            } else {
-                pacman.texturePositionX = 0;
-            }
-            tmpTimerAnimation = hud.animationTime;
-        }
-
-        map.renderer.setView(gamecam);
+        map.renderer.setView(gameCam);
         map.renderer.render();
 
-        game.batch.begin();
+        PacManGame.batch.begin();
 
-        //Neuer Draw Befehl, der die Rotation mit berechnet
-        /*game.batch.draw(pacman.texture,pacman.getXPosition(),pacman.getYPosition(),pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
-                map.tileSize,map.tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
-                pacman.texturePositionX,0,60,60,true,false);*/
-        game.batch.draw(pacman.texture, pacman.getXPosition(), pacman.getYPosition(), pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
-                map.tileSize, map.tileSize, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
-                pacman.texturePositionX, 0, 32, 32, false, false);
+        PacManGame.batch.draw(pacman.texture, pacman.getXPosition(), pacman.getYPosition(), pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+                TILE_SIZE, TILE_SIZE, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
+                pacman.getTexturePositionX(), 0, 32, 32, false, false
+        );
 
-        game.batch.draw(ghost.sprite, ghost.xPosition, ghost.yPosition, map.tileSize, map.tileSize);
-        game.batch.end();
+        for (Enemy ghost : ghosts) {
+            PacManGame.batch.draw(ghost.texture, ghost.getXPosition(), ghost.getYPosition(), ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
+                    TILE_SIZE, TILE_SIZE, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
+                    ghost.getTexturePositionX(), ghost.getTexturePositionY(), 32, 32, false, false
+            );
+        }
 
-        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.time -= Gdx.graphics.getDeltaTime();
-        hud.animationTime += Gdx.graphics.getDeltaTime();
+        PacManGame.batch.end();
+
+        PacManGame.batch.setProjectionMatrix(hud.stage.getCamera().combined);
     }
+
+    public ArrayList<Enemy> getGhosts() { return ghosts; }
+
+    public void evolvePacMan() { }
+
+    public void shrinkPacMan() { }
+
+    public void notReady(){ ready = false; }
 
     @Override
     public void resize(int width, int height) {
-        gamePort.update(width,height,false);
-        gamePort.getCamera().position.set(map.mapWidth*map.tileSize/2f, map.mapHeight*map.tileSize/2f,0);
+        gamePort.update(width, height, false);
+        gamePort.getCamera().position.set(MAP_WIDTH * TILE_SIZE / 2f, MAP_HEIGHT * TILE_SIZE / 2f, 0);
         gamePort.getCamera().update();
     }
 
-    @Override
-    public void pause() {
-
+    public void switchMusicHunting() {
+        if (music.isPlaying() && PrefManager.isMusicOn()) {
+            music.pause();
+            huntingMusic.play();
+        }
     }
 
-    @Override
-    public void resume() {
-
+    public void switchMusicGame() {
+        if(PrefManager.isMusicOn()) {
+            huntingMusic.stop();
+            music.play();
+        }
     }
 
-    @Override
-    public void hide() {
 
-    }
+    @Override
+    public void pause() { }
+
+    @Override
+    public void resume() {  }
+
+    @Override
+    public void hide() {  }
 
     @Override
     public void dispose() {
-        controller.dispose();
-        hud.dispose();
-        map.dispose();
+        CONTROLLER.dispose();
         music.dispose();
+        huntingMusic.dispose();
     }
+
 }

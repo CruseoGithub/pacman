@@ -22,10 +22,11 @@ public class PauseScreen extends MapScreen {
 
     public PauseScreen(PacManGame game, String mapPath, GameScreen screen){
         super(game, mapPath, Type.MENU);
-        this.pacman = new PacMan(game, 25*map.tileSize, 47*map.tileSize, this, hud);
+        this.hud = new Hud(game, this, true);
+        this.pacman = new PacMan(game, 25*map.tileSize, 40*map.tileSize, this, hud);
         this.pacman.setSpeed(8);
         this.ghost = new Enemy(25*map.tileSize, 3*map.tileSize, this, Enemy.Difficulty.EASY);
-        this.hud = new Hud(game, this, false);
+
         this.font = new BitmapFont();
         font.getData().setScale(font.getScaleX()*2);
         this.screen = screen;
@@ -37,8 +38,12 @@ public class PauseScreen extends MapScreen {
     public void render(float delta) {
         super.render(delta);
 
+        hud.stage.draw();
+        hud.animationTime += Gdx.graphics.getDeltaTime();
+        hud.update();
+
         game.batch.begin();
-            font.draw(game.batch, "CONTINUE", 2 * map.tileSize,48* map.tileSize);
+            font.draw(game.batch, "CONTINUE", 2 * map.tileSize,40* map.tileSize);
             font.draw(game.batch, "RETURN TO MENU", 2 * map.tileSize,17* map.tileSize);
             font.draw(game.batch, "MUSIC", 11 * map.tileSize + 20,43* map.tileSize);
             font.draw(game.batch, "ON", 10 * map.tileSize,38* map.tileSize);

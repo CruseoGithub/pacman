@@ -56,6 +56,9 @@ public class PauseScreen extends MapScreen {
         if(pacman.getYPosition() == 16*map.tileSize){
             if(pacman.getXPosition() <= 2*map.tileSize) {
                 game.setScreen(new MenuScreen(game, "mainMenu.tmx"));
+                game.resetLives();
+                game.resetScore();
+                game.resetLevel();
                 this.dispose();
             }
 

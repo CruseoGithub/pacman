@@ -68,8 +68,8 @@ public class Animation {
                                 ACTOR.rotation = 270;
                                 break;
                         }
-                        ACTOR.setXPosition(ACTOR.TILE_SIZE);
-                        ACTOR.setYPosition(17 * ACTOR.TILE_SIZE);
+                        ACTOR.setXPosition(14 * ACTOR.TILE_SIZE);
+                        ACTOR.setYPosition(21 * ACTOR.TILE_SIZE);
                         SCREEN.notReady();
                         tmp = 0;
                     }

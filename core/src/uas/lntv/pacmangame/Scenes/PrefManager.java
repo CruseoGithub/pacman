@@ -1,6 +1,7 @@
 package uas.lntv.pacmangame.Scenes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class PrefManager {
     private static final ArrayList<String> names = new ArrayList<>();
     private static final ArrayList<String> causeOfDeath = new ArrayList<>();
     private static final ArrayList<Integer> level = new ArrayList<>();
-    private static String player;
+    private static String name;
     private static boolean nameSet;
     private static boolean musicOn;
     private static boolean sfxOn;
@@ -27,8 +28,6 @@ public class PrefManager {
     public PrefManager(){
         prefs = Gdx.app.getPreferences("PacManPreferences");
         loadPrefs();
-        if(player.isEmpty()) nameSet = false;
-        else nameIsSet();
     }
 
     public static ArrayList<Integer> getHighScores(){ return highScores; }
@@ -55,7 +54,7 @@ public class PrefManager {
             int x = highScores.get(i);
             if(newScore > x){
                 highScores.add(i, newScore);
-                names.add(i, player);
+                names.add(i, name);
                 PrefManager.causeOfDeath.add(i, causeOfDeath);
                 PrefManager.level.add(i, level);
                 if(highScores.size() > 10){
@@ -72,11 +71,9 @@ public class PrefManager {
         return newHighScore;
     }
 
-    public static void nameIsSet(){ nameSet = true; }
+    public static boolean noNameSet(){ return !nameSet; }
 
-    public static boolean isNameSet(){ return nameSet; }
-
-    public static void setPlayer(String name){ player = name;  }
+    public static void setNameSet(boolean nameSet){ PrefManager.nameSet = nameSet; }
 
     public static boolean isMusicOn() { return musicOn; }
 
@@ -85,6 +82,49 @@ public class PrefManager {
     public static boolean isSfxOn() { return sfxOn; }
 
     public static void setSfxOn(boolean sfxOn) { PrefManager.sfxOn = sfxOn; }
+
+    /**
+     * Gives the player two chances to insert a name, if he doesn't he will be treated as
+     * Anonymous Bastard.
+     */
+    public static void setName() {
+        Gdx.input.getTextInput(
+                new Input.TextInputListener() {
+                    @Override
+                    public void input(String text) {
+                        if (text.isEmpty()) {
+                            Gdx.input.getTextInput(
+                                    new Input.TextInputListener() {
+                                        @Override
+                                        public void input(String secondChance) {
+                                            if (secondChance.isEmpty()) anonymous();
+                                            name = secondChance;
+                                        }
+
+                                        @Override
+                                        public void canceled() {
+                                            anonymous();
+                                        }
+                                    },
+                                    "Are you sure?", "Anonymous Bastard", ""
+                            );
+                        } else name = text;
+                    }
+
+                    @Override
+                    public void canceled() {
+                        anonymous();
+                    }
+                },
+                "Please enter your name", "", "Name"
+        );
+        nameSet = true;
+    }
+
+    /**
+     * Gives the indecisive player the name "Anonymous Bastard".
+     */
+    private static void anonymous(){ name = "Anonymous Bastard"; }
 
     /**
      * Loads the scores from the preferences into the array list.
@@ -130,7 +170,8 @@ public class PrefManager {
         names.add(prefs.getString("names_10"));
         causeOfDeath.add(prefs.getString("cause_of_death_10"));
         level.add(prefs.getInteger("level_10"));
-        setPlayer(prefs.getString("player"));
+        name = prefs.getString("player");
+        nameSet = prefs.getBoolean("NameSet");
         musicOn = prefs.getBoolean("Music");
         sfxOn = prefs.getBoolean("SFX");
     }
@@ -179,7 +220,8 @@ public class PrefManager {
         prefs.putInteger("level_8", level.get(7));
         prefs.putInteger("level_9", level.get(8));
         prefs.putInteger("level_10", level.get(9));
-        prefs.putString("player", player);
+        prefs.putString("player", name);
+        prefs.putBoolean("NameSet", nameSet);
         prefs.putBoolean("Music", musicOn);
         prefs.putBoolean("SFX", sfxOn);
 

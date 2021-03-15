@@ -3,7 +3,6 @@ package uas.lntv.pacmangame.Scenes;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -19,7 +18,6 @@ import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class Hud {
-    private final PacManGame GAME;
     public Stage stage;
     private final Assets assets;
 
@@ -43,7 +41,6 @@ public class Hud {
 
     @SuppressWarnings("DefaultLocale")
     public Hud(PacManGame game, Assets assets, MapScreen screen, boolean visible){
-        this.GAME = game;
         this.assets = assets;
         int mapWidth = screen.map.getMapWidth();
         int mapHeight = screen.map.getMapHeight();
@@ -73,7 +70,7 @@ public class Hud {
         TIME_TEXT_LABEL.setFontScale(4);
         LIVES_TEXT_LABEL.setFontScale(4);
 
-        SCORE_LABEL = new Label(String.format("%06d  ", game.getScore()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        SCORE_LABEL = new Label(String.format("%06d  ", PacManGame.getScore()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
         TIME_LABEL = new Label(String.format("%03d  ", (int)time), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
         SCORE_LABEL.setFontScale(4);
@@ -106,7 +103,7 @@ public class Hud {
         timeStamp = time;
     }
 
-    public final String getMap(){ return STAGES.get(GAME.getLevel() % 5); }
+    public final String getMap(){ return STAGES.get(PacManGame.getLevel() % 5); }
 
     @SuppressWarnings("DefaultLocale")
     public void update(){
@@ -130,10 +127,10 @@ public class Hud {
         }
 
         if(visible){
-            SCORE_LABEL.setText(String.format("%06d", GAME.getScore()));
+            SCORE_LABEL.setText(String.format("%06d", PacManGame.getScore()));
             TIME_LABEL.setText(String.format("%03d", (int)time));
             PacManGame.batch.begin();
-            if(GAME.getLives() >= 1) {
+            if(PacManGame.getLives() >= 1) {
                 PacManGame.batch.draw(PACMAN.texture,
                         PACMAN.getXPosition(), PACMAN.getYPosition(),
                         PACMAN.sprite.getOriginX(), PACMAN.sprite.getOriginY(),
@@ -141,7 +138,7 @@ public class Hud {
                         PACMAN.sprite.getScaleX(), PACMAN.sprite.getScaleY(), PACMAN.rotation,
                         PACMAN.getTexturePositionX() + 96, 0, 32, 32, false, false);
             }
-            if(GAME.getLives() >= 2) {
+            if(PacManGame.getLives() >= 2) {
                 PacManGame.batch.draw(PACMAN.texture,
                         PACMAN.getXPosition() + 2 * TILE_SIZE, PACMAN.getYPosition(),
                         PACMAN.sprite.getOriginX(), PACMAN.sprite.getOriginY(),
@@ -149,7 +146,7 @@ public class Hud {
                         PACMAN.sprite.getScaleX(), PACMAN.sprite.getScaleY(), PACMAN.rotation,
                         PACMAN.getTexturePositionX() + 96, 0, 32, 32, false, false);
             }
-            if(GAME.getLives() >= 3) {
+            if(PacManGame.getLives() >= 3) {
                 PacManGame.batch.draw(PACMAN.texture,
                         PACMAN.getXPosition() + 4 * TILE_SIZE, PACMAN.getYPosition(),
                         PACMAN.sprite.getOriginX(), PACMAN.sprite.getOriginY(),

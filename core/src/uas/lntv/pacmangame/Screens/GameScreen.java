@@ -1,5 +1,7 @@
 package uas.lntv.pacmangame.Screens;
 
+import com.badlogic.gdx.Gdx;
+
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Hud;
@@ -18,7 +20,7 @@ public class GameScreen extends MapScreen {
         super(game, assets, path, Type.GAME);
 
         this.hud = new Hud(game, assets, this, true);
-        this.pacman = new PacMan(game, assets, TILE_SIZE, 17* TILE_SIZE, this, hud);
+        this.pacman = new PacMan(game, assets, 14 * TILE_SIZE, 21 * TILE_SIZE, this, hud);
         this.ghosts.add(new Enemy(13* TILE_SIZE, 33* TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_1)));
         if(PacManGame.getLevel() >= 2) {
             this.ghosts.add(new Enemy(14* TILE_SIZE, 33* TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_2)));
@@ -52,10 +54,8 @@ public class GameScreen extends MapScreen {
     }
 
     @Override
-    public void render(float delta) {
-        super.render(delta);
-        hud.update();
-        hud.stage.draw();
+    public void update(float dt) {
+        super.update(dt);
         if(hud.time < 0){
             if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Time elapsed", PacManGame.getLevel() + 1)){
                 game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
@@ -75,6 +75,15 @@ public class GameScreen extends MapScreen {
             game.setScreen(new GameScreen(game, assets, hud.getMap()));
             this.dispose();
         }
+    }
+
+    @Override
+    public void render(float delta) {
+        update(delta);
+        super.render(delta);
+        if(ready) hud.time -= Gdx.graphics.getDeltaTime();
+        hud.update();
+        hud.stage.draw();
     }
 
     public void evolvePacMan(){

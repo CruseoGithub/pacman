@@ -31,6 +31,7 @@ public class SettingsScreen extends MapScreen {
             !(pacman.getXPosition() == 4 * TILE_SIZE &&
             (pacman.getYPosition() == 21 * TILE_SIZE
             || pacman.getYPosition() == 25 * TILE_SIZE
+            || pacman.getYPosition() == 29 * TILE_SIZE
             || pacman.getYPosition() == 33 * TILE_SIZE
             || pacman.getYPosition() == 41 * TILE_SIZE)
             )
@@ -70,6 +71,18 @@ public class SettingsScreen extends MapScreen {
             if(pacman.getXPosition() == 11 * TILE_SIZE) PrefManager.setSfxOn(true);
             if(pacman.getXPosition() == 15 * TILE_SIZE) PrefManager.setSfxOn(false);
             PrefManager.savePrefs();
+        }
+        if(pacman.getYPosition() == 29 * TILE_SIZE) {
+            if (pacman.getXPosition() == 14 * TILE_SIZE) {
+                PrefManager.setNameSet(true);
+            }
+            if (pacman.getXPosition() == 15 * TILE_SIZE) {
+                PrefManager.setNameSet(false);
+            }
+            if (pacman.getXPosition() == 16 * TILE_SIZE) {
+                if (PrefManager.noNameSet()) PrefManager.setName();
+                PrefManager.savePrefs();
+            }
         }
 
         ghosts.get(0).update(dt);
@@ -124,7 +137,7 @@ public class SettingsScreen extends MapScreen {
                 PacManGame.batch,
                 "SWIPE",
                 19 * TILE_SIZE,
-                37 * TILE_SIZE
+                38 * TILE_SIZE
         );
         FONT.draw(
                 PacManGame.batch,
@@ -136,7 +149,13 @@ public class SettingsScreen extends MapScreen {
                 PacManGame.batch,
                 "BUTTONS",
                 19 * TILE_SIZE,
-                31 * TILE_SIZE
+                30 * TILE_SIZE
+        );
+        FONT.draw(
+                PacManGame.batch,
+                "USER",
+                13 * TILE_SIZE,
+                30 * TILE_SIZE
         );
         FONT.draw(
                 PacManGame.batch,

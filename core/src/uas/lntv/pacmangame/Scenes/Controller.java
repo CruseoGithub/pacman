@@ -55,14 +55,11 @@ public abstract class Controller {
         return rightPressed;
     }
 
-    public boolean pulledInput(){
-        boolean change = false;
-        if(upPressed || downPressed || leftPressed || rightPressed) change = true;
+    public void pulledInput(){
         upPressed = false;
         downPressed = false;
         leftPressed = false;
         rightPressed = false;
-        return change;
     }
 
     public void resize(int width, int height){

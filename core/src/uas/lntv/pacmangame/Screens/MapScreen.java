@@ -237,19 +237,13 @@ public abstract class MapScreen implements Screen {
 
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() { }
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {  }
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() {  }
 
     @Override
     public void dispose() {

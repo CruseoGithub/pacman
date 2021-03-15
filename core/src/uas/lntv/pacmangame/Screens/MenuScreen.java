@@ -1,8 +1,5 @@
 package uas.lntv.pacmangame.Screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.PrefManager;
@@ -24,37 +21,8 @@ public class MenuScreen extends MapScreen {
     public void render(float delta) {
         update(delta);
         super.render(delta);
-        if(!PrefManager.isNameSet()) {
-            Gdx.input.getTextInput(
-                    new Input.TextInputListener() {
-                        @Override
-                        public void input(String text) {
-                            if(text.isEmpty()) {
-                                Gdx.input.getTextInput(
-                                    new Input.TextInputListener() {
-                                        @Override
-                                        public void input(String s) {
-                                            if(s.isEmpty()) anonymous();
-                                            PrefManager.setPlayer(s);
-                                        }
-                                        @Override
-                                        public void canceled() {
-                                            anonymous();
-                                        }
-                                    },
-                                        "Are you sure?", "Anonymous Bastard", ""
-                                );
-                            } else PrefManager.setPlayer(text);
-                        }
-
-                        @Override
-                        public void canceled() {
-                            anonymous();
-                        }
-                    },
-                    "Please enter your name", "", "Name"
-            );
-            PrefManager.nameIsSet();
+        if(PrefManager.noNameSet()) {
+            PrefManager.setName();
         }
 
         if(pacman.getXPosition() == 12* TILE_SIZE){
@@ -68,8 +36,6 @@ public class MenuScreen extends MapScreen {
             }
         }
     }
-
-    private void anonymous(){ PrefManager.setPlayer("Anonymous Bastard"); }
 
     @Override
     public void dispose() {

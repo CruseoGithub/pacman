@@ -57,6 +57,7 @@ public class ScoreScreen extends MapScreen {
      */
     @Override
     public void render(float delta) {
+        update(delta);
         super.render(delta);
 
         PacManGame.batch.begin();

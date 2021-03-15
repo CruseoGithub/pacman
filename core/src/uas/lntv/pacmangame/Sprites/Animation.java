@@ -70,6 +70,7 @@ public class Animation {
                         }
                         ACTOR.setXPosition(ACTOR.TILE_SIZE);
                         ACTOR.setYPosition(17 * ACTOR.TILE_SIZE);
+                        SCREEN.notReady();
                         tmp = 0;
                     }
                     break;

@@ -22,8 +22,9 @@ public class MenuScreen extends MapScreen {
 
     @Override
     public void render(float delta) {
+        update(delta);
         super.render(delta);
-        if(!game.prefManager.isNameSet()) {
+        if(!PrefManager.isNameSet()) {
             Gdx.input.getTextInput(
                     new Input.TextInputListener() {
                         @Override
@@ -53,7 +54,7 @@ public class MenuScreen extends MapScreen {
                     },
                     "Please enter your name", "", "Name"
             );
-            game.prefManager.nameIsSet();
+            PrefManager.nameIsSet();
         }
 
         if(pacman.getXPosition() == 12* TILE_SIZE){

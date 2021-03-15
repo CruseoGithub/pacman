@@ -50,6 +50,8 @@ public abstract class MapScreen implements Screen {
     private final int MAP_HEIGHT;
     protected final int TILE_SIZE;
 
+    protected boolean ready = false;
+
     public MapScreen(PacManGame game, Assets assets, String path, MapScreen.Type type) {
         //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
         if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
@@ -102,70 +104,72 @@ public abstract class MapScreen implements Screen {
     }
 
     @Override
-    public void show() {
-
-    }
+    public void show() {  }
 
     public boolean handleInput() {
+        boolean action = false;
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || CONTROLLER.isRightPressed()) {
             pacman.setNextDirection(Actor.Direction.RIGHT);
-            return true;
+            action = true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || CONTROLLER.isLeftPressed()) {
             pacman.setNextDirection(Actor.Direction.LEFT);
-            return true;
+            action = true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP) || CONTROLLER.isUpPressed()) {
             pacman.setNextDirection(Actor.Direction.UP);
-            return true;
+            action = true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || CONTROLLER.isDownPressed()) {
             pacman.setNextDirection(Actor.Direction.DOWN);
-            return true;
+            action = true;
         }
-        return CONTROLLER.pulledInput();
+        CONTROLLER.pulledInput();
+        return action;
     }
 
     public void update(float dt) {
-        handleInput();
+        if(handleInput()) ready = true;
 
         pacman.update(dt);
         for (Enemy ghost : ghosts) {
             ghost.update(dt);
         }
 
-        if (pacman.getState() != Actor.State.DIEING) {
-            pacman.move();
-            for (Enemy ghost : ghosts) {
-                if (ghost.getState() != Actor.State.KILLED) {
-                    ghost.findNextDirection(pacman);
-                    ghost.move();
-                } else {
-                    if (map.getTile(ghost.getXPosition(), ghost.getYPosition()) != map.getTile(ghost.getStartPosX(), ghost.getStartPosY())) {
-                        ghost.texture = assets.manager.get(assets.BLUE_DEAD);
-                        ghost.getHome();
+        if(!(this instanceof GameScreen) || ready) {
+            if (pacman.getState() != Actor.State.DIEING) {
+                pacman.move();
+                for (Enemy ghost : ghosts) {
+                    if (ghost.getState() != Actor.State.KILLED) {
+                        ghost.findNextDirection(pacman);
+                        ghost.move();
                     } else {
-                        if (ghost == getGhosts().get(0)) {
-                            ghost.texture = assets.manager.get(assets.GHOST_1);
-                        }
-                        if (getGhosts().size() > 1) {
-                            if (ghost == getGhosts().get(1)) {
-                                ghost.texture = assets.manager.get(assets.GHOST_2);
+                        if (map.getTile(ghost.getXPosition(), ghost.getYPosition()) != map.getTile(ghost.getStartPosX(), ghost.getStartPosY())) {
+                            ghost.texture = assets.manager.get(assets.BLUE_DEAD);
+                            ghost.getHome();
+                        } else {
+                            if (ghost == getGhosts().get(0)) {
+                                ghost.texture = assets.manager.get(assets.GHOST_1);
                             }
-                            if (getGhosts().size() > 2) {
-                                if (ghost == getGhosts().get(2)) {
-                                    ghost.texture = assets.manager.get(assets.GHOST_3);
+                            if (getGhosts().size() > 1) {
+                                if (ghost == getGhosts().get(1)) {
+                                    ghost.texture = assets.manager.get(assets.GHOST_2);
+                                }
+                                if (getGhosts().size() > 2) {
+                                    if (ghost == getGhosts().get(2)) {
+                                        ghost.texture = assets.manager.get(assets.GHOST_3);
+                                    }
                                 }
                             }
+                            ghost.setState(Actor.State.RUNNING);
                         }
-                        ghost.setState(Actor.State.RUNNING);
                     }
                 }
-            }
-        } else {
-            for (Enemy ghost : ghosts) {
-                if (map.getTile(ghost.getXPosition(), ghost.getYPosition()) != map.getTile(ghost.getStartPosX(), ghost.getStartPosY())) {
-                    ghost.getHome();
+            } else {
+                for (Enemy ghost : ghosts) {
+                    if (map.getTile(ghost.getXPosition(), ghost.getYPosition()) != map.getTile(ghost.getStartPosX(), ghost.getStartPosY())) {
+                        ghost.getHome();
+                    }
                 }
             }
         }
@@ -177,8 +181,6 @@ public abstract class MapScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if(!(this instanceof SettingsScreen)) update(delta);
-
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -202,7 +204,6 @@ public abstract class MapScreen implements Screen {
         PacManGame.batch.end();
 
         PacManGame.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.time -= Gdx.graphics.getDeltaTime();
     }
 
     public ArrayList<Enemy> getGhosts() { return ghosts; }
@@ -210,6 +211,8 @@ public abstract class MapScreen implements Screen {
     public void evolvePacMan() { }
 
     public void shrinkPacMan() { }
+
+    public void notReady(){ ready = false; }
 
     @Override
     public void resize(int width, int height) {

@@ -16,7 +16,7 @@ public class ControllerButtons extends Controller {
                 Vector3 touch = new Vector3(screenX, screenY, 0);
                 gameCam.unproject(touch);
 
-                System.out.println("Screen coordinates translated to world coordinates: "
+                System.out.println("Screen coordinates Buttons!!!!!!!: "
                         + "X: " + touch.x + " Y: " + touch.y);
 
                 if(touch.x >= 12 * TILE_SIZE && touch.x <= 16 * TILE_SIZE){

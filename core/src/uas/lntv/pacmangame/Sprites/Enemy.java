@@ -18,12 +18,9 @@ public class Enemy extends Actor {
     }
 
     private Pathfinder aStar;
-<<<<<<< HEAD
-    private Difficulty difficulty ;
-=======
+
     private Difficulty difficulty;
     private Difficulty levelDiff;
->>>>>>> dev_Denis
 
     /**
      * Create a new ghost

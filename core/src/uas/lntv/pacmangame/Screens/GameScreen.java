@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
+import uas.lntv.pacmangame.Scenes.ControllerSwipe;
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
@@ -12,20 +13,17 @@ import uas.lntv.pacmangame.Sprites.SuperPacMan;
 
 public class GameScreen extends MapScreen {
 
-<<<<<<< HEAD
+
     public boolean PauseActive = false;
     private boolean paused= false;
     public void setPauseActive(boolean bool) {
         PauseActive = bool;
     }
 
-    public GameScreen(PacManGame game, String mapPath) {
-        super(game, mapPath, Type.GAME);
-=======
     private boolean pacManSuper;
 
     public boolean isPacManSuper() { return pacManSuper; }
->>>>>>> dev_Denis
+
 
     public GameScreen(PacManGame game, Assets assets, String path) {
         super(game, assets, path, Type.GAME);
@@ -65,22 +63,9 @@ public class GameScreen extends MapScreen {
     }
 
     @Override
-<<<<<<< HEAD
-    public void render(float delta) {
-        super.render(delta);
-        if(paused) {
-            controller = new Controller(this);
-            music.play();
-            paused = false;
-            PauseActive = false;
-        }
-        hud.animationTime += Gdx.graphics.getDeltaTime();
-        hud.update();
-        hud.stage.draw();
-=======
     public void update(float dt) {
         super.update(dt);
->>>>>>> dev_Denis
+
         if(hud.time < 0){
             if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Time elapsed", PacManGame.getLevel() + 1)){
                 game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
@@ -103,9 +88,9 @@ public class GameScreen extends MapScreen {
         }
 
         if(PauseActive){
-            controller.dispose();
+            //controller.dispose();
             music.pause();
-            game.setScreen(new PauseScreen(game, "Pausecopy.tmx", this));
+            game.setScreen(new PauseScreen(game, assets,"maps/Pausecopy.tmx", this, hud));
             paused = true;
         }
     }
@@ -114,6 +99,14 @@ public class GameScreen extends MapScreen {
     public void render(float delta) {
         update(delta);
         super.render(delta);
+
+        if(paused) {
+            //controller = new ControllerSwipe(this);
+            music.play();
+            paused = false;
+            PauseActive = false;
+        }
+
         if(ready) hud.time -= Gdx.graphics.getDeltaTime();
         hud.update();
         hud.stage.draw();

@@ -96,86 +96,86 @@ public class SettingsScreen extends MapScreen {
         update(delta);
         super.render(delta);
 
-        PacManGame.batch.begin();
+        game.batch.begin();
         FONT.draw(
-                PacManGame.batch,
+                game.batch,
                 "MUSIC",
                 20 * TILE_SIZE,
                 46 * TILE_SIZE
         );
         FONT.draw(
-                PacManGame.batch,
+                game.batch,
                 "ON",
                 18 * TILE_SIZE,
                 42 * TILE_SIZE
         );
         FONT.draw(
-                PacManGame.batch,
+                game.batch,
                 "OFF",
                 22 * TILE_SIZE,
                 42 * TILE_SIZE
         );
         FONT.draw(
-                PacManGame.batch,
+                game.batch,
                 "SOUND",
                 12 * TILE_SIZE,
                 42 * TILE_SIZE
         );
         FONT.draw(
-                PacManGame.batch,
+                game.batch,
                 "ON",
                 10 * TILE_SIZE,
                 38 * TILE_SIZE
         );
         FONT.draw(
-                PacManGame.batch,
+                game.batch,
                 "OFF",
                 14 * TILE_SIZE,
                 38 * TILE_SIZE
         );
         FONT.draw(
-                PacManGame.batch,
+                game.batch,
                 "SWIPE",
                 19 * TILE_SIZE,
                 38 * TILE_SIZE
         );
         FONT.draw(
-                PacManGame.batch,
+                game.batch,
                 "CONTROL",
                 19 * TILE_SIZE,
                 34 * TILE_SIZE
         );
         FONT.draw(
-                PacManGame.batch,
+                game.batch,
                 "BUTTONS",
                 19 * TILE_SIZE,
                 30 * TILE_SIZE
         );
         FONT.draw(
-                PacManGame.batch,
+                game.batch,
                 "USER",
                 13 * TILE_SIZE,
                 30 * TILE_SIZE
         );
         FONT.draw(
-                PacManGame.batch,
+                game.batch,
                 "SCORES",
                 19 * TILE_SIZE,
                 26 * TILE_SIZE
         );
         FONT.draw(
-                PacManGame.batch,
+                game.batch,
                 "CREDITS",
                 19 * TILE_SIZE,
                 22 * TILE_SIZE
         );
         FONT.draw(
-                PacManGame.batch,
+                game.batch,
                 "RESUME",
                 19 * TILE_SIZE,
                 18 * TILE_SIZE
         );
-        PacManGame.batch.end();
+        game.batch.end();
     }
 
 }

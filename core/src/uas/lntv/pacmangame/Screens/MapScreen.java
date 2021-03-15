@@ -44,15 +44,13 @@ public abstract class MapScreen implements Screen {
     public PacMan pacman;
     protected ArrayList<Enemy> ghosts = new ArrayList<>();
 
-    private final Controller CONTROLLER;
+    protected  Controller controller;
 
-<<<<<<< HEAD
-    protected Controller controller;
-=======
+
     private final int MAP_WIDTH;
     private final int MAP_HEIGHT;
     protected final int TILE_SIZE;
->>>>>>> dev_Denis
+
 
     protected boolean ready = false;
 
@@ -104,7 +102,7 @@ public abstract class MapScreen implements Screen {
         this.gamePort = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, gameCam);
         this.gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-        this.CONTROLLER = new ControllerSwipe(this);
+        this.controller = new ControllerSwipe(this);
     }
 
     @Override
@@ -112,23 +110,23 @@ public abstract class MapScreen implements Screen {
 
     public boolean handleInput() {
         boolean action = false;
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || CONTROLLER.isRightPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || controller.isRightPressed()) {
             pacman.setNextDirection(Actor.Direction.RIGHT);
             action = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || CONTROLLER.isLeftPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || controller.isLeftPressed()) {
             pacman.setNextDirection(Actor.Direction.LEFT);
             action = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) || CONTROLLER.isUpPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) || controller.isUpPressed()) {
             pacman.setNextDirection(Actor.Direction.UP);
             action = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || CONTROLLER.isDownPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || controller.isDownPressed()) {
             pacman.setNextDirection(Actor.Direction.DOWN);
             action = true;
         }
-        CONTROLLER.pulledInput();
+        controller.pulledInput();
         return action;
     }
 
@@ -191,23 +189,23 @@ public abstract class MapScreen implements Screen {
         map.renderer.setView(gameCam);
         map.renderer.render();
 
-        PacManGame.batch.begin();
+        game.batch.begin();
 
-        PacManGame.batch.draw(pacman.texture, pacman.getXPosition(), pacman.getYPosition(), pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+        game.batch.draw(pacman.texture, pacman.getXPosition(), pacman.getYPosition(), pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
                 TILE_SIZE, TILE_SIZE, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
                 pacman.getTexturePositionX(), 0, 32, 32, false, false
         );
 
         for (Enemy ghost : ghosts) {
-            PacManGame.batch.draw(ghost.texture, ghost.getXPosition(), ghost.getYPosition(), ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
+            game.batch.draw(ghost.texture, ghost.getXPosition(), ghost.getYPosition(), ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
                     TILE_SIZE, TILE_SIZE, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
                     ghost.getTexturePositionX(), ghost.getTexturePositionY(), 32, 32, false, false
             );
         }
 
-        PacManGame.batch.end();
+        game.batch.end();
 
-        PacManGame.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
     }
 
     public ArrayList<Enemy> getGhosts() { return ghosts; }
@@ -251,7 +249,7 @@ public abstract class MapScreen implements Screen {
 
     @Override
     public void dispose() {
-        CONTROLLER.dispose();
+        controller.dispose();
         music.dispose();
         huntingMusic.dispose();
     }

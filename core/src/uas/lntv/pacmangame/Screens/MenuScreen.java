@@ -37,12 +37,9 @@ public class MenuScreen extends MapScreen {
         }
     }
 
-<<<<<<< HEAD
-=======
     @Override
     public void dispose() {
         super.dispose();
         hud.dispose();
     }
->>>>>>> dev_Denis
 }

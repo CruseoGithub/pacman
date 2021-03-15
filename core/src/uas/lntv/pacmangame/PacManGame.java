@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import uas.lntv.pacmangame.Scenes.PrefManager;
+import uas.lntv.pacmangame.Screens.LoadingScreen;
 import uas.lntv.pacmangame.Screens.SplashScreen;
 
 public class PacManGame extends Game {
@@ -24,7 +25,7 @@ public class PacManGame extends Game {
 		level = 0;
 		score = 0;
 		lives = 3;
-		setScreen(new SplashScreen(this, assets));
+		setScreen(new LoadingScreen(this, assets));
 	}
 
 	public static int getLevel(){

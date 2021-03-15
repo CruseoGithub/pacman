@@ -21,10 +21,10 @@ public class ControllerSwipe extends Controller {
                 Vector3 touch = new Vector3(screenX, screenY, 0);
                 gameCam.unproject(touch);
 
-                System.out.println("Screen coordinates translated to world coordinates: "
+                System.out.println("Screen coordinates Swipa nicht klauen: "
                         + "X: " + touch.x + " Y: " + touch.y);
 
-
+                ready(touch.x, touch.y);
                 touchEvent = true;
                 touchDownPos = new Vector3(touch.x, touch.y, 0);
 
@@ -39,6 +39,10 @@ public class ControllerSwipe extends Controller {
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 if(touchEvent) {
+                    //System.out.println("touch-up");
+                    Vector3 touch = new Vector3(screenX, screenY, 0);
+                    gameCam.unproject(touch);
+                    setPause(touch.x, touch.y);
                     touchEvent = false;
                     getDirection(screenX, screenY, true);
                 }
@@ -64,6 +68,7 @@ public class ControllerSwipe extends Controller {
             public void getDirection(int screenX, int screenY){
                 Vector3 touch = new Vector3(screenX, screenY, 0);
                 gameCam.unproject(touch);
+                //System.out.println("x:"+ touch.x+ "y:"+ touch.y);
 
                 double angle = Math.atan2((double) touch.x - touchDownPos.x, (double) touchDownPos.y - touch.y);
                 //System.out.println("Winkel: "+ angle);

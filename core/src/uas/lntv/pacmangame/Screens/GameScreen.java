@@ -94,7 +94,7 @@ public class GameScreen extends MapScreen {
         }
         if(PauseActive){
             music.pause();
-            game.setScreen(new PauseScreen(game, assets,"maps/Pausecopy.tmx", this, hud));
+            game.setScreen(new PauseScreen(game, assets,assets.PAUSE, this, hud));
             paused = true;
         }
 

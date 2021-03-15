@@ -4,9 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector3;
 
-import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
-import uas.lntv.pacmangame.Screens.PauseScreen;
 
 public class ControllerSwipe extends Controller {
     boolean touchEvent;

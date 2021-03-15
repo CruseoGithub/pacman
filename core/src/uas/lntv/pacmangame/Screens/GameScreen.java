@@ -86,13 +86,18 @@ public class GameScreen extends MapScreen {
             this.dispose();
 
         }
-
+        if(paused) {
+            controller = new ControllerSwipe(this);
+            music.play();
+            paused = false;
+            PauseActive = false;
+        }
         if(PauseActive){
-            //controller.dispose();
             music.pause();
             game.setScreen(new PauseScreen(game, assets,"maps/Pausecopy.tmx", this, hud));
             paused = true;
         }
+
     }
 
     @Override
@@ -100,12 +105,6 @@ public class GameScreen extends MapScreen {
         update(delta);
         super.render(delta);
 
-        if(paused) {
-            //controller = new ControllerSwipe(this);
-            music.play();
-            paused = false;
-            PauseActive = false;
-        }
 
         if(ready) hud.time -= Gdx.graphics.getDeltaTime();
         hud.update();

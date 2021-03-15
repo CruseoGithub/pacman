@@ -4,14 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector3;
 
+import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
+import uas.lntv.pacmangame.Screens.PauseScreen;
 
 public class ControllerSwipe extends Controller {
     boolean touchEvent;
     Vector3 touchDownPos;
     Vector3 touchCurrentPos;
 
-    public ControllerSwipe(MapScreen screen){
+    public ControllerSwipe(final MapScreen screen){
         super(screen);
         touchEvent = false;
 
@@ -20,9 +22,7 @@ public class ControllerSwipe extends Controller {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 Vector3 touch = new Vector3(screenX, screenY, 0);
                 gameCam.unproject(touch);
-
-                System.out.println("Screen coordinates Swipa nicht klauen: "
-                        + "X: " + touch.x + " Y: " + touch.y);
+                //System.out.println("Screen coordinates Swiper: "+ "X: " + touch.x + " Y: " + touch.y);
 
                 ready(touch.x, touch.y);
                 touchEvent = true;

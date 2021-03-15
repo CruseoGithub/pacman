@@ -29,9 +29,9 @@ public class PauseScreen extends MapScreen {
 
     @Override
     public void render(float delta) {
-        update(delta);
-        super.render(delta);
 
+        super.render(delta);
+        update(delta);
         hud.stage.draw();
         hud.update();
 
@@ -48,7 +48,7 @@ public class PauseScreen extends MapScreen {
             if(pacman.getXPosition() <= 2*TILE_SIZE) {
                 game.setScreen(screen);
                 this.dispose();
-                music.dispose();
+
             }
         }
         //TO MENU

@@ -105,6 +105,7 @@ public abstract class MapScreen implements Screen {
         this.controller = new ControllerSwipe(this);
     }
 
+
     @Override
     public void show() {  }
 
@@ -189,23 +190,23 @@ public abstract class MapScreen implements Screen {
         map.renderer.setView(gameCam);
         map.renderer.render();
 
-        game.batch.begin();
+        PacManGame.batch.begin();
 
-        game.batch.draw(pacman.texture, pacman.getXPosition(), pacman.getYPosition(), pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
+        PacManGame.batch.draw(pacman.texture, pacman.getXPosition(), pacman.getYPosition(), pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
                 TILE_SIZE, TILE_SIZE, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
                 pacman.getTexturePositionX(), 0, 32, 32, false, false
         );
 
         for (Enemy ghost : ghosts) {
-            game.batch.draw(ghost.texture, ghost.getXPosition(), ghost.getYPosition(), ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
+            PacManGame.batch.draw(ghost.texture, ghost.getXPosition(), ghost.getYPosition(), ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
                     TILE_SIZE, TILE_SIZE, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
                     ghost.getTexturePositionX(), ghost.getTexturePositionY(), 32, 32, false, false
             );
         }
 
-        game.batch.end();
+        PacManGame.batch.end();
 
-        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        PacManGame.batch.setProjectionMatrix(hud.stage.getCamera().combined);
     }
 
     public ArrayList<Enemy> getGhosts() { return ghosts; }

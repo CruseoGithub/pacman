@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
 
 /**

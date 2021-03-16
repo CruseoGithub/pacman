@@ -1,6 +1,6 @@
 package uas.lntv.pacmangame.Sprites;
 
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Sprites.Actor.State;

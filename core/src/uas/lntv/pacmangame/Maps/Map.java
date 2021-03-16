@@ -7,8 +7,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-import uas.lntv.pacmangame.Assets;
-import uas.lntv.pacmangame.Scenes.PrefManager;
+import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Sprites.Actor;
 
 /**

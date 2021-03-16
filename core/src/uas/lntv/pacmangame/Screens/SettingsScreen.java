@@ -2,16 +2,19 @@ package uas.lntv.pacmangame.Screens;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
+import uas.lntv.pacmangame.Scenes.ControllerButtons;
+import uas.lntv.pacmangame.Scenes.ControllerJoystick;
 import uas.lntv.pacmangame.Scenes.Hud;
-import uas.lntv.pacmangame.Scenes.PrefManager;
+import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class SettingsScreen extends MapScreen {
 
     private final BitmapFont FONT;
+    private boolean controllerSet = false;
 
     public SettingsScreen(PacManGame game, Assets assets, String path){
         super(game, assets, path, Type.SETTINGS);
@@ -37,6 +40,7 @@ public class SettingsScreen extends MapScreen {
             )
             && !(pacman.getYPosition() == 41 * TILE_SIZE && pacman.getXPosition() == 11 * TILE_SIZE)
             && !(pacman.getYPosition() == 45 * TILE_SIZE && pacman.getXPosition() == 19 * TILE_SIZE)
+            && !(pacman.getYPosition() == 33 * TILE_SIZE && pacman.getXPosition() == 23 * TILE_SIZE)
             || moving
         ){
             pacman.update(dt);
@@ -53,7 +57,23 @@ public class SettingsScreen extends MapScreen {
                 game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
                 this.dispose();
             }
+            if(pacman.getYPosition() == 37 * TILE_SIZE && !controllerSet){
+                PrefManager.setJoystick(true);
+                PrefManager.savePrefs();
+                controller.dispose();
+                controller = new ControllerJoystick(assets,this);
+                controllerSet = true;
+            }
+            if(pacman.getYPosition() == 29 * TILE_SIZE && !controllerSet){
+                PrefManager.setJoystick(false);
+                PrefManager.savePrefs();
+                controller.dispose();
+                controller = new ControllerButtons(assets, this);
+                controllerSet = true;
+            }
         }
+
+        if(pacman.getYPosition() == 33 * TILE_SIZE) controllerSet = false;
 
         if(pacman.getYPosition() == 41 * TILE_SIZE){
             if(pacman.getXPosition() == 19 * TILE_SIZE){
@@ -96,86 +116,86 @@ public class SettingsScreen extends MapScreen {
         update(delta);
         super.render(delta);
 
-        game.batch.begin();
+        PacManGame.batch.begin();
         FONT.draw(
-                game.batch,
+                PacManGame.batch,
                 "MUSIC",
                 20 * TILE_SIZE,
                 46 * TILE_SIZE
         );
         FONT.draw(
-                game.batch,
+                PacManGame.batch,
                 "ON",
                 18 * TILE_SIZE,
                 42 * TILE_SIZE
         );
         FONT.draw(
-                game.batch,
+                PacManGame.batch,
                 "OFF",
                 22 * TILE_SIZE,
                 42 * TILE_SIZE
         );
         FONT.draw(
-                game.batch,
+                PacManGame.batch,
                 "SOUND",
                 12 * TILE_SIZE,
                 42 * TILE_SIZE
         );
         FONT.draw(
-                game.batch,
+                PacManGame.batch,
                 "ON",
                 10 * TILE_SIZE,
                 38 * TILE_SIZE
         );
         FONT.draw(
-                game.batch,
+                PacManGame.batch,
                 "OFF",
                 14 * TILE_SIZE,
                 38 * TILE_SIZE
         );
         FONT.draw(
-                game.batch,
-                "SWIPE",
+                PacManGame.batch,
+                "JOYSTICK",
                 19 * TILE_SIZE,
                 38 * TILE_SIZE
         );
         FONT.draw(
-                game.batch,
+                PacManGame.batch,
                 "CONTROL",
                 19 * TILE_SIZE,
                 34 * TILE_SIZE
         );
         FONT.draw(
-                game.batch,
+                PacManGame.batch,
                 "BUTTONS",
                 19 * TILE_SIZE,
                 30 * TILE_SIZE
         );
         FONT.draw(
-                game.batch,
+                PacManGame.batch,
                 "USER",
                 13 * TILE_SIZE,
                 30 * TILE_SIZE
         );
         FONT.draw(
-                game.batch,
+                PacManGame.batch,
                 "SCORES",
                 19 * TILE_SIZE,
                 26 * TILE_SIZE
         );
         FONT.draw(
-                game.batch,
+                PacManGame.batch,
                 "CREDITS",
                 19 * TILE_SIZE,
                 22 * TILE_SIZE
         );
         FONT.draw(
-                game.batch,
+                PacManGame.batch,
                 "RESUME",
                 19 * TILE_SIZE,
                 18 * TILE_SIZE
         );
-        game.batch.end();
+        PacManGame.batch.end();
     }
 
 }

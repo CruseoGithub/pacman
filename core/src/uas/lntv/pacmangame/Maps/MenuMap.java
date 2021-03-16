@@ -1,6 +1,6 @@
 package uas.lntv.pacmangame.Maps;
 
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 
 /**
  * This class provides a simple map for the purpose of creating menus.

@@ -4,11 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector3;
 
-
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Joystick;
-import uas.lntv.pacmangame.Scenes.ControllerJoystick;
 
 public class ControllerJoystick extends Controller {
     Vector3 touchDownPos;

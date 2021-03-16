@@ -1,8 +1,7 @@
 package uas.lntv.pacmangame.Scenes;
 
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
+
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -12,7 +11,7 @@ import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 
 public abstract class Controller {
     protected MapScreen screen;
@@ -51,6 +50,7 @@ public abstract class Controller {
             }
         }
     }
+
     public void setPause(float x, float y){
         if (PauseReady) {
             PauseReady = false;

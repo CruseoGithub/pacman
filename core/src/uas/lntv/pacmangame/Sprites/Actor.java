@@ -21,13 +21,11 @@ public abstract class Actor {
     }
 
     public enum State {
-        RUNNING, DIEING, KILLED
+        RUNNING, DIEING, HOMING, BOXED
     }
 
     protected int xPosition;
     protected int yPosition;
-    protected final int START_POS_X;
-    protected final int START_POS_Y;
 
     protected final int TILE_SIZE;
     public float rotation;
@@ -58,13 +56,6 @@ public abstract class Actor {
         this.speed = speed;
     }
 
-    public int getStartPosX() {
-        return START_POS_X;
-    }
-
-    public int getStartPosY() {
-        return START_POS_Y;
-    }
 
     public int getXPosition() {
         return xPosition;
@@ -102,9 +93,7 @@ public abstract class Actor {
 
     public Actor(int initX, int initY, MapScreen screen) {
         this.state = State.RUNNING;
-        this.START_POS_X = initX;
         this.xPosition = initX;
-        this.START_POS_Y = initY;
         this.yPosition = initY;
         this.rotation = 0;
         this.speed = 2; // Values can be {0 == Stop , 1, 2 == default, 4, 8, 16}
@@ -154,7 +143,7 @@ public abstract class Actor {
                             this.rotation = 0;
                         int temp = xPosition;
                         xPosition += speed;
-                        if (temp / TILE_SIZE != xPosition / TILE_SIZE && this.state != State.KILLED) {
+                        if (temp / TILE_SIZE != xPosition / TILE_SIZE && this.state != State.HOMING) {
                             screen.map.getTile(temp, yPosition).leave(this);
                             screen.map.getTile(xPosition, yPosition).enter(this);
                         }
@@ -165,7 +154,7 @@ public abstract class Actor {
                         if (xPosition > screen.map.getTile(xPosition, yPosition).getX()) {
                             int temp = xPosition;
                             xPosition -= speed;
-                            if (temp / TILE_SIZE != xPosition / TILE_SIZE && this.state != State.KILLED) {
+                            if (temp / TILE_SIZE != xPosition / TILE_SIZE && this.state != State.HOMING) {
                                 screen.map.getTile(temp, yPosition).leave(this);
                                 screen.map.getTile(xPosition, yPosition).enter(this);
                             }
@@ -175,7 +164,7 @@ public abstract class Actor {
                             this.rotation = 180;
                         int temp = xPosition;
                         xPosition -= speed;
-                        if (temp / TILE_SIZE != xPosition / TILE_SIZE && this.state != State.KILLED) {
+                        if (temp / TILE_SIZE != xPosition / TILE_SIZE && this.state != State.HOMING) {
                             screen.map.getTile(temp, yPosition).leave(this);
                             screen.map.getTile(xPosition, yPosition).enter(this);
                         }
@@ -187,7 +176,7 @@ public abstract class Actor {
                             this.rotation = 90;
                         int temp = yPosition;
                         yPosition += speed;
-                        if (temp / TILE_SIZE != yPosition / TILE_SIZE && this.state != State.KILLED) {
+                        if (temp / TILE_SIZE != yPosition / TILE_SIZE && this.state != State.HOMING) {
                             screen.map.getTile(xPosition, temp).leave(this);
                             screen.map.getTile(xPosition, yPosition).enter(this);
                         }
@@ -198,7 +187,7 @@ public abstract class Actor {
                         if (yPosition > screen.map.getTile(xPosition, yPosition).getY()) {
                             int temp = yPosition;
                             yPosition -= speed;
-                            if (temp / TILE_SIZE != yPosition / TILE_SIZE && this.state != State.KILLED) {
+                            if (temp / TILE_SIZE != yPosition / TILE_SIZE && this.state != State.HOMING) {
                                 screen.map.getTile(xPosition, temp).leave(this);
                                 screen.map.getTile(xPosition, yPosition).enter(this);
                             }
@@ -208,7 +197,7 @@ public abstract class Actor {
                             this.rotation = 270;
                         int temp = yPosition;
                         yPosition -= speed;
-                        if (temp / TILE_SIZE != yPosition / TILE_SIZE && this.state != State.KILLED) {
+                        if (temp / TILE_SIZE != yPosition / TILE_SIZE && this.state != State.HOMING) {
                             screen.map.getTile(xPosition, temp).leave(this);
                             screen.map.getTile(xPosition, yPosition).enter(this);
                         }
@@ -243,7 +232,12 @@ public abstract class Actor {
         }
     }
 
-    public void collide() { this.state = State.DIEING; }
+    public void collide() {
+        this.state = State.DIEING;
+        for(Enemy ghost : screen.getGhosts()){
+            if (ghost.getState() != State.BOXED) ghost.setState(State.HOMING);
+        }
+    }
 
     public void update(float dt){ animation.update(dt); }
 

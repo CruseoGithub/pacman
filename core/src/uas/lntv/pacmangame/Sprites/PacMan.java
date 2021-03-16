@@ -3,10 +3,10 @@ package uas.lntv.pacmangame.Sprites;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Hud;
-import uas.lntv.pacmangame.Scenes.PrefManager;
+import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Screens.MenuScreen;
 import uas.lntv.pacmangame.Screens.ScoreScreen;

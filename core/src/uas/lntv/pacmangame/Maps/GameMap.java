@@ -3,9 +3,9 @@ package uas.lntv.pacmangame.Maps;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
-import uas.lntv.pacmangame.Scenes.PrefManager;
+import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Enemy;
 

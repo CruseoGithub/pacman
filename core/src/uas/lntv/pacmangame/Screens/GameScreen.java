@@ -6,6 +6,7 @@ import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.ControllerSwipe;
 import uas.lntv.pacmangame.Scenes.Hud;
+import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 import uas.lntv.pacmangame.Sprites.SuperPacMan;
@@ -88,13 +89,13 @@ public class GameScreen extends MapScreen {
         }
         if(paused) {
             controller = new ControllerSwipe(this);
-            music.play();
+            if(PrefManager.isMusicOn()== true) music.play();
             paused = false;
             PauseActive = false;
         }
         if(PauseActive){
             music.pause();
-            game.setScreen(new PauseScreen(game, assets,"maps/Pausecopy.tmx", this, hud));
+            game.setScreen(new PauseScreen(game, assets,"maps/PauseMap.tmx", this, hud));
             paused = true;
         }
 

@@ -2,17 +2,19 @@ package uas.lntv.pacmangame.Screens;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
+import uas.lntv.pacmangame.Scenes.ControllerButtons;
+import uas.lntv.pacmangame.Scenes.ControllerJoystick;
 import uas.lntv.pacmangame.Scenes.Hud;
-import uas.lntv.pacmangame.Scenes.PrefManager;
-import uas.lntv.pacmangame.Sprites.Actor;
+import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class SettingsScreen extends MapScreen {
 
     private final BitmapFont FONT;
+    private boolean controllerSet = false;
 
     public SettingsScreen(PacManGame game, Assets assets, String path){
         super(game, assets, path, Type.SETTINGS);
@@ -38,6 +40,7 @@ public class SettingsScreen extends MapScreen {
             )
             && !(pacman.getYPosition() == 41 * TILE_SIZE && pacman.getXPosition() == 11 * TILE_SIZE)
             && !(pacman.getYPosition() == 45 * TILE_SIZE && pacman.getXPosition() == 19 * TILE_SIZE)
+            && !(pacman.getYPosition() == 33 * TILE_SIZE && pacman.getXPosition() == 23 * TILE_SIZE)
             || moving
         ){
             pacman.update(dt);
@@ -54,7 +57,23 @@ public class SettingsScreen extends MapScreen {
                 game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
                 this.dispose();
             }
+            if(pacman.getYPosition() == 37 * TILE_SIZE && !controllerSet){
+                PrefManager.setJoystick(true);
+                PrefManager.savePrefs();
+                controller.dispose();
+                controller = new ControllerJoystick(assets,this);
+                controllerSet = true;
+            }
+            if(pacman.getYPosition() == 29 * TILE_SIZE && !controllerSet){
+                PrefManager.setJoystick(false);
+                PrefManager.savePrefs();
+                controller.dispose();
+                controller = new ControllerButtons(assets, this);
+                controllerSet = true;
+            }
         }
+
+        if(pacman.getYPosition() == 33 * TILE_SIZE) controllerSet = false;
 
         if(pacman.getYPosition() == 41 * TILE_SIZE){
             if(pacman.getXPosition() == 19 * TILE_SIZE){
@@ -136,7 +155,7 @@ public class SettingsScreen extends MapScreen {
         );
         FONT.draw(
                 PacManGame.batch,
-                "SWIPE",
+                "JOYSTICK",
                 19 * TILE_SIZE,
                 38 * TILE_SIZE
         );

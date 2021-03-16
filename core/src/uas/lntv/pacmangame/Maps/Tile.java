@@ -8,7 +8,7 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class Tile extends StaticTiledMapTile {
-    public enum Type { EMPTY,PATH, PATHDOT, WALL, DOT}
+    public enum Type { EMPTY,PATH, WALL, DOT}
     public Tile.Type type;
 
     private int x,y;
@@ -136,7 +136,7 @@ public class Tile extends StaticTiledMapTile {
         this.cost = 1000000;
         this.heuristics = 0;
         this.total = 1000000;
-        if(type == Tile.Type.PATH && isDot == true){
+        if(type == Tile.Type.PATH && isDot){
             this.isDot = isDot;
         }
     }
@@ -163,7 +163,7 @@ public class Tile extends StaticTiledMapTile {
         this.cost = 1000000;
         this.heuristics = 0;
         this.total = 1000000;
-        if(type == Type.PATH && isDot == true){
+        if(type == Type.PATH && isDot){
             this.isDot = isDot;
         }
     }

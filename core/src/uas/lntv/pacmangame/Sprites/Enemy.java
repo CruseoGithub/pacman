@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import uas.lntv.pacmangame.AI.Pathfinder;
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Screens.MapScreen;
 

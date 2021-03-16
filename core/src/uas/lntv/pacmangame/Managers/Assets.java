@@ -1,4 +1,4 @@
-package uas.lntv.pacmangame;
+package uas.lntv.pacmangame.Managers;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
@@ -50,6 +50,8 @@ public class Assets {
     public final AssetDescriptor<Texture> BLUE_DEAD = new AssetDescriptor<>("textures/blue.png", Texture.class);
     public final AssetDescriptor<Texture> TILES = new AssetDescriptor<>("maps/tiles.png", Texture.class);
     public final AssetDescriptor<Texture> COIN_GOLD = new AssetDescriptor<>("textures/CoinGold.png", Texture.class);
+    public final AssetDescriptor<Texture> JOYSTICK_ZONE = new AssetDescriptor<>("textures/JoystickZone.png", Texture.class);
+    public final AssetDescriptor<Texture> JOYSTICK_KNOB = new AssetDescriptor<>("textures/JoystickKnob.png", Texture.class);
 
 
     public final String MAP_1 = "maps/map.tmx";
@@ -61,7 +63,7 @@ public class Assets {
     public final String SETTINGS_MAP = "maps/settings.tmx";
     public final String SCORE_MAP = "maps/HighScoreList.tmx";
     public final String CONTROL = "maps/controller.tmx";
-    public final String PAUSE = "maps/Pausecopy.tmx";
+    public final String PAUSE = "maps/PauseMap.tmx";
 
     /**
      * Small method, that puts everything in the loading queue, that is needed for the splash- and
@@ -104,6 +106,8 @@ public class Assets {
         manager.load(BLUE_DEAD);
         manager.load(TILES);
         manager.load(COIN_GOLD);
+        manager.load(JOYSTICK_ZONE);
+        manager.load(JOYSTICK_KNOB);
 
         manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
         manager.load(CONTROL, TiledMap.class);

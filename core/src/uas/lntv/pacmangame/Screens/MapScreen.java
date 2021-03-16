@@ -14,17 +14,19 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.Random;
 
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Maps.GameMap;
 import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.MenuMap;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Controller;
-import uas.lntv.pacmangame.Scenes.ControllerSwipe;
+import uas.lntv.pacmangame.Scenes.ControllerButtons;
+import uas.lntv.pacmangame.Scenes.ControllerJoystick;
 import uas.lntv.pacmangame.Scenes.Hud;
-import uas.lntv.pacmangame.Scenes.PrefManager;
+import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
+import uas.lntv.pacmangame.Sprites.Joystick;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public abstract class MapScreen implements Screen {
@@ -44,7 +46,9 @@ public abstract class MapScreen implements Screen {
     public PacMan pacman;
     protected ArrayList<Enemy> ghosts = new ArrayList<>();
 
+
     protected  Controller controller;
+    protected Joystick joystick;
 
 
     private final int MAP_WIDTH;
@@ -102,7 +106,10 @@ public abstract class MapScreen implements Screen {
         this.gamePort = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, gameCam);
         this.gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-        this.controller = new ControllerSwipe(this);
+        
+        if(PrefManager.isJoystick()) this.controller = new ControllerJoystick(assets, this);
+        else this.controller = new ControllerButtons(assets,this);
+
     }
 
 
@@ -207,6 +214,17 @@ public abstract class MapScreen implements Screen {
                     TILE_SIZE, TILE_SIZE, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
                     ghost.getTexturePositionX(), ghost.getTexturePositionY(), 32, 32, false, false
             );
+        }
+
+        if(controller instanceof ControllerJoystick){
+            if(controller.isTouchEvent()){
+                joystick = ((ControllerJoystick) controller).joystick;
+                PacManGame.batch.draw(joystick.texture, joystick.getXPosition(), joystick.getYPosition(), 96, 96,
+                        192, 192, 1, 1, joystick.rotation,
+                        joystick.getTexturePositionX(), joystick.getTexturePositionY(), 192, 192, false, false
+                );
+                PacManGame.batch.draw(joystick.textureKnob, joystick.getXPositionKnob(), joystick.getYPositionKnob());
+            }
         }
 
         PacManGame.batch.end();

@@ -1,4 +1,4 @@
-package uas.lntv.pacmangame.Scenes;
+package uas.lntv.pacmangame.Managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -20,6 +20,7 @@ public class PrefManager {
     private static boolean nameSet;
     private static boolean musicOn;
     private static boolean sfxOn;
+    private static boolean joystick;
 
     /**
      * This constructor simply loads the saved high-scores and settings from the preferences.
@@ -81,6 +82,10 @@ public class PrefManager {
     public static boolean isSfxOn() { return sfxOn; }
 
     public static void setSfxOn(boolean sfxOn) { PrefManager.sfxOn = sfxOn; }
+
+    public static boolean isJoystick() { return joystick; }
+
+    public static void setJoystick(boolean joystick) { PrefManager.joystick = joystick; }
 
     /**
      * Gives the player two chances to insert a name, if he doesn't he will be treated as
@@ -173,6 +178,7 @@ public class PrefManager {
         nameSet = prefs.getBoolean("NameSet");
         musicOn = prefs.getBoolean("Music");
         sfxOn = prefs.getBoolean("SFX");
+        joystick = prefs.getBoolean("Controller");
     }
 
     /**
@@ -223,6 +229,7 @@ public class PrefManager {
         prefs.putBoolean("NameSet", nameSet);
         prefs.putBoolean("Music", musicOn);
         prefs.putBoolean("SFX", sfxOn);
+        prefs.putBoolean("Controller", joystick);
 
 /* This resets the list
         prefs.putInteger("high_score_1", 0);

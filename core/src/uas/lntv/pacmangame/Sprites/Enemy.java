@@ -22,6 +22,25 @@ public class Enemy extends Actor {
     private Difficulty difficulty;
     private Difficulty levelDiff;
 
+    private float boxTimer;
+    private final int HOME_X;
+    private final int HOME_Y;
+
+    private boolean home = false;
+
+
+    public int getHomeX() {
+        return HOME_X;
+    }
+
+    public int getHomeY() {
+        return HOME_Y;
+    }
+
+    public boolean isHome(){ return home; }
+
+    public void notHome(){ home = false; }
+
     /**
      * Create a new ghost
      * @param initX starting x-coordinate
@@ -31,6 +50,10 @@ public class Enemy extends Actor {
      */
     public Enemy(int initX, int initY, Assets assets, MapScreen screen, Texture ghost){
         super(initX, initY, screen);
+
+        HOME_X = 13 * TILE_SIZE;
+        HOME_Y = 33 * TILE_SIZE;
+
 
         this.difficulty = Difficulty.EASY;
         this.direction = Direction.DOWN;
@@ -47,6 +70,8 @@ public class Enemy extends Actor {
 
         animation = new Animation(this, assets, animationSpeed, this.screen,4);
 
+        this.boxTimer = 0;
+
         region.flip(true, false);
         this.sprite = new Sprite(region);
         this.sprite.setOrigin(TILE_SIZE /2f, TILE_SIZE /2f);
@@ -62,6 +87,50 @@ public class Enemy extends Actor {
     public void resetDifficulty(){
         setDifficulty(levelDiff);
     }
+
+    public void setBoxTimer(float timer){ this.boxTimer = timer; }
+
+    public float getBoxTimer(){ return this.boxTimer; }
+
+    public void leaveBox(){
+        screen.map.getTile(xPosition, yPosition).leave(this);
+        if(xPosition < 13 * TILE_SIZE) xPosition += 8;
+        else if(xPosition > 13 * TILE_SIZE) xPosition -= 8;
+        else if(yPosition < 33 * TILE_SIZE) yPosition += 8;
+        else setState(State.RUNNING);
+    }
+
+    public void enterBox() {
+        if (yPosition > 30 * TILE_SIZE) yPosition -= 8;
+        else if (!(screen.map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
+            if(xPosition > 12 * TILE_SIZE) xPosition -= 8;
+            if(xPosition == 12 * TILE_SIZE){
+                screen.map.getTile(xPosition, yPosition).enter(this);
+                setState(State.BOXED);
+                home = false;
+                boxTimer = 5;
+            }
+        }
+        else if(!(screen.map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
+            if(xPosition< 15 * TILE_SIZE)xPosition += 8;
+            if(xPosition == 15 * TILE_SIZE){
+                screen.map.getTile(xPosition, yPosition).enter(this);
+                setState(State.BOXED);
+                home = false;
+                boxTimer = 7.5f;
+            }
+        }
+        else if (!(screen.map.getTile(14 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
+            if(xPosition< 14 * TILE_SIZE)xPosition += 8;
+            if(xPosition == 14 * TILE_SIZE) {
+                screen.map.getTile(xPosition, yPosition).enter(this);
+                setState(State.BOXED);
+                home = false;
+                boxTimer = 10;
+            }
+        }
+    }
+
 
     /**
      * Simply detects if PacMan is above or beneath the ghost.
@@ -146,7 +215,8 @@ public class Enemy extends Actor {
      */
     private Direction runAway(Actor hunter){
         if(collisionTest(hunter)){
-            this.state = State.KILLED;
+            this.state = State.HOMING;
+            home = false;
             screen.map.getTile(xPosition, yPosition).leave(this);
             return Direction.RIGHT;
         }
@@ -171,7 +241,7 @@ public class Enemy extends Actor {
      * @return One of the four directions
      */
     private Direction findHome(){
-        aStar = new Pathfinder(screen, this, START_POS_X, START_POS_Y, true);
+        aStar = new Pathfinder(screen, this, HOME_X, HOME_Y, true);
         Tile temp = aStar.aStarResult();
         if(temp.getY() > this.getYPosition()) return Direction.UP;
         if(temp.getY() < this.getYPosition()) return Direction.DOWN;
@@ -185,9 +255,17 @@ public class Enemy extends Actor {
     public void getHome(){
         correctPosition(direction);
         setSpeed(getSpeed() * 2);
+        correctPosition(direction);
+        setSpeed(getSpeed() * 2);
         nextDirection = findHome();
         move();
         setSpeed(getSpeed() / 2);
+        setSpeed(getSpeed() / 2);
+        if(screen.map.getTile(xPosition, yPosition) == screen.map.getTile(HOME_X, HOME_Y)){
+            xPosition = HOME_X;
+            yPosition = HOME_Y;
+            home = true;
+        }
     }
 
     /**

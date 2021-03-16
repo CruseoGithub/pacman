@@ -48,6 +48,7 @@ public abstract class Controller {
             }
         }
     }
+
     public void setPause(float x, float y){
         if (PauseReady) {
             PauseReady = false;

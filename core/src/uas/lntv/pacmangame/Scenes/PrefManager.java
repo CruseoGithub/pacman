@@ -7,7 +7,7 @@ import com.badlogic.gdx.Preferences;
 import java.util.ArrayList;
 
 /**
- * This class manages the high-score list.
+ * This class manages all the saved preferences, like high-scores and settings.
  */
 public class PrefManager {
 
@@ -22,8 +22,7 @@ public class PrefManager {
     private static boolean sfxOn;
 
     /**
-     * This constructor simply loads the saved high-scores from the preferences.
-     * It also checks, if the player's name has already been set before.
+     * This constructor simply loads the saved high-scores and settings from the preferences.
      */
     public PrefManager(){
         prefs = Gdx.app.getPreferences("PacManPreferences");
@@ -127,7 +126,7 @@ public class PrefManager {
     private static void anonymous(){ name = "Anonymous Bastard"; }
 
     /**
-     * Loads the scores from the preferences into the array list.
+     * Loads the scores and settings from the preferences folder into the game.
      */
     public static void loadPrefs(){
         highScores.add(prefs.getInteger("high_score_1"));
@@ -177,7 +176,7 @@ public class PrefManager {
     }
 
     /**
-     * Safes the updated scores into the preferences.
+     * Safes the updated scores and settings into the preferences folder.
      */
     public static void savePrefs(){
         prefs.putInteger("high_score_1", highScores.get(0));

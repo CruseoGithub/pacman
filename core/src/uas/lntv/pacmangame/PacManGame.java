@@ -22,7 +22,7 @@ public class PacManGame extends Game {
 		prefManager = new PrefManager();
 		assets = new Assets();
 		assets.loadSetup();
-		level = 10;
+		level = 0;
 		score = 0;
 		lives = 3;
 		setScreen(new LoadingScreen(this, assets));

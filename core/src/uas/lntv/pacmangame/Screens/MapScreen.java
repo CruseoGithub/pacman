@@ -47,7 +47,7 @@ public abstract class MapScreen implements Screen {
 
 
     protected  Controller controller;
-    private final Joystick JOYSTICK;
+    protected Joystick joystick;
 
 
     private final int MAP_WIDTH;
@@ -105,9 +105,8 @@ public abstract class MapScreen implements Screen {
         this.gamePort = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, gameCam);
         this.gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-
-        this.JOYSTICK = new Joystick(assets, this);
-        this.controller = new ControllerJoystick(JOYSTICK, assets, this);
+        
+        this.controller = new ControllerJoystick(assets, this);
 
     }
 
@@ -212,11 +211,12 @@ public abstract class MapScreen implements Screen {
 
         if(controller instanceof ControllerJoystick){
             if(controller.isTouchEvent()){
-                PacManGame.batch.draw(JOYSTICK.texture, JOYSTICK.getXPosition(), JOYSTICK.getYPosition(), 96, 96,
-                        192, 192, 1, 1, JOYSTICK.rotation,
-                        JOYSTICK.getTexturePositionX(), JOYSTICK.getTexturePositionY(), 192, 192, false, false
+                joystick = ((ControllerJoystick) controller).joystick;
+                PacManGame.batch.draw(joystick.texture, joystick.getXPosition(), joystick.getYPosition(), 96, 96,
+                        192, 192, 1, 1, joystick.rotation,
+                        joystick.getTexturePositionX(), joystick.getTexturePositionY(), 192, 192, false, false
                 );
-                PacManGame.batch.draw(JOYSTICK.textureKnob, JOYSTICK.getXPositionKnob(), JOYSTICK.getYPositionKnob());
+                PacManGame.batch.draw(joystick.textureKnob, joystick.getXPositionKnob(), joystick.getYPositionKnob());
             }
         }
 

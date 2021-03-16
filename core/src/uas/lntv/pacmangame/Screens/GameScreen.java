@@ -89,7 +89,7 @@ public class GameScreen extends MapScreen {
 
         }
         if(paused) {
-            controller = new ControllerJoystick(new Joystick(assets, this), assets, this);
+            controller = new ControllerJoystick(assets, this);
             if(PrefManager.isMusicOn()== true) music.play();
             paused = false;
             PauseActive = false;

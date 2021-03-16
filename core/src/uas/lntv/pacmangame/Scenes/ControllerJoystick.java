@@ -13,13 +13,13 @@ import uas.lntv.pacmangame.Scenes.ControllerJoystick;
 public class ControllerJoystick extends Controller {
     Vector3 touchDownPos;
     Vector3 touchCurrentPos;
-    Joystick joystick;
+    public Joystick joystick;
 
 
-    public ControllerJoystick(final Joystick joystick, Assets assets, MapScreen screen){
+    public ControllerJoystick(Assets assets, MapScreen screen){
         super(assets, screen);
         touchEvent = false;
-        this.joystick = joystick;
+        this.joystick = new Joystick(assets, screen);
         final int joystickZoneRadius = 192 / 2; // 192px x 192px
         final int joystickKnobRadius = 64 / 2; // 64px x 64px
 

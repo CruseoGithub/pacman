@@ -4,30 +4,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector3;
 
-<<<<<<< HEAD:core/src/uas/lntv/pacmangame/Scenes/ControllerSwipe.java
-import uas.lntv.pacmangame.Screens.GameScreen;
-import uas.lntv.pacmangame.Screens.MapScreen;
-import uas.lntv.pacmangame.Screens.PauseScreen;
-=======
+
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Joystick;
->>>>>>> development_2:core/src/uas/lntv/pacmangame/Scenes/ControllerJoystick.java
+import uas.lntv.pacmangame.Scenes.ControllerJoystick;
 
 public class ControllerJoystick extends Controller {
     Vector3 touchDownPos;
     Vector3 touchCurrentPos;
     Joystick joystick;
 
-<<<<<<< HEAD:core/src/uas/lntv/pacmangame/Scenes/ControllerSwipe.java
-    public ControllerSwipe(final MapScreen screen){
-        super(screen);
-=======
-
 
     public ControllerJoystick(final Joystick joystick, Assets assets, MapScreen screen){
         super(assets, screen);
->>>>>>> development_2:core/src/uas/lntv/pacmangame/Scenes/ControllerJoystick.java
         touchEvent = false;
         this.joystick = joystick;
         final int joystickZoneRadius = 192 / 2; // 192px x 192px
@@ -40,17 +30,15 @@ public class ControllerJoystick extends Controller {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 Vector3 touch = new Vector3(screenX, screenY, 0);
                 gameCam.unproject(touch);
-<<<<<<< HEAD:core/src/uas/lntv/pacmangame/Scenes/ControllerSwipe.java
-                //System.out.println("Screen coordinates Swiper: "+ "X: " + touch.x + " Y: " + touch.y);
 
                 ready(touch.x, touch.y);
-=======
+
                 ControllerJoystick.this.joystick.setXPosition((int)(touch.x-joystickZoneRadius));
                 ControllerJoystick.this.joystick.setYPosition((int)(touch.y-joystickZoneRadius));
                 ControllerJoystick.this.joystick.setXPositionKnob((int)(touch.x-joystickKnobRadius));
                 ControllerJoystick.this.joystick.setYPositionKnob((int)(touch.y-joystickKnobRadius));
 
->>>>>>> development_2:core/src/uas/lntv/pacmangame/Scenes/ControllerJoystick.java
+
                 touchEvent = true;
                 touchDownPos = new Vector3(touch.x, touch.y, 0);
 

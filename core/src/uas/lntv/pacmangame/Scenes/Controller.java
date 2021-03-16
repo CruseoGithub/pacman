@@ -12,13 +12,7 @@ import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
-<<<<<<< HEAD
-import uas.lntv.pacmangame.Scenes.Hud;
-import uas.lntv.pacmangame.Screens.PauseScreen;
-import uas.lntv.pacmangame.Screens.ScoreScreen;
-=======
 import uas.lntv.pacmangame.Assets;
->>>>>>> development_2
 
 public abstract class Controller {
     protected MapScreen screen;
@@ -29,16 +23,11 @@ public abstract class Controller {
     protected final int TILE_SIZE;
     protected Assets assets;
 
-<<<<<<< HEAD
 
-
-    protected boolean upPressed, downPressed, leftPressed, rightPressed;
+    protected boolean upPressed, downPressed, leftPressed, rightPressed, touchEvent;
     boolean touchpause = true;
     private boolean PauseReady = false;
 
-=======
-    protected boolean upPressed, downPressed, leftPressed, rightPressed, touchEvent;
->>>>>>> development_2
 
     public Controller(Assets assets, MapScreen screen){
         this.assets = assets;

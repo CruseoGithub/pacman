@@ -4,10 +4,11 @@ import com.badlogic.gdx.Gdx;
 
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
-import uas.lntv.pacmangame.Scenes.ControllerSwipe;
+import uas.lntv.pacmangame.Scenes.ControllerJoystick;
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Sprites.Enemy;
+import uas.lntv.pacmangame.Sprites.Joystick;
 import uas.lntv.pacmangame.Sprites.PacMan;
 import uas.lntv.pacmangame.Sprites.SuperPacMan;
 
@@ -88,7 +89,7 @@ public class GameScreen extends MapScreen {
 
         }
         if(paused) {
-            controller = new ControllerSwipe(this);
+            controller = new ControllerJoystick(new Joystick(assets, this), assets, this);
             if(PrefManager.isMusicOn()== true) music.play();
             paused = false;
             PauseActive = false;

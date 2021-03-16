@@ -4,15 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector3;
 
+
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Joystick;
+import uas.lntv.pacmangame.Scenes.ControllerJoystick;
 
 public class ControllerJoystick extends Controller {
     Vector3 touchDownPos;
     Vector3 touchCurrentPos;
     Joystick joystick;
-
 
 
     public ControllerJoystick(final Joystick joystick, Assets assets, MapScreen screen){
@@ -29,10 +30,14 @@ public class ControllerJoystick extends Controller {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 Vector3 touch = new Vector3(screenX, screenY, 0);
                 gameCam.unproject(touch);
+
+                ready(touch.x, touch.y);
+
                 ControllerJoystick.this.joystick.setXPosition((int)(touch.x-joystickZoneRadius));
                 ControllerJoystick.this.joystick.setYPosition((int)(touch.y-joystickZoneRadius));
                 ControllerJoystick.this.joystick.setXPositionKnob((int)(touch.x-joystickKnobRadius));
                 ControllerJoystick.this.joystick.setYPositionKnob((int)(touch.y-joystickKnobRadius));
+
 
                 touchEvent = true;
                 touchDownPos = new Vector3(touch.x, touch.y, 0);
@@ -67,6 +72,10 @@ public class ControllerJoystick extends Controller {
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 if(touchEvent) {
+                    //System.out.println("touch-up");
+                    Vector3 touch = new Vector3(screenX, screenY, 0);
+                    gameCam.unproject(touch);
+                    setPause(touch.x, touch.y);
                     touchEvent = false;
                     getDirection(screenX, screenY, true);
                 }
@@ -92,6 +101,7 @@ public class ControllerJoystick extends Controller {
             public void getDirection(int screenX, int screenY){
                 Vector3 touch = new Vector3(screenX, screenY, 0);
                 gameCam.unproject(touch);
+                //System.out.println("x:"+ touch.x+ "y:"+ touch.y);
 
                 double angle = Math.atan2((double) touch.x - touchDownPos.x, (double) touchDownPos.y - touch.y);
                 //System.out.println("Winkel: "+ angle);

@@ -45,12 +45,15 @@ public abstract class MapScreen implements Screen {
     public PacMan pacman;
     protected ArrayList<Enemy> ghosts = new ArrayList<>();
 
-    private final Controller CONTROLLER;
+
+    protected  Controller controller;
     private final Joystick JOYSTICK;
+
 
     private final int MAP_WIDTH;
     private final int MAP_HEIGHT;
     protected final int TILE_SIZE;
+
 
     protected boolean ready = false;
 
@@ -102,32 +105,35 @@ public abstract class MapScreen implements Screen {
         this.gamePort = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, gameCam);
         this.gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
+
         this.JOYSTICK = new Joystick(assets, this);
-        this.CONTROLLER = new ControllerJoystick(JOYSTICK, assets, this);
+        this.controller = new ControllerJoystick(JOYSTICK, assets, this);
+
     }
+
 
     @Override
     public void show() {  }
 
     public boolean handleInput() {
         boolean action = false;
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || CONTROLLER.isRightPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || controller.isRightPressed()) {
             pacman.setNextDirection(Actor.Direction.RIGHT);
             action = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || CONTROLLER.isLeftPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || controller.isLeftPressed()) {
             pacman.setNextDirection(Actor.Direction.LEFT);
             action = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) || CONTROLLER.isUpPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) || controller.isUpPressed()) {
             pacman.setNextDirection(Actor.Direction.UP);
             action = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || CONTROLLER.isDownPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || controller.isDownPressed()) {
             pacman.setNextDirection(Actor.Direction.DOWN);
             action = true;
         }
-        CONTROLLER.pulledInput();
+        controller.pulledInput();
         return action;
     }
 
@@ -204,8 +210,8 @@ public abstract class MapScreen implements Screen {
             );
         }
 
-        if(CONTROLLER instanceof ControllerJoystick){
-            if(CONTROLLER.isTouchEvent()){
+        if(controller instanceof ControllerJoystick){
+            if(controller.isTouchEvent()){
                 PacManGame.batch.draw(JOYSTICK.texture, JOYSTICK.getXPosition(), JOYSTICK.getYPosition(), 96, 96,
                         192, 192, 1, 1, JOYSTICK.rotation,
                         JOYSTICK.getTexturePositionX(), JOYSTICK.getTexturePositionY(), 192, 192, false, false
@@ -260,7 +266,7 @@ public abstract class MapScreen implements Screen {
 
     @Override
     public void dispose() {
-        CONTROLLER.dispose();
+        controller.dispose();
         music.dispose();
         huntingMusic.dispose();
     }

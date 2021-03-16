@@ -18,6 +18,7 @@ public class Enemy extends Actor {
     }
 
     private Pathfinder aStar;
+
     private Difficulty difficulty;
     private Difficulty levelDiff;
 

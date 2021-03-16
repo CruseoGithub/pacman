@@ -4,17 +4,28 @@ import com.badlogic.gdx.Gdx;
 
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
+import uas.lntv.pacmangame.Scenes.ControllerJoystick;
 import uas.lntv.pacmangame.Scenes.Hud;
+import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Sprites.Enemy;
+import uas.lntv.pacmangame.Sprites.Joystick;
 import uas.lntv.pacmangame.Sprites.PacMan;
 import uas.lntv.pacmangame.Sprites.SuperPacMan;
 
 
 public class GameScreen extends MapScreen {
 
+
+    public boolean PauseActive = false;
+    private boolean paused= false;
+    public void setPauseActive(boolean bool) {
+        PauseActive = bool;
+    }
+
     private boolean pacManSuper;
 
     public boolean isPacManSuper() { return pacManSuper; }
+
 
     public GameScreen(PacManGame game, Assets assets, String path) {
         super(game, assets, path, Type.GAME);
@@ -56,6 +67,7 @@ public class GameScreen extends MapScreen {
     @Override
     public void update(float dt) {
         super.update(dt);
+
         if(hud.time < 0){
             if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Time elapsed", PacManGame.getLevel() + 1)){
                 game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
@@ -74,13 +86,28 @@ public class GameScreen extends MapScreen {
             music.stop();
             game.setScreen(new GameScreen(game, assets, hud.getMap()));
             this.dispose();
+
         }
+        if(paused) {
+            controller = new ControllerJoystick(new Joystick(assets, this), assets, this);
+            if(PrefManager.isMusicOn()== true) music.play();
+            paused = false;
+            PauseActive = false;
+        }
+        if(PauseActive){
+            music.pause();
+            game.setScreen(new PauseScreen(game, assets,"maps/PauseMap.tmx", this, hud));
+            paused = true;
+        }
+
     }
 
     @Override
     public void render(float delta) {
         update(delta);
         super.render(delta);
+
+
         if(ready) hud.time -= Gdx.graphics.getDeltaTime();
         hud.update();
         hud.stage.draw();

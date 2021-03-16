@@ -60,29 +60,29 @@ public class ScoreScreen extends MapScreen {
         update(delta);
         super.render(delta);
 
-        PacManGame.batch.begin();
+        game.batch.begin();
         for(int i = 0; i < 10; i++) {
             int yPos = (44 * TILE_SIZE) - (3 * i) * TILE_SIZE;
             FONT.draw(
-                    PacManGame.batch,
+                    game.batch,
                     PrefManager.getNames().get(i),
                     3 * TILE_SIZE,
                     yPos
             );
             FONT.draw(
-                    PacManGame.batch,
+                    game.batch,
                     PrefManager.getHighScores().get(i).toString(),
                     11* TILE_SIZE,
                     yPos
             );
             FONT.draw(
-                    PacManGame.batch,
+                    game.batch,
                     PrefManager.getCauseOfDeath().get(i) + " at level " + PrefManager.getLevel().get(i).toString(),
                     15* TILE_SIZE,
                     yPos
             );
         }
-        PacManGame.batch.end();
+        game.batch.end();
     }
 
     @Override

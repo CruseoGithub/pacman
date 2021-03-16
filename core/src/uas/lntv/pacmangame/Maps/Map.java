@@ -27,7 +27,7 @@ public abstract class Map {
 
         private final TiledMap TMX_CONTROL;
         public TiledMapTileLayer layerControlButton;
-        //public TiledMapObjectL layerControlTouch;
+        public TiledMapTileLayer layerControlZone;
 
         protected final int MAP_WIDTH;
         protected final int MAP_HEIGHT;
@@ -62,9 +62,9 @@ public abstract class Map {
             layerPath = (TiledMapTileLayer)tmxMap.getLayers().get("Path");
             layerCollect = (TiledMapTileLayer)tmxMap.getLayers().get("Collectables");
             layerControlButton = (TiledMapTileLayer) TMX_CONTROL.getLayers().get("ControllerButtons");
-            //layerControlTouch = (TiledMapTileLayer)tmxControl.getLayers().get("ControllerTouch");
+            layerControlZone = (TiledMapTileLayer)TMX_CONTROL.getLayers().get("ControllerZone");
+            tmxMap.getLayers().add(layerControlZone);
             tmxMap.getLayers().add(layerControlButton);
-            //tmxMap.getLayers().add(layerControlTouch);
 
             //layerPath.setOpacity(0.5f);
             matrix = new Tile[MAP_WIDTH][MAP_HEIGHT];

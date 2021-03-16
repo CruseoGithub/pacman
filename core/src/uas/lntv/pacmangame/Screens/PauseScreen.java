@@ -45,15 +45,15 @@ public class PauseScreen extends MapScreen {
             pacman.move();
         }
         //RETURN TO GAME
-        if(pacman.getYPosition() == 43*TILE_SIZE){
-            if(pacman.getXPosition() <= 1*TILE_SIZE) {
+        if(pacman.getYPosition() == 43 * TILE_SIZE){
+            if(pacman.getXPosition() <= 1 * TILE_SIZE) {
                 game.setScreen(screen);
                 this.dispose();
             }
         }
         //TO MENU
-        if(pacman.getYPosition() == 16*TILE_SIZE){
-            if(pacman.getXPosition() <= 2*TILE_SIZE) {
+        if(pacman.getYPosition() == 16 * TILE_SIZE){
+            if(pacman.getXPosition() <= 2 * TILE_SIZE) {
                 game.setScreen(new MenuScreen(game, assets, "maps/mainMenu.tmx"));
                 PacManGame.resetLives();
                 PacManGame.resetScore();

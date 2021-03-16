@@ -39,7 +39,12 @@ public class Hud {
     private float timeStamp;
     private final int TILE_SIZE;
 
-    private final PacMan PACMAN;
+
+    private final PacMan PACMAN1;
+    private final PacMan PACMAN2;
+    private final PacMan PACMAN3;
+
+    
 
     @SuppressWarnings("DefaultLocale")
     public Hud(PacManGame game, Assets assets, MapScreen screen, boolean visible){
@@ -87,18 +92,9 @@ public class Hud {
         table.add(TIME_LABEL).expandX().padTop(0);
         if(visible) stage.addActor(table);
 
-        PACMAN = new PacMan(
-                game,
-                assets,
-                20 * TILE_SIZE,
-                (45 * TILE_SIZE + TILE_SIZE /2),
-                0,
-                screen,
-                this,
-                Actor.Direction.RIGHT,
-                Actor.Direction.RIGHT,
-                Actor.Direction.RIGHT
-        );
+        PACMAN1 = new PacMan(game, assets, 20 * TILE_SIZE, (45 * TILE_SIZE + TILE_SIZE /2), screen, this);
+        PACMAN2 = new PacMan(game, assets, 20 * TILE_SIZE, (45 * TILE_SIZE + TILE_SIZE /2), screen, this);
+        PACMAN3 = new PacMan(game, assets, 20 * TILE_SIZE, (45 * TILE_SIZE + TILE_SIZE /2), screen, this);
 
         warned = false;
         red = false;
@@ -108,7 +104,22 @@ public class Hud {
 
     public final String getMap(){ return STAGES.get(GAME.getLevel() % 5); }
 
-    @SuppressWarnings("DefaultLocale")
+
+    public void animateLifes(float dt) {
+        if (GAME.getLives() == 1) {
+
+            PACMAN2.setState(Actor.State.DIEING);
+            PACMAN2.update(dt);
+            drawPac(PACMAN2,2);
+        }
+
+        if (GAME.getLives() == 2) {
+            PACMAN3.setState(Actor.State.DIEING);
+            PACMAN3.update(dt);
+            drawPac(PACMAN3,4);
+        }
+    }
+
     public void update(){
         if(time < WARNING_TIME){
             if(!warned){
@@ -129,36 +140,32 @@ public class Hud {
             }
         }
 
-        if(visible){
+       if(visible){
             SCORE_LABEL.setText(String.format("%06d", GAME.getScore()));
             TIME_LABEL.setText(String.format("%03d", (int)time));
-            PacManGame.batch.begin();
+
             if(GAME.getLives() >= 1) {
-                PacManGame.batch.draw(PACMAN.texture,
-                        PACMAN.getXPosition(), PACMAN.getYPosition(),
-                        PACMAN.sprite.getOriginX(), PACMAN.sprite.getOriginY(),
-                        2 * TILE_SIZE, 2 * TILE_SIZE,
-                        PACMAN.sprite.getScaleX(), PACMAN.sprite.getScaleY(), PACMAN.rotation,
-                        PACMAN.getTexturePositionX() + 96, 0, 32, 32, false, false);
+              drawPac(PACMAN1,0);
             }
             if(GAME.getLives() >= 2) {
-                PacManGame.batch.draw(PACMAN.texture,
-                        PACMAN.getXPosition() + 2 * TILE_SIZE, PACMAN.getYPosition(),
-                        PACMAN.sprite.getOriginX(), PACMAN.sprite.getOriginY(),
-                        2 * TILE_SIZE, 2 * TILE_SIZE,
-                        PACMAN.sprite.getScaleX(), PACMAN.sprite.getScaleY(), PACMAN.rotation,
-                        PACMAN.getTexturePositionX() + 96, 0, 32, 32, false, false);
+                drawPac(PACMAN2,2);
             }
             if(GAME.getLives() >= 3) {
-                PacManGame.batch.draw(PACMAN.texture,
-                        PACMAN.getXPosition() + 4 * TILE_SIZE, PACMAN.getYPosition(),
-                        PACMAN.sprite.getOriginX(), PACMAN.sprite.getOriginY(),
-                        2 * TILE_SIZE, 2 * TILE_SIZE,
-                        PACMAN.sprite.getScaleX(), PACMAN.sprite.getScaleY(), PACMAN.rotation,
-                        PACMAN.getTexturePositionX() + 96, 0, 32, 32, false, false);
+                drawPac(PACMAN3,4);
             }
-            PacManGame.batch.end();
         }
+    }
+
+    public void drawPac(PacMan Pac, int pos){
+        PacManGame.batch.begin();
+        PacManGame.batch.draw(
+                Pac.texture,
+                Pac.getXPosition() + pos * TILE_SIZE, Pac.getYPosition(),
+                Pac.sprite.getOriginX(), Pac.sprite.getOriginY(),
+                2 * TILE_SIZE, 2 * TILE_SIZE,
+                Pac.sprite.getScaleX(), Pac.sprite.getScaleY(), Pac.rotation,
+                Pac.getTexturePositionX() + 96, 0, 32, 32, false, false);
+        PacManGame.batch.end();
     }
 
     public void dispose(){

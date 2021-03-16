@@ -158,6 +158,7 @@ public abstract class MapScreen implements Screen {
                     ghost.getHome();
                 }
             }
+
         }
 
         gameCam.update();

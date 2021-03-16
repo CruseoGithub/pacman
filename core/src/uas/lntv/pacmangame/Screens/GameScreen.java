@@ -3,6 +3,7 @@ package uas.lntv.pacmangame.Screens;
 import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Hud;
+import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 import uas.lntv.pacmangame.Sprites.SuperPacMan;
@@ -55,6 +56,10 @@ public class GameScreen extends MapScreen {
     public void render(float delta) {
         super.render(delta);
         hud.update();
+        if (pacman.getState() == Actor.State.DIEING) {
+        hud.animateLifes(delta/2f);
+        }
+
         hud.stage.draw();
         if(hud.time < 0){
             if(game.highScore.addScore(game.getScore())){

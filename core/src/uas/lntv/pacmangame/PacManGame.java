@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import uas.lntv.pacmangame.Scenes.HighScore;
 import uas.lntv.pacmangame.Screens.SplashScreen;
+import uas.lntv.pacmangame.Screens.LoadingScreen;
 
 public class PacManGame extends Game {
 	private int level;
@@ -24,7 +25,7 @@ public class PacManGame extends Game {
 		highScore = new HighScore();
 		ASSETS.loadSetup();
 		ASSETS.manager.finishLoading();
-		setScreen(new SplashScreen(this, ASSETS));
+		setScreen(new LoadingScreen(this, ASSETS));
 	}
 
 	public int getLevel(){

@@ -65,6 +65,7 @@ public abstract class Map {
             layerControlZone = (TiledMapTileLayer)TMX_CONTROL.getLayers().get("ControllerZone");
             tmxMap.getLayers().add(layerControlZone);
             tmxMap.getLayers().add(layerControlButton);
+            tmxMap.getLayers().get("ControllerZone").
 
             //layerPath.setOpacity(0.5f);
             matrix = new Tile[MAP_WIDTH][MAP_HEIGHT];

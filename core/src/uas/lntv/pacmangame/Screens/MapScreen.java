@@ -104,8 +104,6 @@ public abstract class MapScreen implements Screen {
 
         this.JOYSTICK = new Joystick(assets, this);
         this.CONTROLLER = new ControllerJoystick(JOYSTICK, assets, this);
-
-
     }
 
     @Override

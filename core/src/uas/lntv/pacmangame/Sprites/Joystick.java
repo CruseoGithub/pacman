@@ -1,10 +1,9 @@
 package uas.lntv.pacmangame.Sprites;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import uas.lntv.pacmangame.Screens.MapScreen;
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 
 public class Joystick extends Actor {
     protected Assets assets;

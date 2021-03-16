@@ -2,9 +2,9 @@ package uas.lntv.pacmangame.Screens;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
-import uas.lntv.pacmangame.Scenes.PrefManager;
+import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
@@ -60,29 +60,29 @@ public class ScoreScreen extends MapScreen {
         update(delta);
         super.render(delta);
 
-        game.batch.begin();
+        PacManGame.batch.begin();
         for(int i = 0; i < 10; i++) {
             int yPos = (44 * TILE_SIZE) - (3 * i) * TILE_SIZE;
             FONT.draw(
-                    game.batch,
+                    PacManGame.batch,
                     PrefManager.getNames().get(i),
                     3 * TILE_SIZE,
                     yPos
             );
             FONT.draw(
-                    game.batch,
+                    PacManGame.batch,
                     PrefManager.getHighScores().get(i).toString(),
                     11* TILE_SIZE,
                     yPos
             );
             FONT.draw(
-                    game.batch,
+                    PacManGame.batch,
                     PrefManager.getCauseOfDeath().get(i) + " at level " + PrefManager.getLevel().get(i).toString(),
                     15* TILE_SIZE,
                     yPos
             );
         }
-        game.batch.end();
+        PacManGame.batch.end();
     }
 
     @Override

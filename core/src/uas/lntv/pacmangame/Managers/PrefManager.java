@@ -1,4 +1,4 @@
-package uas.lntv.pacmangame.Scenes;
+package uas.lntv.pacmangame.Managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -7,7 +7,7 @@ import com.badlogic.gdx.Preferences;
 import java.util.ArrayList;
 
 /**
- * This class manages the high-score list.
+ * This class manages all the saved preferences, like high-scores and settings.
  */
 public class PrefManager {
 
@@ -20,10 +20,10 @@ public class PrefManager {
     private static boolean nameSet;
     private static boolean musicOn;
     private static boolean sfxOn;
+    private static boolean joystick;
 
     /**
-     * This constructor simply loads the saved high-scores from the preferences.
-     * It also checks, if the player's name has already been set before.
+     * This constructor simply loads the saved high-scores and settings from the preferences.
      */
     public PrefManager(){
         prefs = Gdx.app.getPreferences("PacManPreferences");
@@ -83,6 +83,10 @@ public class PrefManager {
 
     public static void setSfxOn(boolean sfxOn) { PrefManager.sfxOn = sfxOn; }
 
+    public static boolean isJoystick() { return joystick; }
+
+    public static void setJoystick(boolean joystick) { PrefManager.joystick = joystick; }
+
     /**
      * Gives the player two chances to insert a name, if he doesn't he will be treated as
      * Anonymous Bastard.
@@ -127,7 +131,7 @@ public class PrefManager {
     private static void anonymous(){ name = "Anonymous Bastard"; }
 
     /**
-     * Loads the scores from the preferences into the array list.
+     * Loads the scores and settings from the preferences folder into the game.
      */
     public static void loadPrefs(){
         highScores.add(prefs.getInteger("high_score_1"));
@@ -174,10 +178,11 @@ public class PrefManager {
         nameSet = prefs.getBoolean("NameSet");
         musicOn = prefs.getBoolean("Music");
         sfxOn = prefs.getBoolean("SFX");
+        joystick = prefs.getBoolean("Controller");
     }
 
     /**
-     * Safes the updated scores into the preferences.
+     * Safes the updated scores and settings into the preferences folder.
      */
     public static void savePrefs(){
         prefs.putInteger("high_score_1", highScores.get(0));
@@ -224,6 +229,7 @@ public class PrefManager {
         prefs.putBoolean("NameSet", nameSet);
         prefs.putBoolean("Music", musicOn);
         prefs.putBoolean("SFX", sfxOn);
+        prefs.putBoolean("Controller", joystick);
 
 /* This resets the list
         prefs.putInteger("high_score_1", 0);

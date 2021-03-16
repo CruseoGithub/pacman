@@ -1,4 +1,4 @@
-package uas.lntv.pacmangame;
+package uas.lntv.pacmangame.Managers;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
@@ -32,6 +32,7 @@ public class Assets {
     public final AssetDescriptor<Music> SCORE_MUSIC = new AssetDescriptor<>("music/HeartOfCourage.mp3", Music.class);
     public final AssetDescriptor<Music> HUNTING_MUSIC = new AssetDescriptor<>("music/hunting.mp3", Music.class);
     public final AssetDescriptor<Music> MENU_MUSIC = new AssetDescriptor<>("music/MenuMusic.MP3", Music.class);
+    public final AssetDescriptor<Music> SETTINGS_MUSIC = new AssetDescriptor<>("music/SettingsMusic.mp3", Music.class);
 
     public final AssetDescriptor<Sound> ALARM = new AssetDescriptor<>("sounds/ALARM.mp3", Sound.class);
     public final AssetDescriptor<Sound> DIE = new AssetDescriptor<>("sounds/die.wav", Sound.class);
@@ -62,6 +63,7 @@ public class Assets {
     public final String SETTINGS_MAP = "maps/settings.tmx";
     public final String SCORE_MAP = "maps/HighScoreList.tmx";
     public final String CONTROL = "maps/controller.tmx";
+    public final String PAUSE = "maps/PauseMap.tmx";
 
     /**
      * Small method, that puts everything in the loading queue, that is needed for the splash- and
@@ -79,6 +81,12 @@ public class Assets {
      * This method puts everything in the loading queue, that is needed in the application.
      */
     public void load(){
+        manager.load(ALARM);
+        manager.load(DIE);
+        manager.load(DOT);
+        manager.load(KILL);
+        manager.load(POWER_UP);
+
         manager.load(GAME_MUSIC);
         manager.load(GAME_MUSIC_2);
         manager.load(GAME_MUSIC_3);
@@ -86,12 +94,7 @@ public class Assets {
         manager.load(SCORE_MUSIC);
         manager.load(HUNTING_MUSIC);
         manager.load(MENU_MUSIC);
-
-        manager.load(ALARM);
-        manager.load(DIE);
-        manager.load(DOT);
-        manager.load(KILL);
-        manager.load(POWER_UP);
+        manager.load(SETTINGS_MUSIC);
 
         manager.load(PAC_MAN);
         manager.load(SUPER_PAC);

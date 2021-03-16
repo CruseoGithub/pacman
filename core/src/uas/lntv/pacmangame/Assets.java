@@ -49,6 +49,8 @@ public class Assets {
     public final AssetDescriptor<Texture> BLUE_DEAD = new AssetDescriptor<>("textures/blue.png", Texture.class);
     public final AssetDescriptor<Texture> TILES = new AssetDescriptor<>("maps/tiles.png", Texture.class);
     public final AssetDescriptor<Texture> COIN_GOLD = new AssetDescriptor<>("textures/CoinGold.png", Texture.class);
+    public final AssetDescriptor<Texture> JOYSTICK_ZONE = new AssetDescriptor<>("textures/JoystickZone.png", Texture.class);
+    public final AssetDescriptor<Texture> JOYSTICK_KNOB = new AssetDescriptor<>("textures/JoystickKnob.png", Texture.class);
 
 
     public final String MAP_1 = "maps/map.tmx";
@@ -101,6 +103,8 @@ public class Assets {
         manager.load(BLUE_DEAD);
         manager.load(TILES);
         manager.load(COIN_GOLD);
+        manager.load(JOYSTICK_ZONE);
+        manager.load(JOYSTICK_KNOB);
 
         manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
         manager.load(CONTROL, TiledMap.class);

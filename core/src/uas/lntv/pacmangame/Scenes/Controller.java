@@ -12,9 +12,13 @@ import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
+<<<<<<< HEAD
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Screens.PauseScreen;
 import uas.lntv.pacmangame.Screens.ScoreScreen;
+=======
+import uas.lntv.pacmangame.Assets;
+>>>>>>> development_2
 
 public abstract class Controller {
     protected MapScreen screen;
@@ -23,15 +27,21 @@ public abstract class Controller {
     protected Viewport viewport;
     protected Stage stage;
     protected final int TILE_SIZE;
+    protected Assets assets;
 
+<<<<<<< HEAD
 
 
     protected boolean upPressed, downPressed, leftPressed, rightPressed;
     boolean touchpause = true;
     private boolean PauseReady = false;
 
+=======
+    protected boolean upPressed, downPressed, leftPressed, rightPressed, touchEvent;
+>>>>>>> development_2
 
-    public Controller(MapScreen screen){
+    public Controller(Assets assets, MapScreen screen){
+        this.assets = assets;
         this.screen = screen;
         this.map = screen.map;
         this.TILE_SIZE = screen.map.getTileSize();
@@ -84,6 +94,10 @@ public abstract class Controller {
 
     public boolean isRightPressed() {
         return rightPressed;
+    }
+
+    public boolean isTouchEvent() {
+        return touchEvent;
     }
 
     public void pulledInput(){

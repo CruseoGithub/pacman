@@ -20,11 +20,12 @@ import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.MenuMap;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Controller;
-import uas.lntv.pacmangame.Scenes.ControllerSwipe;
+import uas.lntv.pacmangame.Scenes.ControllerJoystick;
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Scenes.PrefManager;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
+import uas.lntv.pacmangame.Sprites.Joystick;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public abstract class MapScreen implements Screen {
@@ -44,8 +45,13 @@ public abstract class MapScreen implements Screen {
     public PacMan pacman;
     protected ArrayList<Enemy> ghosts = new ArrayList<>();
 
+<<<<<<< HEAD
     protected  Controller controller;
 
+=======
+    private final Controller CONTROLLER;
+    private final Joystick JOYSTICK;
+>>>>>>> development_2
 
     private final int MAP_WIDTH;
     private final int MAP_HEIGHT;
@@ -102,7 +108,14 @@ public abstract class MapScreen implements Screen {
         this.gamePort = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, gameCam);
         this.gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
+<<<<<<< HEAD
         this.controller = new ControllerSwipe(this);
+=======
+        this.JOYSTICK = new Joystick(assets, this);
+        this.CONTROLLER = new ControllerJoystick(JOYSTICK, assets, this);
+
+
+>>>>>>> development_2
     }
 
 
@@ -202,6 +215,16 @@ public abstract class MapScreen implements Screen {
                     TILE_SIZE, TILE_SIZE, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
                     ghost.getTexturePositionX(), ghost.getTexturePositionY(), 32, 32, false, false
             );
+        }
+
+        if(CONTROLLER instanceof ControllerJoystick){
+            if(CONTROLLER.isTouchEvent()){
+                PacManGame.batch.draw(JOYSTICK.texture, JOYSTICK.getXPosition(), JOYSTICK.getYPosition(), 96, 96,
+                        192, 192, 1, 1, JOYSTICK.rotation,
+                        JOYSTICK.getTexturePositionX(), JOYSTICK.getTexturePositionY(), 192, 192, false, false
+                );
+                PacManGame.batch.draw(JOYSTICK.textureKnob, JOYSTICK.getXPositionKnob(), JOYSTICK.getYPositionKnob());
+            }
         }
 
         PacManGame.batch.end();

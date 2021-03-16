@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector3;
 
+import uas.lntv.pacmangame.Assets;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
 public class ControllerButtons extends Controller {
-    public ControllerButtons(MapScreen screen){
-        super(screen);
+    public ControllerButtons(Assets assets, MapScreen screen){
+        super(assets, screen);
+        screen.map.layerControlZone.setOpacity(0.5f);
 
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override

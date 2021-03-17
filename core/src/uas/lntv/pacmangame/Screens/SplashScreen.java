@@ -75,7 +75,7 @@ public class SplashScreen implements Screen {
         if(timer < 2) alpha += time / 2;
         if(timer > 2 && timer < 3) alpha = 1;
         if(timer > 3 && timer < 5) alpha -= time / 2;
-        if(timer > 5 && timer < 7) alpha +=  time / 3;
+        if(timer > 5 && timer < 7) alpha +=  time / 2;
         if(timer > 7 && timer < 8) alpha = 1;
         if(timer > 8 && timer < 10) alpha -= time / 2;
 

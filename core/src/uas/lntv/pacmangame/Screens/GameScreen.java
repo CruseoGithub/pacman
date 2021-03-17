@@ -115,7 +115,6 @@ public class GameScreen extends MapScreen {
         update(delta);
         super.render(delta);
 
-
         if(ready) hud.time -= Gdx.graphics.getDeltaTime();
         hud.update();
         hud.stage.draw();

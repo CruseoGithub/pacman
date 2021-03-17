@@ -76,6 +76,7 @@ public class GameScreen extends MapScreen {
         super.update(dt);
 
         if(hud.time < 0){
+            this.dispose();
             if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Time elapsed", PacManGame.getLevel() + 1)){
                 game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
             } else {
@@ -84,15 +85,14 @@ public class GameScreen extends MapScreen {
             PacManGame.resetLives();
             PacManGame.resetScore();
             PacManGame.resetLevel();
-            this.dispose();
         }
 
         if(hud.levelScore == 150){
             PacManGame.levelUp();
             PacManGame.increaseScore((int)hud.time);
             music.stop();
-            game.setScreen(new GameScreen(game, assets, hud.getMap()));
             this.dispose();
+            game.setScreen(new GameScreen(game, assets, hud.getMap()));
 
         }
         if(paused) {

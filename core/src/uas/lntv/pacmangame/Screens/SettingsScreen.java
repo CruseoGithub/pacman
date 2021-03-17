@@ -50,12 +50,12 @@ public class SettingsScreen extends MapScreen {
         //If PacMan reaches the threshold of action, it depends in which corridor he is
         if(pacman.getXPosition() == 19 *TILE_SIZE){
             if(pacman.getYPosition() == 17 * TILE_SIZE){
-                game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
                 this.dispose();
+                game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
             }
             if(pacman.getYPosition() == 25 * TILE_SIZE){
-                game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
                 this.dispose();
+                game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
             }
             if(pacman.getYPosition() == 37 * TILE_SIZE && !controllerSet){
                 PrefManager.setJoystick(true);

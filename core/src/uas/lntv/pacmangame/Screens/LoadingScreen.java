@@ -73,7 +73,7 @@ public class LoadingScreen implements Screen {
 
         PacManGame.batch.begin();
         PacManGame.batch.setProjectionMatrix(CAM.combined);
-        PacManGame.batch.draw(SPRITE.getTexture(), 0, 0, SPRITE.getOriginX(), SPRITE.getOriginY(),
+        PacManGame.batch.draw(SPRITE.getTexture(), 100, 300, SPRITE.getOriginX(), SPRITE.getOriginY(),
                 256, 256, SPRITE.getScaleX(), SPRITE.getScaleY(), 0,
                 texturePositionX, texturePositionY, 256, 256, false, false
         );

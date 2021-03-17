@@ -1,5 +1,6 @@
 package uas.lntv.pacmangame.Screens;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -32,9 +33,17 @@ public class SplashScreen implements Screen {
         this.ASSETS = ASSETS;
         this.CAM = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         CAM.translate(CAM.viewportWidth/2, CAM.viewportHeight/2);
+
+        if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
+            Gdx.graphics.setWindowedMode(450, 800);
+        }
+
         Texture logo = this.ASSETS.manager.get(ASSETS.LNTV_Logo);
         this.SPLASHY = new Sprite(logo);
-        this.SPLASHY.setSize(200, 200);
+
+        this.SPLASHY.setSize(761, 610);
+        this.SPLASHY.setPosition(-55,-50);
+        this.SPLASHY.setScale(0.4f, 0.25f);
         if(PrefManager.isSfxOn()) this.ASSETS.manager.get(ASSETS.DIAL_UP).play(0.6f);
     }
 
@@ -54,6 +63,8 @@ public class SplashScreen implements Screen {
             SPLASHY.getTexture().dispose();
             SPLASHY.setTexture(this.ASSETS.manager.get(ASSETS.GDX));
             SPLASHY.setSize(390, 65);
+            SPLASHY.setPosition(45,80);
+            SPLASHY.setScale(0.5f, 0.5f);
         }
 
         if(timer > 14) {
@@ -83,7 +94,6 @@ public class SplashScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         PacManGame.batch.begin();
-        PacManGame.batch.setProjectionMatrix(CAM.combined);
         SPLASHY.draw(PacManGame.batch, alpha);
         PacManGame.batch.end();
     }

@@ -90,24 +90,28 @@ public class GameScreen extends MapScreen {
         if(hud.levelScore == 150){
             PacManGame.levelUp();
             PacManGame.increaseScore((int)hud.time);
-            music.stop();
             this.dispose();
             game.setScreen(new GameScreen(game, assets, hud.getMap()));
 
         }
+
         if(paused) {
             if(PrefManager.isJoystick()) this.controller = new ControllerJoystick(assets, this);
             else this.controller = new ControllerButtons(assets,this);
-            if(PrefManager.isMusicOn()) music.play();
+            if(PrefManager.isMusicOn()){
+                if(pacManSuper) assets.manager.get(assets.HUNTING_MUSIC).play();
+                else music.play();
+            }
             paused = false;
             PauseActive = false;
         }
+
         if(PauseActive){
-            music.pause();
-            game.setScreen(new PauseScreen(game, assets,assets.PAUSE, this, hud));
+            if(music.isPlaying()) music.pause();
+            if(assets.manager.get(assets.HUNTING_MUSIC).isPlaying()) assets.manager.get(assets.HUNTING_MUSIC).pause();
+            game.setScreen(new PauseScreen(game, assets, assets.PAUSE, this, hud));
             paused = true;
         }
-
     }
 
     @Override

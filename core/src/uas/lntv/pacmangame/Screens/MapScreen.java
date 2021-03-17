@@ -36,7 +36,6 @@ public abstract class MapScreen implements Screen {
     protected OrthographicCamera gameCam;
     protected Viewport gamePort;
     protected Music music;
-    protected Music huntingMusic;
 
     protected final Assets assets;
 
@@ -94,9 +93,8 @@ public abstract class MapScreen implements Screen {
                 this.music.setVolume(0.3f);
                 break;
         }
-        this.huntingMusic = assets.manager.get(assets.HUNTING_MUSIC);
-        huntingMusic.setVolume(0.25f);
-        huntingMusic.setLooping(true);
+        assets.manager.get(assets.HUNTING_MUSIC).setVolume(0.25f);
+        assets.manager.get(assets.HUNTING_MUSIC).setLooping(true);
         music.setLooping(true);
         if(PrefManager.isMusicOn()) music.play();
         this.MAP_WIDTH = this.map.getMapWidth();
@@ -253,13 +251,13 @@ public abstract class MapScreen implements Screen {
     public void switchMusicHunting() {
         if (music.isPlaying() && PrefManager.isMusicOn()) {
             music.pause();
-            huntingMusic.play();
+            assets.manager.get(assets.HUNTING_MUSIC).play();
         }
     }
 
     public void switchMusicGame() {
         if(PrefManager.isMusicOn()) {
-            huntingMusic.stop();
+            assets.manager.get(assets.HUNTING_MUSIC).stop();
             music.play();
         }
     }
@@ -278,7 +276,6 @@ public abstract class MapScreen implements Screen {
     public void dispose() {
         controller.dispose();
         music.dispose();
-        huntingMusic.dispose();
     }
 
 }

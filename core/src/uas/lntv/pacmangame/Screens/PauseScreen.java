@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
+import uas.lntv.pacmangame.Scenes.ControllerButtons;
+import uas.lntv.pacmangame.Scenes.ControllerJoystick;
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Sprites.Enemy;
@@ -12,6 +14,7 @@ import uas.lntv.pacmangame.Sprites.PacMan;
 public class PauseScreen extends MapScreen {
     private final GameScreen SCREEN;
     private final BitmapFont FONT;
+    private boolean controllerSet = false;
 
 
     public PauseScreen(PacManGame game, Assets assets, String mapPath, GameScreen screen, Hud hud){
@@ -23,8 +26,6 @@ public class PauseScreen extends MapScreen {
         this.FONT = new BitmapFont();
         FONT.getData().setScale(FONT.getScaleX()*2);
         this.SCREEN = screen;
-        music.pause();
-
     }
     @Override
     public void update(float dt){
@@ -44,6 +45,7 @@ public class PauseScreen extends MapScreen {
             pacman.update(dt);
             pacman.move();
         }
+
         //RETURN TO GAME
         if(pacman.getYPosition() == 43 * TILE_SIZE){
             if(pacman.getXPosition() <= 1 * TILE_SIZE) {
@@ -51,8 +53,8 @@ public class PauseScreen extends MapScreen {
                 game.setScreen(SCREEN);
             }
         }
-        //TO MENU
 
+        //TO MENU
         if(pacman.getYPosition() == 16*TILE_SIZE){
             if(pacman.getXPosition() <= 2*TILE_SIZE) {
                 this.dispose();
@@ -62,6 +64,7 @@ public class PauseScreen extends MapScreen {
                 PacManGame.resetLevel();
             }
         }
+
         //MUSIC
         if(pacman.getYPosition() == 34*TILE_SIZE){
             if(pacman.getXPosition() == 2*TILE_SIZE) {
@@ -71,11 +74,13 @@ public class PauseScreen extends MapScreen {
             }
             if(pacman.getXPosition() == 7*TILE_SIZE) {
                 PrefManager.setMusicOn(false);
+                assets.manager.get(assets.HUNTING_MUSIC).stop();
                 music.stop();
                 System.out.println("SOUND OF SILENCE");
             }
             PrefManager.savePrefs();
         }
+
         //SOUND SFX
         if(pacman.getYPosition() == 29*TILE_SIZE){
             if(pacman.getXPosition() == 12*TILE_SIZE) {
@@ -88,6 +93,24 @@ public class PauseScreen extends MapScreen {
             }
             PrefManager.savePrefs();
         }
+
+        if(pacman.getXPosition() == 8 *TILE_SIZE){
+            if(pacman.getYPosition() == 26 * TILE_SIZE && !controllerSet){
+                PrefManager.setJoystick(true);
+                PrefManager.savePrefs();
+                controller.dispose();
+                controller = new ControllerJoystick(assets,this);
+                controllerSet = true;
+            }
+            if(pacman.getYPosition() == 20 * TILE_SIZE && !controllerSet){
+                PrefManager.setJoystick(false);
+                PrefManager.savePrefs();
+                controller.dispose();
+                controller = new ControllerButtons(assets, this);
+                controllerSet = true;
+            }
+        }
+        if(pacman.getYPosition() == 23 * TILE_SIZE) controllerSet = false;
     }
 
     @Override
@@ -145,7 +168,7 @@ public class PauseScreen extends MapScreen {
                     24* TILE_SIZE );
 
             FONT.draw(PacManGame.batch,
-                    "TOUCH",
+                    "JOYSTICK",
                     4 * TILE_SIZE,
                     27* TILE_SIZE );
 

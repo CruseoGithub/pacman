@@ -49,24 +49,24 @@ public class SplashScreen implements Screen {
         float time = Gdx.graphics.getDeltaTime();
         timer += time;
 
-        if(timer > 8 && SPLASHY.getTexture() != this.ASSETS.manager.get(ASSETS.GDX)) {
+        if(timer > 5 && SPLASHY.getTexture() != this.ASSETS.manager.get(ASSETS.GDX)) {
             alpha = 0;
             SPLASHY.getTexture().dispose();
             SPLASHY.setTexture(this.ASSETS.manager.get(ASSETS.GDX));
             SPLASHY.setSize(390, 65);
         }
 
-        if(timer > 14) {
+        if(timer > 10) {
             this.dispose();
             GAME.setScreen(new LoadingScreen(GAME, ASSETS));
         }
 
-        if(timer < 3) alpha += time / 3;
-        if(timer > 3 && timer < 5) alpha = 1;
-        if(timer > 5 && timer < 8) alpha -= time / 3;
-        if(timer > 8 && timer < 11) alpha +=  time / 3;
-        if(timer > 11 && timer < 12) alpha = 1;
-        if(timer > 12 && timer < 14) alpha -= time / 2;
+        if(timer < 2) alpha += time / 2;
+        if(timer > 2 && timer < 3) alpha = 1;
+        if(timer > 3 && timer < 5) alpha -= time / 2;
+        if(timer > 5 && timer < 7) alpha +=  time / 3;
+        if(timer > 7 && timer < 8) alpha = 1;
+        if(timer > 8 && timer < 10) alpha -= time / 2;
 
         CAM.update();
     }

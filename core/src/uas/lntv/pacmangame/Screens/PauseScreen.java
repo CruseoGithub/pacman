@@ -26,8 +26,6 @@ public class PauseScreen extends MapScreen {
         this.FONT = new BitmapFont();
         FONT.getData().setScale(FONT.getScaleX()*2);
         this.SCREEN = screen;
-        music.pause();
-
     }
     @Override
     public void update(float dt){
@@ -76,6 +74,7 @@ public class PauseScreen extends MapScreen {
             }
             if(pacman.getXPosition() == 7*TILE_SIZE) {
                 PrefManager.setMusicOn(false);
+                assets.manager.get(assets.HUNTING_MUSIC).stop();
                 music.stop();
                 System.out.println("SOUND OF SILENCE");
             }

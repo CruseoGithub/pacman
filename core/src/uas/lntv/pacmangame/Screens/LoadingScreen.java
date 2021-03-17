@@ -55,8 +55,8 @@ public class LoadingScreen implements Screen {
             }
         }
         if(ASSETS.manager.update() && progress > 0.99f){
-            GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
             this.dispose();
+            GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
         }
         CAM.update();
     }

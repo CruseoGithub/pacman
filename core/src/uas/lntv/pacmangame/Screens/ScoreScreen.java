@@ -43,8 +43,8 @@ public class ScoreScreen extends MapScreen {
     public void update(float dt) {
         super.update(dt);
         if(pacman.getXPosition() <= 2* TILE_SIZE) {
-            game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
             this.dispose();
+            game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
         }
     }
 

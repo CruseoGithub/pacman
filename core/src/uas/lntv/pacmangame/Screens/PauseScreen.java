@@ -47,19 +47,19 @@ public class PauseScreen extends MapScreen {
         //RETURN TO GAME
         if(pacman.getYPosition() == 43 * TILE_SIZE){
             if(pacman.getXPosition() <= 1 * TILE_SIZE) {
-                game.setScreen(SCREEN);
                 this.dispose();
+                game.setScreen(SCREEN);
             }
         }
         //TO MENU
 
         if(pacman.getYPosition() == 16*TILE_SIZE){
             if(pacman.getXPosition() <= 2*TILE_SIZE) {
+                this.dispose();
                 game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
                 PacManGame.resetLives();
                 PacManGame.resetScore();
                 PacManGame.resetLevel();
-                this.dispose();
             }
         }
         //MUSIC
@@ -155,9 +155,6 @@ public class PauseScreen extends MapScreen {
                     21* TILE_SIZE );
 
         PacManGame.batch.end();
-
-
-
     }
 
 }

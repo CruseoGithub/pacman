@@ -57,8 +57,8 @@ public class SplashScreen implements Screen {
         }
 
         if(timer > 14) {
-            GAME.setScreen(new LoadingScreen(GAME, ASSETS));
             this.dispose();
+            GAME.setScreen(new LoadingScreen(GAME, ASSETS));
         }
 
         if(timer < 3) alpha += time / 3;

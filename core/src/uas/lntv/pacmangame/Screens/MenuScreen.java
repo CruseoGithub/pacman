@@ -27,12 +27,12 @@ public class MenuScreen extends MapScreen {
 
         if(pacman.getXPosition() == 12* TILE_SIZE){
             if(pacman.getYPosition() >= 19* TILE_SIZE && pacman.getYPosition() <= 23* TILE_SIZE){
-                game.setScreen(new GameScreen(game, assets, assets.MAP_1));
                 this.dispose();
+                game.setScreen(new GameScreen(game, assets, assets.MAP_1));
             }
             else if(pacman.getYPosition() >= 29* TILE_SIZE && pacman.getYPosition() <= 33* TILE_SIZE){
-                game.setScreen(new SettingsScreen(game, assets, assets.SETTINGS_MAP));
                 this.dispose();
+                game.setScreen(new SettingsScreen(game, assets, assets.SETTINGS_MAP));
             }
         }
     }

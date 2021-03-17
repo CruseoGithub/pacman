@@ -10,7 +10,8 @@ import uas.lntv.pacmangame.Screens.MapScreen;
 public class ControllerButtons extends Controller {
     public ControllerButtons(Assets assets, MapScreen screen){
         super(assets, screen);
-        screen.map.layerControlZone.setOpacity(0.5f);
+        screen.map.layerControlZone.setOpacity(1f);
+        screen.map.layerControlButton.setOpacity(1f);
 
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override

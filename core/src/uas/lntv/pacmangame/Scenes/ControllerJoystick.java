@@ -22,6 +22,7 @@ public class ControllerJoystick extends Controller {
         final int joystickKnobRadius = 64 / 2; // 64px x 64px
 
         screen.map.layerControlButton.setOpacity(0);
+        screen.map.layerControlZone.setOpacity(1f);
 
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override

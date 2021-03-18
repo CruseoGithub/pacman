@@ -17,10 +17,10 @@ public class PrefManager {
     private static final ArrayList<String> causeOfDeath = new ArrayList<>();
     private static final ArrayList<Integer> level = new ArrayList<>();
     private static String name;
-    private static boolean nameSet;
-    private static boolean musicOn;
-    private static boolean sfxOn;
-    private static boolean joystick;
+    private static boolean nameSet = false;
+    private static boolean musicOn = true;
+    private static boolean sfxOn = true;
+    private static boolean joystick = false;
 
     /**
      * This constructor simply loads the saved high-scores and settings from the preferences.

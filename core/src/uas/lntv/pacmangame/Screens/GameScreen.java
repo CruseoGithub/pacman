@@ -75,10 +75,7 @@ public class GameScreen extends MapScreen {
     public void update(float dt) {
         super.update(dt);
         if(ready) hud.time -= Gdx.graphics.getDeltaTime();
-        hud.update();
-        if (pacman.getState() == Actor.State.DIEING) {
-            hud.animateLifes(delta/2f);
-        }
+
 
         if(hud.time < 0){
             this.dispose();
@@ -123,6 +120,10 @@ public class GameScreen extends MapScreen {
     public void render(float delta) {
         update(delta);
         super.render(delta);
+        hud.update();
+        if (pacman.getState() == Actor.State.DIEING) {
+            hud.animateLifes(delta/2f);
+        }
         hud.stage.draw();
     }
 

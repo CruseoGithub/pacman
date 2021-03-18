@@ -104,14 +104,14 @@ public class Hud {
 
 
     public void animateLifes(float dt) {
-        if (GAME.getLives() == 1) {
+        if (PacManGame.getLives() == 1) {
 
             PACMAN2.setState(Actor.State.DIEING);
             PACMAN2.update(dt);
             drawPac(PACMAN2,2);
         }
 
-        if (GAME.getLives() == 2) {
+        if (PacManGame.getLives() == 2) {
             PACMAN3.setState(Actor.State.DIEING);
             PACMAN3.update(dt);
             drawPac(PACMAN3,4);
@@ -140,21 +140,22 @@ public class Hud {
 
 
         if (visible) {
-            SCORE_LABEL.setText(String.format("%06d", GAME.getScore()));
+            SCORE_LABEL.setText(String.format("%06d", PacManGame.getScore()));
             TIME_LABEL.setText(String.format("%03d", (int) time));
 
-            if (GAME.getLives() >= 1) {
+            if (PacManGame.getLives() >= 1) {
                 drawPac(PACMAN1, 0);
             }
-            if (GAME.getLives() >= 2) {
+            if (PacManGame.getLives() >= 2) {
                 drawPac(PACMAN2, 2);
             }
-            if (GAME.getLives() >= 3) {
+            if (PacManGame.getLives() >= 3) {
                 drawPac(PACMAN3, 4);
 
             }
         }
     }
+
     public void drawPac(PacMan Pac, int pos){
         PacManGame.batch.begin();
         PacManGame.batch.draw(

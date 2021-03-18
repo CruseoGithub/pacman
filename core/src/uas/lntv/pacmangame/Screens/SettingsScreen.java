@@ -14,9 +14,9 @@ import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class SettingsScreen extends MapScreen {
 
+    private final MenuMap MENU_MAP;
     private final BitmapFont FONT;
     private boolean controllerSet = false;
-    private final MenuMap MENU_MAP;
 
     public SettingsScreen(PacManGame game, Assets assets, String path){
         super(game, assets, path, Type.SETTINGS);
@@ -80,6 +80,7 @@ public class SettingsScreen extends MapScreen {
             }
         }
 
+        //preventing infinite dispose/create loop
         if(pacman.getYPosition() == 33 * TILE_SIZE) controllerSet = false;
 
         //MUSIC ON/OFF

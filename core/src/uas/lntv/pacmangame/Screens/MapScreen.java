@@ -233,6 +233,7 @@ public abstract class MapScreen implements Screen {
     @Override
     public void dispose() {
         controller.dispose();
+        assets.manager.get(assets.HUNTING_MUSIC).stop();
         music.dispose();
     }
 

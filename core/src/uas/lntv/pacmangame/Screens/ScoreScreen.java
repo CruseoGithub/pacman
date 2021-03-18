@@ -61,6 +61,7 @@ public class ScoreScreen extends MapScreen {
         super.render(delta);
 
         PacManGame.batch.begin();
+        FONT.draw(PacManGame.batch, "MAIN MENU", 2 * TILE_SIZE, 48 * TILE_SIZE);
         for(int i = 0; i < 10; i++) {
             int yPos = (44 * TILE_SIZE) - (3 * i) * TILE_SIZE;
             FONT.draw(

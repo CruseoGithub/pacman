@@ -58,7 +58,11 @@ public class PauseScreen extends MapScreen {
         if(pacman.getYPosition() == 16*TILE_SIZE){
             if(pacman.getXPosition() <= 2*TILE_SIZE) {
                 this.dispose();
-                game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
+                if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Forfeited", PacManGame.getLevel() + 1)){
+                    game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
+                } else {
+                    game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
+                }
                 PacManGame.resetLives();
                 PacManGame.resetScore();
                 PacManGame.resetLevel();

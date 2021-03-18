@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.Random;
 
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
@@ -23,6 +24,8 @@ public abstract class Actor {
     public enum State {
         RUNNING, DIEING, HOMING, BOXED
     }
+
+    protected Assets assets;
 
     protected int xPosition;
     protected int yPosition;
@@ -91,7 +94,8 @@ public abstract class Actor {
 
     public void setState(State state){ this.state = state; }
 
-    public Actor(int initX, int initY, MapScreen screen) {
+    public Actor(Assets assets, int initX, int initY, MapScreen screen) {
+        this.assets = assets;
         this.state = State.RUNNING;
         this.xPosition = initX;
         this.yPosition = initY;

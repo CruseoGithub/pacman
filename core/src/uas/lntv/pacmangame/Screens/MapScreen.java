@@ -142,49 +142,7 @@ public abstract class MapScreen implements Screen {
         if(!(this instanceof GameScreen) || ready) {
             pacman.update(dt);
             for (Enemy ghost : ghosts) {
-                ghost.update(dt);
-            }
-
-            if (pacman.getState() != Actor.State.DIEING) {
-                pacman.move();
-                for (Enemy ghost : ghosts) {
-                    if(ghost.getBoxTimer() >= 0){
-                        ghost.setBoxTimer(ghost.getBoxTimer() - Gdx.graphics.getDeltaTime());
-                    } else if(ghost.getBoxTimer() < 0 && ghost.getState() == Actor.State.BOXED){
-                        ghost.leaveBox();
-                    } else if (ghost.getState() != Actor.State.HOMING) {
-                        ghost.findNextDirection(pacman);
-                        ghost.move();
-                    } else {
-                        if (!(ghost.isHome()) && pacman.getState() != Actor.State.DIEING) {
-                            ghost.texture = assets.manager.get(assets.BLUE_DEAD);
-                            ghost.getHome();
-                        } else {
-                            if (ghost == getGhosts().get(0)) {
-                                ghost.texture = assets.manager.get(assets.GHOST_1);
-                            }
-                            if (getGhosts().size() > 1) {
-                                if (ghost == getGhosts().get(1)) {
-                                    ghost.texture = assets.manager.get(assets.GHOST_2);
-                                }
-                                if (getGhosts().size() > 2) {
-                                    if (ghost == getGhosts().get(2)) {
-                                        ghost.texture = assets.manager.get(assets.GHOST_3);
-                                    }
-                                }
-                            }
-                            ghost.enterBox();
-                        }
-                    }
-                }
-            } else {
-                for (Enemy ghost : ghosts) {
-                    if(ghost.getState() != Actor.State.BOXED) {
-                        if (!ghost.isHome()) ghost.getHome();
-                        else if (ghost == ghosts.get(0)) ghost.setState(Actor.State.RUNNING);
-                        else ghost.enterBox();
-                    }
-                }
+                ghost.update(dt, pacman);
             }
         }
 

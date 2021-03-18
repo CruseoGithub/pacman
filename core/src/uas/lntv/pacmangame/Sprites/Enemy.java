@@ -165,9 +165,7 @@ public class Enemy extends Actor {
         if(Math.abs(distanceX) > Math.abs(distanceY)){
             return LeftOrRight(distanceX);
         }
-        else {
-            return UpOrDown(distanceY);
-        }
+        else return UpOrDown(distanceY);
     }
 
     /**

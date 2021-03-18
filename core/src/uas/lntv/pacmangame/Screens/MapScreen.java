@@ -144,7 +144,6 @@ public abstract class MapScreen implements Screen {
             for (Enemy ghost : ghosts) {
                 ghost.update(dt, pacman);
             }
-
         }
 
         gameCam.update();

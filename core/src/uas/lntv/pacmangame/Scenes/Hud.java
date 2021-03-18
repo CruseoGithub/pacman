@@ -39,9 +39,9 @@ public class Hud {
     private final int TILE_SIZE;
 
 
-    private final PacMan PACMAN1;
-    private final PacMan PACMAN2;
-    private final PacMan PACMAN3;
+    private final PacMan PAC_MAN_1;
+    private final PacMan PAC_MAN_2;
+    private final PacMan PAC_MAN_3;
 
     
 
@@ -90,9 +90,9 @@ public class Hud {
         table.add(TIME_LABEL).expandX().padTop(0);
         if(visible) stage.addActor(table);
 
-        PACMAN1 = new PacMan(game, assets, 20 * TILE_SIZE, (45 * TILE_SIZE + TILE_SIZE /2), screen, this);
-        PACMAN2 = new PacMan(game, assets, 20 * TILE_SIZE, (45 * TILE_SIZE + TILE_SIZE /2), screen, this);
-        PACMAN3 = new PacMan(game, assets, 20 * TILE_SIZE, (45 * TILE_SIZE + TILE_SIZE /2), screen, this);
+        PAC_MAN_1 = new PacMan(game, assets, 20 * TILE_SIZE, (45 * TILE_SIZE + TILE_SIZE /2), screen, this);
+        PAC_MAN_2 = new PacMan(game, assets, 20 * TILE_SIZE, (45 * TILE_SIZE + TILE_SIZE /2), screen, this);
+        PAC_MAN_3 = new PacMan(game, assets, 20 * TILE_SIZE, (45 * TILE_SIZE + TILE_SIZE /2), screen, this);
 
         warned = false;
         red = false;
@@ -103,21 +103,21 @@ public class Hud {
     public final String getMap(){ return STAGES.get(PacManGame.getLevel() % 5); }
 
 
-    public void animateLifes(float dt) {
+    public void animateLives(float dt) {
         if (PacManGame.getLives() == 1) {
-
-            PACMAN2.setState(Actor.State.DIEING);
-            PACMAN2.update(dt);
-            drawPac(PACMAN2,2);
+            PAC_MAN_2.setState(Actor.State.DIEING);
+            PAC_MAN_2.update(dt);
+            drawPac(PAC_MAN_2,2);
         }
 
         if (PacManGame.getLives() == 2) {
-            PACMAN3.setState(Actor.State.DIEING);
-            PACMAN3.update(dt);
-            drawPac(PACMAN3,4);
+            PAC_MAN_3.setState(Actor.State.DIEING);
+            PAC_MAN_3.update(dt);
+            drawPac(PAC_MAN_3,4);
         }
     }
 
+    @SuppressWarnings("DefaultLocale")
     public void update() {
         if (time < WARNING_TIME) {
             if (!warned) {
@@ -144,19 +144,21 @@ public class Hud {
             TIME_LABEL.setText(String.format("%03d", (int) time));
 
             if (PacManGame.getLives() >= 1) {
-                drawPac(PACMAN1, 0);
+                drawPac(PAC_MAN_1, 0);
             }
             if (PacManGame.getLives() >= 2) {
-                drawPac(PACMAN2, 2);
+                drawPac(PAC_MAN_2, 2);
             }
             if (PacManGame.getLives() >= 3) {
-                drawPac(PACMAN3, 4);
+                drawPac(PAC_MAN_3, 4);
 
             }
         }
     }
 
     public void drawPac(PacMan Pac, int pos){
+        int shift = 0;
+        if(Pac.getState() != Actor.State.DIEING) shift = 96;
         PacManGame.batch.begin();
         PacManGame.batch.draw(
                 Pac.texture,
@@ -164,7 +166,7 @@ public class Hud {
                 Pac.sprite.getOriginX(), Pac.sprite.getOriginY(),
                 2 * TILE_SIZE, 2 * TILE_SIZE,
                 Pac.sprite.getScaleX(), Pac.sprite.getScaleY(), Pac.rotation,
-                Pac.getTexturePositionX() + 96, 0, 32, 32, false, false);
+                Pac.getTexturePositionX() + shift, 0, 32, 32, false, false);
         PacManGame.batch.end();
     }
 

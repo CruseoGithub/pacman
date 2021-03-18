@@ -122,7 +122,7 @@ public class GameScreen extends MapScreen {
         super.render(delta);
         hud.update();
         if (pacman.getState() == Actor.State.DIEING) {
-            hud.animateLifes(delta/2f);
+            hud.animateLives(delta);
         }
         hud.stage.draw();
     }

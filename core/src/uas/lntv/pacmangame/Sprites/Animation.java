@@ -1,7 +1,7 @@
 package uas.lntv.pacmangame.Sprites;
-import uas.lntv.pacmangame.Assets;
+
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Screens.MapScreen;
-import com.badlogic.gdx.graphics.Texture;
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Sprites.Actor.State;
 
@@ -68,8 +68,9 @@ public class Animation {
                                 ACTOR.rotation = 270;
                                 break;
                         }
-                        ACTOR.setXPosition(ACTOR.TILE_SIZE);
-                        ACTOR.setYPosition(17 * ACTOR.TILE_SIZE);
+                        ACTOR.setXPosition(14 * ACTOR.TILE_SIZE);
+                        ACTOR.setYPosition(21 * ACTOR.TILE_SIZE);
+                        SCREEN.notReady();
                         tmp = 0;
                     }
                     break;

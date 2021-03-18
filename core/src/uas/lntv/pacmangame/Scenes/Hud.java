@@ -3,7 +3,6 @@ package uas.lntv.pacmangame.Scenes;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -12,14 +11,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class Hud {
-    private final PacManGame GAME;
     public Stage stage;
     private final Assets assets;
 
@@ -48,7 +47,6 @@ public class Hud {
 
     @SuppressWarnings("DefaultLocale")
     public Hud(PacManGame game, Assets assets, MapScreen screen, boolean visible){
-        this.GAME = game;
         this.assets = assets;
         int mapWidth = screen.map.getMapWidth();
         int mapHeight = screen.map.getMapHeight();
@@ -78,7 +76,7 @@ public class Hud {
         TIME_TEXT_LABEL.setFontScale(4);
         LIVES_TEXT_LABEL.setFontScale(4);
 
-        SCORE_LABEL = new Label(String.format("%06d  ", game.getScore()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        SCORE_LABEL = new Label(String.format("%06d  ", PacManGame.getScore()), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
         TIME_LABEL = new Label(String.format("%03d  ", (int)time), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
         SCORE_LABEL.setFontScale(4);
@@ -102,7 +100,7 @@ public class Hud {
         timeStamp = time;
     }
 
-    public final String getMap(){ return STAGES.get(GAME.getLevel() % 5); }
+    public final String getMap(){ return STAGES.get(PacManGame.getLevel() % 5); }
 
 
     public void animateLifes(float dt) {
@@ -120,18 +118,18 @@ public class Hud {
         }
     }
 
-    public void update(){
-        if(time < WARNING_TIME){
-            if(!warned){
-                assets.manager.get(assets.ALARM).play(0.4f);
+    public void update() {
+        if (time < WARNING_TIME) {
+            if (!warned) {
+                if (PrefManager.isSfxOn()) assets.manager.get(assets.ALARM).play(0.4f);
                 warned = true;
             }
-            if(timeStamp - 0.5 > time) {
-                if(!red) {
+            if (timeStamp - 0.5 > time) {
+                if (!red) {
                     TIME_TEXT_LABEL.setColor(Color.RED);
                     TIME_LABEL.setColor(Color.RED);
                     red = true;
-                } else{
+                } else {
                     TIME_TEXT_LABEL.setColor(Color.WHITE);
                     TIME_LABEL.setColor(Color.WHITE);
                     red = false;
@@ -140,22 +138,23 @@ public class Hud {
             }
         }
 
-       if(visible){
-            SCORE_LABEL.setText(String.format("%06d", GAME.getScore()));
-            TIME_LABEL.setText(String.format("%03d", (int)time));
 
-            if(GAME.getLives() >= 1) {
-              drawPac(PACMAN1,0);
+        if (visible) {
+            SCORE_LABEL.setText(String.format("%06d", GAME.getScore()));
+            TIME_LABEL.setText(String.format("%03d", (int) time));
+
+            if (GAME.getLives() >= 1) {
+                drawPac(PACMAN1, 0);
             }
-            if(GAME.getLives() >= 2) {
-                drawPac(PACMAN2,2);
+            if (GAME.getLives() >= 2) {
+                drawPac(PACMAN2, 2);
             }
-            if(GAME.getLives() >= 3) {
-                drawPac(PACMAN3,4);
+            if (GAME.getLives() >= 3) {
+                drawPac(PACMAN3, 4);
+
             }
         }
     }
-
     public void drawPac(PacMan Pac, int pos){
         PacManGame.batch.begin();
         PacManGame.batch.draw(

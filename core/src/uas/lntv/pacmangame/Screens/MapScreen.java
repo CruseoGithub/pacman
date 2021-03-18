@@ -14,26 +14,28 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.Random;
 
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Maps.GameMap;
 import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.MenuMap;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Controller;
-import uas.lntv.pacmangame.Scenes.ControllerSwipe;
+import uas.lntv.pacmangame.Scenes.ControllerButtons;
+import uas.lntv.pacmangame.Scenes.ControllerJoystick;
 import uas.lntv.pacmangame.Scenes.Hud;
+import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
+import uas.lntv.pacmangame.Sprites.Joystick;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 public abstract class MapScreen implements Screen {
-    public enum Type {GAME, MENU, SCORE}
+    public enum Type {GAME, MENU, SCORE, SETTINGS}
 
     protected PacManGame game;
     protected OrthographicCamera gameCam;
     protected Viewport gamePort;
     protected Music music;
-    protected Music huntingMusic;
 
     protected final Assets assets;
 
@@ -43,11 +45,17 @@ public abstract class MapScreen implements Screen {
     public PacMan pacman;
     protected ArrayList<Enemy> ghosts = new ArrayList<>();
 
-    private final Controller CONTROLLER;
+
+    protected  Controller controller;
+    protected Joystick joystick;
+
 
     private final int MAP_WIDTH;
     private final int MAP_HEIGHT;
     protected final int TILE_SIZE;
+
+
+    protected boolean ready = false;
 
     public MapScreen(PacManGame game, Assets assets, String path, MapScreen.Type type) {
         //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
@@ -62,10 +70,10 @@ public abstract class MapScreen implements Screen {
         playlist.add(assets.manager.get(assets.GAME_MUSIC_4));
         this.game = game;
         this.gameCam = new OrthographicCamera();
+        Random random = new Random();
         switch (type) {
             case GAME:
-                this.map = new GameMap(game, assets, path, this);
-                Random random = new Random();
+                this.map = new GameMap(assets, path, this);
                 this.music = playlist.get(random.nextInt(4));
                 this.music.setVolume(0.3f);
                 break;
@@ -79,12 +87,16 @@ public abstract class MapScreen implements Screen {
                 this.music = assets.manager.get(assets.SCORE_MUSIC);
                 music.setVolume(0.4f);
                 break;
+            case SETTINGS:
+                this.map = new MenuMap(path, assets);
+                this.music = assets.manager.get(assets.SETTINGS_MUSIC);
+                this.music.setVolume(0.3f);
+                break;
         }
-        this.huntingMusic = assets.manager.get(assets.HUNTING_MUSIC);
-        huntingMusic.setVolume(0.25f);
-        huntingMusic.setLooping(true);
+        assets.manager.get(assets.HUNTING_MUSIC).setVolume(0.25f);
+        assets.manager.get(assets.HUNTING_MUSIC).setLooping(true);
         music.setLooping(true);
-        music.play();
+        if(PrefManager.isMusicOn()) music.play();
         this.MAP_WIDTH = this.map.getMapWidth();
         this.MAP_HEIGHT = this.map.getMapHeight();
         this.TILE_SIZE = this.map.getTileSize();
@@ -92,84 +104,55 @@ public abstract class MapScreen implements Screen {
         this.gamePort = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, gameCam);
         this.gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-        this.CONTROLLER = new ControllerSwipe(this);
+        
+        if(PrefManager.isJoystick()) this.controller = new ControllerJoystick(assets, this);
+        else this.controller = new ControllerButtons(assets,this);
+
     }
+
 
     @Override
-    public void show() {
+    public void show() {  }
 
-    }
-
-    public void handleInput() {
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || CONTROLLER.isRightPressed()) {
+    public boolean handleInput() {
+        boolean action = false;
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || controller.isRightPressed()) {
             pacman.setNextDirection(Actor.Direction.RIGHT);
+            action = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || CONTROLLER.isLeftPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || controller.isLeftPressed()) {
             pacman.setNextDirection(Actor.Direction.LEFT);
+            action = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) || CONTROLLER.isUpPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) || controller.isUpPressed()) {
             pacman.setNextDirection(Actor.Direction.UP);
+            action = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || CONTROLLER.isDownPressed()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || controller.isDownPressed()) {
             pacman.setNextDirection(Actor.Direction.DOWN);
+            action = true;
         }
-        CONTROLLER.pulledInput();
+        controller.pulledInput();
+        return action;
     }
 
     public void update(float dt) {
-        handleInput();
+        if(handleInput()) ready = true;
 
-        pacman.update(dt);
-        for (Enemy ghost : ghosts) {
-            ghost.update(dt);
-        }
-
-        if (pacman.getState() != Actor.State.DIEING) {
-            pacman.move();
+        if(!(this instanceof GameScreen) || ready) {
+            pacman.update(dt);
             for (Enemy ghost : ghosts) {
-                if (ghost.getState() != Actor.State.KILLED) {
-                    ghost.findNextDirection(pacman);
-                    ghost.move();
-                } else {
-                    if (map.getTile(ghost.getXPosition(), ghost.getYPosition()) != map.getTile(ghost.getStartPosX(), ghost.getStartPosY())) {
-                        ghost.texture = assets.manager.get(assets.BLUE_DEAD);
-                        ghost.getHome();
-                    } else {
-                        if (ghost == getGhosts().get(0)) {
-                            ghost.texture = assets.manager.get(assets.GHOST_1);
-                        }
-                        if (getGhosts().size() > 1) {
-                            if (ghost == getGhosts().get(1)) {
-                                ghost.texture = assets.manager.get(assets.GHOST_2);
-                            }
-                            if (getGhosts().size() > 2) {
-                                if (ghost == getGhosts().get(2)) {
-                                    ghost.texture = assets.manager.get(assets.GHOST_3);
-                                }
-                            }
-                        }
-                        ghost.setState(Actor.State.RUNNING);
-                    }
-                }
-            }
-        } else {
-            for (Enemy ghost : ghosts) {
-                if (map.getTile(ghost.getXPosition(), ghost.getYPosition()) != map.getTile(ghost.getStartPosX(), ghost.getStartPosY())) {
-                    ghost.getHome();
-                }
+                ghost.update(dt, pacman);
             }
 
         }
 
         gameCam.update();
-
         map.renderer.setView(gameCam);
     }
 
     @Override
     public void render(float delta) {
-        update(delta);
-
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -190,10 +173,20 @@ public abstract class MapScreen implements Screen {
             );
         }
 
+        if(controller instanceof ControllerJoystick){
+            if(controller.isTouchEvent()){
+                joystick = ((ControllerJoystick) controller).joystick;
+                PacManGame.batch.draw(joystick.texture, joystick.getXPosition(), joystick.getYPosition(), 96, 96,
+                        192, 192, 1, 1, joystick.rotation,
+                        joystick.getTexturePositionX(), joystick.getTexturePositionY(), 192, 192, false, false
+                );
+                PacManGame.batch.draw(joystick.textureKnob, joystick.getXPositionKnob(), joystick.getYPositionKnob());
+            }
+        }
+
         PacManGame.batch.end();
 
         PacManGame.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.time -= Gdx.graphics.getDeltaTime();
     }
 
     public ArrayList<Enemy> getGhosts() { return ghosts; }
@@ -201,6 +194,11 @@ public abstract class MapScreen implements Screen {
     public void evolvePacMan() { }
 
     public void shrinkPacMan() { }
+
+    public void notReady(){
+        for(Enemy ghost : ghosts) ghost.notHome();
+        ready = false;
+    }
 
     @Override
     public void resize(int width, int height) {
@@ -210,38 +208,33 @@ public abstract class MapScreen implements Screen {
     }
 
     public void switchMusicHunting() {
-        if (music.isPlaying()) {
+        if (music.isPlaying() && PrefManager.isMusicOn()) {
             music.pause();
-            huntingMusic.play();
+            assets.manager.get(assets.HUNTING_MUSIC).play();
         }
     }
 
     public void switchMusicGame() {
-        huntingMusic.stop();
-        music.play();
+        if(PrefManager.isMusicOn()) {
+            assets.manager.get(assets.HUNTING_MUSIC).stop();
+            music.play();
+        }
     }
 
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() { }
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {  }
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() {  }
 
     @Override
     public void dispose() {
-        CONTROLLER.dispose();
+        controller.dispose();
         music.dispose();
-        huntingMusic.dispose();
     }
 
 }

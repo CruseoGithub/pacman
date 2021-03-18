@@ -6,14 +6,16 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
 
+/**
+ * The LoadingScreen shows the progress of asset loading in a visual way.
+ */
 public class LoadingScreen implements Screen {
     private final PacManGame GAME;
     private final Assets ASSETS;
     private final OrthographicCamera CAM;
-
     private final Sprite SPRITE;
 
     private float checkpoint = 0.04f;
@@ -21,6 +23,11 @@ public class LoadingScreen implements Screen {
     private int texturePositionY = 0;
     private float progress = 0;
 
+    /**
+     * Main constructor of the LoadingScreen
+     * @param GAME running game
+     * @param ASSETS asset management
+     */
     public LoadingScreen(final PacManGame GAME, final Assets ASSETS){
         this.GAME = GAME;
         this.ASSETS = ASSETS;
@@ -33,6 +40,10 @@ public class LoadingScreen implements Screen {
     @Override
     public void show() {  }
 
+    /**
+     * Checks the progress of the loading process of the asset-manager and changes the shown
+     * part of the loading texture
+     */
     private void update(){
         progress = MathUtils.lerp(progress, ASSETS.manager.getProgress(), 0.025f);
         if(progress > checkpoint){
@@ -44,12 +55,17 @@ public class LoadingScreen implements Screen {
             }
         }
         if(ASSETS.manager.update() && progress > 0.99f){
-            GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
             this.dispose();
+            GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
         }
         CAM.update();
     }
 
+    /**
+     * Uses the update method to check the progress and draws the loading progress visualization
+     * on the screen
+     * @param delta time parameter used by libGDX
+     */
     @Override
     public void render(float delta) {
         update();
@@ -57,7 +73,7 @@ public class LoadingScreen implements Screen {
 
         PacManGame.batch.begin();
         PacManGame.batch.setProjectionMatrix(CAM.combined);
-        PacManGame.batch.draw(SPRITE.getTexture(), 0, 0, SPRITE.getOriginX(), SPRITE.getOriginY(),
+        PacManGame.batch.draw(SPRITE.getTexture(), 100, 300, SPRITE.getOriginX(), SPRITE.getOriginY(),
                 256, 256, SPRITE.getScaleX(), SPRITE.getScaleY(), 0,
                 texturePositionX, texturePositionY, 256, 256, false, false
         );
@@ -77,8 +93,6 @@ public class LoadingScreen implements Screen {
     public void hide() {  }
 
     @Override
-    public void dispose() {
-        SPRITE.getTexture().dispose();
-    }
+    public void dispose() {  }
 
 }

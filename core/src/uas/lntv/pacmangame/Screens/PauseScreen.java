@@ -1,0 +1,183 @@
+package uas.lntv.pacmangame.Screens;
+
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+
+import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.PacManGame;
+import uas.lntv.pacmangame.Scenes.ControllerButtons;
+import uas.lntv.pacmangame.Scenes.ControllerJoystick;
+import uas.lntv.pacmangame.Scenes.Hud;
+import uas.lntv.pacmangame.Managers.PrefManager;
+import uas.lntv.pacmangame.Sprites.Enemy;
+import uas.lntv.pacmangame.Sprites.PacMan;
+
+public class PauseScreen extends MapScreen {
+    private final GameScreen SCREEN;
+    private final BitmapFont FONT;
+    private boolean controllerSet = false;
+
+
+    public PauseScreen(PacManGame game, Assets assets, String mapPath, GameScreen screen, Hud hud){
+        super(game, assets, mapPath, Type.MENU);
+        this.hud = hud;
+        this.pacman = new PacMan(game, assets, 25*TILE_SIZE, 43*TILE_SIZE, this, hud);
+        this.pacman.setSpeed(8);
+        ghosts.add(new Enemy(25*TILE_SIZE, 3*TILE_SIZE, assets, this, assets.manager.get(assets.BLUE_DEAD)));
+        this.FONT = new BitmapFont();
+        FONT.getData().setScale(FONT.getScaleX()*2);
+        this.SCREEN = screen;
+    }
+    @Override
+    public void update(float dt){
+        boolean moving = false;
+        if(handleInput()) moving = true;
+        if(
+                !(pacman.getXPosition() == 25 * TILE_SIZE
+                        &&(pacman.getYPosition() == 39 * TILE_SIZE
+                        || pacman.getYPosition() == 34 * TILE_SIZE
+                        || pacman.getYPosition() == 23 * TILE_SIZE)
+                )
+                        && !(pacman.getYPosition() == 39 * TILE_SIZE && pacman.getXPosition() == 7 * TILE_SIZE)
+                        && !(pacman.getYPosition() == 34 * TILE_SIZE && pacman.getXPosition() == 17 * TILE_SIZE)
+                        && !(pacman.getYPosition() == 23 * TILE_SIZE && pacman.getXPosition() == 4 * TILE_SIZE)
+                        || moving
+        ){
+            pacman.update(dt);
+            pacman.move();
+        }
+
+        //RETURN TO GAME
+        if(pacman.getYPosition() == 43 * TILE_SIZE){
+            if(pacman.getXPosition() <= 1 * TILE_SIZE) {
+                this.dispose();
+                game.setScreen(SCREEN);
+            }
+        }
+
+        //TO MENU
+        if(pacman.getYPosition() == 16*TILE_SIZE){
+            if(pacman.getXPosition() <= 2*TILE_SIZE) {
+                this.dispose();
+                game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
+                PacManGame.resetLives();
+                PacManGame.resetScore();
+                PacManGame.resetLevel();
+            }
+        }
+
+        //MUSIC
+        if(pacman.getYPosition() == 34*TILE_SIZE){
+            if(pacman.getXPosition() == 2*TILE_SIZE) {
+                PrefManager.setMusicOn(true);
+                if(!music.isPlaying()) music.play();
+                System.out.println("MUSIC LALALA");
+            }
+            if(pacman.getXPosition() == 7*TILE_SIZE) {
+                PrefManager.setMusicOn(false);
+                assets.manager.get(assets.HUNTING_MUSIC).stop();
+                music.stop();
+                System.out.println("SOUND OF SILENCE");
+            }
+            PrefManager.savePrefs();
+        }
+
+        //SOUND SFX
+        if(pacman.getYPosition() == 29*TILE_SIZE){
+            if(pacman.getXPosition() == 12*TILE_SIZE) {
+                PrefManager.setSfxOn(true);
+                System.out.println("SFX ON");
+            }
+            if(pacman.getXPosition() == 17*TILE_SIZE) {
+                PrefManager.setSfxOn(false);
+                System.out.println("SFX OFFFFFFF");
+            }
+            PrefManager.savePrefs();
+        }
+
+        if(pacman.getXPosition() == 8 *TILE_SIZE){
+            if(pacman.getYPosition() == 26 * TILE_SIZE && !controllerSet){
+                PrefManager.setJoystick(true);
+                PrefManager.savePrefs();
+                controller.dispose();
+                controller = new ControllerJoystick(assets,this);
+                controllerSet = true;
+            }
+            if(pacman.getYPosition() == 20 * TILE_SIZE && !controllerSet){
+                PrefManager.setJoystick(false);
+                PrefManager.savePrefs();
+                controller.dispose();
+                controller = new ControllerButtons(assets, this);
+                controllerSet = true;
+            }
+        }
+        if(pacman.getYPosition() == 23 * TILE_SIZE) controllerSet = false;
+    }
+
+    @Override
+    public void render(float delta) {
+
+        super.render(delta);
+        update(delta);
+        hud.stage.draw();
+        hud.update();
+
+        PacManGame.batch.begin();
+            FONT.draw(PacManGame.batch,
+                    "CONTINUE",
+                    TILE_SIZE + 15,
+                    44* TILE_SIZE - 6);
+
+            FONT.draw(PacManGame.batch,
+                    "RETURN TO MENU",
+                    2 * TILE_SIZE,
+                    17* TILE_SIZE);
+
+            FONT.draw(PacManGame.batch,
+                    "MUSIC",
+                    3 * TILE_SIZE + 20,
+                    40* TILE_SIZE);
+
+            FONT.draw(PacManGame.batch,
+                    "ON",
+                    2 * TILE_SIZE,
+                    35* TILE_SIZE -10);
+
+            FONT.draw(PacManGame.batch,
+                    "OFF",
+                    7 * TILE_SIZE,
+                    35* TILE_SIZE -10);
+
+            FONT.draw(PacManGame.batch,
+                    "SOUND",
+                    13 * TILE_SIZE +13 ,
+                    35* TILE_SIZE);
+
+            FONT.draw(PacManGame.batch,
+                    "ON",
+                    12 * TILE_SIZE,
+                    30* TILE_SIZE -10);
+
+            FONT.draw(PacManGame.batch,
+                    "OFF",
+                    17 * TILE_SIZE,
+                    30* TILE_SIZE -10);
+
+            FONT.draw(PacManGame.batch,
+                    "CONTROLLER",
+                    6 * TILE_SIZE,
+                    24* TILE_SIZE );
+
+            FONT.draw(PacManGame.batch,
+                    "JOYSTICK",
+                    4 * TILE_SIZE,
+                    27* TILE_SIZE );
+
+            FONT.draw(PacManGame.batch,
+                    "BUTTONS",
+                    4 * TILE_SIZE,
+                    21* TILE_SIZE );
+
+        PacManGame.batch.end();
+    }
+
+}

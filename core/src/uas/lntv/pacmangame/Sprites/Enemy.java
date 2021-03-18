@@ -1,11 +1,12 @@
 package uas.lntv.pacmangame.Sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import uas.lntv.pacmangame.AI.Pathfinder;
-import uas.lntv.pacmangame.Assets;
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
@@ -18,8 +19,20 @@ public class Enemy extends Actor {
     }
 
     private Pathfinder aStar;
+
     private Difficulty difficulty;
     private Difficulty levelDiff;
+
+    private float boxTimer;
+    private final int HOME_X;
+    private final int HOME_Y;
+    private final Texture LIVING_BODY;
+
+    private boolean home = false;
+
+    public boolean isHome(){ return home; }
+
+    public void notHome(){ home = false; }
 
     /**
      * Create a new ghost
@@ -29,14 +42,19 @@ public class Enemy extends Actor {
      * @param ghost name or path of the png-file that makes the ghost look beautiful
      */
     public Enemy(int initX, int initY, Assets assets, MapScreen screen, Texture ghost){
-        super(initX, initY, screen);
+        super(assets, initX, initY, screen);
+
+        HOME_X = 13 * TILE_SIZE;
+        HOME_Y = 33 * TILE_SIZE;
+
 
         this.difficulty = Difficulty.EASY;
         this.direction = Direction.DOWN;
         this.nextDirection = Direction.DOWN;
         this.prevDirection = Direction.DOWN;
 
-        this.texture = ghost;
+        LIVING_BODY = ghost;
+        this.texture = LIVING_BODY;
         region = new TextureRegion(texture);
         region.setRegionX(0);
         region.setRegionY(0);
@@ -45,6 +63,8 @@ public class Enemy extends Actor {
         this.animationSpeed = 0.1f;
 
         animation = new Animation(this, assets, animationSpeed, this.screen,4);
+
+        this.boxTimer = 0;
 
         region.flip(true, false);
         this.sprite = new Sprite(region);
@@ -61,6 +81,53 @@ public class Enemy extends Actor {
     public void resetDifficulty(){
         setDifficulty(levelDiff);
     }
+
+    public void setBoxTimer(float timer){ this.boxTimer = timer; }
+
+    public float getBoxTimer(){ return this.boxTimer; }
+
+    public void leaveBox(){
+        screen.map.getTile(xPosition, yPosition).leave(this);
+        if(xPosition < 13 * TILE_SIZE) xPosition += 8;
+        else if(xPosition > 13 * TILE_SIZE) xPosition -= 8;
+        else if(yPosition < 33 * TILE_SIZE) yPosition += 8;
+        else setState(State.RUNNING);
+    }
+
+    public void enterBox() {
+        if (yPosition > 30 * TILE_SIZE) yPosition -= 8;
+        else if (!(screen.map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
+            if(xPosition > 12 * TILE_SIZE) xPosition -= 8;
+            if(xPosition == 12 * TILE_SIZE){
+                screen.map.getTile(xPosition, yPosition).enter(this);
+                setState(State.BOXED);
+                home = false;
+                boxTimer = 5;
+                texture = LIVING_BODY;
+            }
+        }
+        else if(!(screen.map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
+            if(xPosition< 15 * TILE_SIZE)xPosition += 8;
+            if(xPosition == 15 * TILE_SIZE){
+                screen.map.getTile(xPosition, yPosition).enter(this);
+                setState(State.BOXED);
+                home = false;
+                boxTimer = 7.5f;
+                texture = LIVING_BODY;
+            }
+        }
+        else if (!(screen.map.getTile(14 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
+            if(xPosition< 14 * TILE_SIZE)xPosition += 8;
+            if(xPosition == 14 * TILE_SIZE) {
+                screen.map.getTile(xPosition, yPosition).enter(this);
+                setState(State.BOXED);
+                home = false;
+                boxTimer = 10;
+                texture = LIVING_BODY;
+            }
+        }
+    }
+
 
     /**
      * Simply detects if PacMan is above or beneath the ghost.
@@ -145,7 +212,9 @@ public class Enemy extends Actor {
      */
     private Direction runAway(Actor hunter){
         if(collisionTest(hunter)){
-            this.state = State.KILLED;
+            this.state = State.HOMING;
+            this.texture = assets.manager.get(assets.BLUE_DEAD);
+            home = false;
             screen.map.getTile(xPosition, yPosition).leave(this);
             return Direction.RIGHT;
         }
@@ -170,7 +239,7 @@ public class Enemy extends Actor {
      * @return One of the four directions
      */
     private Direction findHome(){
-        aStar = new Pathfinder(screen, this, getStartPosX(), getStartPosY(), true);
+        aStar = new Pathfinder(screen, this, HOME_X, HOME_Y, true);
         Tile temp = aStar.aStarResult();
         if(temp.getY() > this.getYPosition()) return Direction.UP;
         if(temp.getY() < this.getYPosition()) return Direction.DOWN;
@@ -184,9 +253,17 @@ public class Enemy extends Actor {
     public void getHome(){
         correctPosition(direction);
         setSpeed(getSpeed() * 2);
+        correctPosition(direction);
+        setSpeed(getSpeed() * 2);
         nextDirection = findHome();
         move();
         setSpeed(getSpeed() / 2);
+        setSpeed(getSpeed() / 2);
+        if(screen.map.getTile(xPosition, yPosition) == screen.map.getTile(HOME_X, HOME_Y)){
+            xPosition = HOME_X;
+            yPosition = HOME_Y;
+            home = true;
+        }
     }
 
     /**
@@ -212,6 +289,29 @@ public class Enemy extends Actor {
                 nextDirection = runAway(target);
                 break;
         }
+    }
+
+    public void update(float dt, PacMan pacman) {
+        super.update(dt);
+        if(pacman.getState() == State.DIEING){
+            if(state != Actor.State.BOXED) {
+                if (!home) getHome();
+                else if (LIVING_BODY == assets.manager.get(assets.GHOST_1)) setState(Actor.State.RUNNING);
+                else enterBox();
+            }
+        } else{
+            if(boxTimer > 0) boxTimer -= Gdx.graphics.getDeltaTime();
+            else if(state == State.BOXED) leaveBox();
+            else if(state == State.HOMING) {
+                if(!home) getHome();
+                else enterBox();
+            }
+            else{
+                findNextDirection(pacman);
+                move();
+            }
+        }
+
     }
 
     /**

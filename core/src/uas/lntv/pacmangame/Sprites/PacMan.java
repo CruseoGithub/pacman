@@ -14,16 +14,14 @@ import uas.lntv.pacmangame.Screens.ScoreScreen;
 public class PacMan extends Actor {
     public Hud hud;
     protected PacManGame game;
-    protected Assets assets;
 
     public PacMan(PacManGame game, Assets assets, int initX, int initY, MapScreen screen, Hud hud){
-        super(initX, initY, screen);
+        super(assets, initX, initY, screen);
         this.direction = Direction.RIGHT;
         this.nextDirection = Direction.RIGHT;
         this.prevDirection = Direction.RIGHT;
 
         this.game = game;
-        this.assets = assets;
 
         if(!(this instanceof SuperPacMan)) this.texture = assets.manager.get(assets.PAC_MAN);
         else this.texture = assets.manager.get(assets.SUPER_PAC);
@@ -43,14 +41,13 @@ public class PacMan extends Actor {
     }
 
     public PacMan(PacManGame game, Assets assets, int initX, int initY, int speed, MapScreen screen, Hud hud,  Direction now, Direction next, Direction prev){
-        super(initX, initY, screen);
+        super(assets, initX, initY, screen);
         this.direction = now;
         this.nextDirection = next;
         this.prevDirection = prev;
         this.setSpeed(speed);
 
         this.game = game;
-        this.assets = assets;
 
         if(!(this instanceof SuperPacMan)) this.texture = assets.manager.get(assets.PAC_MAN);
         else this.texture = assets.manager.get(assets.SUPER_PAC);
@@ -104,6 +101,12 @@ public class PacMan extends Actor {
             PacManGame.resetLives();
             PacManGame.resetLevel();
         }
+    }
+
+    @Override
+    public void update(float dt) {
+        super.update(dt);
+        if(getState() != State.DIEING) move();
     }
 
     @Override

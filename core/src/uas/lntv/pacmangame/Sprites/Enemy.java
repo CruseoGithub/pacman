@@ -1,5 +1,6 @@
 package uas.lntv.pacmangame.Sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -25,17 +26,9 @@ public class Enemy extends Actor {
     private float boxTimer;
     private final int HOME_X;
     private final int HOME_Y;
+    private final Texture LIVING_BODY;
 
     private boolean home = false;
-
-
-    public int getHomeX() {
-        return HOME_X;
-    }
-
-    public int getHomeY() {
-        return HOME_Y;
-    }
 
     public boolean isHome(){ return home; }
 
@@ -49,7 +42,7 @@ public class Enemy extends Actor {
      * @param ghost name or path of the png-file that makes the ghost look beautiful
      */
     public Enemy(int initX, int initY, Assets assets, MapScreen screen, Texture ghost){
-        super(initX, initY, screen);
+        super(assets, initX, initY, screen);
 
         HOME_X = 13 * TILE_SIZE;
         HOME_Y = 33 * TILE_SIZE;
@@ -60,7 +53,8 @@ public class Enemy extends Actor {
         this.nextDirection = Direction.DOWN;
         this.prevDirection = Direction.DOWN;
 
-        this.texture = ghost;
+        LIVING_BODY = ghost;
+        this.texture = LIVING_BODY;
         region = new TextureRegion(texture);
         region.setRegionX(0);
         region.setRegionY(0);
@@ -109,6 +103,7 @@ public class Enemy extends Actor {
                 setState(State.BOXED);
                 home = false;
                 boxTimer = 5;
+                texture = LIVING_BODY;
             }
         }
         else if(!(screen.map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
@@ -118,6 +113,7 @@ public class Enemy extends Actor {
                 setState(State.BOXED);
                 home = false;
                 boxTimer = 7.5f;
+                texture = LIVING_BODY;
             }
         }
         else if (!(screen.map.getTile(14 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
@@ -127,6 +123,7 @@ public class Enemy extends Actor {
                 setState(State.BOXED);
                 home = false;
                 boxTimer = 10;
+                texture = LIVING_BODY;
             }
         }
     }
@@ -216,6 +213,7 @@ public class Enemy extends Actor {
     private Direction runAway(Actor hunter){
         if(collisionTest(hunter)){
             this.state = State.HOMING;
+            this.texture = assets.manager.get(assets.BLUE_DEAD);
             home = false;
             screen.map.getTile(xPosition, yPosition).leave(this);
             return Direction.RIGHT;
@@ -291,6 +289,29 @@ public class Enemy extends Actor {
                 nextDirection = runAway(target);
                 break;
         }
+    }
+
+    public void update(float dt, PacMan pacman) {
+        super.update(dt);
+        if(pacman.getState() == State.DIEING){
+            if(state != Actor.State.BOXED) {
+                if (!home) getHome();
+                else if (LIVING_BODY == assets.manager.get(assets.GHOST_1)) setState(Actor.State.RUNNING);
+                else enterBox();
+            }
+        } else{
+            if(boxTimer > 0) boxTimer -= Gdx.graphics.getDeltaTime();
+            else if(state == State.BOXED) leaveBox();
+            else if(state == State.HOMING) {
+                if(!home) getHome();
+                else enterBox();
+            }
+            else{
+                findNextDirection(pacman);
+                move();
+            }
+        }
+
     }
 
     /**

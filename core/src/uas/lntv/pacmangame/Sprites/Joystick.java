@@ -6,7 +6,6 @@ import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Managers.Assets;
 
 public class Joystick extends Actor {
-    protected Assets assets;
     public Texture textureKnob;
     protected int xPositionKnob, yPositionKnob;
 
@@ -16,8 +15,7 @@ public class Joystick extends Actor {
     public int getYPositionKnob() { return yPositionKnob; }
 
     public Joystick(Assets assets, MapScreen screen){
-        super(0,0,screen);
-        this.assets = assets;
+        super(assets,0,0,screen);
         this.texture = assets.manager.get(assets.JOYSTICK_ZONE);
         textureKnob = assets.manager.get(assets.JOYSTICK_KNOB);
     }

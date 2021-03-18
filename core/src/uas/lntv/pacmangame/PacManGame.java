@@ -8,6 +8,7 @@ import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Screens.LoadingScreen;
 import uas.lntv.pacmangame.Screens.SplashScreen;
+import uas.lntv.pacmangame.Screens.LoadingScreen;
 
 public class PacManGame extends Game {
 	private static int level;
@@ -23,7 +24,7 @@ public class PacManGame extends Game {
 		prefManager = new PrefManager();
 		assets = new Assets();
 		assets.loadSetup();
-		level = 10;
+		level = 0;
 		score = 0;
 		lives = 3;
 		setScreen(new SplashScreen(this, assets));

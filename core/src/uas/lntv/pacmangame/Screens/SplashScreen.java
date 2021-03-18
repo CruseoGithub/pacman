@@ -37,7 +37,6 @@ public class SplashScreen implements Screen {
         if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
             Gdx.graphics.setWindowedMode(450, 800);
         }
-
         Texture logo = this.ASSETS.manager.get(ASSETS.LNTV_Logo);
         this.SPLASHY = new Sprite(logo);
 
@@ -63,8 +62,8 @@ public class SplashScreen implements Screen {
             SPLASHY.getTexture().dispose();
             SPLASHY.setTexture(this.ASSETS.manager.get(ASSETS.GDX));
             SPLASHY.setSize(390, 65);
-            SPLASHY.setPosition(45,80);
-            SPLASHY.setScale(0.5f, 0.5f);
+            SPLASHY.setPosition(100,170);
+            SPLASHY.setScale(0.8f, 0.8f);
         }
 
         if(timer > 10) {

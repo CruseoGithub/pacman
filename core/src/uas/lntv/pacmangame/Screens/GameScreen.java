@@ -76,7 +76,6 @@ public class GameScreen extends MapScreen {
         super.update(dt);
         if(ready) hud.time -= Gdx.graphics.getDeltaTime();
 
-
         if(hud.time < 0){
             this.dispose();
             if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Time elapsed", PacManGame.getLevel() + 1)){
@@ -94,7 +93,6 @@ public class GameScreen extends MapScreen {
             PacManGame.increaseScore((int)hud.time);
             this.dispose();
             game.setScreen(new GameScreen(game, assets, hud.getMap()));
-
         }
 
         if(paused) {

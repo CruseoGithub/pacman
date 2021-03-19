@@ -2,6 +2,7 @@ package uas.lntv.pacmangame.Sprites;
 
 import com.badlogic.gdx.graphics.Texture;
 
+import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Managers.Assets;
 
@@ -20,4 +21,12 @@ public class Joystick extends Actor {
         textureKnob = assets.manager.get(assets.JOYSTICK_KNOB);
     }
 
+    @Override
+    public void draw() {
+        PacManGame.batch.draw(texture, getXPosition(), getYPosition(), 96, 96,
+                192, 192, 1, 1, rotation,
+                texturePositionX, texturePositionY, 192, 192, false, false
+        );
+        PacManGame.batch.draw(textureKnob, xPositionKnob, yPositionKnob);
+    }
 }

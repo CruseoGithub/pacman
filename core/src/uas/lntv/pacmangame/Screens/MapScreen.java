@@ -159,27 +159,16 @@ public abstract class MapScreen implements Screen {
         map.renderer.render();
 
         PacManGame.batch.begin();
-
-        PacManGame.batch.draw(pacman.texture, pacman.getXPosition(), pacman.getYPosition(), pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
-                TILE_SIZE, TILE_SIZE, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
-                pacman.getTexturePositionX(), 0, 32, 32, false, false
-        );
+        pacman.draw();
 
         for (Enemy ghost : ghosts) {
-            PacManGame.batch.draw(ghost.texture, ghost.getXPosition(), ghost.getYPosition(), ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
-                    TILE_SIZE, TILE_SIZE, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
-                    ghost.getTexturePositionX(), ghost.getTexturePositionY(), 32, 32, false, false
-            );
+            ghost.draw();
         }
 
         if(controller instanceof ControllerJoystick){
             if(controller.isTouchEvent()){
                 joystick = ((ControllerJoystick) controller).joystick;
-                PacManGame.batch.draw(joystick.texture, joystick.getXPosition(), joystick.getYPosition(), 96, 96,
-                        192, 192, 1, 1, joystick.rotation,
-                        joystick.getTexturePositionX(), joystick.getTexturePositionY(), 192, 192, false, false
-                );
-                PacManGame.batch.draw(joystick.textureKnob, joystick.getXPositionKnob(), joystick.getYPositionKnob());
+                joystick.draw();
             }
         }
 

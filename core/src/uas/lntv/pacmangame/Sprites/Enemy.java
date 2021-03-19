@@ -18,19 +18,16 @@ public class Enemy extends Actor {
         RUNAWAY,RANDOM,EASY,MEDIUM,HARD
     }
 
-    private Pathfinder aStar;
-
     private Difficulty difficulty;
     private Difficulty levelDiff;
+    private Pathfinder aStar;
+    private final Texture LIVING_BODY;
 
     private float boxTimer;
     private final int HOME_X;
     private final int HOME_Y;
-    private final Texture LIVING_BODY;
 
     private boolean home = false;
-
-    public boolean isHome(){ return home; }
 
     public void notHome(){ home = false; }
 
@@ -78,14 +75,20 @@ public class Enemy extends Actor {
         this.difficulty = difficulty;
     }
 
+    /**
+     * This method is needed, when SuperPacMan shrinks down to PacMan and the ghost needs to
+     * turn back to his assigned difficulty depending on the level.
+     */
     public void resetDifficulty(){
         setDifficulty(levelDiff);
     }
 
     public void setBoxTimer(float timer){ this.boxTimer = timer; }
 
-    public float getBoxTimer(){ return this.boxTimer; }
-
+    /**
+     * Moves the ghost according to its current position until it has reached the HOME-position
+     * outside of the box.
+     */
     public void leaveBox(){
         screen.map.getTile(xPosition, yPosition).leave(this);
         if(xPosition < 13 * TILE_SIZE) xPosition += 8;
@@ -94,6 +97,9 @@ public class Enemy extends Actor {
         else setState(State.RUNNING);
     }
 
+    /**
+     * Make the ghost find his spot in the box.
+     */
     public void enterBox() {
         if (yPosition > 30 * TILE_SIZE) yPosition -= 8;
         else if (!(screen.map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
@@ -206,7 +212,7 @@ public class Enemy extends Actor {
      * The map will be divided in four quarters and the targeted tile will be the one in the
      * extreme corner of the opposite quarter in which SuperPacMan is right now.
      * @param hunter RUN! It's SuperPacMan!!
-     * @return tile of retreat
+     * @return Direction to the tile of retreat
      */
     private Direction runAway(Actor hunter){
         if(collisionTest(hunter)){
@@ -289,6 +295,12 @@ public class Enemy extends Actor {
         }
     }
 
+    /**
+     * This update method checks the current state of the game to determine what each ghost needs to
+     * do next.
+     * @param dt time parameter used by libGDX
+     * @param pacman PacMan
+     */
     public void update(float dt, PacMan pacman) {
         super.update(dt);
         if(pacman.getState() == State.DIEING){

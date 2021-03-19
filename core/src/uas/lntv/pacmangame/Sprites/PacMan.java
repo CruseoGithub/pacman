@@ -80,9 +80,12 @@ public class PacMan extends Actor {
         }
     }
 
-
-
-    public void resetSupStatusTime(){}
+ /*   public void draw(){
+        PacManGame.batch.draw(texture, xPosition, yPosition, sprite.getOriginX(), sprite.getOriginY(),
+                TILE_SIZE, TILE_SIZE, sprite.getScaleX(), sprite.getScaleY(), rotation,
+                texturePositionX, 0, 32, 32, false, false
+        );
+    }*/
 
     @Override
     public void collide() {

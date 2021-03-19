@@ -142,7 +142,7 @@ public class GameScreen extends MapScreen {
             );
             this.pacManSuper = true;
         } else{
-            pacman.resetSupStatusTime();
+            ((SuperPacMan)pacman).resetSupStatusTime();
         }
     }
 

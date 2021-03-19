@@ -8,6 +8,7 @@ import java.util.Random;
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Maps.Tile;
+import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
@@ -234,6 +235,18 @@ public abstract class Actor {
                 screen.map.getTile(xPosition, yPosition).enter(this);
             }
         }
+    }
+
+    public void draw(){
+        PacManGame.batch.draw(texture,
+                xPosition, yPosition,
+                sprite.getOriginX(), sprite.getOriginY(),
+                TILE_SIZE, TILE_SIZE,
+                sprite.getScaleX(), sprite.getScaleY(),
+                rotation,
+                texturePositionX, texturePositionY,
+                32, 32, false, false
+        );
     }
 
     public void collide() {

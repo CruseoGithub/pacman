@@ -57,7 +57,7 @@ public class SplashScreen implements Screen {
      * @param GAME running game
      * @param ASSETS asset management
      */
-    public SplashScreen(final PacManGame GAME, final Assets ASSETS){
+    public SplashScreen(final PacManGame GAME, final Assets ASSETS, boolean introLogos){
 
         //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
         if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
@@ -87,6 +87,8 @@ public class SplashScreen implements Screen {
 
         this.ASSETS.load();
         this.SPRITE = new Sprite(this.ASSETS.manager.get(ASSETS.LOADING));
+
+        if(!introLogos) timer = 10; //Skip intro logos
 
     }
 

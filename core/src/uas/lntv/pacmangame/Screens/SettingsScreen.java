@@ -3,6 +3,7 @@ package uas.lntv.pacmangame.Screens;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Maps.MenuMap;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.ControllerButtons;
 import uas.lntv.pacmangame.Scenes.ControllerJoystick;
@@ -13,6 +14,7 @@ import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class SettingsScreen extends MapScreen {
 
+    private final MenuMap MENU_MAP;
     private final BitmapFont FONT;
     private boolean controllerSet = false;
 
@@ -24,6 +26,7 @@ public class SettingsScreen extends MapScreen {
         this.hud = new Hud(game, assets,this, false);
         this.FONT = new BitmapFont();
         FONT.getData().setScale(FONT.getScaleX()*2);
+        this.MENU_MAP = (MenuMap) map;
     }
 
     @Override
@@ -49,14 +52,17 @@ public class SettingsScreen extends MapScreen {
 
         //If PacMan reaches the threshold of action, it depends in which corridor he is
         if(pacman.getXPosition() == 19 *TILE_SIZE){
+            //RETURN TO  MAIN MENU
             if(pacman.getYPosition() == 17 * TILE_SIZE){
                 this.dispose();
                 game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
             }
+            //ENTER SCORE SCREEN
             if(pacman.getYPosition() == 25 * TILE_SIZE){
                 this.dispose();
                 game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
             }
+            //SET CONTROLLER TO JOYSTICK
             if(pacman.getYPosition() == 37 * TILE_SIZE && !controllerSet){
                 PrefManager.setJoystick(true);
                 PrefManager.savePrefs();
@@ -64,6 +70,7 @@ public class SettingsScreen extends MapScreen {
                 controller = new ControllerJoystick(assets,this);
                 controllerSet = true;
             }
+            //SET CONTROLLER TO BUTTONS
             if(pacman.getYPosition() == 29 * TILE_SIZE && !controllerSet){
                 PrefManager.setJoystick(false);
                 PrefManager.savePrefs();
@@ -73,8 +80,10 @@ public class SettingsScreen extends MapScreen {
             }
         }
 
+        //preventing infinite dispose/create loop
         if(pacman.getYPosition() == 33 * TILE_SIZE) controllerSet = false;
 
+        //MUSIC ON/OFF
         if(pacman.getYPosition() == 41 * TILE_SIZE){
             if(pacman.getXPosition() == 19 * TILE_SIZE){
                 PrefManager.setMusicOn(true);
@@ -87,11 +96,14 @@ public class SettingsScreen extends MapScreen {
             PrefManager.savePrefs();
         }
 
+        //SFX ON/OFF
         if(pacman.getYPosition() == 37 * TILE_SIZE){
             if(pacman.getXPosition() == 11 * TILE_SIZE) PrefManager.setSfxOn(true);
             if(pacman.getXPosition() == 15 * TILE_SIZE) PrefManager.setSfxOn(false);
             PrefManager.savePrefs();
         }
+
+        //CHANGE USER NAME
         if(pacman.getYPosition() == 29 * TILE_SIZE) {
             if (pacman.getXPosition() == 14 * TILE_SIZE) {
                 PrefManager.setNameSet(true);
@@ -105,10 +117,36 @@ public class SettingsScreen extends MapScreen {
             }
         }
 
+        //CHECK FOR HIGHLIGHTING
+        if(PrefManager.isMusicOn()) {
+            this.MENU_MAP.getHighlightLayers().get(0).setVisible(true);
+            this.MENU_MAP.getHighlightLayers().get(1).setVisible(false);
+        }
+        else{
+            this.MENU_MAP.getHighlightLayers().get(0).setVisible(false);
+            this.MENU_MAP.getHighlightLayers().get(1).setVisible(true);
+        }
+        if(PrefManager.isSfxOn()){
+            this.MENU_MAP.getHighlightLayers().get(2).setVisible(true);
+            this.MENU_MAP.getHighlightLayers().get(3).setVisible(false);
+        }
+        else {
+            this.MENU_MAP.getHighlightLayers().get(2).setVisible(false);
+            this.MENU_MAP.getHighlightLayers().get(3).setVisible(true);
+        }
+        if(PrefManager.isJoystick()) {
+            this.MENU_MAP.getHighlightLayers().get(4).setVisible(true);
+            this.MENU_MAP.getHighlightLayers().get(5).setVisible(false);
+        }
+        else{
+            this.MENU_MAP.getHighlightLayers().get(4).setVisible(false);
+            this.MENU_MAP.getHighlightLayers().get(5).setVisible(true);
+        }
+
         ghosts.get(0).update(dt);
         ghosts.get(0).move();
         gameCam.update();
-        map.renderer.setView(gameCam);
+        this.MENU_MAP.renderer.setView(gameCam);
     }
 
     @Override
@@ -191,7 +229,7 @@ public class SettingsScreen extends MapScreen {
         );
         FONT.draw(
                 PacManGame.batch,
-                "RESUME",
+                "RETURN",
                 19 * TILE_SIZE,
                 18 * TILE_SIZE
         );

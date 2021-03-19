@@ -11,6 +11,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -24,6 +26,12 @@ import uas.lntv.pacmangame.Managers.PrefManager;
 public class SplashScreen implements Screen {
     private final PacManGame GAME;
     private final Assets ASSETS;
+
+    private final Sprite SPRITE;
+    private float checkpoint = 0.04f;
+    private int texturePositionX = 0;
+    private int texturePositionY = 0;
+    private float progress = 0;
 
     private final OrthographicCamera CAM;
     private final Viewport gamePort;
@@ -40,7 +48,9 @@ public class SplashScreen implements Screen {
     private TiledMapTileLayer visibleLayer;
 
     private float timer = 0;
+    private float time = 0;
     private float alpha = 0;
+
 
     /**
      * Main constructor of the SplashScreen
@@ -48,6 +58,12 @@ public class SplashScreen implements Screen {
      * @param ASSETS asset management
      */
     public SplashScreen(final PacManGame GAME, final Assets ASSETS){
+
+        //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
+        if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
+            Gdx.graphics.setWindowedMode(450, 800);
+        }
+
         this.GAME = GAME;
         this.ASSETS = ASSETS;
 
@@ -68,28 +84,33 @@ public class SplashScreen implements Screen {
 
         this.layerLNTV.setOpacity(0f);
         this.layerLNTV.setVisible(true);
+
+        this.ASSETS.load();
+        this.SPRITE = new Sprite(this.ASSETS.manager.get(ASSETS.LOADING));
+
     }
 
     @Override
     public void show() { }
 
+
+    private void update(){
+        time = Gdx.graphics.getDeltaTime();
+        timer += time;
+        if(timer < 10) updateSplash();
+        else updateLoading();
+    }
+
     /**
      * Checks the time, the SplashScreen is shown yet and reacts according to it.
      * It changes the used logo and simulates the fade-effects.
      */
-    private void update(){
-        float time = Gdx.graphics.getDeltaTime();
-        timer += time;
-
+    private void updateSplash() {
         if(timer>=5 && visibleLayer == layerLNTV){
             visibleLayer.setVisible(false);
             visibleLayer = layerGDX;
             visibleLayer.setOpacity(0f);
             visibleLayer.setVisible(true);
-        }
-        else if(timer > 10) {
-            this.dispose();
-            GAME.setScreen(new LoadingScreen(GAME, ASSETS));
         }
 
         visibleLayer.setOpacity(alpha);
@@ -101,6 +122,42 @@ public class SplashScreen implements Screen {
         if(timer > 7 && timer < 8) alpha = 1;
         if(timer > 8 && timer < 10) alpha -= time / 2;
     }
+    private void updateLoading(){
+        visibleLayer.setVisible(false);
+
+        //Grabing the center point of the Screen
+        Vector3 center = new Vector3((float)(Gdx.graphics.getWidth()) / 2, (float)(Gdx.graphics.getHeight()) / 2, 0);
+        CAM.unproject(center);
+
+        //Move the center of Sprite from left/bottom corner to center
+        center.x -= 256 / 2f;
+        center.y -= 256 / 2f;
+
+        PacManGame.batch.begin();
+        PacManGame.batch.setProjectionMatrix(CAM.combined);
+
+        PacManGame.batch.draw(SPRITE.getTexture(), center.x, center.y, SPRITE.getOriginX(), SPRITE.getOriginY(),
+                256, 256, SPRITE.getScaleX(), SPRITE.getScaleY(), 0,
+                texturePositionX, texturePositionY, 256, 256, false, false
+        );
+        PacManGame.batch.end();
+
+        progress = MathUtils.lerp(progress, ASSETS.manager.getProgress(), 0.025f);
+        if(progress > checkpoint){
+            checkpoint += 0.04f;
+            if(texturePositionX < 1024) texturePositionX += 256;
+            else{
+                texturePositionX = 0;
+                texturePositionY += 256;
+            }
+        }
+        if(ASSETS.manager.update() && progress > 0.99f){
+            this.dispose();
+            GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
+        }
+
+
+    }
 
     /**
      * Uses the update method to check the time and draws the logo on the screen.
@@ -108,13 +165,15 @@ public class SplashScreen implements Screen {
      */
     @Override
     public void render(float delta) {
-        update();
-
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         renderer.setView(CAM);
         renderer.render();
+
+        update();
+
+
     }
 
     @Override

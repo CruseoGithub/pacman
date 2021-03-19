@@ -18,8 +18,10 @@ public class PacManGame extends Game {
 
 	@Override
 	public void create () {
+
 		batch = new SpriteBatch();
 		prefManager = new PrefManager();
+		//prefManager.resetScores();
 		assets = new Assets();
 		assets.loadSetup();
 		level = 0;

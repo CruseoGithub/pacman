@@ -7,6 +7,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
@@ -18,8 +24,21 @@ import uas.lntv.pacmangame.Managers.PrefManager;
 public class SplashScreen implements Screen {
     private final PacManGame GAME;
     private final Assets ASSETS;
+
     private final OrthographicCamera CAM;
-    private final Sprite SPLASHY;
+    private final Viewport gamePort;
+
+    private final OrthogonalTiledMapRenderer renderer;
+    private final TiledMap TMX_MAP;
+
+    private final int MAP_WIDTH;
+    private final int MAP_HEIGHT;
+    private final int TILE_SIZE;
+
+    private final TiledMapTileLayer layerLNTV;
+    private final TiledMapTileLayer layerGDX;
+    private final TiledMapTileLayer visibleLayer;
+
     private float timer = 0;
     private float alpha = 0;
 
@@ -31,19 +50,24 @@ public class SplashScreen implements Screen {
     public SplashScreen(final PacManGame GAME, final Assets ASSETS){
         this.GAME = GAME;
         this.ASSETS = ASSETS;
-        this.CAM = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        CAM.translate(CAM.viewportWidth/2, CAM.viewportHeight/2);
 
-        if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
-            Gdx.graphics.setWindowedMode(450, 800);
-        }
-        Texture logo = this.ASSETS.manager.get(ASSETS.LNTV_Logo);
-        this.SPLASHY = new Sprite(logo);
+        TmxMapLoader tmxMapLoader = new TmxMapLoader();
+        this.TMX_MAP = tmxMapLoader.load("maps/splash.tmx");
 
-        this.SPLASHY.setSize(761, 610);
-        this.SPLASHY.setPosition(-55,-50);
-        this.SPLASHY.setScale(0.4f, 0.25f);
-        if(PrefManager.isSfxOn()) this.ASSETS.manager.get(ASSETS.DIAL_UP).play(0.6f);
+        this.MAP_WIDTH = Integer.parseInt(TMX_MAP.getProperties().get("width").toString());
+        this.MAP_HEIGHT = Integer.parseInt(TMX_MAP.getProperties().get("height").toString());
+        this.TILE_SIZE = Integer.parseInt(TMX_MAP.getProperties().get("tilewidth").toString());
+        this.renderer = new OrthogonalTiledMapRenderer(TMX_MAP);
+        this.CAM = new OrthographicCamera();
+        this.gamePort = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, CAM);
+        this.CAM.position.set((float)(MAP_WIDTH * TILE_SIZE) / 2, (float)(MAP_WIDTH * TILE_SIZE) / 2, 0);
+
+        this.layerLNTV = (TiledMapTileLayer) TMX_MAP.getLayers().get("Walls");
+        this.layerGDX = (TiledMapTileLayer) TMX_MAP.getLayers().get("Path");
+        this.visibleLayer = layerLNTV;
+
+        this.layerLNTV.setOpacity(0f);
+        this.layerLNTV.setVisible(true);
     }
 
     @Override
@@ -57,19 +81,18 @@ public class SplashScreen implements Screen {
         float time = Gdx.graphics.getDeltaTime();
         timer += time;
 
-        if(timer > 5 && SPLASHY.getTexture() != this.ASSETS.manager.get(ASSETS.GDX)) {
-            alpha = 0;
-            SPLASHY.getTexture().dispose();
-            SPLASHY.setTexture(this.ASSETS.manager.get(ASSETS.GDX));
-            SPLASHY.setSize(390, 65);
-            SPLASHY.setPosition(100,170);
-            SPLASHY.setScale(0.8f, 0.8f);
+        if(timer>=5 && visibleLayer == layerLNTV){
+            visibleLayer.setVisible(false);
+            visibleLayer = layerGDX;
+            visibleLayer.setOpacity(0f);
+            visibleLayer.setVisible(true);
         }
-
-        if(timer > 10) {
+        else if(timer > 10) {
             this.dispose();
             GAME.setScreen(new LoadingScreen(GAME, ASSETS));
         }
+
+        visibleLayer.setOpacity(alpha);
 
         if(timer < 2) alpha += time / 2;
         if(timer > 2 && timer < 3) alpha = 1;
@@ -77,8 +100,6 @@ public class SplashScreen implements Screen {
         if(timer > 5 && timer < 7) alpha +=  time / 2;
         if(timer > 7 && timer < 8) alpha = 1;
         if(timer > 8 && timer < 10) alpha -= time / 2;
-
-        CAM.update();
     }
 
     /**
@@ -92,13 +113,16 @@ public class SplashScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        PacManGame.batch.begin();
-        SPLASHY.draw(PacManGame.batch, alpha);
-        PacManGame.batch.end();
+        renderer.setView(CAM);
+        renderer.render();
     }
 
     @Override
-    public void resize(int width, int height) {  }
+    public void resize(int width, int height) {
+        gamePort.update(width, height, false);
+        gamePort.getCamera().position.set(MAP_WIDTH * TILE_SIZE / 2f, MAP_HEIGHT * TILE_SIZE / 2f, 0);
+        gamePort.getCamera().update();
+    }
 
     @Override
     public void pause() {  }

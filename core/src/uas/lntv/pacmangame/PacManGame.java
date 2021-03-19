@@ -6,9 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Managers.PrefManager;
-import uas.lntv.pacmangame.Screens.LoadingScreen;
 import uas.lntv.pacmangame.Screens.SplashScreen;
-import uas.lntv.pacmangame.Screens.LoadingScreen;
 
 public class PacManGame extends Game {
 	private static int level;

@@ -57,7 +57,7 @@ public class SplashScreen implements Screen {
      * @param GAME running game
      * @param ASSETS asset management
      */
-    public SplashScreen(final PacManGame GAME, final Assets ASSETS){
+    public SplashScreen(final PacManGame GAME, final Assets ASSETS, boolean skipLogos){
 
         //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
         if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
@@ -76,7 +76,7 @@ public class SplashScreen implements Screen {
         this.renderer = new OrthogonalTiledMapRenderer(TMX_MAP);
         this.CAM = new OrthographicCamera();
         this.gamePort = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, CAM);
-        this.CAM.position.set((float)(MAP_WIDTH * TILE_SIZE) / 2, (float)(MAP_WIDTH * TILE_SIZE) / 2, 0);
+        this.CAM.position.set((MAP_WIDTH * TILE_SIZE) / 2f, (MAP_WIDTH * TILE_SIZE) / 2f, 0);
 
         this.layerLNTV = (TiledMapTileLayer) TMX_MAP.getLayers().get("Walls");
         this.layerGDX = (TiledMapTileLayer) TMX_MAP.getLayers().get("Path");
@@ -87,6 +87,8 @@ public class SplashScreen implements Screen {
 
         this.ASSETS.load();
         this.SPRITE = new Sprite(this.ASSETS.manager.get(ASSETS.LOADING));
+
+        if(skipLogos) timer = 10; //Skip intro logos
 
     }
 

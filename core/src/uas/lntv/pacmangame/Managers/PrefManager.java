@@ -24,6 +24,7 @@ public class PrefManager {
     private static boolean musicOn;
     private static boolean sfxOn ;
     private static boolean joystick;
+    private static boolean skipLogos;
     private static boolean init = false;
 
     /**
@@ -36,6 +37,7 @@ public class PrefManager {
             musicOn = true;
             sfxOn = true;
             joystick = false;
+            skipLogos = false;
         }
         init = true;
         savePrefs();
@@ -98,6 +100,10 @@ public class PrefManager {
 
     public static void setJoystick(boolean joystick) { PrefManager.joystick = joystick; }
 
+    public static boolean isLogosSkip() { return skipLogos; }
+
+    public static void setSkipLogos(boolean introLogos) { PrefManager.skipLogos = PrefManager.skipLogos; }
+
     /**
      * Gives the player two chances to insert a name, if he doesn't he will be treated as
      * Anonymous Bastard.
@@ -144,7 +150,7 @@ public class PrefManager {
     /**
      * Loads the scores and settings from the preferences folder into the game.
      */
-    public static void loadPrefs(){
+    public static void loadPrefs() {
         highScores.add(prefs.getInteger("high_score_1"));
         names.add(prefs.getString("names_1"));
         causeOfDeath.add(prefs.getString("cause_of_death_1"));
@@ -190,6 +196,7 @@ public class PrefManager {
         musicOn = prefs.getBoolean("Music");
         sfxOn = prefs.getBoolean("SFX");
         joystick = prefs.getBoolean("Controller");
+        skipLogos = prefs.getBoolean("SkipLogos");
         init = prefs.getBoolean("Initialized");
     }
 
@@ -242,6 +249,7 @@ public class PrefManager {
         prefs.putBoolean("Music", musicOn);
         prefs.putBoolean("SFX", sfxOn);
         prefs.putBoolean("Controller", joystick);
+        prefs.putBoolean("SkipLogos", skipLogos);
         prefs.putBoolean("Initialized", init);
 
         prefs.flush();

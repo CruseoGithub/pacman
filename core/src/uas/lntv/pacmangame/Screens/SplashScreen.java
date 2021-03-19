@@ -37,7 +37,7 @@ public class SplashScreen implements Screen {
 
     private final TiledMapTileLayer layerLNTV;
     private final TiledMapTileLayer layerGDX;
-    private final TiledMapTileLayer visibleLayer;
+    private TiledMapTileLayer visibleLayer;
 
     private float timer = 0;
     private float alpha = 0;

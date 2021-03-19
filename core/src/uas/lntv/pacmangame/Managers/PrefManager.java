@@ -21,6 +21,7 @@ public class PrefManager {
     private static boolean musicOn = true;
     private static boolean sfxOn = true;
     private static boolean joystick = false;
+    private static boolean skipLogos = true;
 
     /**
      * This constructor simply loads the saved high-scores and settings from the preferences.
@@ -86,6 +87,10 @@ public class PrefManager {
     public static boolean isJoystick() { return joystick; }
 
     public static void setJoystick(boolean joystick) { PrefManager.joystick = joystick; }
+
+    public static boolean isLogosSkip() { return skipLogos; }
+
+    public static void setSkipLogos(boolean introLogos) { PrefManager.skipLogos = PrefManager.skipLogos; }
 
     /**
      * Gives the player two chances to insert a name, if he doesn't he will be treated as
@@ -179,6 +184,7 @@ public class PrefManager {
         musicOn = prefs.getBoolean("Music");
         sfxOn = prefs.getBoolean("SFX");
         joystick = prefs.getBoolean("Controller");
+        skipLogos = prefs.getBoolean("SkipLogos");
     }
 
     /**
@@ -230,6 +236,7 @@ public class PrefManager {
         prefs.putBoolean("Music", musicOn);
         prefs.putBoolean("SFX", sfxOn);
         prefs.putBoolean("Controller", joystick);
+        prefs.putBoolean("SkipLogos", skipLogos);
 
 /* This resets the list
         prefs.putInteger("high_score_1", 0);

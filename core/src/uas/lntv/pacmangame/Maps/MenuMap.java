@@ -42,7 +42,7 @@ public class MenuMap extends Map {
         for(int x = 0; x < MAP_WIDTH; x++){
             for(int y = 0; y < MAP_HEIGHT; y++){
                 if(layerCollect.getCell(x, y) != null){
-                    matrix[x][y].isDot = true;
+                    matrix[x][y].placeItem(Tile.Item.DOT);
                 }
             }
         }

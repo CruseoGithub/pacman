@@ -183,14 +183,14 @@ public abstract class Map {
          * @param tile specify the tile from which you want to collect an item
          */
         public void collect(Tile tile){
-            if(tile.isDot){
+            if(tile.getItem() == Tile.Item.DOT){
                 if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.DOT).play(0.25f);
                 layerCollect.setCell(
                         tile.getX()/ TILE_SIZE,
                         tile.getY()/ TILE_SIZE,
                         null
                 );
-                tile.isDot = false;
+                tile.takeItem();
             }
         }
 

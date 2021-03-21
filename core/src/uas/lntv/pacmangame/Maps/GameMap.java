@@ -37,7 +37,7 @@ public class GameMap extends Map {
         for(int x = 0; x < MAP_WIDTH; x++){
             for(int y = 0; y < MAP_HEIGHT; y++){
                 if(layerCollect.getCell(x,y) != null) {
-                    matrix[x][y].placeItem();
+                    matrix[x][y].placeItem(Tile.Item.HUNTER);
                 }
             }
         }
@@ -53,7 +53,7 @@ public class GameMap extends Map {
             for(int x = 0; x < MAP_WIDTH; x++){
                 for(int y = 0; y < MAP_HEIGHT; y++){
                     if(layerWall.getCell(x, y) == null && total_Dots>0 && layerCollect.getCell(x,y) == null){
-                        if (layerPath.getCell(x, y) != null & !matrix[x][y].isDot && x > 0 && x < (MAP_WIDTH - 2)) { //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
+                        if (layerPath.getCell(x, y) != null & !matrix[x][y].isItem() && x > 0 && x < (MAP_WIDTH - 2)) { //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
                             int max = 1;
                             int min = 0;
                             int random = (int) (Math.random() * (max - min + 1) + min); // random ist entweder 0 oder 1
@@ -62,7 +62,7 @@ public class GameMap extends Map {
                                 TiledMapTile t = new Tile(createTextureRegion(Tile.Type.DOT));
                                 cell.setTile(t);
                                 layerCollect.setCell(x, y, cell);
-                                matrix[x][y].isDot = true;
+                                matrix[x][y].placeItem(Tile.Item.DOT);
                                 total_Dots--;
                             }
                         }
@@ -79,7 +79,7 @@ public class GameMap extends Map {
      * @param tile specify the tile from which you want to collect an item
      */
     public void collect(Tile tile){
-        if(tile.isItem()){
+        if(tile.getItem() == Tile.Item.HUNTER){
             layerCollect.setCell(
                     tile.getX()/ TILE_SIZE,
                     tile.getY()/ TILE_SIZE,
@@ -92,7 +92,7 @@ public class GameMap extends Map {
                 ghost.setDifficulty(Enemy.Difficulty.RUNAWAY);
             }
         }
-        if(tile.isDot){
+        if(tile.getItem() == Tile.Item.DOT){
             PacManGame.increaseScore(1);
             screen.hud.levelScore++;
             screen.hud.update();

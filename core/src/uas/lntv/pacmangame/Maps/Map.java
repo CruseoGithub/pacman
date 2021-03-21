@@ -3,6 +3,7 @@ package uas.lntv.pacmangame.Maps;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -109,26 +110,75 @@ public abstract class Map {
          * @param type specify type of the tile (exp. DOT)
          * @return returns the textureregion for the type specified
          */
-        public TextureRegion createTextureRegion(Tile.Type type){
+        public TextureRegion createTextureRegion(Tile.Item type){
             TextureRegion region = null;
-            if(firstMap){
-                if(type == Tile.Type.DOT) {
-                        region = layerPath.getCell(1,17).getTile().getTextureRegion();
-                }
-            }
-            else {
-                Texture tex = ASSETS.manager.get(ASSETS.TILES);
-                region = new TextureRegion(tex);
-                if(type == Tile.Type.DOT) {
-                        tex = ASSETS.manager.get(ASSETS.COIN_GOLD);
+            switch (type){
+                case DOT:
+                    if(firstMap) region = layerPath.getCell(1,17).getTile().getTextureRegion();
+                    else{
+                        Texture tex = ASSETS.manager.get(ASSETS.COIN_GOLD);
                         region = new TextureRegion(tex);
                         region.setRegionX(128);
                         region.setRegionWidth(32);
                         region.setRegionY(0);
                         region.setRegionHeight(32);
-                }
+                    }
+                    break;
+                case HUNTER:
+                    Texture tex = ASSETS.manager.get(ASSETS.ITEM_HUNTER);
+                    region = new TextureRegion(tex);
+                    region.setRegionX(0);
+                    region.setRegionWidth(32);
+                    region.setRegionY(0);
+                    region.setRegionHeight(32);
+                    break;
+                case SLOWMO:
+                    Texture tex2 = ASSETS.manager.get(ASSETS.ITEM_SLOWMO);
+                    region = new TextureRegion(tex2);
+                    region.setRegionX(0);
+                    region.setRegionWidth(32);
+                    region.setRegionY(0);
+                    region.setRegionHeight(32);
+                    break;
             }
             return region;
+        }
+
+        public TiledMapTileLayer.Cell createItem(Tile.Item type){
+            TextureRegion region = null;
+            switch (type){
+                case DOT:
+                    if(firstMap) region = layerPath.getCell(1,17).getTile().getTextureRegion();
+                    else{
+                        Texture tex = ASSETS.manager.get(ASSETS.COIN_GOLD);
+                        region = new TextureRegion(tex);
+                        region.setRegionX(128);
+                        region.setRegionWidth(32);
+                        region.setRegionY(0);
+                        region.setRegionHeight(32);
+                    }
+                    break;
+                case HUNTER:
+                    Texture tex = ASSETS.manager.get(ASSETS.ITEM_HUNTER);
+                    region = new TextureRegion(tex);
+                    region.setRegionX(0);
+                    region.setRegionWidth(32);
+                    region.setRegionY(0);
+                    region.setRegionHeight(32);
+                    break;
+                case SLOWMO:
+                    Texture tex2 = ASSETS.manager.get(ASSETS.ITEM_SLOWMO);
+                    region = new TextureRegion(tex2);
+                    region.setRegionX(0);
+                    region.setRegionWidth(32);
+                    region.setRegionY(0);
+                    region.setRegionHeight(32);
+                    break;
+            }
+            TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+            TiledMapTile t = new Tile(region);
+            cell.setTile(t);
+            return cell;
         }
 
         /**

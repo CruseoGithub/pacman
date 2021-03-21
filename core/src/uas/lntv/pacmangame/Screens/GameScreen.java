@@ -3,6 +3,7 @@ package uas.lntv.pacmangame.Screens;
 import com.badlogic.gdx.Gdx;
 
 import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.ControllerButtons;
 import uas.lntv.pacmangame.Scenes.ControllerJoystick;
@@ -22,10 +23,13 @@ public class GameScreen extends MapScreen {
     public void setPauseActive(boolean bool) {
         PauseActive = bool;
     }
+    private float buffTimer = 0;
 
     private boolean pacManSuper;
+    private boolean buffActive;
 
     public boolean isPacManSuper() { return pacManSuper; }
+    public boolean isBuffActive(){ return buffActive; }
 
 
     public GameScreen(PacManGame game, Assets assets, String path) {
@@ -75,6 +79,14 @@ public class GameScreen extends MapScreen {
     public void update(float dt) {
         super.update(dt);
         if(ready) hud.time -= Gdx.graphics.getDeltaTime();
+        if(buffActive){
+            if(buffTimer < 10){
+                buffTimer += Gdx.graphics.getDeltaTime();
+            }else {
+                activateBuff(Tile.Item.EMPTY);
+            }
+        }
+
 
         if(hud.time < 0){
             this.dispose();
@@ -112,6 +124,8 @@ public class GameScreen extends MapScreen {
             game.setScreen(new PauseScreen(game, assets, assets.PAUSE, this, hud));
             paused = true;
         }
+
+
     }
 
     @Override
@@ -125,24 +139,41 @@ public class GameScreen extends MapScreen {
         hud.stage.draw();
     }
 
-    public void evolvePacMan(){
-        if(!isPacManSuper()){
-            this.switchMusicHunting();
-            this.pacman = new SuperPacMan(
-                    game,
-                    assets,
-                    this.pacman.getXPosition(),
-                    this.pacman.getYPosition(),
-                    this.pacman.getSpeed(),
-                    this,
-                    this.hud,
-                    this.pacman.getDirection(),
-                    this.pacman.getNextDirection(),
-                    this.pacman.getPrevDirection()
-            );
-            this.pacManSuper = true;
-        } else{
-            ((SuperPacMan)pacman).resetSupStatusTime();
+    public void activateBuff(Tile.Item buffType){
+        switch (buffType){
+            case EMPTY:
+                if(buffActive){
+                    for (Enemy ghost : ghosts) {
+                        ghost.correctPosition(ghost.getDirection());
+                        ghost.setSpeed(ghost.getSpeed()*2);
+                    }
+                }
+                this.buffActive = false;
+                break;
+            case HUNTER:
+                if(!isPacManSuper()){
+                    this.switchMusicHunting();
+                    this.pacman = new SuperPacMan(
+                            game,
+                            assets,
+                            this.pacman.getXPosition(),
+                            this.pacman.getYPosition(),
+                            this.pacman.getSpeed(),
+                            this,
+                            this.hud,
+                            this.pacman.getDirection(),
+                            this.pacman.getNextDirection(),
+                            this.pacman.getPrevDirection()
+                    );
+                    this.pacManSuper = true;
+                } else{
+                    ((SuperPacMan)pacman).resetSupStatusTime();
+                }
+                break;
+            case SLOWMO:
+                this.buffActive = true;
+                for (Enemy ghost : ghosts) ghost.setSpeed(ghost.getSpeed()/2);
+                break;
         }
     }
 

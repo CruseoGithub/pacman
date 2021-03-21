@@ -2,6 +2,9 @@ package uas.lntv.pacmangame.Maps;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.math.Vector3;
+
+import java.util.ArrayList;
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
@@ -15,6 +18,8 @@ import uas.lntv.pacmangame.Sprites.Enemy;
  */
 public class GameMap extends Map {
     MapScreen screen;
+    ArrayList<Vector3> hunterItems = new ArrayList<>();
+    Vector3 randomItemPos;
 	
     /**
      * does the same as the parent constructor.
@@ -26,6 +31,16 @@ public class GameMap extends Map {
     public GameMap(Assets assets, String path, MapScreen screen){
         super(path, assets);
         this.screen = screen;
+
+        //Hunter Item Positions
+        hunterItems.add(new Vector3(1, 21, 0));
+        hunterItems.add(new Vector3(1, 36, 0));
+        hunterItems.add(new Vector3(26, 21, 0));
+        hunterItems.add(new Vector3(26, 36, 0));
+
+        randomItemPos = new Vector3(1, 24, 0);
+
+
         generateItems();
         generateDots(150);
     }
@@ -36,8 +51,17 @@ public class GameMap extends Map {
     public void generateItems(){
         for(int x = 0; x < MAP_WIDTH; x++){
             for(int y = 0; y < MAP_HEIGHT; y++){
-                if(layerCollect.getCell(x,y) != null) {
-                    matrix[x][y].placeItem(Tile.Item.HUNTER);
+                //Generate hunter items on the map
+                for (Vector3 pos: hunterItems) {
+                    if(x == pos.x && y == pos.y){
+                        layerCollect.setCell(x, y, createItem(Tile.Item.HUNTER));
+                        matrix[x][y].placeItem(Tile.Item.HUNTER);
+                    }
+                }
+                //generate random Item
+                if(x == randomItemPos.x && y == randomItemPos.y){
+                    layerCollect.setCell(x, y, createItem(Tile.Item.SLOWMO));
+                    matrix[x][y].placeItem(Tile.Item.SLOWMO);
                 }
             }
         }
@@ -58,10 +82,7 @@ public class GameMap extends Map {
                             int min = 0;
                             int random = (int) (Math.random() * (max - min + 1) + min); // random ist entweder 0 oder 1
                             if (random > 0) {
-                                TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                                TiledMapTile t = new Tile(createTextureRegion(Tile.Type.DOT));
-                                cell.setTile(t);
-                                layerCollect.setCell(x, y, cell);
+                                layerCollect.setCell(x, y, createItem(Tile.Item.DOT));
                                 matrix[x][y].placeItem(Tile.Item.DOT);
                                 total_Dots--;
                             }
@@ -88,17 +109,18 @@ public class GameMap extends Map {
                 screen.hud.update();
                 break;
             case HUNTER:
-                layerCollect.setCell(
-                        tile.getX()/ TILE_SIZE,
-                        tile.getY()/ TILE_SIZE,
-                        null
-                );
                 tile.takeItem();
                 if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
-                screen.evolvePacMan();
+                screen.activateBuff(Tile.Item.HUNTER);
                 for(Enemy ghost : screen.getGhosts()){
                     ghost.setDifficulty(Enemy.Difficulty.RUNAWAY);
                 }
+                break;
+            case SLOWMO:
+                tile.takeItem();
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
+                screen.activateBuff(Tile.Item.SLOWMO);
+                break;
         }
         super.collect(tile);
     }

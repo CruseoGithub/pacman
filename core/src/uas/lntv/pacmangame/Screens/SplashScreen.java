@@ -83,7 +83,10 @@ public class SplashScreen implements Screen {
         this.visibleLayer = layerLNTV;
 
         this.layerLNTV.setOpacity(0f);
+
         this.layerLNTV.setVisible(true);
+
+        this.ASSETS.manager.get(this.ASSETS.DIAL_UP).play(0.4f);
 
         this.ASSETS.load();
         this.SPRITE = new Sprite(this.ASSETS.manager.get(ASSETS.LOADING));
@@ -124,6 +127,7 @@ public class SplashScreen implements Screen {
         if(timer > 7 && timer < 8) alpha = 1;
         if(timer > 8 && timer < 10) alpha -= time / 2;
     }
+
     private void updateLoading(){
         visibleLayer.setVisible(false);
 

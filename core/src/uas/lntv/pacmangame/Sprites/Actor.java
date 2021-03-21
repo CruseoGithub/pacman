@@ -253,6 +253,7 @@ public abstract class Actor {
         this.state = State.DIEING;
         for(Enemy ghost : screen.getGhosts()){
             if (ghost.getState() != State.BOXED) ghost.setState(State.HOMING);
+            screen.map.getTile(ghost.xPosition, ghost.yPosition).leave(ghost);
         }
     }
 

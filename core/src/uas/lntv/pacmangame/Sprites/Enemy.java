@@ -1,5 +1,6 @@
 package uas.lntv.pacmangame.Sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,27 +18,16 @@ public class Enemy extends Actor {
         RUNAWAY,RANDOM,EASY,MEDIUM,HARD
     }
 
-    private Pathfinder aStar;
-
     private Difficulty difficulty;
     private Difficulty levelDiff;
+    private Pathfinder aStar;
+    private final Texture LIVING_BODY;
 
     private float boxTimer;
     private final int HOME_X;
     private final int HOME_Y;
 
     private boolean home = false;
-
-
-    public int getHomeX() {
-        return HOME_X;
-    }
-
-    public int getHomeY() {
-        return HOME_Y;
-    }
-
-    public boolean isHome(){ return home; }
 
     public void notHome(){ home = false; }
 
@@ -49,7 +39,7 @@ public class Enemy extends Actor {
      * @param ghost name or path of the png-file that makes the ghost look beautiful
      */
     public Enemy(int initX, int initY, Assets assets, MapScreen screen, Texture ghost){
-        super(initX, initY, screen);
+        super(assets, initX, initY, screen);
 
         HOME_X = 13 * TILE_SIZE;
         HOME_Y = 33 * TILE_SIZE;
@@ -60,7 +50,8 @@ public class Enemy extends Actor {
         this.nextDirection = Direction.DOWN;
         this.prevDirection = Direction.DOWN;
 
-        this.texture = ghost;
+        LIVING_BODY = ghost;
+        this.texture = LIVING_BODY;
         region = new TextureRegion(texture);
         region.setRegionX(0);
         region.setRegionY(0);
@@ -84,14 +75,20 @@ public class Enemy extends Actor {
         this.difficulty = difficulty;
     }
 
+    /**
+     * This method is needed, when SuperPacMan shrinks down to PacMan and the ghost needs to
+     * turn back to his assigned difficulty depending on the level.
+     */
     public void resetDifficulty(){
         setDifficulty(levelDiff);
     }
 
     public void setBoxTimer(float timer){ this.boxTimer = timer; }
 
-    public float getBoxTimer(){ return this.boxTimer; }
-
+    /**
+     * Moves the ghost according to its current position until it has reached the HOME-position
+     * outside of the box.
+     */
     public void leaveBox(){
         screen.map.getTile(xPosition, yPosition).leave(this);
         if(xPosition < 13 * TILE_SIZE) xPosition += 8;
@@ -100,6 +97,9 @@ public class Enemy extends Actor {
         else setState(State.RUNNING);
     }
 
+    /**
+     * Make the ghost find his spot in the box.
+     */
     public void enterBox() {
         if (yPosition > 30 * TILE_SIZE) yPosition -= 8;
         else if (!(screen.map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
@@ -109,6 +109,7 @@ public class Enemy extends Actor {
                 setState(State.BOXED);
                 home = false;
                 boxTimer = 5;
+                texture = LIVING_BODY;
             }
         }
         else if(!(screen.map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
@@ -118,6 +119,7 @@ public class Enemy extends Actor {
                 setState(State.BOXED);
                 home = false;
                 boxTimer = 7.5f;
+                texture = LIVING_BODY;
             }
         }
         else if (!(screen.map.getTile(14 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
@@ -127,6 +129,7 @@ public class Enemy extends Actor {
                 setState(State.BOXED);
                 home = false;
                 boxTimer = 10;
+                texture = LIVING_BODY;
             }
         }
     }
@@ -168,9 +171,7 @@ public class Enemy extends Actor {
         if(Math.abs(distanceX) > Math.abs(distanceY)){
             return LeftOrRight(distanceX);
         }
-        else {
-            return UpOrDown(distanceY);
-        }
+        else return UpOrDown(distanceY);
     }
 
     /**
@@ -211,11 +212,12 @@ public class Enemy extends Actor {
      * The map will be divided in four quarters and the targeted tile will be the one in the
      * extreme corner of the opposite quarter in which SuperPacMan is right now.
      * @param hunter RUN! It's SuperPacMan!!
-     * @return tile of retreat
+     * @return Direction to the tile of retreat
      */
     private Direction runAway(Actor hunter){
         if(collisionTest(hunter)){
             this.state = State.HOMING;
+            this.texture = assets.manager.get(assets.BLUE_DEAD);
             home = false;
             screen.map.getTile(xPosition, yPosition).leave(this);
             return Direction.RIGHT;
@@ -291,6 +293,35 @@ public class Enemy extends Actor {
                 nextDirection = runAway(target);
                 break;
         }
+    }
+
+    /**
+     * This update method checks the current state of the game to determine what each ghost needs to
+     * do next.
+     * @param dt time parameter used by libGDX
+     * @param pacman PacMan
+     */
+    public void update(float dt, PacMan pacman) {
+        super.update(dt);
+        if(pacman.getState() == State.DIEING){
+            if(state != Actor.State.BOXED) {
+                if (!home) getHome();
+                else if (LIVING_BODY == assets.manager.get(assets.GHOST_1)) setState(Actor.State.RUNNING);
+                else enterBox();
+            }
+        } else{
+            if(boxTimer > 0) boxTimer -= Gdx.graphics.getDeltaTime();
+            else if(state == State.BOXED) leaveBox();
+            else if(state == State.HOMING) {
+                if(!home) getHome();
+                else enterBox();
+            }
+            else{
+                findNextDirection(pacman);
+                move();
+            }
+        }
+
     }
 
     /**

@@ -1,5 +1,7 @@
 package uas.lntv.pacmangame.Screens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import uas.lntv.pacmangame.Managers.Assets;
@@ -18,6 +20,7 @@ import uas.lntv.pacmangame.Sprites.PacMan;
 public class ScoreScreen extends MapScreen {
 
     private final BitmapFont FONT;
+    private boolean resetAsked = false;
 
     /**
      * This screen is a separate room where you can see the high-score list.
@@ -27,7 +30,7 @@ public class ScoreScreen extends MapScreen {
      */
     public ScoreScreen(PacManGame game, Assets assets, String path){
         super(game, assets, path, Type.SCORE);
-        this.pacman = new PacMan(game, assets, 25 * TILE_SIZE, 47 * TILE_SIZE, this, hud);
+        this.pacman = new PacMan(game, assets, 14 * TILE_SIZE, 46 * TILE_SIZE, this, hud);
         this.pacman.setSpeed(16);
         this.ghosts.add(new Enemy(25 * TILE_SIZE, 3 * TILE_SIZE,  assets, this, assets.manager.get(assets.WHITE_DEAD)));
         this.hud = new Hud(game, assets,this, false);
@@ -36,7 +39,7 @@ public class ScoreScreen extends MapScreen {
     }
 
     /**
-     * Checks the position of PacMan for quitting this screen
+     * Checks the position of PacMan for quitting this screen or resetting all settings.
      * @param dt time parameter used by libGDX
      */
     @Override
@@ -45,6 +48,25 @@ public class ScoreScreen extends MapScreen {
         if(pacman.getXPosition() <= 2* TILE_SIZE) {
             this.dispose();
             game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
+        }
+        if(pacman.getXPosition() == 24 * TILE_SIZE) resetAsked = false;
+        if(pacman.getXPosition() >= 25 * TILE_SIZE) {
+            if(!resetAsked) {
+                resetAsked = true;
+                Gdx.input.getTextInput(
+                        new Input.TextInputListener() {
+                            @Override
+                            public void input(String answer) {
+                                if (answer.equals("Yes")) PrefManager.resetScores();
+                            }
+
+                            @Override
+                            public void canceled() {
+                            }
+                        },
+                        "Type 'Yes' to do a factory reset!", "No", ""
+                );
+            }
         }
     }
 
@@ -61,6 +83,8 @@ public class ScoreScreen extends MapScreen {
         super.render(delta);
 
         PacManGame.batch.begin();
+        FONT.draw(PacManGame.batch, "RESET", 22 * TILE_SIZE, 48 * TILE_SIZE);
+        FONT.draw(PacManGame.batch, "MAIN MENU", 2 * TILE_SIZE, 48 * TILE_SIZE);
         for(int i = 0; i < 10; i++) {
             int yPos = (44 * TILE_SIZE) - (3 * i) * TILE_SIZE;
             FONT.draw(

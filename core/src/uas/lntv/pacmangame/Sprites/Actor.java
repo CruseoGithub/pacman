@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.Random;
 
+import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Maps.Tile;
+import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
@@ -23,6 +25,8 @@ public abstract class Actor {
     public enum State {
         RUNNING, DIEING, HOMING, BOXED
     }
+
+    protected Assets assets;
 
     protected int xPosition;
     protected int yPosition;
@@ -91,7 +95,8 @@ public abstract class Actor {
 
     public void setState(State state){ this.state = state; }
 
-    public Actor(int initX, int initY, MapScreen screen) {
+    public Actor(Assets assets, int initX, int initY, MapScreen screen) {
+        this.assets = assets;
         this.state = State.RUNNING;
         this.xPosition = initX;
         this.yPosition = initY;
@@ -232,10 +237,23 @@ public abstract class Actor {
         }
     }
 
+    public void draw(){
+        PacManGame.batch.draw(texture,
+                xPosition, yPosition,
+                sprite.getOriginX(), sprite.getOriginY(),
+                TILE_SIZE, TILE_SIZE,
+                sprite.getScaleX(), sprite.getScaleY(),
+                rotation,
+                texturePositionX, texturePositionY,
+                32, 32, false, false
+        );
+    }
+
     public void collide() {
         this.state = State.DIEING;
         for(Enemy ghost : screen.getGhosts()){
             if (ghost.getState() != State.BOXED) ghost.setState(State.HOMING);
+            screen.map.getTile(ghost.xPosition, ghost.yPosition).leave(ghost);
         }
     }
 

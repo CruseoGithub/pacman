@@ -55,7 +55,7 @@ public class ControllerJoystick extends Controller {
                 Vector3 current = new Vector3(touch.x, touch.y, 0);
                 Vector3 center = new Vector3(touchDownPos.x, touchDownPos.y, 0);
                 float distance = current.dst(center); //distance from Center to Knob
-                if (distance > joystickZoneRadius) //If the distance is less than the radius, it is already within the circle.
+                if (distance > joystickZoneRadius) //If the distance is less than the radius, it is already within the center circle.
                 {
                     Vector3 fromCenterToKnob = new Vector3(current.x - center.x, current.y - center.y, 0);
                     fromCenterToKnob.x = fromCenterToKnob.x*(joystickZoneRadius / distance); //Multiply by radius //Divide by Distance

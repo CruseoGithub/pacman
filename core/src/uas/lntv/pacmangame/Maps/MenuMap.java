@@ -1,12 +1,19 @@
 package uas.lntv.pacmangame.Maps;
 
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+
+import java.util.ArrayList;
+
 import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Managers.PrefManager;
 
 /**
  * This class provides a simple map for the purpose of creating menus.
  * It will not create collectables besides the ones already provided by the tmx-mapfile
  */
 public class MenuMap extends Map {
+
+    private final ArrayList<TiledMapTileLayer> HIGHLIGHT_LAYERS = new ArrayList<>();
 
     /**
      * Does the same as the parent constructor, but creates no additional collectables.
@@ -15,8 +22,17 @@ public class MenuMap extends Map {
      */
     public MenuMap(String path, Assets assets){
         super(path, assets);
+        HIGHLIGHT_LAYERS.add((TiledMapTileLayer) TMX_MAP.getLayers().get("MusicOn"));
+        HIGHLIGHT_LAYERS.add((TiledMapTileLayer) TMX_MAP.getLayers().get("MusicOff"));
+        HIGHLIGHT_LAYERS.add((TiledMapTileLayer) TMX_MAP.getLayers().get("SFXOn"));
+        HIGHLIGHT_LAYERS.add((TiledMapTileLayer) TMX_MAP.getLayers().get("SFXOff"));
+        HIGHLIGHT_LAYERS.add((TiledMapTileLayer) TMX_MAP.getLayers().get("Joystick"));
+        HIGHLIGHT_LAYERS.add((TiledMapTileLayer) TMX_MAP.getLayers().get("Buttons"));
         generateDots(0);
     }
+
+
+    public ArrayList<TiledMapTileLayer> getHighlightLayers(){ return HIGHLIGHT_LAYERS; }
 
     /**
      * searches for collectables in the tmx-mapfile layer and adds them to the tile matrix
@@ -27,7 +43,7 @@ public class MenuMap extends Map {
         for(int x = 0; x < MAP_WIDTH; x++){
             for(int y = 0; y < MAP_HEIGHT; y++){
                 if(layerCollect.getCell(x, y) != null){
-                    matrix[x][y].isDot = true;
+                    matrix[x][y].placeItem(Tile.Item.DOT);
                 }
             }
         }
@@ -39,7 +55,11 @@ public class MenuMap extends Map {
      */
     @Override
     public void collect(Tile tile) {
-        super.collect(tile);
+        if(tile.getItem() == Tile.Item.DOT){
+            tile.takeItem();
+            if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.DOT).play(0.25f);
+            super.collect(tile);
+        }
     }
 
 }

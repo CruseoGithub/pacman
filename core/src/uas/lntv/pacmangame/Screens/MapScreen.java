@@ -142,49 +142,7 @@ public abstract class MapScreen implements Screen {
         if(!(this instanceof GameScreen) || ready) {
             pacman.update(dt);
             for (Enemy ghost : ghosts) {
-                ghost.update(dt);
-            }
-
-            if (pacman.getState() != Actor.State.DIEING) {
-                pacman.move();
-                for (Enemy ghost : ghosts) {
-                    if(ghost.getBoxTimer() >= 0){
-                        ghost.setBoxTimer(ghost.getBoxTimer() - Gdx.graphics.getDeltaTime());
-                    } else if(ghost.getBoxTimer() < 0 && ghost.getState() == Actor.State.BOXED){
-                        ghost.leaveBox();
-                    } else if (ghost.getState() != Actor.State.HOMING) {
-                        ghost.findNextDirection(pacman);
-                        ghost.move();
-                    } else {
-                        if (!(ghost.isHome()) && pacman.getState() != Actor.State.DIEING) {
-                            ghost.texture = assets.manager.get(assets.BLUE_DEAD);
-                            ghost.getHome();
-                        } else {
-                            if (ghost == getGhosts().get(0)) {
-                                ghost.texture = assets.manager.get(assets.GHOST_1);
-                            }
-                            if (getGhosts().size() > 1) {
-                                if (ghost == getGhosts().get(1)) {
-                                    ghost.texture = assets.manager.get(assets.GHOST_2);
-                                }
-                                if (getGhosts().size() > 2) {
-                                    if (ghost == getGhosts().get(2)) {
-                                        ghost.texture = assets.manager.get(assets.GHOST_3);
-                                    }
-                                }
-                            }
-                            ghost.enterBox();
-                        }
-                    }
-                }
-            } else {
-                for (Enemy ghost : ghosts) {
-                    if(ghost.getState() != Actor.State.BOXED) {
-                        if (!ghost.isHome()) ghost.getHome();
-                        else if (ghost == ghosts.get(0)) ghost.setState(Actor.State.RUNNING);
-                        else ghost.enterBox();
-                    }
-                }
+                ghost.update(dt, pacman);
             }
         }
 
@@ -201,27 +159,16 @@ public abstract class MapScreen implements Screen {
         map.renderer.render();
 
         PacManGame.batch.begin();
-
-        PacManGame.batch.draw(pacman.texture, pacman.getXPosition(), pacman.getYPosition(), pacman.sprite.getOriginX(), pacman.sprite.getOriginY(),
-                TILE_SIZE, TILE_SIZE, pacman.sprite.getScaleX(), pacman.sprite.getScaleY(), pacman.rotation,
-                pacman.getTexturePositionX(), 0, 32, 32, false, false
-        );
+        pacman.draw();
 
         for (Enemy ghost : ghosts) {
-            PacManGame.batch.draw(ghost.texture, ghost.getXPosition(), ghost.getYPosition(), ghost.sprite.getOriginX(), ghost.sprite.getOriginY(),
-                    TILE_SIZE, TILE_SIZE, ghost.sprite.getScaleX(), ghost.sprite.getScaleY(), ghost.rotation,
-                    ghost.getTexturePositionX(), ghost.getTexturePositionY(), 32, 32, false, false
-            );
+            ghost.draw();
         }
 
         if(controller instanceof ControllerJoystick){
             if(controller.isTouchEvent()){
                 joystick = ((ControllerJoystick) controller).joystick;
-                PacManGame.batch.draw(joystick.texture, joystick.getXPosition(), joystick.getYPosition(), 96, 96,
-                        192, 192, 1, 1, joystick.rotation,
-                        joystick.getTexturePositionX(), joystick.getTexturePositionY(), 192, 192, false, false
-                );
-                PacManGame.batch.draw(joystick.textureKnob, joystick.getXPositionKnob(), joystick.getYPositionKnob());
+                joystick.draw();
             }
         }
 
@@ -275,6 +222,7 @@ public abstract class MapScreen implements Screen {
     @Override
     public void dispose() {
         controller.dispose();
+        assets.manager.get(assets.HUNTING_MUSIC).stop();
         music.dispose();
     }
 

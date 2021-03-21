@@ -19,7 +19,6 @@ public class GameMap extends Map {
     /**
      * does the same as the parent constructor.
      * Additionaly it generates collectables and provides a method to collect them.
-     * @param game instance of PacManGame
      * @param assets instance of the Assetmanager
      * @param path  string value which contains the path to a tmx-Mapfile.
      * @param screen instance of a Screen which contains this map
@@ -38,7 +37,7 @@ public class GameMap extends Map {
         for(int x = 0; x < MAP_WIDTH; x++){
             for(int y = 0; y < MAP_HEIGHT; y++){
                 if(layerCollect.getCell(x,y) != null) {
-                    matrix[x][y].placeItem();
+                    matrix[x][y].placeItem(Tile.Item.HUNTER);
                 }
             }
         }
@@ -54,7 +53,7 @@ public class GameMap extends Map {
             for(int x = 0; x < MAP_WIDTH; x++){
                 for(int y = 0; y < MAP_HEIGHT; y++){
                     if(layerWall.getCell(x, y) == null && total_Dots>0 && layerCollect.getCell(x,y) == null){
-                        if (layerPath.getCell(x, y) != null & !matrix[x][y].isDot && x > 0 && x < (MAP_WIDTH - 2)) { //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
+                        if (layerPath.getCell(x, y) != null & !matrix[x][y].isItem() && x > 0 && x < (MAP_WIDTH - 2)) { //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
                             int max = 1;
                             int min = 0;
                             int random = (int) (Math.random() * (max - min + 1) + min); // random ist entweder 0 oder 1
@@ -63,7 +62,7 @@ public class GameMap extends Map {
                                 TiledMapTile t = new Tile(createTextureRegion(Tile.Type.DOT));
                                 cell.setTile(t);
                                 layerCollect.setCell(x, y, cell);
-                                matrix[x][y].isDot = true;
+                                matrix[x][y].placeItem(Tile.Item.DOT);
                                 total_Dots--;
                             }
                         }
@@ -75,28 +74,31 @@ public class GameMap extends Map {
 
     /**
      * this will delete a collectable from the map and plays a sound
-     * additionaly it will in increase Pac-Mans score value.
-     * If the collectable is a hunter item it will evolve Pac-Man to SuperPacMan and set the ghosts to a freightened state.
+     * additionally it will in increase Pac-Mans score value.
+     * If the collectable is a hunter item it will evolve Pac-Man to SuperPacMan and set the ghosts to a frightened state.
      * @param tile specify the tile from which you want to collect an item
      */
     public void collect(Tile tile){
-        if(tile.isItem()){
-            layerCollect.setCell(
-                    tile.getX()/ TILE_SIZE,
-                    tile.getY()/ TILE_SIZE,
-                    null
-            );
-            tile.takeItem();
-            if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
-            screen.evolvePacMan();
-            for(Enemy ghost : screen.getGhosts()){
-                ghost.setDifficulty(Enemy.Difficulty.RUNAWAY);
-            }
-        }
-        if(tile.isDot){
-            PacManGame.increaseScore(1);
-            screen.hud.levelScore++;
-            screen.hud.update();
+        switch (tile.getItem()){
+            case DOT:
+                tile.takeItem();
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.DOT).play(0.25f);
+                PacManGame.increaseScore(1);
+                screen.hud.levelScore++;
+                screen.hud.update();
+                break;
+            case HUNTER:
+                layerCollect.setCell(
+                        tile.getX()/ TILE_SIZE,
+                        tile.getY()/ TILE_SIZE,
+                        null
+                );
+                tile.takeItem();
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
+                screen.evolvePacMan();
+                for(Enemy ghost : screen.getGhosts()){
+                    ghost.setDifficulty(Enemy.Difficulty.RUNAWAY);
+                }
         }
         super.collect(tile);
     }

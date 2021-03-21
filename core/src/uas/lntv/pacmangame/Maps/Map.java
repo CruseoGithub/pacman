@@ -25,6 +25,7 @@ public abstract class Map {
         public TiledMapTileLayer layerPath;
         public TiledMapTileLayer layerCollect;
 
+        protected  final TiledMap TMX_MAP;
         private final TiledMap TMX_CONTROL;
         public TiledMapTileLayer layerControlButton;
         public TiledMapTileLayer layerControlZone;
@@ -50,21 +51,21 @@ public abstract class Map {
             this.ASSETS = assets;
             firstMap = path.equals("maps/map.tmx");
             TmxMapLoader tmxMapLoader = new TmxMapLoader();
-            TiledMap tmxMap = tmxMapLoader.load(path);
+            TMX_MAP = tmxMapLoader.load(path);
             TMX_CONTROL = assets.manager.get(assets.CONTROL);
-            renderer = new OrthogonalTiledMapRenderer(tmxMap);
+            renderer = new OrthogonalTiledMapRenderer(TMX_MAP);
 
-            MAP_WIDTH = Integer.parseInt(tmxMap.getProperties().get("width").toString());
-            MAP_HEIGHT = Integer.parseInt(tmxMap.getProperties().get("height").toString());
-            TILE_SIZE = Integer.parseInt(tmxMap.getProperties().get("tilewidth").toString());
+            MAP_WIDTH = Integer.parseInt(TMX_MAP.getProperties().get("width").toString());
+            MAP_HEIGHT = Integer.parseInt(TMX_MAP.getProperties().get("height").toString());
+            TILE_SIZE = Integer.parseInt(TMX_MAP.getProperties().get("tilewidth").toString());
 
-            layerWall = (TiledMapTileLayer)tmxMap.getLayers().get("Walls");
-            layerPath = (TiledMapTileLayer)tmxMap.getLayers().get("Path");
-            layerCollect = (TiledMapTileLayer)tmxMap.getLayers().get("Collectables");
+            layerWall = (TiledMapTileLayer) TMX_MAP.getLayers().get("Walls");
+            layerPath = (TiledMapTileLayer) TMX_MAP.getLayers().get("Path");
+            layerCollect = (TiledMapTileLayer) TMX_MAP.getLayers().get("Collectables");
             layerControlButton = (TiledMapTileLayer) TMX_CONTROL.getLayers().get("ControllerButtons");
             layerControlZone = (TiledMapTileLayer)TMX_CONTROL.getLayers().get("ControllerZone");
-            tmxMap.getLayers().add(layerControlZone);
-            tmxMap.getLayers().add(layerControlButton);
+            TMX_MAP.getLayers().add(layerControlZone);
+            TMX_MAP.getLayers().add(layerControlButton);
 
             //layerPath.setOpacity(0.5f);
             matrix = new Tile[MAP_WIDTH][MAP_HEIGHT];
@@ -182,16 +183,11 @@ public abstract class Map {
          * @param tile specify the tile from which you want to collect an item
          */
         public void collect(Tile tile){
-            if(tile.isDot){
-                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.DOT).play(0.25f);
-                layerCollect.setCell(
-                        tile.getX()/ TILE_SIZE,
-                        tile.getY()/ TILE_SIZE,
-                        null
-                );
-                tile.isDot = false;
-            }
+            layerCollect.setCell(
+                    tile.getX()/ TILE_SIZE,
+                    tile.getY()/ TILE_SIZE,
+                    null
+            );
         }
-
 }
 

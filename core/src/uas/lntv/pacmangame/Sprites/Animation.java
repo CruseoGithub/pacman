@@ -109,7 +109,11 @@ public class Animation {
         if (ACTOR instanceof Enemy && ACTOR.state != State.DIEING) {
             this.animationSpeed = 0.1f;
         }
-        if ((SCREEN.map.getTile(ACTOR.xPosition, ACTOR.yPosition, ACTOR.direction).type != Tile.Type.WALL) || (ACTOR.state == State.DIEING)) {
+        if ((SCREEN.map.getTile(ACTOR.xPosition, ACTOR.yPosition, ACTOR.direction).type != Tile.Type.WALL)
+                || ACTOR.xPosition%SCREEN.map.getTileSize() != 0
+                || ACTOR.yPosition%SCREEN.map.getTileSize() != 0
+                || ACTOR.state == State.DIEING
+        ) {
             if (tmpTimerAnimation >= this.animationSpeed) {
                 this.animate();
                 tmpTimerAnimation = 0;

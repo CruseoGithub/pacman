@@ -3,6 +3,7 @@ package uas.lntv.pacmangame.Screens;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Maps.MenuMap;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.ControllerButtons;
 import uas.lntv.pacmangame.Scenes.ControllerJoystick;
@@ -11,11 +12,20 @@ import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
+/**
+ * In the SettingsScreen you can edit your settings or view the scoreboard and the credits.
+ */
 public class SettingsScreen extends MapScreen {
 
     private final BitmapFont FONT;
     private boolean controllerSet = false;
 
+    /**
+     * Main constructor of the SettingsScreen
+     * @param game the running game
+     * @param assets the asset management
+     * @param path the path where the needed map is located in the assets
+     */
     public SettingsScreen(PacManGame game, Assets assets, String path){
         super(game, assets, path, Type.SETTINGS);
         this.pacman = new PacMan(game, assets, 2 * TILE_SIZE, 33 * TILE_SIZE, this, hud);
@@ -26,10 +36,17 @@ public class SettingsScreen extends MapScreen {
         FONT.getData().setScale(FONT.getScaleX()*2);
     }
 
+    /**
+     * Update checks the position of PacMan, so find out if any of the options were chosen by
+     * the player.
+     * @param dt time parameter used by libGDX
+     */
     @Override
     public void update(float dt){
         boolean moving = false;
         if(handleInput()) moving = true;
+
+        //Stopping points, to make the movement through the menu easier
         if(
             !(pacman.getXPosition() == 4 * TILE_SIZE &&
             (pacman.getYPosition() == 21 * TILE_SIZE
@@ -49,14 +66,17 @@ public class SettingsScreen extends MapScreen {
 
         //If PacMan reaches the threshold of action, it depends in which corridor he is
         if(pacman.getXPosition() == 19 *TILE_SIZE){
+            //RETURN TO  MAIN MENU
             if(pacman.getYPosition() == 17 * TILE_SIZE){
                 this.dispose();
                 game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
             }
+            //ENTER SCORE SCREEN
             if(pacman.getYPosition() == 25 * TILE_SIZE){
                 this.dispose();
                 game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
             }
+            //SET CONTROLLER TO JOYSTICK
             if(pacman.getYPosition() == 37 * TILE_SIZE && !controllerSet){
                 PrefManager.setJoystick(true);
                 PrefManager.savePrefs();
@@ -64,6 +84,7 @@ public class SettingsScreen extends MapScreen {
                 controller = new ControllerJoystick(assets,this);
                 controllerSet = true;
             }
+            //SET CONTROLLER TO BUTTONS
             if(pacman.getYPosition() == 29 * TILE_SIZE && !controllerSet){
                 PrefManager.setJoystick(false);
                 PrefManager.savePrefs();
@@ -73,8 +94,10 @@ public class SettingsScreen extends MapScreen {
             }
         }
 
+        //preventing infinite dispose/create loop
         if(pacman.getYPosition() == 33 * TILE_SIZE) controllerSet = false;
 
+        //MUSIC ON/OFF
         if(pacman.getYPosition() == 41 * TILE_SIZE){
             if(pacman.getXPosition() == 19 * TILE_SIZE){
                 PrefManager.setMusicOn(true);
@@ -87,11 +110,14 @@ public class SettingsScreen extends MapScreen {
             PrefManager.savePrefs();
         }
 
+        //SFX ON/OFF
         if(pacman.getYPosition() == 37 * TILE_SIZE){
             if(pacman.getXPosition() == 11 * TILE_SIZE) PrefManager.setSfxOn(true);
             if(pacman.getXPosition() == 15 * TILE_SIZE) PrefManager.setSfxOn(false);
             PrefManager.savePrefs();
         }
+
+        //CHANGE USER NAME
         if(pacman.getYPosition() == 29 * TILE_SIZE) {
             if (pacman.getXPosition() == 14 * TILE_SIZE) {
                 PrefManager.setNameSet(true);
@@ -105,12 +131,45 @@ public class SettingsScreen extends MapScreen {
             }
         }
 
+        //CHECK FOR HIGHLIGHTING
+        if(PrefManager.isMusicOn()) {
+            ((MenuMap)map).getHighlightLayers().get(0).setVisible(true);
+            ((MenuMap)map).getHighlightLayers().get(1).setVisible(false);
+        }
+        else{
+            ((MenuMap)map).getHighlightLayers().get(0).setVisible(false);
+            ((MenuMap)map).getHighlightLayers().get(1).setVisible(true);
+        }
+        if(PrefManager.isSfxOn()){
+            ((MenuMap)map).getHighlightLayers().get(2).setVisible(true);
+            ((MenuMap)map).getHighlightLayers().get(3).setVisible(false);
+        }
+        else {
+            ((MenuMap)map).getHighlightLayers().get(2).setVisible(false);
+            ((MenuMap)map).getHighlightLayers().get(3).setVisible(true);
+        }
+        if(PrefManager.isJoystick()) {
+            ((MenuMap)map).getHighlightLayers().get(4).setVisible(true);
+            ((MenuMap)map).getHighlightLayers().get(5).setVisible(false);
+        }
+        else{
+            ((MenuMap)map).getHighlightLayers().get(4).setVisible(false);
+            ((MenuMap)map).getHighlightLayers().get(5).setVisible(true);
+        }
+
         ghosts.get(0).update(dt);
         ghosts.get(0).move();
         gameCam.update();
         map.renderer.setView(gameCam);
     }
 
+    /**
+     * In addition to the render method of the abstract MapScreen class, this render method also
+     * draws words on the screen, so that the player knows which option he can use in which place
+     * and it uses the classes own update method to check PacMan's place.
+     * @param delta time parameter used by libGDX
+     * @see MapScreen
+     */
     @Override
     public void render(float delta) {
         update(delta);
@@ -191,7 +250,7 @@ public class SettingsScreen extends MapScreen {
         );
         FONT.draw(
                 PacManGame.batch,
-                "RESUME",
+                "RETURN",
                 19 * TILE_SIZE,
                 18 * TILE_SIZE
         );

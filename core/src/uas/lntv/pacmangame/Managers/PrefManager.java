@@ -12,22 +12,37 @@ import java.util.ArrayList;
 public class PrefManager {
 
     private static Preferences prefs;
+
     private static final ArrayList<Integer> highScores = new ArrayList<>();
     private static final ArrayList<String> names = new ArrayList<>();
     private static final ArrayList<String> causeOfDeath = new ArrayList<>();
     private static final ArrayList<Integer> level = new ArrayList<>();
+
     private static String name;
+
     private static boolean nameSet;
     private static boolean musicOn;
     private static boolean sfxOn;
     private static boolean joystick;
+    private static boolean skipLogos;
+    private static boolean init = false;
 
     /**
      * This constructor simply loads the saved high-scores and settings from the preferences.
+     * At first startup it will initialize with default settings.
      */
     public PrefManager(){
         prefs = Gdx.app.getPreferences("PacManPreferences");
         loadPrefs();
+        if(!init){
+            // Default settings
+            musicOn = true;
+            sfxOn = true;
+            joystick = false;
+            skipLogos = false;
+            init = true;
+            savePrefs();
+        }
     }
 
     public static ArrayList<Integer> getHighScores(){ return highScores; }
@@ -87,6 +102,10 @@ public class PrefManager {
 
     public static void setJoystick(boolean joystick) { PrefManager.joystick = joystick; }
 
+    public static boolean isLogosSkip() { return skipLogos; }
+
+    public static void setSkipLogos(boolean introLogos) { PrefManager.skipLogos = PrefManager.skipLogos; }
+
     /**
      * Gives the player two chances to insert a name, if he doesn't he will be treated as
      * Anonymous Bastard.
@@ -133,7 +152,7 @@ public class PrefManager {
     /**
      * Loads the scores and settings from the preferences folder into the game.
      */
-    public static void loadPrefs(){
+    public static void loadPrefs() {
         highScores.add(prefs.getInteger("high_score_1"));
         names.add(prefs.getString("names_1"));
         causeOfDeath.add(prefs.getString("cause_of_death_1"));
@@ -179,6 +198,8 @@ public class PrefManager {
         musicOn = prefs.getBoolean("Music");
         sfxOn = prefs.getBoolean("SFX");
         joystick = prefs.getBoolean("Controller");
+        skipLogos = prefs.getBoolean("SkipLogos");
+        init = prefs.getBoolean("Initialized");
     }
 
     /**
@@ -230,8 +251,13 @@ public class PrefManager {
         prefs.putBoolean("Music", musicOn);
         prefs.putBoolean("SFX", sfxOn);
         prefs.putBoolean("Controller", joystick);
+        prefs.putBoolean("SkipLogos", skipLogos);
+        prefs.putBoolean("Initialized", init);
 
-/* This resets the list
+        prefs.flush();
+    }
+
+    public static void resetScores(){
         prefs.putInteger("high_score_1", 0);
         prefs.putInteger("high_score_2", 0);
         prefs.putInteger("high_score_3", 0);
@@ -273,9 +299,18 @@ public class PrefManager {
         prefs.putInteger("level_9", 0);
         prefs.putInteger("level_10", 0);
         prefs.putString("player", "");
-*/
-
+        prefs.putBoolean("NameSet", false);
+        prefs.putBoolean("Music", true);
+        prefs.putBoolean("SFX", true);
+        prefs.putBoolean("Controller", false);
+        prefs.putBoolean("Initialized", true);
 
         prefs.flush();
+        highScores.clear();
+        names.clear();
+        causeOfDeath.clear();
+        level.clear();
+        loadPrefs();
     }
+
 }

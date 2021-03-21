@@ -74,6 +74,7 @@ public class GameScreen extends MapScreen {
     @Override
     public void update(float dt) {
         super.update(dt);
+        if(ready) hud.time -= Gdx.graphics.getDeltaTime();
 
         if(hud.time < 0){
             this.dispose();
@@ -92,7 +93,6 @@ public class GameScreen extends MapScreen {
             PacManGame.increaseScore((int)hud.time);
             this.dispose();
             game.setScreen(new GameScreen(game, assets, hud.getMap()));
-
         }
 
         if(paused) {
@@ -118,9 +118,10 @@ public class GameScreen extends MapScreen {
     public void render(float delta) {
         update(delta);
         super.render(delta);
-
-        if(ready) hud.time -= Gdx.graphics.getDeltaTime();
         hud.update();
+        if (pacman.getState() == Actor.State.DIEING) {
+            hud.animateLives(delta/1.001f);
+        }
         hud.stage.draw();
     }
 
@@ -141,7 +142,7 @@ public class GameScreen extends MapScreen {
             );
             this.pacManSuper = true;
         } else{
-            pacman.resetSupStatusTime();
+            ((SuperPacMan)pacman).resetSupStatusTime();
         }
     }
 

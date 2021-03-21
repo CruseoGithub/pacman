@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Managers.PrefManager;
-import uas.lntv.pacmangame.Screens.LoadingScreen;
 import uas.lntv.pacmangame.Screens.SplashScreen;
 
 public class PacManGame extends Game {
@@ -19,14 +18,16 @@ public class PacManGame extends Game {
 
 	@Override
 	public void create () {
+
 		batch = new SpriteBatch();
 		prefManager = new PrefManager();
+		//prefManager.resetScores();
 		assets = new Assets();
 		assets.loadSetup();
 		level = 0;
 		score = 0;
 		lives = 3;
-		setScreen(new SplashScreen(this, assets));
+		setScreen(new SplashScreen(this, assets, PrefManager.isLogosSkip()));
 	}
 
 	public static int getLevel(){

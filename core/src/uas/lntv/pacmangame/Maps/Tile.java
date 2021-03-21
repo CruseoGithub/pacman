@@ -9,11 +9,11 @@ import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class Tile extends StaticTiledMapTile {
     public enum Type { EMPTY,PATH, WALL, DOT}
+    public enum Item { EMPTY, DOT, HUNTER}
     public Tile.Type type;
+    protected Tile.Item item;
 
     private int x,y;
-    public boolean isDot;
-    private boolean item = false;
     private boolean occupiedByPacMan = false;
     private boolean occupiedByGhost = false;
 
@@ -34,12 +34,6 @@ public class Tile extends StaticTiledMapTile {
     public Type getType() {
         return type;
     }
-
-    public boolean isItem(){ return item; }
-
-    public void placeItem(){ item = true; }
-
-    public void takeItem(){ item = false; }
 
     public int getCost() {
         return cost;
@@ -91,11 +85,20 @@ public class Tile extends StaticTiledMapTile {
         if(actor instanceof Enemy) occupiedByGhost = false;
     }
 
+    public boolean isItem(){
+        return item != Item.EMPTY;
+    }
+    public Item getItem(){ return this.item;}
+
+    public void placeItem(Tile.Item item){ this.item = item; }
+
+    public void takeItem(){ this.item = Item.EMPTY; }
+
     public Tile(){
         super(new TextureRegion());
         this.type = null;
         this.prev = null;
-        this.isDot = false;
+        this.item = Item.EMPTY;
         this.x = 0;
         this.y = 0;
         this.cost = 1000000;
@@ -107,7 +110,7 @@ public class Tile extends StaticTiledMapTile {
         super(textureRegion);
         this.type = null;
         this.prev = null;
-        this.isDot = false;
+        this.item = Item.EMPTY;
         this.x = 0;
         this.y = 0;
         this.cost = 1000000;
@@ -118,54 +121,24 @@ public class Tile extends StaticTiledMapTile {
     public Tile(TextureRegion textureRegion, Tile.Type type, int x, int y) {
         super(textureRegion);
         this.type = type;
-        this.isDot = false;
+        this.item = Item.EMPTY;
         this.x = x;
         this.y = y;
         this.cost = 1000000;
         this.heuristics = 0;
         this.total = 1000000;
-    }
-
-    public Tile(TextureRegion textureRegion, Tile.Type type, int x, int y, boolean isDot){
-        super(textureRegion);
-        this.type = type;
-        this.prev = null;
-        this.isDot = false;
-        this.x = x;
-        this.y = y;
-        this.cost = 1000000;
-        this.heuristics = 0;
-        this.total = 1000000;
-        if(type == Tile.Type.PATH && isDot){
-            this.isDot = isDot;
-        }
     }
 
     public Tile(Type type, int x, int y) {
         super(new TextureRegion());
         this.type = type;
         this.prev = null;
-        this.isDot = false;
+        this.item = Item.EMPTY;
         this.x = x;
         this.y = y;
         this.cost = 1000000;
         this.heuristics = 0;
         this.total = 1000000;
-    }
-
-    public Tile(Type type, int x, int y, boolean isDot){
-        super(new TextureRegion());
-        this.type = type;
-        this.prev = null;
-        this.isDot = false;
-        this.x = x;
-        this.y = y;
-        this.cost = 1000000;
-        this.heuristics = 0;
-        this.total = 1000000;
-        if(type == Type.PATH && isDot){
-            this.isDot = isDot;
-        }
     }
 
 }

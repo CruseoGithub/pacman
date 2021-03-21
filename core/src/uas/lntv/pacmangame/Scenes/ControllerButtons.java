@@ -20,17 +20,16 @@ public class ControllerButtons extends Controller {
                 gameCam.unproject(touch);
 
                 ready(touch.x, touch.y);
-                System.out.println("Screen coordinates Buttons!!!!!!!: "
-                        + "X: " + touch.x + " Y: " + touch.y);
 
-                if(touch.x >= 12 * TILE_SIZE && touch.x <= 16 * TILE_SIZE){
-                    if(touch.y >= 0 && touch.y <= 4 * TILE_SIZE) downPressed = true;
-                    if(touch.y >= 10 * TILE_SIZE && touch.y <= 14 * TILE_SIZE) upPressed = true;
-                }
+                /*System.out.println("Screen coordinates an angle from center: "
+                        + "X: " + touch.x + " Y: " + touch.y + " Angle: " + getAngleFromCenter(touch));*/
 
-                if(touch.y >= 5 * TILE_SIZE && touch.y <= 9 * TILE_SIZE){
-                    if(touch.x >= 7 * TILE_SIZE && touch.x <= 11 * TILE_SIZE) leftPressed = true;
-                    if(touch.x >= 17 * TILE_SIZE && touch.x <= 21 * TILE_SIZE) rightPressed = true;
+                if(!PauseReady){
+                    float angle = getAngleFromCenter(touch);
+                    if(angle > 45 && angle < 135)       upPressed = true;
+                    else if(angle > 135 && angle < 225) leftPressed = true;
+                    else if(angle > 225 && angle < 315) downPressed = true;
+                    else if(angle > 315 || angle < 45)  rightPressed = true;
                 }
                 return true;
             }
@@ -41,6 +40,14 @@ public class ControllerButtons extends Controller {
                 gameCam.unproject(touch);
                 setPause(touch.x, touch.y);
                 return super.touchUp(screenX, screenY, pointer, button);
+            }
+            public float getAngleFromCenter(Vector3 target) {
+                //Center { x = 14, y = 7 }
+                float angle = (float) Math.toDegrees(Math.atan2(target.y - (7 * TILE_SIZE), target.x - (14 * TILE_SIZE)));
+                if(angle < 0){
+                    angle += 360;
+                }
+                return angle;
             }
         });
     }

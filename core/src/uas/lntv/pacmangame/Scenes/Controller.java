@@ -25,7 +25,7 @@ public abstract class Controller {
 
     protected boolean upPressed, downPressed, leftPressed, rightPressed, touchEvent;
     boolean touchpause = true;
-    private boolean PauseReady = false;
+    protected boolean PauseReady = false;
 
 
     public Controller(Assets assets, MapScreen screen){

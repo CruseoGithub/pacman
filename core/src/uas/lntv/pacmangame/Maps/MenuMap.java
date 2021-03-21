@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import java.util.ArrayList;
 
 import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Managers.PrefManager;
 
 /**
  * This class provides a simple map for the purpose of creating menus.
@@ -42,7 +43,7 @@ public class MenuMap extends Map {
         for(int x = 0; x < MAP_WIDTH; x++){
             for(int y = 0; y < MAP_HEIGHT; y++){
                 if(layerCollect.getCell(x, y) != null){
-                    matrix[x][y].isDot = true;
+                    matrix[x][y].placeItem(Tile.Item.DOT);
                 }
             }
         }
@@ -54,7 +55,11 @@ public class MenuMap extends Map {
      */
     @Override
     public void collect(Tile tile) {
-        super.collect(tile);
+        if(tile.getItem() == Tile.Item.DOT){
+            tile.takeItem();
+            if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.DOT).play(0.25f);
+            super.collect(tile);
+        }
     }
 
 }

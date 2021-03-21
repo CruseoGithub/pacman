@@ -10,7 +10,7 @@ import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Enemy;
 
 /**
- * this class sets up a map for a game level.
+ * This class sets up a map for a game level.
  * It implements some additional code for generating and collecting collectables
  */
 public class GameMap extends Map {
@@ -18,7 +18,7 @@ public class GameMap extends Map {
 	
     /**
      * does the same as the parent constructor.
-     * Additionaly it generates collectables and provides a method to collect them.
+     * Additionally it generates collectables and provides a method to collect them.
      * @param assets instance of the Assetmanager
      * @param path  string value which contains the path to a tmx-Mapfile.
      * @param screen instance of a Screen which contains this map

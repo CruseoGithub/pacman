@@ -1,7 +1,5 @@
 package uas.lntv.pacmangame.Sprites;
 
-import com.badlogic.gdx.Gdx;
-
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Hud;
@@ -13,8 +11,6 @@ import uas.lntv.pacmangame.Screens.GameScreen;
  * He is faster, looks different and is able to eat ghosts.
  */
 public class SuperPacMan extends PacMan {
-
-    private float supStatusTime;
 
     /**
      * Let PacMan go Super!
@@ -33,35 +29,6 @@ public class SuperPacMan extends PacMan {
         super(game, assets, initX, initY, speed, screen, hud, now, next, prev);
         correctPosition(now);                                       //avoids rushing through walls
         setSpeed(speed * 2);
-    }
-
-    /**
-     * This method is supposed to be used, when PacMan is already SuperPacMan and eats
-     * another hunting item.
-     * The only thing that happens here is, that the duration of the Super-status is reset.
-     */
-    public void resetSupStatusTime() {
-        supStatusTime = 0;
-    }
-
-    /**
-     * Updates the time spent in Super-status and turns PacMan back to normal after
-     * a certain amount of time.
-     * @param dt delta time
-     * @see PacMan
-     */
-    @Override
-    public void update(float dt) {
-        super.update(dt);
-        supStatusTime += Gdx.graphics.getDeltaTime();
-        if (supStatusTime > 10) {
-            screen.shrinkPacMan();
-            screen.switchMusicGame();
-            screen.pacman = new PacMan(game, assets, getXPosition(), getYPosition(), (getSpeed() / 2), screen, hud, direction, nextDirection, prevDirection);
-            for (Enemy ghost : screen.getGhosts()) {
-                ghost.resetDifficulty();
-            }
-        }
     }
 
     /**

@@ -21,10 +21,9 @@ public class PacManGame extends Game {
 
 		batch = new SpriteBatch();
 		prefManager = new PrefManager();
-		//prefManager.resetScores();
 		assets = new Assets();
 		assets.loadSetup();
-		level = 0;
+		level = 6;
 		score = 0;
 		lives = 3;
 		setScreen(new SplashScreen(this, assets, PrefManager.isLogosSkip()));
@@ -54,13 +53,13 @@ public class PacManGame extends Game {
 
 	@Override
 	public void render () { super.render(); }
-	
+
 	@Override
 	public void dispose () {
 		super.dispose();
 		assets.dispose();
 		batch.dispose();
-		System.exit(0);
 		Gdx.app.exit();
+		System.exit(0);
 	}
 }

@@ -24,6 +24,7 @@ public class GameScreen extends MapScreen {
     }
 
     private boolean pacManSuper;
+    private float supStatusTime = 0;
 
     public boolean isPacManSuper() { return pacManSuper; }
 
@@ -76,6 +77,29 @@ public class GameScreen extends MapScreen {
         super.update(dt);
         if(ready) hud.time -= Gdx.graphics.getDeltaTime();
 
+        if(pacManSuper) {
+            supStatusTime += Gdx.graphics.getDeltaTime();
+            if (supStatusTime > 10) {
+                pacManSuper = false;
+                switchMusicGame();
+                pacman = new PacMan(
+                        game,
+                        assets,
+                        pacman.getXPosition(),
+                        pacman.getYPosition(),
+                        (pacman.getSpeed() / 2),
+                        this,
+                        hud,
+                        pacman.getDirection(),
+                        pacman.getNextDirection(),
+                        pacman.getPrevDirection()
+                );
+                for (Enemy ghost : ghosts) {
+                    ghost.resetDifficulty();
+                }
+            }
+        }
+
         if(hud.time < 0){
             this.dispose();
             if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Time elapsed", PacManGame.getLevel() + 1)){
@@ -126,7 +150,8 @@ public class GameScreen extends MapScreen {
     }
 
     public void evolvePacMan(){
-        if(!isPacManSuper()){
+        supStatusTime = 0;
+        if(!pacManSuper) {
             this.switchMusicHunting();
             this.pacman = new SuperPacMan(
                     game,
@@ -141,12 +166,8 @@ public class GameScreen extends MapScreen {
                     this.pacman.getPrevDirection()
             );
             this.pacManSuper = true;
-        } else{
-            ((SuperPacMan)pacman).resetSupStatusTime();
         }
     }
-
-    public void shrinkPacMan(){ this.pacManSuper = false; }
 
     @Override
     public void dispose() {

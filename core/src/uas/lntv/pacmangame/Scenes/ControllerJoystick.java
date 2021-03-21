@@ -108,22 +108,22 @@ public class ControllerJoystick extends Controller {
                 if (angle > -0.5 && angle < 0.5){
                     //unten
                     downPressed = true;
-                    joystick.rotation = 0;
+                    joystick.setRotation(0);
                 }
                 if (angle > 0.5 && angle < 2){
                     //rechts
                     rightPressed = true;
-                    joystick.rotation = 90;
+                    joystick.setRotation(90);
                 }
                 if (angle > 2 || angle < -2.5){
                     //oben
                     upPressed = true;
-                    joystick.rotation = 180;
+                    joystick.setRotation(180);
                 }
                 if (angle > -2.5 && angle < -0.5){
                     //links
                     leftPressed = true;
-                    joystick.rotation = 270;
+                    joystick.setRotation(270);
                 }
             }
         });

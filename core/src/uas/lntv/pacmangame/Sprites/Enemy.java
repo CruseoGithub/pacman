@@ -70,6 +70,7 @@ public class Enemy extends Actor {
 
     public Difficulty getDifficulty(){ return this.difficulty; }
 
+
     public void setDifficulty(Enemy.Difficulty difficulty){
         if(difficulty == Difficulty.RUNAWAY && this.difficulty != Difficulty.RUNAWAY) levelDiff = this.difficulty;
         this.difficulty = difficulty;
@@ -166,7 +167,7 @@ public class Enemy extends Actor {
     private Direction findNextDirectionEasy(Actor target){
         int distanceX = this.xPosition - target.getXPosition();
         int distanceY = this.yPosition - target.getYPosition();
-        if((Math.abs(distanceX) + Math.abs(distanceY)) > 16* TILE_SIZE) return Direction.getRandomDirection();
+        if(state != State.BOXED && (Math.abs(distanceX) + Math.abs(distanceY)) > 16* TILE_SIZE) return Direction.getRandomDirection();
         if(collisionTest(target)) return Direction.RIGHT;
         if(Math.abs(distanceX) > Math.abs(distanceY)){
             return LeftOrRight(distanceX);
@@ -310,7 +311,24 @@ public class Enemy extends Actor {
                 else enterBox();
             }
         } else{
-            if(boxTimer > 0) boxTimer -= Gdx.graphics.getDeltaTime();
+            if(boxTimer > 0){
+                boxTimer -= Gdx.graphics.getDeltaTime();
+                Direction temp = findNextDirectionEasy(pacman);
+                switch(temp){
+                    case RIGHT:
+                        texturePositionY = 0;
+                        break;
+                    case LEFT:
+                        texturePositionY = 32;
+                        break;
+                    case UP:
+                        texturePositionY = 64;
+                        break;
+                    case DOWN:
+                        texturePositionY = 96;
+                        break;
+                }
+            }
             else if(state == State.BOXED) leaveBox();
             else if(state == State.HOMING) {
                 if(!home) getHome();

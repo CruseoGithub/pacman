@@ -1,6 +1,5 @@
 package uas.lntv.pacmangame.Scenes;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -148,13 +147,13 @@ public class Hud {
 
 
             if(((GameScreen)SCREEN).isPacManSuper()){
-                PAC_MAN_1.texture = assets.manager.get(assets.SUPER_PAC);
-                PAC_MAN_2.texture = assets.manager.get(assets.SUPER_PAC);
-                PAC_MAN_3.texture = assets.manager.get(assets.SUPER_PAC);
+                PAC_MAN_1.setTexture(assets.manager.get(assets.SUPER_PAC));
+                PAC_MAN_2.setTexture(assets.manager.get(assets.SUPER_PAC));
+                PAC_MAN_3.setTexture(assets.manager.get(assets.SUPER_PAC));
             } else if (SCREEN.pacman.getState() != Actor.State.DIEING){
-                PAC_MAN_1.texture = assets.manager.get(assets.PAC_MAN);
-                PAC_MAN_2.texture = assets.manager.get(assets.PAC_MAN);
-                PAC_MAN_3.texture = assets.manager.get(assets.PAC_MAN);
+                PAC_MAN_1.setTexture(assets.manager.get(assets.PAC_MAN));
+                PAC_MAN_2.setTexture(assets.manager.get(assets.PAC_MAN));
+                PAC_MAN_3.setTexture(assets.manager.get(assets.PAC_MAN));
             }
 
             if (PacManGame.getLives() >= 1) {

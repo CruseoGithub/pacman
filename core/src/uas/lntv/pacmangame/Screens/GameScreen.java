@@ -86,6 +86,11 @@ public class GameScreen extends MapScreen {
                 activateBuff(Tile.Item.EMPTY);
             }
         }
+        if((int)hud.time % 10 == 0){
+            if(!map.matrix[(int)this.map.randomItemPos.x][(int)this.map.randomItemPos.y].isItem()){
+                this.map.generateRandomItem();
+            }
+        }
 
 
         if(hud.time < 0){
@@ -173,6 +178,12 @@ public class GameScreen extends MapScreen {
             case SLOWMO:
                 this.buffActive = true;
                 for (Enemy ghost : ghosts) ghost.setSpeed(ghost.getSpeed()/2);
+                break;
+            case TIME:
+                hud.time += 10;
+                break;
+            case LIFE:
+                if(PacManGame.getLives()<3) PacManGame.addLive();
                 break;
         }
     }

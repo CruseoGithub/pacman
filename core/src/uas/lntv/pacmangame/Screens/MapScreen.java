@@ -180,7 +180,6 @@ public abstract class MapScreen implements Screen {
 
     public ArrayList<Enemy> getGhosts() { return ghosts; }
 
-    public void evolvePacMan() { }
     public void activateBuff(Tile.Item buffType) { }
 
     public void shrinkPacMan() { }

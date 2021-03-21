@@ -19,7 +19,6 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 public class GameMap extends Map {
     MapScreen screen;
     ArrayList<Vector3> hunterItems = new ArrayList<>();
-    Vector3 randomItemPos;
 	
     /**
      * does the same as the parent constructor.
@@ -38,15 +37,12 @@ public class GameMap extends Map {
         hunterItems.add(new Vector3(26, 21, 0));
         hunterItems.add(new Vector3(26, 36, 0));
 
-        randomItemPos = new Vector3(1, 24, 0);
-
-
         generateItems();
         generateDots(150);
     }
 
     /**
-     * generates hunter items
+     * generates Collectables (Not Dots!)
      */
     public void generateItems(){
         for(int x = 0; x < MAP_WIDTH; x++){
@@ -58,13 +54,22 @@ public class GameMap extends Map {
                         matrix[x][y].placeItem(Tile.Item.HUNTER);
                     }
                 }
-                //generate random Item
-                if(x == randomItemPos.x && y == randomItemPos.y){
-                    layerCollect.setCell(x, y, createItem(Tile.Item.SLOWMO));
-                    matrix[x][y].placeItem(Tile.Item.SLOWMO);
-                }
             }
         }
+        generateRandomItem();
+    }
+    @Override
+    public void generateRandomItem(){
+            Tile.Item random = randomItem();
+            layerCollect.setCell((int)randomItemPos.x, (int)randomItemPos.y, createItem(random));
+            matrix[(int)randomItemPos.x][(int)randomItemPos.y].placeItem(random);
+    }
+    public Tile.Item randomItem(){
+        int max = 5;
+        int min = 2;
+        int random = (int) (Math.random() * (max - min + 1) + min); // random ist zwischen 1 und 4
+        Tile.Item itemList[] = Tile.Item.values();
+        return itemList[random];
     }
 
     /**
@@ -120,6 +125,16 @@ public class GameMap extends Map {
                 tile.takeItem();
                 if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
                 screen.activateBuff(Tile.Item.SLOWMO);
+                break;
+            case TIME:
+                tile.takeItem();
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
+                screen.activateBuff(Tile.Item.TIME);
+                break;
+            case LIFE:
+                tile.takeItem();
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
+                screen.activateBuff(Tile.Item.LIFE);
                 break;
         }
         super.collect(tile);

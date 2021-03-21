@@ -50,6 +50,8 @@ public class PacManGame extends Game {
 
 	public static void die(){ lives--; }
 
+	public static void addLive(){ lives++; }
+
 	public static void resetLives(){ lives = 3; }
 
 	@Override

@@ -24,12 +24,13 @@ public class ControllerButtons extends Controller {
                 /*System.out.println("Screen coordinates an angle from center: "
                         + "X: " + touch.x + " Y: " + touch.y + " Angle: " + getAngleFromCenter(touch));*/
 
-                float angle = getAngleFromCenter(touch);
-                if(angle > 45 && angle < 135)       upPressed = true;
-                else if(angle > 135 && angle < 225) leftPressed = true;
-                else if(angle > 225 && angle < 315) downPressed = true;
-                else if(angle > 315 || angle < 45)  rightPressed = true;
-
+                if(!PauseReady){
+                    float angle = getAngleFromCenter(touch);
+                    if(angle > 45 && angle < 135)       upPressed = true;
+                    else if(angle > 135 && angle < 225) leftPressed = true;
+                    else if(angle > 225 && angle < 315) downPressed = true;
+                    else if(angle > 315 || angle < 45)  rightPressed = true;
+                }
                 return true;
             }
 

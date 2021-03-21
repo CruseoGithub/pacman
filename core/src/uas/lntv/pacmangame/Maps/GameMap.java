@@ -79,23 +79,26 @@ public class GameMap extends Map {
      * @param tile specify the tile from which you want to collect an item
      */
     public void collect(Tile tile){
-        if(tile.getItem() == Tile.Item.HUNTER){
-            layerCollect.setCell(
-                    tile.getX()/ TILE_SIZE,
-                    tile.getY()/ TILE_SIZE,
-                    null
-            );
-            tile.takeItem();
-            if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
-            screen.evolvePacMan();
-            for(Enemy ghost : screen.getGhosts()){
-                ghost.setDifficulty(Enemy.Difficulty.RUNAWAY);
-            }
-        }
-        if(tile.getItem() == Tile.Item.DOT){
-            PacManGame.increaseScore(1);
-            screen.hud.levelScore++;
-            screen.hud.update();
+        switch (tile.getItem()){
+            case DOT:
+                tile.takeItem();
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.DOT).play(0.25f);
+                PacManGame.increaseScore(1);
+                screen.hud.levelScore++;
+                screen.hud.update();
+                break;
+            case HUNTER:
+                layerCollect.setCell(
+                        tile.getX()/ TILE_SIZE,
+                        tile.getY()/ TILE_SIZE,
+                        null
+                );
+                tile.takeItem();
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
+                screen.evolvePacMan();
+                for(Enemy ghost : screen.getGhosts()){
+                    ghost.setDifficulty(Enemy.Difficulty.RUNAWAY);
+                }
         }
         super.collect(tile);
     }

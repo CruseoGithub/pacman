@@ -9,11 +9,11 @@ import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class Tile extends StaticTiledMapTile {
     public enum Type { EMPTY,PATH, WALL, DOT}
-    public enum Item { EMPTY, DOT, HUNTER}
+    public enum Item { EMPTY, DOT, HUNTER, SLOWMO, TIME}
     public Tile.Type type;
     protected Tile.Item item;
 
-    private int x,y;
+    private final int x,y;
     private boolean occupiedByPacMan = false;
     private boolean occupiedByGhost = false;
 

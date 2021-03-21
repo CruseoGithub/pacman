@@ -1,5 +1,6 @@
 package uas.lntv.pacmangame.Scenes;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.PacManGame;
+import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.PacMan;
@@ -21,6 +23,7 @@ import uas.lntv.pacmangame.Sprites.PacMan;
 public class Hud {
     public Stage stage;
     private final Assets assets;
+    private final MapScreen SCREEN;
 
     public float time;
     public Integer levelScore;
@@ -47,6 +50,7 @@ public class Hud {
     @SuppressWarnings("DefaultLocale")
     public Hud(PacManGame game, Assets assets, MapScreen screen, boolean visible){
         this.assets = assets;
+        this.SCREEN = screen;
         int mapWidth = screen.map.getMapWidth();
         int mapHeight = screen.map.getMapHeight();
         int tileSize = screen.map.getTileSize();
@@ -141,6 +145,17 @@ public class Hud {
         if (visible) {
             SCORE_LABEL.setText(String.format("%06d", PacManGame.getScore()));
             TIME_LABEL.setText(String.format("%03d", (int) time));
+
+
+            if(((GameScreen)SCREEN).isPacManSuper()){
+                PAC_MAN_1.texture = assets.manager.get(assets.SUPER_PAC);
+                PAC_MAN_2.texture = assets.manager.get(assets.SUPER_PAC);
+                PAC_MAN_3.texture = assets.manager.get(assets.SUPER_PAC);
+            } else if (SCREEN.pacman.getState() != Actor.State.DIEING){
+                PAC_MAN_1.texture = assets.manager.get(assets.PAC_MAN);
+                PAC_MAN_2.texture = assets.manager.get(assets.PAC_MAN);
+                PAC_MAN_3.texture = assets.manager.get(assets.PAC_MAN);
+            }
 
             if (PacManGame.getLives() >= 1) {
                 PAC_MAN_1.drawLife();

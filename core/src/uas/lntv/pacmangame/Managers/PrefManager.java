@@ -22,25 +22,27 @@ public class PrefManager {
 
     private static boolean nameSet;
     private static boolean musicOn;
-    private static boolean sfxOn ;
+    private static boolean sfxOn;
     private static boolean joystick;
     private static boolean skipLogos;
     private static boolean init = false;
 
     /**
      * This constructor simply loads the saved high-scores and settings from the preferences.
+     * At first startup it will initialize with default settings.
      */
     public PrefManager(){
         prefs = Gdx.app.getPreferences("PacManPreferences");
         loadPrefs();
         if(!init){
+            // Default settings
             musicOn = true;
             sfxOn = true;
             joystick = false;
             skipLogos = false;
+            init = true;
+            savePrefs();
         }
-        init = true;
-        savePrefs();
     }
 
     public static ArrayList<Integer> getHighScores(){ return highScores; }

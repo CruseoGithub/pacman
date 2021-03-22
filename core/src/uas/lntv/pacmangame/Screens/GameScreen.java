@@ -138,7 +138,7 @@ public class GameScreen extends MapScreen {
         super.render(delta);
         hud.update();
         if (pacman.getState() == Actor.State.DIEING) {
-            hud.animateLives(delta/1.001f);
+            hud.animateLives(delta/1.1f);
         }
         hud.stage.draw();
     }
@@ -173,7 +173,10 @@ public class GameScreen extends MapScreen {
             case LIFE:
                 this.itemTaken = true;
                 this.itemCoolDown = 15;
-                if(PacManGame.getLives() < 3) PacManGame.addLive();
+                if(PacManGame.getLives() < 3) {
+                    PacManGame.addLive();
+                    hud.resetLives();
+                }
                 break;
         }
     }

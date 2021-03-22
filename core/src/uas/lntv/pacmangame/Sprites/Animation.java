@@ -25,6 +25,8 @@ public class Animation {
         this.FRAME_WIDTH = actor.region.getRegionWidth() / frameCount;
     }
 
+    public void resetTmp(){ this.tmp = 0; }
+
     public void animate() {
         if (ACTOR instanceof PacMan) {
             switch (ACTOR.state) {

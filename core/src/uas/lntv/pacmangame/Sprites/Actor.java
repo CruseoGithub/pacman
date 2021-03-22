@@ -54,6 +54,8 @@ public abstract class Actor {
     protected float animationSpeed;
     protected boolean mouthOpen;
 
+    public Animation getAnimation(){ return this.animation; }
+
     public int getSpeed() {
         return speed;
     }
@@ -83,6 +85,11 @@ public abstract class Actor {
     }
 
     public void setTexture(Texture texture){ this.texture = texture; }
+
+    public void resetTexturePosition() {
+        this.texturePositionX = 0;
+        this.texturePositionY = 0;
+    }
 
     public Direction getDirection() { return direction; }
 

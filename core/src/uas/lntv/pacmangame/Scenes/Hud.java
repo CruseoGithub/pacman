@@ -168,6 +168,24 @@ public class Hud {
         }
     }
 
+    public void resetLives(){
+        if (PacManGame.getLives() == 2) {
+            PAC_MAN_2.getAnimation().resetTmp();
+            PAC_MAN_2.setState(Actor.State.RUNNING);
+            PAC_MAN_2.resetTexturePosition();
+            PAC_MAN_2.setXPosition(PAC_MAN_2.getHomeX());
+            PAC_MAN_2.setYPosition(PAC_MAN_2.getHomeY());
+        }
+        if (PacManGame.getLives() == 3) {
+            PAC_MAN_3.getAnimation().resetTmp();
+            PAC_MAN_3.setState(Actor.State.RUNNING);
+            PAC_MAN_3.resetTexturePosition();
+            PAC_MAN_3.setXPosition(PAC_MAN_3.getHomeX());
+            PAC_MAN_3.setYPosition(PAC_MAN_3.getHomeY());
+
+        }
+    }
+
 
     public void dispose(){
         stage.dispose();

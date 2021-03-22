@@ -18,7 +18,9 @@ import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.PacMan;
-
+/**
+ *
+ */
 public class Hud {
     public Stage stage;
     private final Assets assets;

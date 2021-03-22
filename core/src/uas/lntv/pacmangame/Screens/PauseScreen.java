@@ -22,7 +22,15 @@ public class PauseScreen extends MapScreen {
     private final BitmapFont FONT;
     private boolean controllerSet = false;
 
-
+    /**
+     * Main constructor of the PauseScreen
+     * @param game running game
+     * @param assets asset management
+     * @param mapPath the path where the map is stored
+     * @see MapScreen
+     * @param hud hud from the game paused
+     * @param screen
+     */
     public PauseScreen(PacManGame game, Assets assets, String mapPath, GameScreen screen, Hud hud){
         super(game, assets, mapPath, Type.MENU);
         this.hud = hud;
@@ -152,6 +160,7 @@ public class PauseScreen extends MapScreen {
 
     /**
      * Draws labels on the screen, where options.
+     * @param delta time value
      */
     @Override
     public void render(float delta) {

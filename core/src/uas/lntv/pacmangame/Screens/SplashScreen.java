@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -19,8 +18,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
-import uas.lntv.pacmangame.Managers.PrefManager;
-import uas.lntv.pacmangame.Scenes.ControllerJoystick;
+
 
 /**
  * The SplashScreen is the first thing shown when the application starts.

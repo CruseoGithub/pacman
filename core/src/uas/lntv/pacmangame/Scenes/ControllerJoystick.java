@@ -10,7 +10,6 @@ import uas.lntv.pacmangame.Sprites.Joystick;
 
 public class ControllerJoystick extends Controller {
     Vector3 touchDownPos;
-    Vector3 touchCurrentPos;
     public Joystick joystick;
 
 

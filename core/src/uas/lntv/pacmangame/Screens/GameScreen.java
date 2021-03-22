@@ -33,7 +33,13 @@ public class GameScreen extends MapScreen {
 
     public boolean isPacManSuper() { return pacManSuper; }
 
-
+    /**
+     * Creates a screen with(out) HUD, PacMan, Ghost(s).
+     * According to current level, there are more (difficult) Ghosts.
+     * @param game
+     * @param assets asset management
+     * @param path the path where the map is stored
+     */
     public GameScreen(PacManGame game, Assets assets, String path) {
         super(game, assets, path, Type.GAME);
 
@@ -76,11 +82,13 @@ public class GameScreen extends MapScreen {
         }
     }
 
+    /**
+     * 
+     */
     @Override
     public void update(float dt) {
         super.update(dt);
         if(ready) hud.time -= Gdx.graphics.getDeltaTime();
-
 
         updateCoolDown();
         updateHunter();
@@ -126,6 +134,9 @@ public class GameScreen extends MapScreen {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void render(float delta) {
         update(delta);
@@ -137,6 +148,9 @@ public class GameScreen extends MapScreen {
         hud.stage.draw();
     }
 
+    /**
+     *
+     */
     public void activateBuff(Tile.Item buffType){
         switch (buffType) {
             case HUNTER:
@@ -175,6 +189,9 @@ public class GameScreen extends MapScreen {
         }
     }
 
+    /**
+     *
+     */
     private void updateCoolDown(){
         if(itemTaken){
             itemCoolDown -= Gdx.graphics.getDeltaTime();
@@ -185,6 +202,9 @@ public class GameScreen extends MapScreen {
         }
     }
 
+    /**
+     *
+     */
     private void updateHunter(){
         if(pacManSuper) {
             supStatusTime -= Gdx.graphics.getDeltaTime();
@@ -200,6 +220,9 @@ public class GameScreen extends MapScreen {
         }
     }
 
+    /**
+     *
+     */
     private void updateSloMo(){
         if(enemiesSlow){
             slowDownTime -= Gdx.graphics.getDeltaTime();

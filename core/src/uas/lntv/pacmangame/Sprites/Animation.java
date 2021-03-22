@@ -25,6 +25,8 @@ public class Animation {
         this.FRAME_WIDTH = actor.region.getRegionWidth() / frameCount;
     }
 
+    public void resetTmp(){ this.tmp = 0; }
+
     public void animate() {
         if (ACTOR instanceof PacMan) {
             switch (ACTOR.state) {
@@ -68,8 +70,8 @@ public class Animation {
                                 ACTOR.rotation = 270;
                                 break;
                         }
-                        ACTOR.setXPosition(14 * ACTOR.TILE_SIZE);
-                        ACTOR.setYPosition(21 * ACTOR.TILE_SIZE);
+                        ACTOR.setXPosition(ACTOR.getHomeX());
+                        ACTOR.setYPosition(ACTOR.getHomeY());
                         SCREEN.notReady();
                         tmp = 0;
                     }

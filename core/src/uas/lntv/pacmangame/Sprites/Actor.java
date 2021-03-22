@@ -30,11 +30,13 @@ public abstract class Actor {
 
     protected int xPosition;
     protected int yPosition;
+    protected int homeX;
+    protected int homeY;
 
     protected final int TILE_SIZE;
-    public float rotation;
+    protected float rotation;
 
-    private int speed;
+    protected int speed;
     protected int texturePositionX;
     protected int texturePositionY;
     protected Direction direction;
@@ -43,14 +45,16 @@ public abstract class Actor {
 
     protected State state;
 
-    public Sprite sprite;
+    protected Sprite sprite;
     protected TextureRegion region;
-    public Texture texture;
+    protected Texture texture;
     protected MapScreen screen;
 
     protected Animation animation;
     protected float animationSpeed;
-    boolean mouthOpen;
+    protected boolean mouthOpen;
+
+    public Animation getAnimation(){ return this.animation; }
 
     public int getSpeed() {
         return speed;
@@ -60,6 +64,9 @@ public abstract class Actor {
         this.speed = speed;
     }
 
+    public int getHomeX(){ return homeX; }
+
+    public int getHomeY(){ return homeY; }
 
     public int getXPosition() {
         return xPosition;
@@ -77,19 +84,20 @@ public abstract class Actor {
         this.yPosition = yPosition;
     }
 
-    public int getTexturePositionX(){ return this.texturePositionX; }
+    public void setTexture(Texture texture){ this.texture = texture; }
 
-    public int getTexturePositionY(){ return this.texturePositionY; }
-
-    public Direction getNextDirection() { return nextDirection; }
+    public void resetTexturePosition() {
+        this.texturePositionX = 0;
+        this.texturePositionY = 0;
+    }
 
     public Direction getDirection() { return direction; }
-
-    public Direction getPrevDirection() { return prevDirection; }
 
     public void setNextDirection(Direction nextDirection) {
         this.nextDirection = nextDirection;
     }
+
+    public void setRotation(int rotation) { this.rotation = rotation; }
 
     public State getState(){ return this.state; }
 
@@ -252,8 +260,10 @@ public abstract class Actor {
     public void collide() {
         this.state = State.DIEING;
         for(Enemy ghost : screen.getGhosts()){
-            if (ghost.getState() != State.BOXED) ghost.setState(State.HOMING);
-            screen.map.getTile(ghost.xPosition, ghost.yPosition).leave(ghost);
+            if (ghost.getState() != State.BOXED) {
+                ghost.setState(State.HOMING);
+                screen.map.getTile(ghost.xPosition, ghost.yPosition).leave(ghost);
+            }
         }
     }
 

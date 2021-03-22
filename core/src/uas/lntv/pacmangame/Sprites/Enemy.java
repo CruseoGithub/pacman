@@ -24,8 +24,6 @@ public class Enemy extends Actor {
     private final Texture LIVING_BODY;
 
     private float boxTimer;
-    private final int HOME_X;
-    private final int HOME_Y;
 
     private boolean home = false;
 
@@ -41,8 +39,8 @@ public class Enemy extends Actor {
     public Enemy(int initX, int initY, Assets assets, MapScreen screen, Texture ghost){
         super(assets, initX, initY, screen);
 
-        HOME_X = 13 * TILE_SIZE;
-        HOME_Y = 33 * TILE_SIZE;
+        homeX = 13 * TILE_SIZE;
+        homeY = 33 * TILE_SIZE;
 
 
         this.difficulty = Difficulty.EASY;
@@ -69,6 +67,7 @@ public class Enemy extends Actor {
     }
 
     public Difficulty getDifficulty(){ return this.difficulty; }
+
 
     public void setDifficulty(Enemy.Difficulty difficulty){
         if(difficulty == Difficulty.RUNAWAY && this.difficulty != Difficulty.RUNAWAY) levelDiff = this.difficulty;
@@ -166,7 +165,7 @@ public class Enemy extends Actor {
     private Direction findNextDirectionEasy(Actor target){
         int distanceX = this.xPosition - target.getXPosition();
         int distanceY = this.yPosition - target.getYPosition();
-        if((Math.abs(distanceX) + Math.abs(distanceY)) > 16* TILE_SIZE) return Direction.getRandomDirection();
+        if(state != State.BOXED && (Math.abs(distanceX) + Math.abs(distanceY)) > 16* TILE_SIZE) return Direction.getRandomDirection();
         if(collisionTest(target)) return Direction.RIGHT;
         if(Math.abs(distanceX) > Math.abs(distanceY)){
             return LeftOrRight(distanceX);
@@ -243,7 +242,7 @@ public class Enemy extends Actor {
      * @return One of the four directions
      */
     private Direction findHome(){
-        aStar = new Pathfinder(screen, this, HOME_X, HOME_Y, true);
+        aStar = new Pathfinder(screen, this, homeX, homeY, true);
         Tile temp = aStar.aStarResult();
         if(temp.getY() > this.getYPosition()) return Direction.UP;
         if(temp.getY() < this.getYPosition()) return Direction.DOWN;
@@ -263,9 +262,9 @@ public class Enemy extends Actor {
         move();
         setSpeed(getSpeed() / 2);
         setSpeed(getSpeed() / 2);
-        if(screen.map.getTile(xPosition, yPosition) == screen.map.getTile(HOME_X, HOME_Y)){
-            xPosition = HOME_X;
-            yPosition = HOME_Y;
+        if(screen.map.getTile(xPosition, yPosition) == screen.map.getTile(homeX, homeY)){
+            xPosition = homeX;
+            yPosition = homeY;
             home = true;
         }
     }
@@ -310,7 +309,24 @@ public class Enemy extends Actor {
                 else enterBox();
             }
         } else{
-            if(boxTimer > 0) boxTimer -= Gdx.graphics.getDeltaTime();
+            if(boxTimer > 0){
+                boxTimer -= Gdx.graphics.getDeltaTime();
+                Direction temp = findNextDirectionEasy(pacman);
+                switch(temp){
+                    case RIGHT:
+                        texturePositionY = 0;
+                        break;
+                    case LEFT:
+                        texturePositionY = 32;
+                        break;
+                    case UP:
+                        texturePositionY = 64;
+                        break;
+                    case DOWN:
+                        texturePositionY = 96;
+                        break;
+                }
+            }
             else if(state == State.BOXED) leaveBox();
             else if(state == State.HOMING) {
                 if(!home) getHome();

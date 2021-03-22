@@ -9,7 +9,7 @@ import uas.lntv.pacmangame.Sprites.PacMan;
 
 public class Tile extends StaticTiledMapTile {
     public enum Type { EMPTY,PATH, WALL, DOT}
-    public enum Item { EMPTY, DOT, HUNTER, SLOWMO, TIME}
+    public enum Item { EMPTY, DOT, HUNTER, SLOWMO, TIME, LIFE}
     public Tile.Type type;
     protected Tile.Item item;
 

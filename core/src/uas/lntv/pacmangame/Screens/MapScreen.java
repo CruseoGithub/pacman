@@ -180,10 +180,7 @@ public abstract class MapScreen implements Screen {
 
     public ArrayList<Enemy> getGhosts() { return ghosts; }
 
-    public void evolvePacMan() { }
     public void activateBuff(Tile.Item buffType) { }
-
-    public void shrinkPacMan() { }
 
     public void notReady(){
         for(Enemy ghost : ghosts) ghost.notHome();
@@ -210,7 +207,6 @@ public abstract class MapScreen implements Screen {
             music.play();
         }
     }
-
 
     @Override
     public void pause() { }

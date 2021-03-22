@@ -1,6 +1,5 @@
 package uas.lntv.pacmangame.Scenes;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -30,6 +29,7 @@ public class Hud {
     public boolean visible;
 
     private final ArrayList<String> STAGES = new ArrayList<>();
+    private final ArrayList<PacMan> LIVE_PAC_MEN = new ArrayList<>();
 
     private final Label TIME_TEXT_LABEL;
     private final Label TIME_LABEL;
@@ -39,13 +39,6 @@ public class Hud {
     private boolean red;
     private final int WARNING_TIME;
     private float timeStamp;
-
-
-    private final PacMan PAC_MAN_1;
-    private final PacMan PAC_MAN_2;
-    private final PacMan PAC_MAN_3;
-
-    
 
     @SuppressWarnings("DefaultLocale")
     public Hud(PacManGame game, Assets assets, MapScreen screen, boolean visible){
@@ -93,9 +86,9 @@ public class Hud {
         table.add(TIME_LABEL).expandX().padTop(0);
         if(visible) stage.addActor(table);
 
-        PAC_MAN_1 = new PacMan(game, assets, 20 * tileSize, (45 * tileSize + tileSize /2), screen, this);
-        PAC_MAN_2 = new PacMan(game, assets, 22 * tileSize, (45 * tileSize + tileSize /2), screen, this);
-        PAC_MAN_3 = new PacMan(game, assets, 24 * tileSize, (45 * tileSize + tileSize /2), screen, this);
+        LIVE_PAC_MEN.add(new PacMan(game, assets, 20 * tileSize, (45 * tileSize + tileSize /2), screen, this));
+        LIVE_PAC_MEN.add(new PacMan(game, assets, 22 * tileSize, (45 * tileSize + tileSize /2), screen, this));
+        LIVE_PAC_MEN.add(new PacMan(game, assets, 24 * tileSize, (45 * tileSize + tileSize /2), screen, this));
 
         warned = false;
         red = false;
@@ -108,16 +101,18 @@ public class Hud {
 
     public void animateLives(float dt) {
         if (PacManGame.getLives() == 1) {
-            PAC_MAN_2.setState(Actor.State.DIEING);
-            PAC_MAN_2.update(dt);
-            PAC_MAN_2.drawLife();
+            animate(LIVE_PAC_MEN.get(1), dt/1.1f);
         }
 
         if (PacManGame.getLives() == 2) {
-            PAC_MAN_3.setState(Actor.State.DIEING);
-            PAC_MAN_3.update(dt);
-            PAC_MAN_3.drawLife();
+            animate(LIVE_PAC_MEN.get(2), dt/1.1f);
         }
+    }
+
+    private void animate(PacMan pacman, float dt){
+        pacman.setState(Actor.State.DIEING);
+        pacman.update(dt);
+        pacman.drawLife();
     }
 
     @SuppressWarnings("DefaultLocale")
@@ -148,25 +143,42 @@ public class Hud {
 
 
             if(((GameScreen)SCREEN).isPacManSuper()){
-                PAC_MAN_1.texture = assets.manager.get(assets.SUPER_PAC);
-                PAC_MAN_2.texture = assets.manager.get(assets.SUPER_PAC);
-                PAC_MAN_3.texture = assets.manager.get(assets.SUPER_PAC);
+                for(PacMan pacman : LIVE_PAC_MEN) {
+                    pacman.setTexture(assets.manager.get(assets.SUPER_PAC));
+                }
             } else if (SCREEN.pacman.getState() != Actor.State.DIEING){
-                PAC_MAN_1.texture = assets.manager.get(assets.PAC_MAN);
-                PAC_MAN_2.texture = assets.manager.get(assets.PAC_MAN);
-                PAC_MAN_3.texture = assets.manager.get(assets.PAC_MAN);
+                for(PacMan pacman : LIVE_PAC_MEN) {
+                    pacman.setTexture(assets.manager.get(assets.PAC_MAN));
+                }
             }
 
             if (PacManGame.getLives() >= 1) {
-                PAC_MAN_1.drawLife();
+                LIVE_PAC_MEN.get(0).drawLife();
             }
             if (PacManGame.getLives() >= 2) {
-                PAC_MAN_2.drawLife();
+                LIVE_PAC_MEN.get(1).drawLife();
             }
             if (PacManGame.getLives() >= 3) {
-                PAC_MAN_3.drawLife();
+                LIVE_PAC_MEN.get(2).drawLife();
             }
         }
+    }
+
+    public void resetLives(){
+        if (PacManGame.getLives() == 2) {
+            reset(LIVE_PAC_MEN.get(1));
+        }
+        if (PacManGame.getLives() == 3) {
+            reset(LIVE_PAC_MEN.get(2));
+        }
+    }
+
+    private void reset(PacMan pacman){
+        pacman.getAnimation().resetTmp();
+        pacman.setState(Actor.State.RUNNING);
+        pacman.resetTexturePosition();
+        pacman.setXPosition(pacman.getHomeX());
+        pacman.setYPosition(pacman.getHomeY());
     }
 
 

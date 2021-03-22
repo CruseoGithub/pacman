@@ -81,14 +81,8 @@ public class GameScreen extends MapScreen {
         super.update(dt);
         if(ready) hud.time -= Gdx.graphics.getDeltaTime();
 
-        if(itemTaken){
-            itemCoolDown -= Gdx.graphics.getDeltaTime();
-            if(itemCoolDown < 0){
-                this.map.generateRandomItem();
-                itemTaken = false;
-            }
-        }
 
+        updateCoolDown();
         updateHunter();
         updateSloMo();
 
@@ -138,7 +132,7 @@ public class GameScreen extends MapScreen {
         super.render(delta);
         hud.update();
         if (pacman.getState() == Actor.State.DIEING) {
-            hud.animateLives(delta/1.1f);
+            hud.animateLives(delta);
         }
         hud.stage.draw();
     }
@@ -178,6 +172,16 @@ public class GameScreen extends MapScreen {
                     hud.resetLives();
                 }
                 break;
+        }
+    }
+
+    private void updateCoolDown(){
+        if(itemTaken){
+            itemCoolDown -= Gdx.graphics.getDeltaTime();
+            if(itemCoolDown < 0){
+                this.map.generateRandomItem();
+                itemTaken = false;
+            }
         }
     }
 

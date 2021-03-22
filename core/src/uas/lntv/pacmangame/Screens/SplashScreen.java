@@ -2,10 +2,10 @@ package uas.lntv.pacmangame.Screens;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
-import uas.lntv.pacmangame.Managers.PrefManager;
+
 
 /**
  * The SplashScreen is the first thing shown when the application starts.
@@ -50,6 +50,8 @@ public class SplashScreen implements Screen {
     private float timer = 0;
     private float time = 0;
     private float alpha = 0;
+
+    private boolean touchEvent = false;
 
 
     /**
@@ -92,6 +94,18 @@ public class SplashScreen implements Screen {
         this.SPRITE = new Sprite(this.ASSETS.manager.get(ASSETS.LOADING));
 
         if(skipLogos) timer = 10; //Skip intro logos
+
+        Gdx.input.setInputProcessor(new InputAdapter(){
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                if(touchEvent) {
+                    timer = 10;
+                    ASSETS.manager.get(ASSETS.DIAL_UP).stop();
+                }
+                else touchEvent = true;
+                return true;
+            }
+        });
 
     }
 
@@ -161,7 +175,6 @@ public class SplashScreen implements Screen {
             this.dispose();
             GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
         }
-
 
     }
 

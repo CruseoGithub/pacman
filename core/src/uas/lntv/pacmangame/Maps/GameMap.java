@@ -1,7 +1,5 @@
 package uas.lntv.pacmangame.Maps;
 
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
@@ -70,8 +68,8 @@ public class GameMap extends Map {
         int max = 5;
         int min = 2;
         int random = (int) (Math.random() * (max - min + 1) + min); // random ist zwischen 1 und 4
-        Tile.Item itemList[] = Tile.Item.values();
-        return itemList[5];
+        Tile.Item[] itemList= Tile.Item.values();
+        return itemList[random];
     }
 
     /**

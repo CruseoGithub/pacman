@@ -12,7 +12,6 @@ import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
-import uas.lntv.pacmangame.Sprites.SuperPacMan;
 
 
 public class GameScreen extends MapScreen {
@@ -23,13 +22,16 @@ public class GameScreen extends MapScreen {
     public void setPauseActive(boolean bool) {
         PauseActive = bool;
     }
-    private float buffTimer = 0;
 
-    private boolean pacManSuper;
-    private boolean buffActive;
+    private boolean pacManSuper = false;
+    private boolean enemiesSlow = false;
+    private boolean itemTaken = false;
+
+    private float supStatusTime = 10;
+    private float slowDownTime = 10;
+    private float itemCoolDown = 15;
 
     public boolean isPacManSuper() { return pacManSuper; }
-    public boolean isBuffActive(){ return buffActive; }
 
 
     public GameScreen(PacManGame game, Assets assets, String path) {
@@ -72,26 +74,17 @@ public class GameScreen extends MapScreen {
         if(PacManGame.getLevel() >= 30){
             ghosts.get(2).setDifficulty(Enemy.Difficulty.HARD);
         }
-        this.pacManSuper = false;
     }
 
     @Override
     public void update(float dt) {
         super.update(dt);
         if(ready) hud.time -= Gdx.graphics.getDeltaTime();
-        if(buffActive){
-            if(buffTimer < 10){
-                buffTimer += Gdx.graphics.getDeltaTime();
-            }else {
-                activateBuff(Tile.Item.EMPTY);
-            }
-        }
-        if((int)hud.time % 10 == 0){
-            if(!map.matrix[(int)this.map.randomItemPos.x][(int)this.map.randomItemPos.y].isItem()){
-                this.map.generateRandomItem();
-            }
-        }
 
+
+        updateCoolDown();
+        updateHunter();
+        updateSloMo();
 
         if(hud.time < 0){
             this.dispose();
@@ -139,56 +132,86 @@ public class GameScreen extends MapScreen {
         super.render(delta);
         hud.update();
         if (pacman.getState() == Actor.State.DIEING) {
-            hud.animateLives(delta/1.001f);
+            hud.animateLives(delta);
         }
         hud.stage.draw();
     }
 
     public void activateBuff(Tile.Item buffType){
-        switch (buffType){
-            case EMPTY:
-                if(buffActive){
-                    for (Enemy ghost : ghosts) {
-                        ghost.correctPosition(ghost.getDirection());
-                        ghost.setSpeed(ghost.getSpeed()*2);
-                    }
-                }
-                this.buffActive = false;
-                break;
+        switch (buffType) {
             case HUNTER:
-                if(!isPacManSuper()){
+                this.itemTaken = true;
+                this.itemCoolDown = 15;
+                this.supStatusTime = 10;
+                if (!pacManSuper) {
                     this.switchMusicHunting();
-                    this.pacman = new SuperPacMan(
-                            game,
-                            assets,
-                            this.pacman.getXPosition(),
-                            this.pacman.getYPosition(),
-                            this.pacman.getSpeed(),
-                            this,
-                            this.hud,
-                            this.pacman.getDirection(),
-                            this.pacman.getNextDirection(),
-                            this.pacman.getPrevDirection()
-                    );
+                    this.pacman.setTexture(assets.manager.get(assets.SUPER_PAC));
+                    this.pacman.correctPosition(pacman.getDirection());
+                    this.pacman.setSpeed(this.pacman.getSpeed() * 2);
                     this.pacManSuper = true;
-                } else{
-                    ((SuperPacMan)pacman).resetSupStatusTime();
                 }
                 break;
             case SLOWMO:
-                this.buffActive = true;
-                for (Enemy ghost : ghosts) ghost.setSpeed(ghost.getSpeed()/2);
+                this.itemTaken = true;
+                this.itemCoolDown = 15;
+                if(!enemiesSlow) {
+                    for (Enemy ghost : ghosts) ghost.setSpeed(ghost.getSpeed() / 2);
+                    this.enemiesSlow = true;
+                }
                 break;
             case TIME:
-                hud.time += 10;
+                this.itemTaken = true;
+                this.itemCoolDown = 15;
+                this.hud.time += 10;
                 break;
             case LIFE:
-                if(PacManGame.getLives()<3) PacManGame.addLive();
+                this.itemTaken = true;
+                this.itemCoolDown = 15;
+                if(PacManGame.getLives() < 3) {
+                    PacManGame.addLive();
+                    hud.resetLives();
+                }
                 break;
         }
     }
 
-    public void shrinkPacMan(){ this.pacManSuper = false; }
+    private void updateCoolDown(){
+        if(itemTaken){
+            itemCoolDown -= Gdx.graphics.getDeltaTime();
+            if(itemCoolDown < 0){
+                this.map.generateRandomItem();
+                itemTaken = false;
+            }
+        }
+    }
+
+    private void updateHunter(){
+        if(pacManSuper) {
+            supStatusTime -= Gdx.graphics.getDeltaTime();
+            if (supStatusTime < 0) {
+                pacManSuper = false;
+                switchMusicGame();
+                pacman.setTexture(assets.manager.get(assets.PAC_MAN));
+                pacman.setSpeed(pacman.getSpeed()/2);
+                for (Enemy ghost : ghosts) {
+                    ghost.resetDifficulty();
+                }
+            }
+        }
+    }
+
+    private void updateSloMo(){
+        if(enemiesSlow){
+            slowDownTime -= Gdx.graphics.getDeltaTime();
+            if(slowDownTime < 0){
+                for (Enemy ghost : ghosts) {
+                    ghost.correctPosition(ghost.getDirection());
+                    ghost.setSpeed(ghost.getSpeed()*2);
+                }
+                enemiesSlow = false;
+            }
+        }
+    }
 
     @Override
     public void dispose() {

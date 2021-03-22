@@ -1,7 +1,5 @@
 package uas.lntv.pacmangame.Maps;
 
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
@@ -13,7 +11,7 @@ import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Enemy;
 
 /**
- * this class sets up a map for a game level.
+ * This class sets up a map for a game level.
  * It implements some additional code for generating and collecting collectables
  */
 public class GameMap extends Map {
@@ -22,7 +20,7 @@ public class GameMap extends Map {
 	
     /**
      * does the same as the parent constructor.
-     * Additionaly it generates collectables and provides a method to collect them.
+     * Additionally it generates collectables and provides a method to collect them.
      * @param assets instance of the Assetmanager
      * @param path  string value which contains the path to a tmx-Mapfile.
      * @param screen instance of a Screen which contains this map
@@ -58,12 +56,14 @@ public class GameMap extends Map {
         }
         generateRandomItem();
     }
+
     @Override
     public void generateRandomItem(){
             Tile.Item random = randomItem();
             layerCollect.setCell((int)randomItemPos.x, (int)randomItemPos.y, createItem(random));
             matrix[(int)randomItemPos.x][(int)randomItemPos.y].placeItem(random);
     }
+
     public Tile.Item randomItem(){
         int min = 2; // 0 and 1 are not special collectibles: 0 = Empty ; 1 = Dot/Scorepoint
         int max = Tile.Item.values().length -1;

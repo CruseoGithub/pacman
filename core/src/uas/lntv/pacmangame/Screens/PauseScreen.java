@@ -11,7 +11,12 @@ import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
-
+/**
+ * The PauseScreen is an extension of the MapScreen class, it's shown when the game gets paused.
+ * It will pop up, if you are inside a game and click in the area of the HUD (top).
+ * When in this screen, the game is paused and can be resumed by selecting 'CONTINUE'.
+ * Some options for sound and control can also be changed in here, you can also return to MENU.
+ */
 public class PauseScreen extends MapScreen {
     private final GameScreen SCREEN;
     private final BitmapFont FONT;
@@ -28,6 +33,11 @@ public class PauseScreen extends MapScreen {
         FONT.getData().setScale(FONT.getScaleX()*2);
         this.SCREEN = screen;
     }
+
+    /**
+     * Checks the position of PacMan for changing settings, returning to or exiting the game.
+     * @param dt time parameter used by libGDX
+     */
     @Override
     public void update(float dt){
         boolean moving = false;
@@ -49,7 +59,7 @@ public class PauseScreen extends MapScreen {
 
         //RETURN TO GAME
         if(pacman.getYPosition() == 43 * TILE_SIZE){
-            if(pacman.getXPosition() <= 1 * TILE_SIZE) {
+            if(pacman.getXPosition() <= TILE_SIZE) {
                 this.dispose();
                 game.setScreen(SCREEN);
             }
@@ -75,13 +85,11 @@ public class PauseScreen extends MapScreen {
             if(pacman.getXPosition() == 2*TILE_SIZE) {
                 PrefManager.setMusicOn(true);
                 if(!music.isPlaying()) music.play();
-                System.out.println("MUSIC LALALA");
             }
             if(pacman.getXPosition() == 7*TILE_SIZE) {
                 PrefManager.setMusicOn(false);
                 assets.manager.get(assets.HUNTING_MUSIC).stop();
                 music.stop();
-                System.out.println("SOUND OF SILENCE");
             }
             PrefManager.savePrefs();
         }
@@ -90,11 +98,9 @@ public class PauseScreen extends MapScreen {
         if(pacman.getYPosition() == 29*TILE_SIZE){
             if(pacman.getXPosition() == 12*TILE_SIZE) {
                 PrefManager.setSfxOn(true);
-                System.out.println("SFX ON");
             }
             if(pacman.getXPosition() == 17*TILE_SIZE) {
                 PrefManager.setSfxOn(false);
-                System.out.println("SFX OFFFFFFF");
             }
             PrefManager.savePrefs();
         }
@@ -144,6 +150,9 @@ public class PauseScreen extends MapScreen {
         }
     }
 
+    /**
+     * Draws labels on the screen, where options.
+     */
     @Override
     public void render(float delta) {
 

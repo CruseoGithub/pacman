@@ -25,7 +25,7 @@ public class PacManGame extends Game {
 		assets.loadSetup();
 		level = 0;
 		score = 0;
-		lives = 2;
+		lives = 3;
 		setScreen(new SplashScreen(this, assets, PrefManager.isLogosSkip()));
 	}
 

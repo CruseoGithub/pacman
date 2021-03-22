@@ -67,7 +67,7 @@ public class GameMap extends Map {
     public Tile.Item randomItem(){
         int max = 5;
         int min = 2;
-        int random = (int) (Math.random() * (max - min + 1) + min); // random ist zwischen 1 und 4
+        int random = (int) (Math.random() * (max - min + 1) + min); // random ist zwischen 2 und 5
         Tile.Item[] itemList= Tile.Item.values();
         return itemList[random];
     }

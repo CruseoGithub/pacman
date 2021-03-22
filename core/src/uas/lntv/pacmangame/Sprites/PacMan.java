@@ -22,6 +22,9 @@ public class PacMan extends Actor {
         this.nextDirection = Direction.RIGHT;
         this.prevDirection = Direction.RIGHT;
 
+        homeX = initX;
+        homeY = initY;
+
         this.game = game;
 
         this.texture = assets.manager.get(assets.PAC_MAN);

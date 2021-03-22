@@ -30,6 +30,8 @@ public abstract class Actor {
 
     protected int xPosition;
     protected int yPosition;
+    protected int homeX;
+    protected int homeY;
 
     protected final int TILE_SIZE;
     protected float rotation;
@@ -60,6 +62,9 @@ public abstract class Actor {
         this.speed = speed;
     }
 
+    public int getHomeX(){ return homeX; }
+
+    public int getHomeY(){ return homeY; }
 
     public int getXPosition() {
         return xPosition;

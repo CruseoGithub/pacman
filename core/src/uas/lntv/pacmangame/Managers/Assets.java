@@ -68,6 +68,7 @@ public class Assets {
     public final String SCORE_MAP = "maps/HighScoreList.tmx";
     public final String CONTROL = "maps/controller.tmx";
     public final String PAUSE = "maps/PauseMap.tmx";
+    public final String SPLASH = "maps/splash.tmx";
 
     /**
      * Small method, that puts everything in the loading queue, that is needed for the splash- and

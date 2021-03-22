@@ -15,7 +15,6 @@ import uas.lntv.pacmangame.Managers.Assets;
 
 public abstract class Controller {
     protected MapScreen screen;
-    protected Map map;
     protected OrthographicCamera gameCam;
     protected Viewport viewport;
     protected Stage stage;
@@ -31,12 +30,11 @@ public abstract class Controller {
     public Controller(Assets assets, MapScreen screen){
         this.assets = assets;
         this.screen = screen;
-        this.map = screen.map;
-        this.TILE_SIZE = screen.map.getTileSize();
+        this.TILE_SIZE = Map.getTileSize();
         gameCam = new OrthographicCamera();
         viewport = new FitViewport(
-                map.getMapWidth() * TILE_SIZE,
-                map.getMapHeight() * TILE_SIZE,
+                Map.getMapWidth() * TILE_SIZE,
+                Map.getMapHeight() * TILE_SIZE,
                 gameCam);
         stage = new Stage(viewport, PacManGame.batch);
     }

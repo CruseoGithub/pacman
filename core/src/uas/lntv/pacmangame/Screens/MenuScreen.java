@@ -11,7 +11,7 @@ public class MenuScreen extends MapScreen {
 
     public MenuScreen(PacManGame game, Assets assets, String path){
         super(game, assets, path, Type.MENU);
-        this.pacman = new PacMan(game, assets, 2* TILE_SIZE, 26* TILE_SIZE, this, hud);
+        this.pacman = new PacMan(game, assets, 2* TILE_SIZE, 26* TILE_SIZE, this);
         this.pacman.setSpeed(8);
         this.ghosts.add(new Enemy(16* TILE_SIZE,23* TILE_SIZE, assets,this, assets.manager.get(assets.BLUE_DEAD)));
         this.hud = new Hud(game, assets,this, false); //Not Visible

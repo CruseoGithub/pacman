@@ -3,6 +3,7 @@ package uas.lntv.pacmangame.Screens;
 import com.badlogic.gdx.Gdx;
 
 import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.ControllerButtons;
@@ -17,11 +18,8 @@ import uas.lntv.pacmangame.Sprites.PacMan;
 public class GameScreen extends MapScreen {
 
 
-    public boolean PauseActive = false;
+    private boolean PauseActive = false;
     private boolean paused = false;
-    public void setPauseActive(boolean bool) {
-        PauseActive = bool;
-    }
 
     private boolean pacManSuper = false;
     private boolean enemiesSlow = false;
@@ -31,33 +29,39 @@ public class GameScreen extends MapScreen {
     private float slowDownTime = 10;
     private float itemCoolDown = 15;
 
+    public void setPauseActive(boolean bool) {
+        PauseActive = bool;
+    }
     public boolean isPacManSuper() { return pacManSuper; }
-
 
     public GameScreen(PacManGame game, Assets assets, String path) {
         super(game, assets, path, Type.GAME);
 
         this.hud = new Hud(game, assets, this, true);
-        this.pacman = new PacMan(game, assets, 14 * TILE_SIZE, 21 * TILE_SIZE, this, hud);
+        this.pacman = new PacMan(game, assets, 14 * TILE_SIZE, 21 * TILE_SIZE, this);
         this.ghosts.add(new Enemy(13 * TILE_SIZE, 33 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_1)));
+
         if(PacManGame.getLevel() >= 2) {
             this.ghosts.add(new Enemy(15 * TILE_SIZE, 30 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_2)));
             this.ghosts.get(1).setState(Actor.State.BOXED);
             this.ghosts.get(1).setBoxTimer(5);
-            map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(1));
+            Map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(1));
         }
+
         if(PacManGame.getLevel() >= 4) {
             this.ghosts.add(new Enemy(12 * TILE_SIZE, 30 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_3)));
             this.ghosts.get(2).setState(Actor.State.BOXED);
             this.ghosts.get(2).setBoxTimer(10);
-            map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(2));
+            Map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(2));
             ghosts.get(0).setDifficulty(Enemy.Difficulty.MEDIUM);
         }
+
         if(PacManGame.getLevel() >= 6){
             ghosts.get(1).setDifficulty(Enemy.Difficulty.MEDIUM);
             pacman.setSpeed(pacman.getSpeed()*2);
             for(Enemy ghost : ghosts) ghost.setSpeed(pacman.getSpeed());
         }
+
         if(PacManGame.getLevel() >= 8){
             ghosts.get(2).setDifficulty(Enemy.Difficulty.MEDIUM);
         }
@@ -80,7 +84,6 @@ public class GameScreen extends MapScreen {
     public void update(float dt) {
         super.update(dt);
         if(ready) hud.time -= Gdx.graphics.getDeltaTime();
-
 
         updateCoolDown();
         updateHunter();
@@ -122,7 +125,6 @@ public class GameScreen extends MapScreen {
             game.setScreen(new PauseScreen(game, assets, assets.PAUSE, this, hud));
             paused = true;
         }
-
 
     }
 

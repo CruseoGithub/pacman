@@ -25,12 +25,10 @@ public class PacManGame extends Game {
 		level = 0;
 		score = 0;
 		lives = 3;
-		setScreen(new SplashScreen(this, assets, PrefManager.isLogosSkip()));
+		setScreen(new SplashScreen(this, assets));
 	}
 
-	public static int getLevel(){
-		return level;
-	}
+	public static int getLevel(){ return level; }
 
 	public static void levelUp(){
 		level++;

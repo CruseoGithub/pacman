@@ -43,6 +43,10 @@ public class PacMan extends Actor {
         this.hud = hud;
     }
 
+    /**
+     * Draws PacMan at the top of the screen in super-size.
+     * This method should only be called in the HUD to display the lives in a beautiful way.
+     */
     public void drawLife(){
         int shift = 0;
         if(state != State.DIEING) shift = 96;
@@ -88,6 +92,11 @@ public class PacMan extends Actor {
         }
     }
 
+    /**
+     * Checks if PacMan is dieing right now and moves if he's not.
+     * @param dt time parameter used by libGDX
+     * @see Actor
+     */
     @Override
     public void update(float dt) {
         super.update(dt);

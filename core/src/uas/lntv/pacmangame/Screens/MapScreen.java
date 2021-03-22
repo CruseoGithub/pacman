@@ -50,9 +50,6 @@ public abstract class MapScreen implements Screen {
     protected  Controller controller;
     protected Joystick joystick;
 
-
-    private final int MAP_WIDTH;
-    private final int MAP_HEIGHT;
     protected final int TILE_SIZE;
 
 
@@ -98,11 +95,9 @@ public abstract class MapScreen implements Screen {
         assets.manager.get(assets.HUNTING_MUSIC).setLooping(true);
         music.setLooping(true);
         if(PrefManager.isMusicOn()) music.play();
-        this.MAP_WIDTH = this.map.getMapWidth();
-        this.MAP_HEIGHT = this.map.getMapHeight();
-        this.TILE_SIZE = this.map.getTileSize();
+        this.TILE_SIZE = Map.getTileSize();
 
-        this.gamePort = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, gameCam);
+        this.gamePort = new FitViewport(Map.getMapWidth() * TILE_SIZE, Map.getMapHeight() * TILE_SIZE, gameCam);
         this.gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
         
@@ -190,7 +185,7 @@ public abstract class MapScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         gamePort.update(width, height, false);
-        gamePort.getCamera().position.set(MAP_WIDTH * TILE_SIZE / 2f, MAP_HEIGHT * TILE_SIZE / 2f, 0);
+        gamePort.getCamera().position.set(Map.getMapWidth() * TILE_SIZE / 2f, Map.getMapHeight() * TILE_SIZE / 2f, 0);
         gamePort.getCamera().update();
     }
 

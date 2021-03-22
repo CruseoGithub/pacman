@@ -48,9 +48,8 @@ public class Tile extends StaticTiledMapTile {
         return heuristics;
     }
 
-    public Tile setHeuristics(double heuristics) {
+    public void setHeuristics(double heuristics) {
         this.heuristics = heuristics;
-        return this;
     }
 
     public double getTotal() {

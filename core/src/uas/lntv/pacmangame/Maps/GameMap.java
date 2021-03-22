@@ -43,8 +43,8 @@ public class GameMap extends Map {
      * generates Collectables (Not Dots!)
      */
     public void generateItems(){
-        for(int x = 0; x < MAP_WIDTH; x++){
-            for(int y = 0; y < MAP_HEIGHT; y++){
+        for(int x = 0; x < mapWidth; x++){
+            for(int y = 0; y < mapHeight; y++){
                 //Generate hunter items on the map
                 for (Vector3 pos: hunterItems) {
                     if(x == pos.x && y == pos.y){
@@ -68,7 +68,7 @@ public class GameMap extends Map {
         int min = 2; // 0 and 1 are not special collectibles: 0 = Empty ; 1 = Dot/Scorepoint
         int max = Tile.Item.values().length -1;
         int random = (int) (Math.random() * (max - min + 1) + min); // random ist zwischen 1 und 4
-        Tile.Item itemList[] = Tile.Item.values();
+        Tile.Item[] itemList = Tile.Item.values();
         return itemList[random];
     }
 
@@ -79,10 +79,10 @@ public class GameMap extends Map {
      */
     public void generateDots(int total_Dots){
         while(total_Dots > 0){
-            for(int x = 0; x < MAP_WIDTH; x++){
-                for(int y = 0; y < MAP_HEIGHT; y++){
+            for(int x = 0; x < mapWidth; x++){
+                for(int y = 0; y < mapHeight; y++){
                     if(layerWall.getCell(x, y) == null && total_Dots>0 && layerCollect.getCell(x,y) == null){
-                        if (layerPath.getCell(x, y) != null & !matrix[x][y].isItem() && x > 0 && x < (MAP_WIDTH - 2)) { //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
+                        if (layerPath.getCell(x, y) != null & !matrix[x][y].isItem() && x > 0 && x < (mapWidth - 2)) { //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
                             int max = 1;
                             int min = 0;
                             int random = (int) (Math.random() * (max - min + 1) + min); // random ist entweder 0 oder 1

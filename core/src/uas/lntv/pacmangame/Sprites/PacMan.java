@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.PacManGame;
-import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
@@ -124,7 +124,7 @@ public class PacMan extends Actor {
     @Override
     public void move(){
         super.move();
-        screen.map.collect(screen.map.getTile(xPosition, yPosition)); //collect Dots
+        screen.map.collect(Map.getTile(xPosition, yPosition)); //collect Dots
     }
 
 }

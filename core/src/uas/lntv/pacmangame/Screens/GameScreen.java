@@ -3,6 +3,7 @@ package uas.lntv.pacmangame.Screens;
 import com.badlogic.gdx.Gdx;
 
 import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.ControllerButtons;
@@ -44,13 +45,13 @@ public class GameScreen extends MapScreen {
             this.ghosts.add(new Enemy(15 * TILE_SIZE, 30 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_2)));
             this.ghosts.get(1).setState(Actor.State.BOXED);
             this.ghosts.get(1).setBoxTimer(5);
-            map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(1));
+            Map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(1));
         }
         if(PacManGame.getLevel() >= 4) {
             this.ghosts.add(new Enemy(12 * TILE_SIZE, 30 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_3)));
             this.ghosts.get(2).setState(Actor.State.BOXED);
             this.ghosts.get(2).setBoxTimer(10);
-            map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(2));
+            Map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(2));
             ghosts.get(0).setDifficulty(Enemy.Difficulty.MEDIUM);
         }
         if(PacManGame.getLevel() >= 6){

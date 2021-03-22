@@ -79,11 +79,7 @@ public abstract class Actor {
 
     public void setTexture(Texture texture){ this.texture = texture; }
 
-    public Direction getNextDirection() { return nextDirection; }
-
     public Direction getDirection() { return direction; }
-
-    public Direction getPrevDirection() { return prevDirection; }
 
     public void setNextDirection(Direction nextDirection) {
         this.nextDirection = nextDirection;

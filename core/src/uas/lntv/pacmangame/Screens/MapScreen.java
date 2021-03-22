@@ -18,6 +18,7 @@ import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Maps.GameMap;
 import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.MenuMap;
+import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Controller;
 import uas.lntv.pacmangame.Scenes.ControllerButtons;
@@ -179,7 +180,7 @@ public abstract class MapScreen implements Screen {
 
     public ArrayList<Enemy> getGhosts() { return ghosts; }
 
-    public void evolvePacMan() { }
+    public void activateBuff(Tile.Item buffType) { }
 
     public void shrinkPacMan() { }
 

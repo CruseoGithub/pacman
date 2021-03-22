@@ -3,6 +3,7 @@ package uas.lntv.pacmangame.Screens;
 import com.badlogic.gdx.Gdx;
 
 import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.ControllerButtons;
 import uas.lntv.pacmangame.Scenes.ControllerJoystick;
@@ -11,7 +12,6 @@ import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
-import uas.lntv.pacmangame.Sprites.SuperPacMan;
 
 
 public class GameScreen extends MapScreen {
@@ -23,8 +23,13 @@ public class GameScreen extends MapScreen {
         PauseActive = bool;
     }
 
-    private boolean pacManSuper;
-    private float supStatusTime = 0;
+    private boolean pacManSuper = false;
+    private boolean enemiesSlow = false;
+    private boolean itemTaken = false;
+
+    private float supStatusTime = 10;
+    private float slowDownTime = 10;
+    private float itemCoolDown = 15;
 
     public boolean isPacManSuper() { return pacManSuper; }
 
@@ -69,7 +74,6 @@ public class GameScreen extends MapScreen {
         if(PacManGame.getLevel() >= 30){
             ghosts.get(2).setDifficulty(Enemy.Difficulty.HARD);
         }
-        this.pacManSuper = false;
     }
 
     @Override
@@ -77,28 +81,16 @@ public class GameScreen extends MapScreen {
         super.update(dt);
         if(ready) hud.time -= Gdx.graphics.getDeltaTime();
 
-        if(pacManSuper) {
-            supStatusTime += Gdx.graphics.getDeltaTime();
-            if (supStatusTime > 10) {
-                pacManSuper = false;
-                switchMusicGame();
-                pacman = new PacMan(
-                        game,
-                        assets,
-                        pacman.getXPosition(),
-                        pacman.getYPosition(),
-                        (pacman.getSpeed() / 2),
-                        this,
-                        hud,
-                        pacman.getDirection(),
-                        pacman.getNextDirection(),
-                        pacman.getPrevDirection()
-                );
-                for (Enemy ghost : ghosts) {
-                    ghost.resetDifficulty();
-                }
+        if(itemTaken){
+            itemCoolDown -= Gdx.graphics.getDeltaTime();
+            if(itemCoolDown < 0){
+                this.map.generateRandomItem();
+                itemTaken = false;
             }
         }
+
+        updateHunter();
+        updateSloMo();
 
         if(hud.time < 0){
             this.dispose();
@@ -136,6 +128,8 @@ public class GameScreen extends MapScreen {
             game.setScreen(new PauseScreen(game, assets, assets.PAUSE, this, hud));
             paused = true;
         }
+
+
     }
 
     @Override
@@ -149,23 +143,66 @@ public class GameScreen extends MapScreen {
         hud.stage.draw();
     }
 
-    public void evolvePacMan(){
-        supStatusTime = 0;
-        if(!pacManSuper) {
-            this.switchMusicHunting();
-            this.pacman = new SuperPacMan(
-                    game,
-                    assets,
-                    this.pacman.getXPosition(),
-                    this.pacman.getYPosition(),
-                    this.pacman.getSpeed(),
-                    this,
-                    this.hud,
-                    this.pacman.getDirection(),
-                    this.pacman.getNextDirection(),
-                    this.pacman.getPrevDirection()
-            );
-            this.pacManSuper = true;
+    public void activateBuff(Tile.Item buffType){
+        switch (buffType) {
+            case HUNTER:
+                this.itemTaken = true;
+                this.itemCoolDown = 15;
+                this.supStatusTime = 10;
+                if (!pacManSuper) {
+                    this.switchMusicHunting();
+                    this.pacman.setTexture(assets.manager.get(assets.SUPER_PAC));
+                    this.pacman.correctPosition(pacman.getDirection());
+                    this.pacman.setSpeed(this.pacman.getSpeed() * 2);
+                    this.pacManSuper = true;
+                }
+                break;
+            case SLOWMO:
+                this.itemTaken = true;
+                this.itemCoolDown = 15;
+                if(!enemiesSlow) {
+                    for (Enemy ghost : ghosts) ghost.setSpeed(ghost.getSpeed() / 2);
+                    this.enemiesSlow = true;
+                }
+                break;
+            case TIME:
+                this.itemTaken = true;
+                this.itemCoolDown = 15;
+                this.hud.time += 10;
+                break;
+            case LIFE:
+                this.itemTaken = true;
+                this.itemCoolDown = 15;
+                if(PacManGame.getLives() < 3) PacManGame.addLive();
+                break;
+        }
+    }
+
+    private void updateHunter(){
+        if(pacManSuper) {
+            supStatusTime -= Gdx.graphics.getDeltaTime();
+            if (supStatusTime < 0) {
+                pacManSuper = false;
+                switchMusicGame();
+                pacman.setTexture(assets.manager.get(assets.PAC_MAN));
+                pacman.setSpeed(pacman.getSpeed()/2);
+                for (Enemy ghost : ghosts) {
+                    ghost.resetDifficulty();
+                }
+            }
+        }
+    }
+
+    private void updateSloMo(){
+        if(enemiesSlow){
+            slowDownTime -= Gdx.graphics.getDeltaTime();
+            if(slowDownTime < 0){
+                for (Enemy ghost : ghosts) {
+                    ghost.correctPosition(ghost.getDirection());
+                    ghost.setSpeed(ghost.getSpeed()*2);
+                }
+                enemiesSlow = false;
+            }
         }
     }
 

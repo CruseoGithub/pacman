@@ -50,6 +50,10 @@ public class Assets {
     public final AssetDescriptor<Texture> BLUE_DEAD = new AssetDescriptor<>("textures/blue.png", Texture.class);
     public final AssetDescriptor<Texture> TILES = new AssetDescriptor<>("maps/tiles.png", Texture.class);
     public final AssetDescriptor<Texture> COIN_GOLD = new AssetDescriptor<>("textures/CoinGold.png", Texture.class);
+    public final AssetDescriptor<Texture> ITEM_HUNTER = new AssetDescriptor<>("maps/cherry.png", Texture.class);
+    public final AssetDescriptor<Texture> ITEM_TIME = new AssetDescriptor<>("textures/itemTime.png", Texture.class);
+    public final AssetDescriptor<Texture> ITEM_SLOWMO = new AssetDescriptor<>("textures/itemRunning.png", Texture.class);
+    public final AssetDescriptor<Texture> ITEM_LIFE = new AssetDescriptor<>("textures/itemLife.png", Texture.class);
     public final AssetDescriptor<Texture> JOYSTICK_ZONE = new AssetDescriptor<>("textures/JoystickZone.png", Texture.class);
     public final AssetDescriptor<Texture> JOYSTICK_KNOB = new AssetDescriptor<>("textures/JoystickKnob.png", Texture.class);
 
@@ -106,6 +110,10 @@ public class Assets {
         manager.load(BLUE_DEAD);
         manager.load(TILES);
         manager.load(COIN_GOLD);
+        manager.load(ITEM_HUNTER);
+        manager.load(ITEM_SLOWMO);
+        manager.load(ITEM_LIFE);
+        manager.load(ITEM_TIME);
         manager.load(JOYSTICK_ZONE);
         manager.load(JOYSTICK_KNOB);
 

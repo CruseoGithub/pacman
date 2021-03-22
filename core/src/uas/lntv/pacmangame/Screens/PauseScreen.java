@@ -3,6 +3,7 @@ package uas.lntv.pacmangame.Screens;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Maps.MenuMap;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.ControllerButtons;
 import uas.lntv.pacmangame.Scenes.ControllerJoystick;
@@ -115,6 +116,32 @@ public class PauseScreen extends MapScreen {
             }
         }
         if(pacman.getYPosition() == 23 * TILE_SIZE) controllerSet = false;
+
+        //CHECK FOR HIGHLIGHTING
+        if(PrefManager.isMusicOn()) {
+            ((MenuMap)map).getHighlightLayers().get(0).setVisible(true);
+            ((MenuMap)map).getHighlightLayers().get(1).setVisible(false);
+        }
+        else{
+            ((MenuMap)map).getHighlightLayers().get(0).setVisible(false);
+            ((MenuMap)map).getHighlightLayers().get(1).setVisible(true);
+        }
+        if(PrefManager.isSfxOn()){
+            ((MenuMap)map).getHighlightLayers().get(2).setVisible(true);
+            ((MenuMap)map).getHighlightLayers().get(3).setVisible(false);
+        }
+        else {
+            ((MenuMap)map).getHighlightLayers().get(2).setVisible(false);
+            ((MenuMap)map).getHighlightLayers().get(3).setVisible(true);
+        }
+        if(PrefManager.isJoystick()) {
+            ((MenuMap)map).getHighlightLayers().get(4).setVisible(true);
+            ((MenuMap)map).getHighlightLayers().get(5).setVisible(false);
+        }
+        else{
+            ((MenuMap)map).getHighlightLayers().get(4).setVisible(false);
+            ((MenuMap)map).getHighlightLayers().get(5).setVisible(true);
+        }
     }
 
     @Override
@@ -144,12 +171,12 @@ public class PauseScreen extends MapScreen {
             FONT.draw(PacManGame.batch,
                     "ON",
                     2 * TILE_SIZE,
-                    35* TILE_SIZE -10);
+                    35* TILE_SIZE -5);
 
             FONT.draw(PacManGame.batch,
                     "OFF",
                     7 * TILE_SIZE,
-                    35* TILE_SIZE -10);
+                    35* TILE_SIZE -5);
 
             FONT.draw(PacManGame.batch,
                     "SOUND",
@@ -159,12 +186,12 @@ public class PauseScreen extends MapScreen {
             FONT.draw(PacManGame.batch,
                     "ON",
                     12 * TILE_SIZE,
-                    30* TILE_SIZE -10);
+                    30* TILE_SIZE -5);
 
             FONT.draw(PacManGame.batch,
                     "OFF",
                     17 * TILE_SIZE,
-                    30* TILE_SIZE -10);
+                    30* TILE_SIZE -5);
 
             FONT.draw(PacManGame.batch,
                     "CONTROLLER",
@@ -174,12 +201,12 @@ public class PauseScreen extends MapScreen {
             FONT.draw(PacManGame.batch,
                     "JOYSTICK",
                     4 * TILE_SIZE,
-                    27* TILE_SIZE );
+                    27* TILE_SIZE -4);
 
             FONT.draw(PacManGame.batch,
                     "BUTTONS",
                     4 * TILE_SIZE,
-                    21* TILE_SIZE );
+                    21* TILE_SIZE -4);
 
         PacManGame.batch.end();
     }

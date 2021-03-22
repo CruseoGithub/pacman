@@ -7,6 +7,7 @@ import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Managers.PrefManager;
+import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Screens.MenuScreen;
 import uas.lntv.pacmangame.Screens.ScoreScreen;
@@ -23,8 +24,7 @@ public class PacMan extends Actor {
 
         this.game = game;
 
-        if(!(this instanceof SuperPacMan)) this.texture = assets.manager.get(assets.PAC_MAN);
-        else this.texture = assets.manager.get(assets.SUPER_PAC);
+        this.texture = assets.manager.get(assets.PAC_MAN);
         region = new TextureRegion(texture);
         region.setRegionX(0);
         region.setRegionY(0);
@@ -38,46 +38,6 @@ public class PacMan extends Actor {
         this.sprite = new Sprite(region);
         this.sprite.setOrigin(TILE_SIZE/2f, TILE_SIZE/2f);
         this.hud = hud;
-    }
-
-    public PacMan(PacManGame game, Assets assets, int initX, int initY, int speed, MapScreen screen, Hud hud,  Direction now, Direction next, Direction prev){
-        super(assets, initX, initY, screen);
-        this.direction = now;
-        this.nextDirection = next;
-        this.prevDirection = prev;
-        this.setSpeed(speed);
-
-        this.game = game;
-
-        if(!(this instanceof SuperPacMan)) this.texture = assets.manager.get(assets.PAC_MAN);
-        else this.texture = assets.manager.get(assets.SUPER_PAC);
-        region = new TextureRegion(texture);
-        region.setRegionX(0);
-        region.setRegionY(0);
-        texturePositionX = 0;
-        animationSpeed = 0.01f;
-        mouthOpen = true;
-
-        animation = new Animation(this, assets, animationSpeed, this.screen,6);
-
-        region.flip(true, false);
-        this.sprite = new Sprite(region);
-        this.sprite.setOrigin(TILE_SIZE/2f, TILE_SIZE/2f);
-        this.hud = hud;
-        switch(direction){
-            case RIGHT:
-                this.rotation = 0;
-                break;
-            case UP:
-                this.rotation = 90;
-                break;
-            case LEFT:
-                this.rotation = 180;
-                break;
-            case DOWN:
-                this.rotation = 270;
-                break;
-        }
     }
 
     public void drawLife(){
@@ -96,22 +56,32 @@ public class PacMan extends Actor {
         PacManGame.batch.end();
     }
 
+    /**
+     * If PacMan as a hunter collides with a ghost, he will kill it.
+     * It will cause a sound effect and increase the score.
+     * Otherwise he will be killed by the ghost, lose a life and be set to his starting position.
+     */
     @Override
     public void collide() {
-        super.collide();
-        if(PrefManager.isSfxOn()) assets.manager.get(assets.DIE).play(0.35f);
-        if(PacManGame.getLives() > 1) PacManGame.die();
-        else {
-            PacManGame.die();
-            super.screen.dispose();
-            if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Killed", PacManGame.getLevel() + 1)){
-                game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
-            } else {
-                game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
+        if(((GameScreen)screen).isPacManSuper()){
+            if(PrefManager.isSfxOn()) assets.manager.get(assets.KILL).play(0.15f);
+            PacManGame.increaseScore(50);
+        } else {
+            super.collide();
+            if (PrefManager.isSfxOn()) assets.manager.get(assets.DIE).play(0.35f);
+            if (PacManGame.getLives() > 1) PacManGame.die();
+            else {
+                PacManGame.die();
+                super.screen.dispose();
+                if (PacManGame.prefManager.addScore(PacManGame.getScore(), "Killed", PacManGame.getLevel() + 1)) {
+                    game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
+                } else {
+                    game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
+                }
+                PacManGame.resetScore();
+                PacManGame.resetLives();
+                PacManGame.resetLevel();
             }
-            PacManGame.resetScore();
-            PacManGame.resetLives();
-            PacManGame.resetLevel();
         }
     }
 

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Managers.PrefManager;
+import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
@@ -37,9 +38,8 @@ public class Hud {
     private final Label TIME_LABEL;
     private final Label SCORE_LABEL;
 
-    private boolean warned;
-    private boolean red;
-    private final int WARNING_TIME;
+    private boolean warned = false;
+    private boolean red = false;
     private float timeStamp;
 
     /**
@@ -54,9 +54,7 @@ public class Hud {
     public Hud(PacManGame game, Assets assets, MapScreen screen, boolean visible){
         this.assets = assets;
         this.SCREEN = screen;
-        int mapWidth = screen.map.getMapWidth();
-        int mapHeight = screen.map.getMapHeight();
-        int tileSize = screen.map.getTileSize();
+        int tileSize = Map.getTileSize();
         time = 120;
         levelScore = 0;
         STAGES.add(assets.MAP_1);
@@ -67,7 +65,11 @@ public class Hud {
 
         this.visible = visible;
 
-        Viewport viewport = new FitViewport(mapWidth * tileSize, mapHeight * tileSize, (new OrthographicCamera()));
+        Viewport viewport = new FitViewport(
+                Map.getMapWidth() * tileSize,
+                Map.getMapHeight() * tileSize,
+                new OrthographicCamera()
+        );
         stage = new Stage(viewport, PacManGame.batch);
 
         Table table = new Table();
@@ -96,13 +98,10 @@ public class Hud {
         table.add(TIME_LABEL).expandX().padTop(0);
         if(visible) stage.addActor(table);
 
-        LIVE_PAC_MEN.add(new PacMan(game, assets, 20 * tileSize, (45 * tileSize + tileSize /2), screen, this));
-        LIVE_PAC_MEN.add(new PacMan(game, assets, 22 * tileSize, (45 * tileSize + tileSize /2), screen, this));
-        LIVE_PAC_MEN.add(new PacMan(game, assets, 24 * tileSize, (45 * tileSize + tileSize /2), screen, this));
+        for(int i = 0; i < 3; i++) {
+            LIVE_PAC_MEN.add(new PacMan(game, assets, (20 + (2 * i)) * tileSize, (45 * tileSize + tileSize / 2), screen));
+        }
 
-        warned = false;
-        red = false;
-        WARNING_TIME = 30;
         timeStamp = time;
     }
 
@@ -135,6 +134,7 @@ public class Hud {
      */
     @SuppressWarnings("DefaultLocale")
     public void update() {
+        int WARNING_TIME = 30;
         if (time < WARNING_TIME) {
             if (!warned) {
                 if (PrefManager.isSfxOn()) assets.manager.get(assets.ALARM).play(0.4f);

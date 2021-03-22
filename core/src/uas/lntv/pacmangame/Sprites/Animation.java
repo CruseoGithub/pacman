@@ -1,6 +1,7 @@
 package uas.lntv.pacmangame.Sprites;
 
 import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.Sprites.Actor.State;
@@ -111,9 +112,9 @@ public class Animation {
         if (ACTOR instanceof Enemy && ACTOR.state != State.DIEING) {
             this.animationSpeed = 0.1f;
         }
-        if ((SCREEN.map.getTile(ACTOR.xPosition, ACTOR.yPosition, ACTOR.direction).type != Tile.Type.WALL)
-                || ACTOR.xPosition%SCREEN.map.getTileSize() != 0
-                || ACTOR.yPosition%SCREEN.map.getTileSize() != 0
+        if ((Map.getTile(ACTOR.xPosition, ACTOR.yPosition, ACTOR.direction).type != Tile.Type.WALL)
+                || ACTOR.xPosition%Map.getTileSize() != 0
+                || ACTOR.yPosition%Map.getTileSize() != 0
                 || ACTOR.state == State.DIEING
         ) {
             if (tmpTimerAnimation >= this.animationSpeed) {

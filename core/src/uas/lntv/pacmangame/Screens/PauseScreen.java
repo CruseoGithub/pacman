@@ -32,7 +32,7 @@ public class PauseScreen extends MapScreen {
     public PauseScreen(PacManGame game, Assets assets, String mapPath, GameScreen screen, Hud hud){
         super(game, assets, mapPath, Type.MENU);
         this.hud = hud;
-        this.pacman = new PacMan(game, assets, 25*TILE_SIZE, 43*TILE_SIZE, this, hud);
+        this.pacman = new PacMan(game, assets, 25*TILE_SIZE, 43*TILE_SIZE, this);
         this.pacman.setSpeed(8);
         ghosts.add(new Enemy(25*TILE_SIZE, 3*TILE_SIZE, assets, this, assets.manager.get(assets.BLUE_DEAD)));
         this.FONT = new BitmapFont();

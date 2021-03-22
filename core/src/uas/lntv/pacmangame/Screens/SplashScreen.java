@@ -37,7 +37,6 @@ public class SplashScreen implements Screen {
     private final Viewport gamePort;
 
     private final OrthogonalTiledMapRenderer renderer;
-    private final TiledMap TMX_MAP;
 
     private final int MAP_WIDTH;
     private final int MAP_HEIGHT;
@@ -59,7 +58,7 @@ public class SplashScreen implements Screen {
      * @param GAME running game
      * @param ASSETS asset management
      */
-    public SplashScreen(final PacManGame GAME, final Assets ASSETS, boolean skipLogos){
+    public SplashScreen(final PacManGame GAME, final Assets ASSETS){
 
         //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
         if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
@@ -70,7 +69,7 @@ public class SplashScreen implements Screen {
         this.ASSETS = ASSETS;
 
         TmxMapLoader tmxMapLoader = new TmxMapLoader();
-        this.TMX_MAP = tmxMapLoader.load("maps/splash.tmx");
+        TiledMap TMX_MAP = tmxMapLoader.load(ASSETS.SPLASH);
 
         this.MAP_WIDTH = Integer.parseInt(TMX_MAP.getProperties().get("width").toString());
         this.MAP_HEIGHT = Integer.parseInt(TMX_MAP.getProperties().get("height").toString());
@@ -92,8 +91,6 @@ public class SplashScreen implements Screen {
 
         this.ASSETS.load();
         this.SPRITE = new Sprite(this.ASSETS.manager.get(ASSETS.LOADING));
-
-        if(skipLogos) timer = 10; //Skip intro logos
 
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override

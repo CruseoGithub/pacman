@@ -1,7 +1,7 @@
 package uas.lntv.pacmangame.AI;
 
+import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.Tile;
-import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 
@@ -17,11 +17,10 @@ public class Pathfinder {
     private final Enemy HUNTER;
     private final int TARGET_X;
     private final int TARGET_Y;
-    private final MapScreen SCREEN;
     private final int MAP_WIDTH;
     private final int MAP_HEIGHT;
     private final int TILE_SIZE;
-    private boolean findHome;
+    private final boolean FIND_HOME;
     private boolean noWay = false;
 
     /**
@@ -30,20 +29,19 @@ public class Pathfinder {
      * It generates a matrix of the whole map and also calculates the heuristics to the target.
      * It also prepares to search by creating a 'open' list with all tiles of the map, setting the
      * cost of the starting tile to 0 and creating a yet empty 'closed' list.
-     * @param screen the screen in which the actor acts
      * @param hunter actor that wants to find a shortest path
      * @param prey target of the actor
      */
-    public Pathfinder(MapScreen screen, Enemy hunter, Actor prey){
-        this.SCREEN = screen;
-        this.MAP_WIDTH = screen.map.getMapWidth();
-        this.MAP_HEIGHT = screen.map.getMapHeight();
-        this.TILE_SIZE = screen.map.getTileSize();
-        this.MATRIX = screen.map.matrix;
+    public Pathfinder(Enemy hunter, Actor prey){
+        this.MAP_WIDTH = Map.getMapWidth();
+        this.MAP_HEIGHT = Map.getMapHeight();
+        this.TILE_SIZE = Map.getTileSize();
+        this.MATRIX = Map.getMatrix();
         this.open = new Tile[(MAP_WIDTH * MAP_HEIGHT)];
         this.HUNTER = hunter;
         this.TARGET_X = prey.getXPosition();
         this.TARGET_Y = prey.getYPosition();
+        this.FIND_HOME = false;
         int i = 0;
         for(int x = 0; x < MAP_WIDTH; x++){
             for(int y = 0; y < MAP_HEIGHT; y++){
@@ -67,20 +65,19 @@ public class Pathfinder {
     }
 
     /**
-     *Does the same as the first constructor, but uses x-/y-coordinates instead of an actor.
+     * Does the same as the first constructor, but uses x-/y-coordinates instead of an actor.
      * @see Pathfinder
      */
-    public Pathfinder(MapScreen screen, Enemy hunter, int targetX, int targetY, boolean findHome){
-        this.SCREEN = screen;
-        this.MAP_WIDTH = screen.map.getMapWidth();
-        this.MAP_HEIGHT = screen.map.getMapHeight();
-        this.TILE_SIZE = screen.map.getTileSize();
-        this.MATRIX = screen.map.matrix;
+    public Pathfinder(Enemy hunter, int targetX, int targetY, boolean findHome){
+        this.MAP_WIDTH = Map.getMapWidth();
+        this.MAP_HEIGHT = Map.getMapHeight();
+        this.TILE_SIZE = Map.getTileSize();
+        this.MATRIX = Map.getMatrix();
         this.open = new Tile[(MAP_WIDTH * MAP_HEIGHT)];
         this.HUNTER = hunter;
         this.TARGET_X = targetX;
         this.TARGET_Y = targetY;
-        this.findHome = findHome;
+        this.FIND_HOME = findHome;
         int i = 0;
         for(int x = 0; x < MAP_WIDTH; x++){
             for(int y = 0; y < MAP_HEIGHT; y++){
@@ -105,7 +102,7 @@ public class Pathfinder {
 
     private int searchHunter(){
         int i = 0;
-        while(open[i] != SCREEN.map.getTile(HUNTER.getXPosition(), HUNTER.getYPosition())){
+        while(open[i] != Map.getTile(HUNTER.getXPosition(), HUNTER.getYPosition())){
             i++;
         }
         return i;
@@ -168,7 +165,7 @@ public class Pathfinder {
             noWay = true;
             return true;
         }
-        if(min == SCREEN.map.getTile(TARGET_X, TARGET_Y)) return true;
+        if(min == Map.getTile(TARGET_X, TARGET_Y)) return true;
         int x = min.getX() / TILE_SIZE;
         int y = min.getY() / TILE_SIZE;
         if(y < (MAP_HEIGHT - 1)) {
@@ -179,7 +176,7 @@ public class Pathfinder {
                         && !(up.isOccupiedByGhost())
                         )
                         || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(up.isOccupiedByPacMan()))
-                    ) || findHome
+                    ) || FIND_HOME
                     )
             ){
                 up.setCost(min.getCost() + 1);
@@ -195,7 +192,7 @@ public class Pathfinder {
                         && !(down.isOccupiedByGhost())
                         )
                         || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(down.isOccupiedByPacMan()))
-                    ) || findHome
+                    ) || FIND_HOME
                     )
             ){
                 down.setCost(min.getCost() + 1);
@@ -211,7 +208,7 @@ public class Pathfinder {
                         && !(left.isOccupiedByGhost())
                         )
                         || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(left.isOccupiedByPacMan()))
-                    ) || findHome
+                    ) || FIND_HOME
                     )
             ){
                 left.setCost(min.getCost() + 1);
@@ -227,7 +224,7 @@ public class Pathfinder {
                         && !(right.isOccupiedByGhost())
                         )
                         || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(right.isOccupiedByPacMan()))
-                    ) || findHome
+                    ) || FIND_HOME
                     )
             ){
                 right.setCost(min.getCost() + 1);
@@ -243,11 +240,11 @@ public class Pathfinder {
      * @return next tile from the actor on the way to its target.
      */
     public Tile aStarResult(){
-        Tile temp = SCREEN.map.getTile(TARGET_X, TARGET_Y);
+        Tile temp = Map.getTile(TARGET_X, TARGET_Y);
         while(true){ if(aStarAlg()) break; }
         if(noWay) return null;
-        if(temp == SCREEN.map.getTile(HUNTER.getXPosition(), HUNTER.getYPosition())) return temp;
-        while(temp.getPrev() != SCREEN.map.getTile(HUNTER.getXPosition(), HUNTER.getYPosition())){
+        if(temp == Map.getTile(HUNTER.getXPosition(), HUNTER.getYPosition())) return temp;
+        while(temp.getPrev() != Map.getTile(HUNTER.getXPosition(), HUNTER.getYPosition())){
             temp = temp.getPrev();
         }
         return temp;

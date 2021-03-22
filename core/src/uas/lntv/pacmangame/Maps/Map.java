@@ -10,7 +10,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 
 import uas.lntv.pacmangame.Managers.Assets;
-import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Sprites.Actor;
 
 /**
@@ -19,166 +18,167 @@ import uas.lntv.pacmangame.Sprites.Actor;
  * This class is abtract and should be implemented as a GameMap or MenuMap
  */
 public abstract class Map {
-        private final boolean firstMap;
-        public OrthogonalTiledMapRenderer renderer;
-        protected final Assets ASSETS;
+    private final boolean firstMap;
+    public OrthogonalTiledMapRenderer renderer;
+    protected final Assets ASSETS;
 
-        public TiledMapTileLayer layerWall;
-        public TiledMapTileLayer layerPath;
-        public TiledMapTileLayer layerCollect;
+    public TiledMapTileLayer layerWall;
+    public TiledMapTileLayer layerPath;
+    public TiledMapTileLayer layerCollect;
 
-        protected  final TiledMap TMX_MAP;
-        private final TiledMap TMX_CONTROL;
-        public TiledMapTileLayer layerControlButton;
-        public TiledMapTileLayer layerControlZone;
+    protected  final TiledMap TMX_MAP;
+    public TiledMapTileLayer layerControlButton;
+    public TiledMapTileLayer layerControlZone;
 
-        protected final int MAP_WIDTH;
-        protected final int MAP_HEIGHT;
-        protected final int TILE_SIZE;
+    protected static int mapWidth;
+    protected static int mapHeight;
+    protected static int tileSize;
 
-        public Tile[][] matrix;
+    protected static Tile[][] matrix;
 
-        public final int getMapWidth(){ return this.MAP_WIDTH; }
-        public final int getMapHeight(){ return this.MAP_HEIGHT; }
-        public final int getTileSize(){ return this.TILE_SIZE; }
+    public static int getMapWidth(){ return mapWidth; }
+    public static int getMapHeight(){ return mapHeight; }
+    public static int getTileSize(){ return tileSize; }
 
-        public Vector3 randomItemPos;
+    public static Tile[][] getMatrix(){ return matrix; }
 
-        /**
-         * The constructor loads the graphic layers of the tmx-Mapfile and sets them up into a Maprenderer
-         * It generates a matrix of the Map which contains a Tile for each cell.
-         * It provides methods for generating and collecting Collectables which should be implemented as needed by the child class.
-         * @param path String value which contains the path to a tmx-Mapfile.
-         * @param assets provide the Assetsmanager instance of the game.
-         */
-        public Map(String path, Assets assets){
-            this.ASSETS = assets;
-            firstMap = path.equals("maps/map.tmx");
-            TmxMapLoader tmxMapLoader = new TmxMapLoader();
-            TMX_MAP = tmxMapLoader.load(path);
-            TMX_CONTROL = assets.manager.get(assets.CONTROL);
-            renderer = new OrthogonalTiledMapRenderer(TMX_MAP);
+    public Vector3 randomItemPos;
 
-            MAP_WIDTH = Integer.parseInt(TMX_MAP.getProperties().get("width").toString());
-            MAP_HEIGHT = Integer.parseInt(TMX_MAP.getProperties().get("height").toString());
-            TILE_SIZE = Integer.parseInt(TMX_MAP.getProperties().get("tilewidth").toString());
+    /**
+     * The constructor loads the graphic layers of the tmx-Mapfile and sets them up into a Maprenderer
+     * It generates a matrix of the Map which contains a Tile for each cell.
+     * It provides methods for generating and collecting Collectables which should be implemented as needed by the child class.
+     * @param path String value which contains the path to a tmx-Mapfile.
+     * @param assets provide the Assetsmanager instance of the game.
+     */
+    public Map(String path, Assets assets){
+        this.ASSETS = assets;
+        firstMap = path.equals("maps/map.tmx");
+        TmxMapLoader tmxMapLoader = new TmxMapLoader();
+        TMX_MAP = tmxMapLoader.load(path);
+        TiledMap TMX_CONTROL = assets.manager.get(assets.CONTROL);
+        renderer = new OrthogonalTiledMapRenderer(TMX_MAP);
 
-            layerWall = (TiledMapTileLayer) TMX_MAP.getLayers().get("Walls");
-            layerPath = (TiledMapTileLayer) TMX_MAP.getLayers().get("Path");
-            layerCollect = (TiledMapTileLayer) TMX_MAP.getLayers().get("Collectables");
-            layerControlButton = (TiledMapTileLayer) TMX_CONTROL.getLayers().get("ControllerButtons");
-            layerControlZone = (TiledMapTileLayer)TMX_CONTROL.getLayers().get("ControllerZone");
-            TMX_MAP.getLayers().add(layerControlZone);
-            TMX_MAP.getLayers().add(layerControlButton);
+        mapWidth = Integer.parseInt(TMX_MAP.getProperties().get("width").toString());
+        mapHeight = Integer.parseInt(TMX_MAP.getProperties().get("height").toString());
+        tileSize = Integer.parseInt(TMX_MAP.getProperties().get("tilewidth").toString());
 
-            //layerPath.setOpacity(0.5f);
-            matrix = new Tile[MAP_WIDTH][MAP_HEIGHT];
-            generateScreenMap();
-            randomItemPos = new Vector3(9, 33, 0);
-        }
+        layerWall = (TiledMapTileLayer) TMX_MAP.getLayers().get("Walls");
+        layerPath = (TiledMapTileLayer) TMX_MAP.getLayers().get("Path");
+        layerCollect = (TiledMapTileLayer) TMX_MAP.getLayers().get("Collectables");
+        layerControlButton = (TiledMapTileLayer) TMX_CONTROL.getLayers().get("ControllerButtons");
+        layerControlZone = (TiledMapTileLayer) TMX_CONTROL.getLayers().get("ControllerZone");
+        TMX_MAP.getLayers().add(layerControlZone);
+        TMX_MAP.getLayers().add(layerControlButton);
 
-        /**
-         * This Method will generade the matrix which holds the information about every Tile in the Map
-         * It iterates through the matrix and adds specific tiles to it depending on the tile type.
-         * it gets this information from the tmx-file layers
-         */
-        private void generateScreenMap(){
-            for(int x = 0; x < MAP_WIDTH; x++){
-                for(int y = 0; y < MAP_HEIGHT; y++){
-                    if(layerWall.getCell(x, y) == null){
-                        matrix[x][y] = new Tile(Tile.Type.EMPTY, ((x* TILE_SIZE)), ((y* TILE_SIZE)));
-                        if(layerPath.getCell(x,y) != null){
-                            Tile tile = new Tile(layerPath.getCell(x,y).getTile().getTextureRegion(), Tile.Type.PATH, (x* TILE_SIZE), (y* TILE_SIZE));
-                            matrix[x][y] = tile;
-                        }
+        //layerPath.setOpacity(0.5f);
+        matrix = new Tile[mapWidth][mapHeight];
+        generateScreenMap();
+        randomItemPos = new Vector3(9, 33, 0);
+    }
+
+    /**
+     * This Method will generade the matrix which holds the information about every Tile in the Map
+     * It iterates through the matrix and adds specific tiles to it depending on the tile type.
+     * it gets this information from the tmx-file layers
+     */
+    private void generateScreenMap(){
+        for(int x = 0; x < mapWidth; x++){
+            for(int y = 0; y < mapHeight; y++){
+                if(layerWall.getCell(x, y) == null){
+                    matrix[x][y] = new Tile(Tile.Type.EMPTY, ((x* tileSize)), ((y* tileSize)));
+                    if(layerPath.getCell(x,y) != null){
+                        Tile tile = new Tile(layerPath.getCell(x,y).getTile().getTextureRegion(), Tile.Type.PATH, (x* tileSize), (y* tileSize));
+                        matrix[x][y] = tile;
                     }
-                    else {
-                        TextureRegion wallRegion = layerWall.getCell(x,y).getTile().getTextureRegion();
-                        matrix[x][y] = new Tile(wallRegion, Tile.Type.WALL, (x* TILE_SIZE), (y* TILE_SIZE));
-                    }
-
                 }
+                else {
+                    TextureRegion wallRegion = layerWall.getCell(x,y).getTile().getTextureRegion();
+                    matrix[x][y] = new Tile(wallRegion, Tile.Type.WALL, (x* tileSize), (y* tileSize));
+                }
+
             }
         }
+    }
 
-        /**
-         * generates all simple dots/scorepoints which can be collected by Pac-Man.
-         * Should be implemented in child classes.
-         * @param total_Dots the total amount of Dots/Points generated on the map
-         */
-        public abstract void generateDots(int total_Dots);
+    /**
+     * generates all simple dots/scorepoints which can be collected by Pac-Man.
+     * Should be implemented in child classes.
+     * @param total_Dots the total amount of Dots/Points generated on the map
+     */
+    public abstract void generateDots(int total_Dots);
 
-        /**
-         * this is a helper-method. it generates a cell with a textureregion depending on type specified.
-         * it is mostly used to generate the correct texture for Collectables.
-         * @param type specify type of the tile (exp. DOT)
-         * @return returns the cell for the type specified
-         */
-        public TiledMapTileLayer.Cell createItem(Tile.Item type){
-            TextureRegion region = null;
-            switch (type){
-                case DOT:
-                    if(firstMap) region = layerPath.getCell(1,17).getTile().getTextureRegion();
-                    else{
-                        Texture tex = ASSETS.manager.get(ASSETS.COIN_GOLD);
-                        region = new TextureRegion(tex);
-                        region.setRegionX(128);
-                        region.setRegionWidth(32);
-                        region.setRegionY(0);
-                        region.setRegionHeight(32);
-                    }
-                    break;
-                case HUNTER:
-                    Texture tex = ASSETS.manager.get(ASSETS.ITEM_HUNTER);
+    /**
+     * this is a helper-method. it generates a cell with a textureregion depending on type specified.
+     * it is mostly used to generate the correct texture for Collectables.
+     * @param type specify type of the tile (exp. DOT)
+     * @return returns the cell for the type specified
+     */
+    public TiledMapTileLayer.Cell createItem(Tile.Item type){
+        TextureRegion region = null;
+        switch (type){
+            case DOT:
+                if(firstMap) region = layerPath.getCell(1,17).getTile().getTextureRegion();
+                else{
+                    Texture tex = ASSETS.manager.get(ASSETS.COIN_GOLD);
                     region = new TextureRegion(tex);
-                    region.setRegionX(0);
+                    region.setRegionX(128);
                     region.setRegionWidth(32);
                     region.setRegionY(0);
                     region.setRegionHeight(32);
-                    break;
-                case SLOWMO:
-                    Texture tex2 = ASSETS.manager.get(ASSETS.ITEM_SLOWMO);
-                    region = new TextureRegion(tex2);
-                    region.setRegionX(0);
-                    region.setRegionWidth(32);
-                    region.setRegionY(0);
-                    region.setRegionHeight(32);
-                    break;
-                case TIME:
-                    Texture tex3 = ASSETS.manager.get(ASSETS.ITEM_TIME);
-                    region = new TextureRegion(tex3);
-                    region.setRegionX(0);
-                    region.setRegionWidth(32);
-                    region.setRegionY(0);
-                    region.setRegionHeight(32);
-                    break;
-                case LIFE:
-                    Texture tex4 = ASSETS.manager.get(ASSETS.ITEM_LIFE);
-                    region = new TextureRegion(tex4);
-                    region.setRegionX(0);
-                    region.setRegionWidth(32);
-                    region.setRegionY(0);
-                    region.setRegionHeight(32);
-                    break;
-            }
-            TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-            TiledMapTile t = new Tile(region);
-            cell.setTile(t);
-            return cell;
+                }
+                break;
+            case HUNTER:
+                Texture tex = ASSETS.manager.get(ASSETS.ITEM_HUNTER);
+                region = new TextureRegion(tex);
+                region.setRegionX(0);
+                region.setRegionWidth(32);
+                region.setRegionY(0);
+                region.setRegionHeight(32);
+                break;
+            case SLOWMO:
+                Texture tex2 = ASSETS.manager.get(ASSETS.ITEM_SLOWMO);
+                region = new TextureRegion(tex2);
+                region.setRegionX(0);
+                region.setRegionWidth(32);
+                region.setRegionY(0);
+                region.setRegionHeight(32);
+                break;
+            case TIME:
+                Texture tex3 = ASSETS.manager.get(ASSETS.ITEM_TIME);
+                region = new TextureRegion(tex3);
+                region.setRegionX(0);
+                region.setRegionWidth(32);
+                region.setRegionY(0);
+                region.setRegionHeight(32);
+                break;
+            case LIFE:
+                Texture tex4 = ASSETS.manager.get(ASSETS.ITEM_LIFE);
+                region = new TextureRegion(tex4);
+                region.setRegionX(0);
+                region.setRegionWidth(32);
+                region.setRegionY(0);
+                region.setRegionHeight(32);
+                break;
         }
+        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+        TiledMapTile t = new Tile(region);
+        cell.setTile(t);
+        return cell;
+    }
 
-        public void generateRandomItem() {
-        }
+    public void generateRandomItem() {
+    }
 
-        /**
-         * get a tile by position
-         * @param xPosition x-position of the tile
-         * @param yPosition y-position of the tile
-         * @return returns the tile
-         */
-        public Tile getTile(int xPosition, int yPosition){
-            return matrix[xPosition / TILE_SIZE][yPosition / TILE_SIZE];
-        }
+    /**
+     * get a tile by position
+     * @param xPosition x-position of the tile
+     * @param yPosition y-position of the tile
+     * @return returns the tile
+     */
+    public static Tile getTile(int xPosition, int yPosition){
+        return matrix[xPosition / tileSize][yPosition / tileSize];
+    }
 
     /**
      * get the neighbouring tile in a certain direction
@@ -187,47 +187,47 @@ public abstract class Map {
      * @param dir direction to the neighbouring tile
      * @return returns the neighbouring tile
      */
-        public Tile getTile(int xPosition, int yPosition, Actor.Direction dir){
-            int nextCellX = ((xPosition/ TILE_SIZE));
-            int nextCellY = ((yPosition/ TILE_SIZE));
-            switch (dir) {
-                case RIGHT:
-                    nextCellX = ((xPosition+ TILE_SIZE) / TILE_SIZE);
-                    break;
-                case LEFT:
-                    nextCellX = ((xPosition- TILE_SIZE) / TILE_SIZE);
-                    break;
-                case UP:
-                    nextCellY = ((yPosition+ TILE_SIZE) / TILE_SIZE);
-                    break;
-                case DOWN:
-                    nextCellY = ((yPosition- TILE_SIZE) / TILE_SIZE);
-                    break;
+    public static Tile getTile(int xPosition, int yPosition, Actor.Direction dir){
+        int nextCellX = ((xPosition/ tileSize));
+        int nextCellY = ((yPosition/ tileSize));
+        switch (dir) {
+            case RIGHT:
+                nextCellX = ((xPosition+ tileSize) / tileSize);
+                break;
+            case LEFT:
+                nextCellX = ((xPosition- tileSize) / tileSize);
+                break;
+            case UP:
+                nextCellY = ((yPosition+ tileSize) / tileSize);
+                break;
+            case DOWN:
+                nextCellY = ((yPosition- tileSize) / tileSize);
+                break;
 
-            }
-            return matrix[nextCellX][nextCellY];
         }
+        return matrix[nextCellX][nextCellY];
+    }
 
-        /**
-         * Not implemented !!!!!!!!!!!
-         * @param tile
-         * @param type
-         */
-        public void setTile(Tile tile, Tile.Type type){
-            tile.type = type;
-        }
+    /**
+     * Not implemented !!!!!!!!!!!
+     * @param tile
+     * @param type
+     */
+    public void setTile(Tile tile, Tile.Type type){
+        tile.type = type;
+    }
 
-        /**
-         * this will delete a collectable from the map and plays a sound
-         * @param tile specify the tile from which you want to collect an item
-         */
-        public void collect(Tile tile){
-            layerCollect.setCell(
-                    tile.getX()/ TILE_SIZE,
-                    tile.getY()/ TILE_SIZE,
-                    null
-            );
-        }
+    /**
+     * this will delete a collectable from the map and plays a sound
+     * @param tile specify the tile from which you want to collect an item
+     */
+    public void collect(Tile tile){
+        layerCollect.setCell(
+                tile.getX()/ tileSize,
+                tile.getY()/ tileSize,
+                null
+        );
+    }
 
 
 }

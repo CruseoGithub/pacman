@@ -4,19 +4,34 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.PacManGame;
-import uas.lntv.pacmangame.Scenes.Hud;
 import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Screens.MenuScreen;
 import uas.lntv.pacmangame.Screens.ScoreScreen;
 
+/**
+ * PacMan is out protagonist. He is a yellow ball with a mouth with the size of half of his body.
+ * PacMan is able to eat dots and collect items to get buffed.
+ * He is very afraid of ghosts and should avoid contact with them unless he ate a hunter item and
+ * became SuperPacMan, who is also able to eat ghosts.
+ * PacMan is also representing himself in the HUD and displays the amount of remaining lives with
+ * his own body.
+ */
 public class PacMan extends Actor {
-    public Hud hud;
     protected PacManGame game;
 
-    public PacMan(PacManGame game, Assets assets, int initX, int initY, MapScreen screen, Hud hud){
+    /**
+     * Create a new PacMan
+     * @param game The running game
+     * @param assets The used assets-manager
+     * @param initX Starting x-coordinate
+     * @param initY Starting y-coordinate
+     * @param screen The screen in which PacMan will be created
+     */
+    public PacMan(PacManGame game, Assets assets, int initX, int initY, MapScreen screen){
         super(assets, initX, initY, screen);
         this.direction = Direction.RIGHT;
         this.nextDirection = Direction.RIGHT;
@@ -40,7 +55,6 @@ public class PacMan extends Actor {
         region.flip(true, false);
         this.sprite = new Sprite(region);
         this.sprite.setOrigin(TILE_SIZE/2f, TILE_SIZE/2f);
-        this.hud = hud;
     }
 
     /**
@@ -103,10 +117,14 @@ public class PacMan extends Actor {
         if(getState() != State.DIEING) move();
     }
 
+    /**
+     * Moves like an Actor, but additionally collects dots and items while walking.
+     * @see Actor
+     */
     @Override
     public void move(){
         super.move();
-        screen.map.collect(screen.map.getTile(xPosition, yPosition)); //collect Dots
+        screen.map.collect(Map.getTile(xPosition, yPosition)); //collect Dots
     }
 
 }

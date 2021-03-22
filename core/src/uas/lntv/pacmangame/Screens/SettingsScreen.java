@@ -28,7 +28,7 @@ public class SettingsScreen extends MapScreen {
      */
     public SettingsScreen(PacManGame game, Assets assets, String path){
         super(game, assets, path, Type.SETTINGS);
-        this.pacman = new PacMan(game, assets, 2 * TILE_SIZE, 33 * TILE_SIZE, this, hud);
+        this.pacman = new PacMan(game, assets, 2 * TILE_SIZE, 33 * TILE_SIZE, this);
         this.pacman.setSpeed(8);
         this.ghosts.add(new Enemy(25 * TILE_SIZE, 3 * TILE_SIZE,  assets, this, assets.manager.get(assets.GHOST_1)));
         this.hud = new Hud(game, assets,this, false);

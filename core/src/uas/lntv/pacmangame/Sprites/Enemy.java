@@ -69,6 +69,10 @@ public class Enemy extends Actor {
     public Difficulty getDifficulty(){ return this.difficulty; }
 
 
+    /**
+     * In addition to normal setter methods, this one can keep the difficulty of the current level.
+     * @param difficulty the difficulty that the ghost is supposed to adopt
+     */
     public void setDifficulty(Enemy.Difficulty difficulty){
         if(difficulty == Difficulty.RUNAWAY && this.difficulty != Difficulty.RUNAWAY) levelDiff = this.difficulty;
         this.difficulty = difficulty;
@@ -122,7 +126,8 @@ public class Enemy extends Actor {
             }
         }
         else if (!(screen.map.getTile(14 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
-            if(xPosition< 14 * TILE_SIZE)xPosition += 8;
+            if(xPosition < 14 * TILE_SIZE)xPosition += 8;
+            if(xPosition > 14 * TILE_SIZE) xPosition -= 8;  //this could happen if the second and third ghost enter the box in short distance to each other (< TILE_SIZE)
             if(xPosition == 14 * TILE_SIZE) {
                 screen.map.getTile(xPosition, yPosition).enter(this);
                 setState(State.BOXED);

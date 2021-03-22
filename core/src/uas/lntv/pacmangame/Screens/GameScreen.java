@@ -38,7 +38,7 @@ public class GameScreen extends MapScreen {
         super(game, assets, path, Type.GAME);
 
         this.hud = new Hud(game, assets, this, true);
-        this.pacman = new PacMan(game, assets, 14 * TILE_SIZE, 21 * TILE_SIZE, this, hud);
+        this.pacman = new PacMan(game, assets, 14 * TILE_SIZE, 21 * TILE_SIZE, this);
         this.ghosts.add(new Enemy(13 * TILE_SIZE, 33 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_1)));
         if(PacManGame.getLevel() >= 2) {
             this.ghosts.add(new Enemy(15 * TILE_SIZE, 30 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_2)));

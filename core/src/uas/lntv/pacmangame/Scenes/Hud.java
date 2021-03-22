@@ -86,9 +86,9 @@ public class Hud {
         table.add(TIME_LABEL).expandX().padTop(0);
         if(visible) stage.addActor(table);
 
-        LIVE_PAC_MEN.add(new PacMan(game, assets, 20 * tileSize, (45 * tileSize + tileSize /2), screen, this));
-        LIVE_PAC_MEN.add(new PacMan(game, assets, 22 * tileSize, (45 * tileSize + tileSize /2), screen, this));
-        LIVE_PAC_MEN.add(new PacMan(game, assets, 24 * tileSize, (45 * tileSize + tileSize /2), screen, this));
+        LIVE_PAC_MEN.add(new PacMan(game, assets, 20 * tileSize, (45 * tileSize + tileSize /2), screen));
+        LIVE_PAC_MEN.add(new PacMan(game, assets, 22 * tileSize, (45 * tileSize + tileSize /2), screen));
+        LIVE_PAC_MEN.add(new PacMan(game, assets, 24 * tileSize, (45 * tileSize + tileSize /2), screen));
 
         warned = false;
         red = false;

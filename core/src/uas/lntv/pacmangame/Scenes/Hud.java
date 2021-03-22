@@ -19,7 +19,7 @@ import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.PacMan;
 /**
- *
+ * Local variables used in this class
  */
 public class Hud {
     public Stage stage;
@@ -42,6 +42,14 @@ public class Hud {
     private final int WARNING_TIME;
     private float timeStamp;
 
+    /**
+     * (Jabba)The HUD
+     * @param game gets handed over
+     * @param assets asset management
+     * @param screen gets handed over
+     * @param visible HUD only visible when true
+     * Arranges the HUD with SCORE, TIME & LIVES
+     */
     @SuppressWarnings("DefaultLocale")
     public Hud(PacManGame game, Assets assets, MapScreen screen, boolean visible){
         this.assets = assets;
@@ -100,7 +108,9 @@ public class Hud {
 
     public final String getMap(){ return STAGES.get(PacManGame.getLevel() % 5); }
 
-
+    /**
+     * Animates the images according to the lives of PacMan
+     */
     public void animateLives(float dt) {
         if (PacManGame.getLives() == 1) {
             animate(LIVE_PAC_MEN.get(1), dt/1.1f);
@@ -111,12 +121,18 @@ public class Hud {
         }
     }
 
+    /**
+     * Animation of dying
+     */
     private void animate(PacMan pacman, float dt){
         pacman.setState(Actor.State.DIEING);
         pacman.update(dt);
         pacman.drawLife();
     }
-
+    /**
+     * Look of TIME changes according to time left
+     * Number of PacMans in HUD change depending on lives left
+     */
     @SuppressWarnings("DefaultLocale")
     public void update() {
         if (time < WARNING_TIME) {
@@ -165,7 +181,9 @@ public class Hud {
             }
         }
     }
-
+    /**
+     * Redraws the PacMans in the HUD when when you eat a LifeUp item.
+     */
     public void resetLives(){
         if (PacManGame.getLives() == 2) {
             reset(LIVE_PAC_MEN.get(1));
@@ -174,7 +192,9 @@ public class Hud {
             reset(LIVE_PAC_MEN.get(2));
         }
     }
-
+    /**
+     * Function for redrawing the PacMans in the HUD
+     */
     private void reset(PacMan pacman){
         pacman.getAnimation().resetTmp();
         pacman.setState(Actor.State.RUNNING);

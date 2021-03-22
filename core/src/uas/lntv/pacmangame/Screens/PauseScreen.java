@@ -27,9 +27,7 @@ public class PauseScreen extends MapScreen {
      * @param game running game
      * @param assets asset management
      * @param mapPath the path where the map is stored
-     * @see MapScreen
      * @param hud hud from the game paused
-     * @param screen
      */
     public PauseScreen(PacManGame game, Assets assets, String mapPath, GameScreen screen, Hud hud){
         super(game, assets, mapPath, Type.MENU);

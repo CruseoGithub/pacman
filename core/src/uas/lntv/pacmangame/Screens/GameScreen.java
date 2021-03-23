@@ -174,6 +174,8 @@ public class GameScreen extends MapScreen {
                 if(PacManGame.getLives() < 3) {
                     PacManGame.addLive();
                     hud.resetLives();
+                } else{
+                    PacManGame.increaseScore(75);
                 }
                 break;
         }

@@ -48,7 +48,7 @@ public class GameMap extends Map {
     }
 
     /**
-     * Generates an item based on priority/percentage on the map.
+     * Generates an item based on priority/percentage on one of the four spots on the map.
      */
     @Override
     public void generateRandomItem(){
@@ -57,6 +57,10 @@ public class GameMap extends Map {
         if(!(matrix[(int)position.x][(int)position.y].isItem())) generateRandomItem(position);
     }
 
+    /**
+     * generates a random item on a certain position
+     * @param position Vector2 with map coordinates
+     */
     private void generateRandomItem(Vector2 position){
         Tile.Item random = randomItem();
         layerCollect.setCell((int)position.x, (int)position.y, createItem(random));
@@ -130,7 +134,7 @@ public class GameMap extends Map {
         if(total < 100){
             total = 100 - total;
             while (total > 0){
-                int perItem = (int)(total/items);
+                int perItem = total/items;
                 if(perItem > 1){
                     for(int i = 0; i < percentList.length; i++){
                         percentList[i] += perItem;
@@ -145,6 +149,10 @@ public class GameMap extends Map {
         return percentList;
     }
 
+    /**
+     * counts the number of items that are placed on the map already (no dots)
+     * @return number of items (0-4)
+     */
     public int countItems(){
         int count = 0;
         for(Vector2 position : items){

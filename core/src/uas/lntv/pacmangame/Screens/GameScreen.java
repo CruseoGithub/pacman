@@ -3,6 +3,7 @@ package uas.lntv.pacmangame.Screens;
 import com.badlogic.gdx.Gdx;
 
 import uas.lntv.pacmangame.Managers.Assets;
+import uas.lntv.pacmangame.Maps.GameMap;
 import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.PacManGame;
@@ -27,7 +28,7 @@ public class GameScreen extends MapScreen {
 
     private float supStatusTime = 10;
     private float slowDownTime = 10;
-    private float itemCoolDown = 15;
+    private float itemCoolDown = 0;
 
     public void setPauseActive(boolean bool) {
         PauseActive = bool;
@@ -143,7 +144,7 @@ public class GameScreen extends MapScreen {
         switch (buffType) {
             case HUNTER:
                 this.itemTaken = true;
-                this.itemCoolDown = 15;
+                this.itemCoolDown += 10;
                 this.supStatusTime = 10;
                 if (!pacManSuper) {
                     this.switchMusicHunting();
@@ -155,7 +156,7 @@ public class GameScreen extends MapScreen {
                 break;
             case SLOWMO:
                 this.itemTaken = true;
-                this.itemCoolDown = 15;
+                this.itemCoolDown += 10;
                 if(!enemiesSlow) {
                     for (Enemy ghost : ghosts) ghost.setSpeed(ghost.getSpeed() / 2);
                     this.enemiesSlow = true;
@@ -163,12 +164,12 @@ public class GameScreen extends MapScreen {
                 break;
             case TIME:
                 this.itemTaken = true;
-                this.itemCoolDown = 15;
+                this.itemCoolDown += 10;
                 this.hud.time += 10;
                 break;
             case LIFE:
                 this.itemTaken = true;
-                this.itemCoolDown = 15;
+                this.itemCoolDown += 10;
                 if(PacManGame.getLives() < 3) {
                     PacManGame.addLive();
                     hud.resetLives();
@@ -180,9 +181,22 @@ public class GameScreen extends MapScreen {
     private void updateCoolDown(){
         if(itemTaken){
             itemCoolDown -= Gdx.graphics.getDeltaTime();
-            if(itemCoolDown < 0){
-                this.map.generateRandomItem();
-                itemTaken = false;
+            switch(((GameMap)map).countItems()){
+                case 4:
+                    itemTaken = false;
+                    break;
+                case 3:
+                    if(itemCoolDown < 0) this.map.generateRandomItem();
+                    break;
+                case 2:
+                    if(itemCoolDown < 10) this.map.generateRandomItem();
+                    break;
+                case 1:
+                    if(itemCoolDown < 20) this.map.generateRandomItem();
+                    break;
+                case 0:
+                    if(itemCoolDown < 30) this.map.generateRandomItem();
+                    break;
             }
         }
     }

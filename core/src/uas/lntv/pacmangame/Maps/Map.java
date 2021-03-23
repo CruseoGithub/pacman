@@ -15,7 +15,7 @@ import uas.lntv.pacmangame.Sprites.Actor;
 /**
  * This class is generates a Tiled Map which can be loaded onto a Screen.
  * It provides a matrix which holds information about map dimensions and layout (Path/Wall/Collectable)
- * This class is abtract and should be implemented as a GameMap or MenuMap
+ * This class is abstract and should be implemented as a GameMap or MenuMap
  */
 public abstract class Map {
     private final boolean firstMap;
@@ -42,7 +42,7 @@ public abstract class Map {
 
     public static Tile[][] getMatrix(){ return matrix; }
 
-    public Vector3 randomItemPos;
+    //public Vector3 randomItemPos;
 
     /**
      * The constructor loads the graphic layers of the tmx-Mapfile and sets them up into a Maprenderer
@@ -74,7 +74,7 @@ public abstract class Map {
         //layerPath.setOpacity(0.5f);
         matrix = new Tile[mapWidth][mapHeight];
         generateScreenMap();
-        randomItemPos = new Vector3(9, 33, 0);
+        //randomItemPos = new Vector3(9, 33, 0);
     }
 
     /**

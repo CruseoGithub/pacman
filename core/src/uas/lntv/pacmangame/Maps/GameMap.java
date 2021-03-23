@@ -1,8 +1,9 @@
 package uas.lntv.pacmangame.Maps;
 
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
@@ -16,8 +17,8 @@ import uas.lntv.pacmangame.Sprites.Enemy;
  */
 public class GameMap extends Map {
     MapScreen screen;
-    ArrayList<Vector3> hunterItems = new ArrayList<>();
-	
+    ArrayList<Vector2> items = new ArrayList<>();
+
     /**
      * does the same as the parent constructor.
      * Additionally it generates collectables and provides a method to collect them.
@@ -30,10 +31,10 @@ public class GameMap extends Map {
         this.screen = screen;
 
         //Hunter Item Positions
-        hunterItems.add(new Vector3(1, 21, 0));
-        hunterItems.add(new Vector3(1, 36, 0));
-        hunterItems.add(new Vector3(26, 21, 0));
-        hunterItems.add(new Vector3(26, 36, 0));
+        items.add(new Vector2(1, 21));
+        items.add(new Vector2(1, 36));
+        items.add(new Vector2(26, 21));
+        items.add(new Vector2(26, 36));
 
         generateItems();
         generateDots(150);
@@ -43,25 +44,20 @@ public class GameMap extends Map {
      * generates Collectables (Not Dots!)
      */
     public void generateItems(){
-        for(int x = 0; x < mapWidth; x++){
-            for(int y = 0; y < mapHeight; y++){
-                //Generate hunter items on the map
-                for (Vector3 pos: hunterItems) {
-                    if(x == pos.x && y == pos.y){
-                        layerCollect.setCell(x, y, createItem(Tile.Item.HUNTER));
-                        matrix[x][y].placeItem(Tile.Item.HUNTER);
-                    }
-                }
-            }
-        }
-        generateRandomItem();
+        for(Vector2 position : items) generateRandomItem(position);
     }
 
     @Override
     public void generateRandomItem(){
-            Tile.Item random = randomItem();
-            layerCollect.setCell((int)randomItemPos.x, (int)randomItemPos.y, createItem(random));
-            matrix[(int)randomItemPos.x][(int)randomItemPos.y].placeItem(random);
+        Random random = new Random();
+        Vector2 position = items.get(random.nextInt(4));
+        if(!(matrix[(int)position.x][(int)position.y].isItem())) generateRandomItem(position);
+    }
+
+    private void generateRandomItem(Vector2 position){
+        Tile.Item random = randomItem();
+        layerCollect.setCell((int)position.x, (int)position.y, createItem(random));
+        matrix[(int)position.x][(int)position.y].placeItem(random);
     }
 
     public Tile.Item randomItem(){
@@ -70,6 +66,14 @@ public class GameMap extends Map {
         int random = (int) (Math.random() * (max - min + 1) + min); // random ist zwischen 1 und 4
         Tile.Item[] itemList = Tile.Item.values();
         return itemList[random];
+    }
+
+    public int countItems(){
+        int count = 0;
+        for(Vector2 position : items){
+            if(matrix[(int)position.x][(int)position.y].isItem()) count++;
+        }
+        return count;
     }
 
     /**

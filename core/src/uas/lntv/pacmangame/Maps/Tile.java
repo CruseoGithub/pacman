@@ -87,6 +87,7 @@ public class Tile extends StaticTiledMapTile {
     public boolean isItem(){
         return item != Item.EMPTY;
     }
+
     public Item getItem(){ return this.item;}
 
     public void placeItem(Tile.Item item){ this.item = item; }

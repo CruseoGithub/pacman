@@ -87,7 +87,7 @@ public class GameMap extends Map {
     }
 
     /**
-     * generates all simple dots/scorepoints which can be collected by Pac-Man.
+     * generates all simple dots/scorepoints which can be collected by Pac-Man. (would also work for special items)
      * It does this by iterating through the tile matrix and placing items by chance (default: 50% chance) until it reaches a total amount of items.
      * @param amount the total amount of Dots/Points generated on the map
      */

@@ -104,9 +104,9 @@ public abstract class Map {
     /**
      * generates all simple dots/scorepoints which can be collected by Pac-Man.
      * Should be implemented in child classes.
-     * @param total_Dots the total amount of Dots/Points generated on the map
+     * @param amount the total amount of Dots/Points generated on the map
      */
-    public abstract void generateDots(int total_Dots);
+    public abstract void generateCollectables(Tile.Item item, int amount);
 
     /**
      * this is a helper-method. it generates a cell with a textureregion depending on type specified.

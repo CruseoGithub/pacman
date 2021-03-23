@@ -157,6 +157,7 @@ public class GameScreen extends MapScreen {
             case SLOWMO:
                 this.itemTaken = true;
                 this.itemCoolDown += 10;
+                this.slowDownTime = 10;
                 if(!enemiesSlow) {
                     for (Enemy ghost : ghosts) ghost.setSpeed(ghost.getSpeed() / 2);
                     this.enemiesSlow = true;

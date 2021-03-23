@@ -1,10 +1,10 @@
 package uas.lntv.pacmangame.Maps;
 
 
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
-import java.util.Random;
+
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
@@ -19,7 +19,7 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 public class GameMap extends Map {
     MapScreen screen;
 
-    ArrayList<Vector3> collectablesPos = new ArrayList<>();
+    ArrayList<Vector2> collectablesPos = new ArrayList<>();
 	
 
     /**
@@ -34,33 +34,49 @@ public class GameMap extends Map {
         this.screen = screen;
 
         //Collectables Positions on the map
-        collectablesPos.add(new Vector3(1, 21, 0));
-        collectablesPos.add(new Vector3(1, 36, 0));
-        collectablesPos.add(new Vector3(26, 21, 0));
-        collectablesPos.add(new Vector3(26, 36, 0));
+        collectablesPos.add(new Vector2(1, 21));
+        collectablesPos.add(new Vector2(1, 36));
+        collectablesPos.add(new Vector2(26, 21));
+        collectablesPos.add(new Vector2(26, 36));
 
-        for (Vector3 pos: collectablesPos) {
+        for (Vector2 pos: collectablesPos) {
             matrix[(int) pos.x][(int) pos.y].placeItem(Tile.Item.EMPTY);
             layerCollect.setCell((int) pos.x, (int) pos.y, null);
         }
-        generateSpecialItem();
+        for(int i = 0 ; i< 4; i++){
+            generateSpecialItem();
+        }
         generateCollectables(Tile.Item.DOT, 150);
     }
 
     /**
-     * generates Collectables (Not Dots!)
+     * This methode looks for special Items on the map an will generate a new special item in a free slot
+     * The selection of which item to generate will be decided via an algorithm which is loosly based on the golden ratio.
+     * if a certain item already exists the likelihood of it spawning will decrease further.
      */
     public void generateSpecialItem(){
         ArrayList<Tile.Item> exsitingItems = new ArrayList<Tile.Item>();
-        for (Vector3 pos: collectablesPos) {
+
+        //initializes two lists: itemList = all possible Items; existingItems= all exsisting items on the map
+        Tile.Item[] tmpList = Tile.Item.values();
+        ArrayList<Tile.Item> itemList = new ArrayList<Tile.Item>();
+        for(int i = 2; i<Tile.Item.values().length; i++){
+            itemList.add(tmpList[i]);
+            exsitingItems.add(Tile.Item.EMPTY);
+        }
+
+        //Looks for Items which are already on the map and adds them to the list
+        for (Vector2 pos: collectablesPos) {
             if(matrix[(int) pos.x][(int) pos.y].isItem()){
-                exsitingItems.add(matrix[(int) pos.x][(int) pos.y].getItem());
-            }else{
-                exsitingItems.add(Tile.Item.EMPTY);
+                Tile.Item exists = matrix[(int) pos.x][(int) pos.y].getItem();
+                int index = itemList.indexOf(exists);
+                exsitingItems.add(index, exists);
             }
         }
+
+        // Creates a new special Item on the Map
         boolean created = false;
-        for (Vector3 pos: collectablesPos) {
+        for (Vector2 pos: collectablesPos) {
             if(!matrix[(int) pos.x][(int) pos.y].isItem() && !created){
                 Tile.Item newItem = newItem(exsitingItems);
                 layerCollect.setCell((int) pos.x, (int) pos.y, createItem(newItem));
@@ -69,6 +85,7 @@ public class GameMap extends Map {
             }
         }
     }
+
     /**
      * generates all simple dots/scorepoints which can be collected by Pac-Man.
      * It does this by iterating through the tile matrix and placing items by chance (default: 50% chance) until it reaches a total amount of items.
@@ -95,31 +112,6 @@ public class GameMap extends Map {
         }
     }
 
-    public void generateItems(){
-        for(Vector3 position : collectablesPos) generateSpecialItem();
-    }
-
-    /**
-     * Generates an item based on priority/percentage on one of the four spots on the map.
-     */
-    /*@Override
-    public void generateRandomItem(){
-        Random random = new Random();
-        Vector3 position = collectablesPos.get(random.nextInt(4));
-        if(!(matrix[(int)position.x][(int)position.y].isItem())) generateRandomItem(position);
-    }*/
-
-    /**
-     * generates a random item on a certain position
-     * @param position Vector3 with map coordinates
-     */
-    /*
-    @Override
-    private void generateRandomItem(Vector3 position){
-        Tile.Item random = randomItem();
-        layerCollect.setCell((int)position.x, (int)position.y, createItem(random));
-        matrix[(int)position.x][(int)position.y].placeItem(random);
-    }*/
 
     /**
      * It will generate an array that represents a percentage cake that includes every item based on its specific priority
@@ -149,7 +141,7 @@ public class GameMap extends Map {
                     // redistributes the rest to the rarer items
                     while (rest > 0){
                         if(i < percentList.length-1){
-                            int perItem = (int) rest / percentList.length-i;
+                            int perItem = (int) rest / percentList.length-i-1;
                             if(perItem >= 1){
                                 for(int j = i+1; j < percentList.length; j++){
                                     percentList[j] += perItem;
@@ -170,7 +162,6 @@ public class GameMap extends Map {
                 }
             }
         }
-        int no = 0;
 
         //destributes the percentages to a array[100]
         Tile.Item[] percentCake = new Tile.Item[100];
@@ -181,10 +172,11 @@ public class GameMap extends Map {
                 percentList[j-2]--;
             }
             else{
-                if(j == itemList.length-1) {
+                if(j == itemList.length-1) percentCake[i] = itemList[j];
+                else {
+                    j++;
                     percentCake[i] = itemList[j];
                 }
-                else j++;
             }
         }
 
@@ -259,7 +251,7 @@ public class GameMap extends Map {
     @Override
     public int countItems(){
         int count = 0;
-        for(Vector3 position : collectablesPos){
+        for(Vector2 position : collectablesPos){
             if(matrix[(int)position.x][(int)position.y].isItem()) count++;
         }
         return count;

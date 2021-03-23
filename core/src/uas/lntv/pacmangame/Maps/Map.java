@@ -160,6 +160,9 @@ public abstract class Map {
                 region.setRegionY(0);
                 region.setRegionHeight(32);
                 break;
+            default:
+                int i = 0;
+                break;
         }
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         TiledMapTile t = new Tile(region);

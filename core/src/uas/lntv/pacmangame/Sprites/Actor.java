@@ -141,15 +141,15 @@ public abstract class Actor {
         ){
             prevDirection = direction;
             if (nextDirection != direction
-                    && screen.map.getTile(xPosition, yPosition, nextDirection).type != Tile.Type.WALL
-                    && !( this instanceof Enemy && screen.map.getTile(xPosition, yPosition, nextDirection).isOccupiedByGhost() )
+                    && Map.getTile(xPosition, yPosition, nextDirection).type != Tile.Type.WALL
+                    && !( this instanceof Enemy && Map.getTile(xPosition, yPosition, nextDirection).isOccupiedByGhost() )
             ) {
                 if (xPosition == Map.getTile(xPosition, yPosition).getX() && yPosition == Map.getTile(xPosition, yPosition).getY()) {
                     direction = nextDirection;
                 }
             }
 
-            Tile tempTile = screen.map.getTile(xPosition, yPosition, direction);
+            Tile tempTile = Map.getTile(xPosition, yPosition, direction);
             switch (direction) {
                 case RIGHT:
                     if (tempTile.type != Tile.Type.WALL) {

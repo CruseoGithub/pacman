@@ -35,6 +35,10 @@ public class GameMap extends Map {
         collectablesPos.add(new Vector3(26, 21, 0));
         collectablesPos.add(new Vector3(26, 36, 0));
 
+        for (Vector3 pos: collectablesPos) {
+            matrix[(int) pos.x][(int) pos.y].placeItem(Tile.Item.EMPTY);
+            layerCollect.setCell((int) pos.x, (int) pos.y, null);
+        }
         generateSpecialItem();
         generateCollectables(Tile.Item.DOT, 150);
     }
@@ -51,20 +55,40 @@ public class GameMap extends Map {
                 exsitingItems.add(Tile.Item.EMPTY);
             }
         }
-
-
-        /*for(int x = 0; x < mapWidth; x++){
-            for(int y = 0; y < mapHeight; y++){
-                //Generate item on the map
-                for (Vector3 pos: collectablesPos) {
-                    if(x == pos.x && y == pos.y){
-                        layerCollect.setCell(x, y, createItem(Tile.Item.HUNTER));
-                        matrix[x][y].placeItem(Tile.Item.HUNTER);
+        boolean created = false;
+        for (Vector3 pos: collectablesPos) {
+            if(!matrix[(int) pos.x][(int) pos.y].isItem() && !created){
+                Tile.Item newItem = newItem(exsitingItems);
+                layerCollect.setCell((int) pos.x, (int) pos.y, createItem(newItem));
+                matrix[(int) pos.x][(int) pos.y].placeItem(newItem);
+                created = true;
+            }
+        }
+    }
+    /**
+     * generates all simple dots/scorepoints which can be collected by Pac-Man.
+     * It does this by iterating through the tile matrix and placing items by chance (default: 50% chance) until it reaches a total amount of items.
+     * @param amount the total amount of Dots/Points generated on the map
+     */
+    public void generateCollectables(Tile.Item item, int amount){
+        while(amount > 0){
+            for(int x = 0; x < mapWidth; x++){
+                for(int y = 0; y < mapHeight; y++){
+                    if(layerWall.getCell(x, y) == null && amount >0 && layerCollect.getCell(x,y) == null){
+                        if (layerPath.getCell(x, y) != null & !matrix[x][y].isItem() && x > 0 && x < (mapWidth - 2)) { //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
+                            int max = 1;
+                            int min = 0;
+                            int random = (int) (Math.random() * (max - min + 1) + min); // random ist entweder 0 oder 1
+                            if (random > 0) {
+                                layerCollect.setCell(x, y, createItem(item));
+                                matrix[x][y].placeItem(item);
+                                amount--;
+                            }
+                        }
                     }
                 }
             }
-        }*/
-        //generateRandomItem();
+        }
     }
 
     /**
@@ -84,15 +108,18 @@ public class GameMap extends Map {
      * From this array it will choose a random item.
      * @return returns a random item based on percentage ( percentage is based on the golden ratio )
      */
-    public Tile.Item randomItem(ArrayList<Tile.Item> exsitingItems){
+    public Tile.Item newItem(ArrayList<Tile.Item> exsitingItems){
         Tile.Item[] itemList = Tile.Item.values();
 
         int[] percentList = getPercentage(Tile.Item.values().length-2);
 
         int threshold = 10;
         for(int i = 0; i < percentList.length; i++){
+
+            //If the item already exists
             if(exsitingItems.get(i) != Tile.Item.EMPTY){
                 int rest = 0;
+                //if the percentage of an item is above the minimum threshold
                 if(percentList[i] > threshold){
                     if(percentList[i] % 2 == 0){
                         percentList[i] /= 2;
@@ -101,22 +128,24 @@ public class GameMap extends Map {
                         percentList[i] =(int)(percentList[i] / 2);
                         rest = percentList[i]+1;
                     }
-
+                    // redistributes the rest to the rarer items
                     while (rest > 0){
                         if(i < percentList.length-1){
                             int perItem = (int) rest / percentList.length-i;
-                            if(perItem > 1){
+                            if(perItem >= 1){
                                 for(int j = i+1; j < percentList.length; j++){
                                     percentList[j] += perItem;
                                     rest -= perItem;
                                 }
                             } else {
-                                //In case rest is uneven it will give 1% to a Life Item
+                                //In case the rest can not be destributed to all the rarest item will get the rest ( rest < sum(all items) )
                                 percentList[5] += rest; // 5 = LIFE
                                 rest = 0;
                             }
                         }else{
-                            percentList[percentList.length-1]
+                            //if the current item is the last item it gives the rest to itself
+                            percentList[percentList.length-1] = rest;
+                            rest = 0;
                         }
 
                     }
@@ -202,32 +231,6 @@ public class GameMap extends Map {
             }
         }
         return percentList;
-    }
-
-    /**
-     * generates all simple dots/scorepoints which can be collected by Pac-Man.
-     * It does this by iterating through the tile matrix and placing items by chance (default: 50% chance) until it reaches a total amount of items.
-     * @param amount the total amount of Dots/Points generated on the map
-     */
-    public void generateCollectables(Tile.Item item, int amount){
-        while(amount > 0){
-            for(int x = 0; x < mapWidth; x++){
-                for(int y = 0; y < mapHeight; y++){
-                    if(layerWall.getCell(x, y) == null && amount >0 && layerCollect.getCell(x,y) == null){
-                        if (layerPath.getCell(x, y) != null & !matrix[x][y].isItem() && x > 0 && x < (mapWidth - 2)) { //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
-                            int max = 1;
-                            int min = 0;
-                            int random = (int) (Math.random() * (max - min + 1) + min); // random ist entweder 0 oder 1
-                            if (random > 0) {
-                                layerCollect.setCell(x, y, createItem(item));
-                                matrix[x][y].placeItem(item);
-                                amount--;
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     /**

@@ -181,7 +181,7 @@ public class GameScreen extends MapScreen {
         if(itemTaken){
             itemCoolDown -= Gdx.graphics.getDeltaTime();
             if(itemCoolDown < 0){
-                this.map.generateRandomItem();
+                this.map.generateSpecialItem();
                 itemTaken = false;
             }
         }

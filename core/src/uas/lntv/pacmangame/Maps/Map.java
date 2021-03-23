@@ -170,6 +170,10 @@ public abstract class Map {
     public void generateRandomItem() {
     }
 
+    public void generateSpecialItem(){
+
+    }
+
     /**
      * get a tile by position
      * @param xPosition x-position of the tile

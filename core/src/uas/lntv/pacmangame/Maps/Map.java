@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector3;
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Sprites.Actor;
@@ -168,7 +169,8 @@ public abstract class Map {
 
     public void generateRandomItem() {
     }
-
+    public void generateRandomItem(Vector3 position) {
+    }
     public void generateSpecialItem(){
 
     }
@@ -220,6 +222,10 @@ public abstract class Map {
         tile.type = type;
     }
 
+    public int countItems() {
+        return 0;
+    }
+
     /**
      * this will delete a collectable from the map and plays a sound
      * @param tile specify the tile from which you want to collect an item
@@ -231,7 +237,6 @@ public abstract class Map {
                 null
         );
     }
-
 
 }
 

@@ -34,7 +34,6 @@ public class GameScreen extends MapScreen {
     }
     public boolean isPacManSuper() { return pacManSuper; }
 
-<<<<<<< HEAD
     /**
      * Creates a screen with(out) HUD, PacMan, Ghost(s).
      * According to current level, there are more (difficult) Ghosts.
@@ -42,8 +41,7 @@ public class GameScreen extends MapScreen {
      * @param assets asset management
      * @param path the path where the map is stored
      */
-=======
->>>>>>> dev_Denis
+
     public GameScreen(PacManGame game, Assets assets, String path) {
         super(game, assets, path, Type.GAME);
 

@@ -15,7 +15,7 @@ import uas.lntv.pacmangame.Sprites.Actor;
 /**
  * This class is generates a Tiled Map which can be loaded onto a Screen.
  * It provides a matrix which holds information about map dimensions and layout (Path/Wall/Collectable)
- * This class is abtract and should be implemented as a GameMap or MenuMap
+ * This class is abstract and should be implemented as a GameMap or MenuMap
  */
 public abstract class Map {
     private final boolean firstMap;
@@ -42,7 +42,7 @@ public abstract class Map {
 
     public static Tile[][] getMatrix(){ return matrix; }
 
-    public Vector3 randomItemPos;
+    //public Vector3 randomItemPos;
 
     /**
      * The constructor loads the graphic layers of the tmx-Mapfile and sets them up into a Maprenderer
@@ -74,7 +74,7 @@ public abstract class Map {
         //layerPath.setOpacity(0.5f);
         matrix = new Tile[mapWidth][mapHeight];
         generateScreenMap();
-        randomItemPos = new Vector3(9, 33, 0);
+        //randomItemPos = new Vector3(9, 33, 0);
     }
 
     /**
@@ -104,9 +104,9 @@ public abstract class Map {
     /**
      * generates all simple dots/scorepoints which can be collected by Pac-Man.
      * Should be implemented in child classes.
-     * @param total_Dots the total amount of Dots/Points generated on the map
+     * @param amount the total amount of Dots/Points generated on the map
      */
-    public abstract void generateDots(int total_Dots);
+    public abstract void generateCollectables(Tile.Item item, int amount);
 
     /**
      * this is a helper-method. it generates a cell with a textureregion depending on type specified.
@@ -160,6 +160,9 @@ public abstract class Map {
                 region.setRegionY(0);
                 region.setRegionHeight(32);
                 break;
+            default:
+                int i = 0;
+                break;
         }
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         TiledMapTile t = new Tile(region);
@@ -168,6 +171,11 @@ public abstract class Map {
     }
 
     public void generateRandomItem() {
+    }
+    public void generateRandomItem(Vector3 position) {
+    }
+    public void generateSpecialItem(){
+
     }
 
     /**
@@ -217,6 +225,10 @@ public abstract class Map {
         tile.type = type;
     }
 
+    public int countItems() {
+        return 0;
+    }
+
     /**
      * this will delete a collectable from the map and plays a sound
      * @param tile specify the tile from which you want to collect an item
@@ -228,7 +240,6 @@ public abstract class Map {
                 null
         );
     }
-
 
 }
 

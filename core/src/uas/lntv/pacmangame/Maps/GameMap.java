@@ -1,8 +1,10 @@
 package uas.lntv.pacmangame.Maps;
 
-import com.badlogic.gdx.math.Vector3;
+
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
+
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.PacManGame;
@@ -16,8 +18,10 @@ import uas.lntv.pacmangame.Sprites.Enemy;
  */
 public class GameMap extends Map {
     MapScreen screen;
-    ArrayList<Vector3> hunterItems = new ArrayList<>();
+
+    ArrayList<Vector2> collectablesPos = new ArrayList<>();
 	
+
     /**
      * does the same as the parent constructor.
      * Additionally it generates collectables and provides a method to collect them.
@@ -29,47 +33,228 @@ public class GameMap extends Map {
         super(path, assets);
         this.screen = screen;
 
-        //Hunter Item Positions
-        hunterItems.add(new Vector3(1, 21, 0));
-        hunterItems.add(new Vector3(1, 36, 0));
-        hunterItems.add(new Vector3(26, 21, 0));
-        hunterItems.add(new Vector3(26, 36, 0));
+        //Collectables Positions on the map
+        collectablesPos.add(new Vector2(1, 21));
+        collectablesPos.add(new Vector2(1, 36));
+        collectablesPos.add(new Vector2(26, 21));
+        collectablesPos.add(new Vector2(26, 36));
 
-        generateItems();
-        generateDots(150);
+        for (Vector2 pos: collectablesPos) {
+            matrix[(int) pos.x][(int) pos.y].placeItem(Tile.Item.EMPTY);
+            layerCollect.setCell((int) pos.x, (int) pos.y, null);
+        }
+        for(int i = 0 ; i< 4; i++){
+            generateSpecialItem();
+        }
+        generateCollectables(Tile.Item.DOT, 150);
     }
 
     /**
-     * generates Collectables (Not Dots!)
+     * This methode looks for special Items on the map an will generate a new special item in a free slot
+     * The selection of which item to generate will be decided via an algorithm which is loosly based on the golden ratio.
+     * if a certain item already exists the likelihood of it spawning will decrease further.
      */
-    public void generateItems(){
-        for(int x = 0; x < mapWidth; x++){
-            for(int y = 0; y < mapHeight; y++){
-                //Generate hunter items on the map
-                for (Vector3 pos: hunterItems) {
-                    if(x == pos.x && y == pos.y){
-                        layerCollect.setCell(x, y, createItem(Tile.Item.HUNTER));
-                        matrix[x][y].placeItem(Tile.Item.HUNTER);
+    public void generateSpecialItem(){
+        ArrayList<Tile.Item> exsitingItems = new ArrayList<Tile.Item>();
+
+        //initializes two lists: itemList = all possible Items; existingItems= all exsisting items on the map
+        Tile.Item[] tmpList = Tile.Item.values();
+        ArrayList<Tile.Item> itemList = new ArrayList<Tile.Item>();
+        for(int i = 2; i<Tile.Item.values().length; i++){
+            itemList.add(tmpList[i]);
+            exsitingItems.add(Tile.Item.EMPTY);
+        }
+
+        //Looks for Items which are already on the map and adds them to the list
+        for (Vector2 pos: collectablesPos) {
+            if(matrix[(int) pos.x][(int) pos.y].isItem()){
+                Tile.Item exists = matrix[(int) pos.x][(int) pos.y].getItem();
+                int index = itemList.indexOf(exists);
+                exsitingItems.add(index, exists);
+            }
+        }
+
+        // Creates a new special Item on the Map
+        boolean created = false;
+        for (Vector2 pos: collectablesPos) {
+            if(!matrix[(int) pos.x][(int) pos.y].isItem() && !created){
+                Tile.Item newItem = newItem(exsitingItems);
+                layerCollect.setCell((int) pos.x, (int) pos.y, createItem(newItem));
+                matrix[(int) pos.x][(int) pos.y].placeItem(newItem);
+                created = true;
+            }
+        }
+    }
+
+    /**
+     * generates all simple dots/scorepoints which can be collected by Pac-Man. (would also work for special items)
+     * It does this by iterating through the tile matrix and placing items by chance (default: 50% chance) until it reaches a total amount of items.
+     * @param amount the total amount of Dots/Points generated on the map
+     */
+    public void generateCollectables(Tile.Item item, int amount) {
+        while (amount > 0) {
+            for (int x = 0; x < mapWidth; x++) {
+                for (int y = 0; y < mapHeight; y++) {
+                    if (layerWall.getCell(x, y) == null && amount > 0 && layerCollect.getCell(x, y) == null) {
+                        if (layerPath.getCell(x, y) != null & !matrix[x][y].isItem() && x > 0 && x < (mapWidth - 2)) { //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
+                            int max = 1;
+                            int min = 0;
+                            int random = (int) (Math.random() * (max - min + 1) + min); // random ist entweder 0 oder 1
+                            if (random > 0) {
+                                layerCollect.setCell(x, y, createItem(item));
+                                matrix[x][y].placeItem(item);
+                                amount--;
+                            }
+                        }
                     }
                 }
             }
         }
-        generateRandomItem();
     }
 
-    @Override
-    public void generateRandomItem(){
-            Tile.Item random = randomItem();
-            layerCollect.setCell((int)randomItemPos.x, (int)randomItemPos.y, createItem(random));
-            matrix[(int)randomItemPos.x][(int)randomItemPos.y].placeItem(random);
-    }
 
-    public Tile.Item randomItem(){
-        int min = 2; // 0 and 1 are not special collectibles: 0 = Empty ; 1 = Dot/Scorepoint
-        int max = Tile.Item.values().length -1;
-        int random = (int) (Math.random() * (max - min + 1) + min); // random ist zwischen 1 und 4
+    /**
+     * It will generate an array that represents a percentage cake that includes every item based on its specific priority
+     * From this array it will choose a random item.
+     * @return returns a random item based on percentage ( percentage is based on the golden ratio )
+     */
+    public Tile.Item newItem(ArrayList<Tile.Item> exsitingItems){
         Tile.Item[] itemList = Tile.Item.values();
-        return itemList[random];
+
+        int[] percentList = getPercentage(Tile.Item.values().length-2);
+
+        int threshold = 10;
+        for(int i = 0; i < percentList.length; i++){
+
+            //If the item already exists
+            if(exsitingItems.get(i) != Tile.Item.EMPTY){
+                int rest = 0;
+                //if the percentage of an item is above the minimum threshold
+                if(percentList[i] > threshold){
+                    if(percentList[i] % 2 == 0){
+                        percentList[i] /= 2;
+                        rest = percentList[i];
+                    }else{
+                        percentList[i] =(int)(percentList[i] / 2);
+                        rest = percentList[i]+1;
+                    }
+                    // redistributes the rest to the rarer items
+                    while (rest > 0){
+                        if(i < percentList.length-1){
+                            int perItem = (int) rest / percentList.length-i-1;
+                            if(perItem >= 1){
+                                for(int j = i+1; j < percentList.length; j++){
+                                    percentList[j] += perItem;
+                                    rest -= perItem;
+                                }
+                            } else {
+                                //In case the rest can not be destributed to all the rarest item will get the rest ( rest < sum(all items) )
+                                percentList[0] += rest; // 5 = LIFE
+                                rest = 0;
+                            }
+                        }else{
+                            //if the current item is the last item it gives the rest to itself
+                            percentList[percentList.length-1] = rest;
+                            rest = 0;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        //destributes the percentages to a array[100]
+        Tile.Item[] percentCake = new Tile.Item[100];
+        int j = 2;
+        for(int i = 0; i < 100; i++){
+            if(percentList[j-2] > 0) {
+                percentCake[i] = itemList[j];
+                percentList[j-2]--;
+            }
+            else{
+                if(j == itemList.length-1) percentCake[i] = itemList[j];
+                else {
+                    j++;
+                    percentCake[i] = itemList[j];
+                }
+            }
+        }
+
+        //Picks a random item from the array
+        int min = 0;
+        int max = percentCake.length-1; //length is 100
+        int random = (int) (Math.random() * (max - min + 1) + min);
+        return percentCake[random];
+    }
+
+    /**
+     * This calculates the golden ratio based on the number of items
+     * @param items total number of items
+     * @return returns the golden ratio
+     */
+    public static double goldenRatio(int items) {
+        if (items == 0) return 1;
+        return 1.0 + 1.0 / goldenRatio(items-1);
+    }
+
+    /**
+     * it calculates a percentage portion for each item based on the golden ration. (it wont amount to exactly 100% though)
+     * Any left over percentages will be destributed equaly to every item
+     * @param items total number of items
+     * @return returns a list of percentages for each item
+     */
+    public static int[] getPercentage(int items) {
+        double ratio = goldenRatio(items);
+
+        //Calculating every percentage portion fore each item
+        int[] percentList = new int[items];
+        double max_old, max_new, percent;
+        max_old = 100.0;
+        for (int i = 0; i < items; i++){
+            max_new = max_old / ratio;
+            percent = max_old - max_new;
+
+            //fractions bigger than one half shall be rounded up to the nearest whole number;
+            //fractions smaller than one half shall be rounded down to the nearest whole number.
+            if((percent-(int)percent) < 0.5) percentList[i] = (int)percent;
+            else percentList[i] = (int)percent + 1;
+            max_old = max_new;
+        }
+        int total = 0;
+        for(double p : percentList){
+            total += p;
+        }
+
+        //if the calculation did not add up to 100% the remaining percentage will be distributed to every item
+        if(total < 100){
+            total = 100 - total;
+            while (total > 0){
+                int perItem = total/items;
+                if(perItem > 1){
+                    for(int i = 0; i < percentList.length; i++){
+                        percentList[i] += perItem;
+                        total -= perItem;
+                    }
+                } else {
+                    percentList[0] += total;
+                    total = 0;
+                }
+            }
+        }
+        return percentList;
+    }
+
+    /**
+     * counts the number of items that are placed on the map already (no dots)
+     * @return number of items (0-4)
+     */
+    @Override
+    public int countItems(){
+        int count = 0;
+        for(Vector2 position : collectablesPos){
+            if(matrix[(int)position.x][(int)position.y].isItem()) count++;
+        }
+        return count;
     }
 
     /**

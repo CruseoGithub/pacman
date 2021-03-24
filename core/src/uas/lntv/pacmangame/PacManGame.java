@@ -28,9 +28,7 @@ public class PacManGame extends Game {
 		setScreen(new SplashScreen(this, assets));
 	}
 
-	public static int getLevel(){
-		return level;
-	}
+	public static int getLevel(){ return level; }
 
 	public static void levelUp(){
 		level++;

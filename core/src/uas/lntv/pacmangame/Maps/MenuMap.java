@@ -28,7 +28,7 @@ public class MenuMap extends Map {
         HIGHLIGHT_LAYERS.add((TiledMapTileLayer) TMX_MAP.getLayers().get("SFXOff"));
         HIGHLIGHT_LAYERS.add((TiledMapTileLayer) TMX_MAP.getLayers().get("Joystick"));
         HIGHLIGHT_LAYERS.add((TiledMapTileLayer) TMX_MAP.getLayers().get("Buttons"));
-        generateDots(0);
+        generateCollectables(Tile.Item.DOT,0);
     }
 
 
@@ -36,14 +36,14 @@ public class MenuMap extends Map {
 
     /**
      * searches for collectables in the tmx-mapfile layer and adds them to the tile matrix
-     * @param total_Dots the total amount of Dots/Points generated on the map
+     * @param amount the total amount of Dots/Points generated on the map
      */
     @Override
-    public void generateDots(int total_Dots) {
+    public void generateCollectables(Tile.Item item, int amount) {
         for(int x = 0; x < mapWidth; x++){
             for(int y = 0; y < mapHeight; y++){
                 if(layerCollect.getCell(x, y) != null){
-                    matrix[x][y].placeItem(Tile.Item.DOT);
+                    matrix[x][y].placeItem(item);
                 }
             }
         }

@@ -23,6 +23,7 @@ import uas.lntv.pacmangame.Sprites.PacMan;
  * Local variables used in this class
  */
 public class Hud {
+
     public Stage stage;
     private final Assets assets;
     private final MapScreen SCREEN;

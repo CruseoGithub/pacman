@@ -55,14 +55,14 @@ public class GameMap extends Map {
      * if a certain item already exists the likelihood of it spawning will decrease further.
      */
     public void generateSpecialItem(){
-        ArrayList<Tile.Item> exsitingItems = new ArrayList<>();
+        ArrayList<Tile.Item> existingItems = new ArrayList<>();
 
         //initializes two lists: itemList = all possible Items; existingItems= all exsisting items on the map
         Tile.Item[] tmpList = Tile.Item.values();
         ArrayList<Tile.Item> itemList = new ArrayList<>();
         for(int i = 2; i<Tile.Item.values().length; i++){
             itemList.add(tmpList[i]);
-            exsitingItems.add(Tile.Item.EMPTY);
+            existingItems.add(Tile.Item.EMPTY);
         }
 
         //Looks for Items which are already on the map and adds them to the list
@@ -70,7 +70,7 @@ public class GameMap extends Map {
             if(matrix[(int) pos.x][(int) pos.y].isItem()){
                 Tile.Item exists = matrix[(int) pos.x][(int) pos.y].getItem();
                 int index = itemList.indexOf(exists);
-                exsitingItems.add(index, exists);
+                existingItems.add(index, exists);
             }
         }
 
@@ -78,7 +78,7 @@ public class GameMap extends Map {
         boolean created = false;
         for (Vector2 pos: collectablesPos) {
             if(!matrix[(int) pos.x][(int) pos.y].isItem() && !created){
-                Tile.Item newItem = newItem(exsitingItems);
+                Tile.Item newItem = newItem(existingItems);
                 layerCollect.setCell((int) pos.x, (int) pos.y, createItem(newItem));
                 matrix[(int) pos.x][(int) pos.y].placeItem(newItem);
                 created = true;
@@ -118,7 +118,7 @@ public class GameMap extends Map {
      * From this array it will choose a random item.
      * @return returns a random item based on percentage ( percentage is based on the golden ratio )
      */
-    public Tile.Item newItem(ArrayList<Tile.Item> exsitingItems){
+    public Tile.Item newItem(ArrayList<Tile.Item> existingItems){
         Tile.Item[] itemList = Tile.Item.values();
 
         int[] percentList = getPercentage(Tile.Item.values().length-2);
@@ -127,7 +127,7 @@ public class GameMap extends Map {
         for(int i = 0; i < percentList.length; i++){
 
             //If the item already exists
-            if(exsitingItems.get(i) != Tile.Item.EMPTY){
+            if(existingItems.get(i) != Tile.Item.EMPTY){
                 int rest;
                 //if the percentage of an item is above the minimum threshold
                 if(percentList[i] > threshold){
@@ -135,13 +135,13 @@ public class GameMap extends Map {
                         percentList[i] /= 2;
                         rest = percentList[i];
                     }else{
-                        percentList[i] =(int)(percentList[i] / 2);
+                        percentList[i] = percentList[i] / 2;
                         rest = percentList[i]+1;
                     }
                     // redistributes the rest to the rarer items
                     while (rest > 0){
                         if(i < percentList.length-1){
-                            int perItem = (int) rest / percentList.length-i-1;
+                            int perItem = rest / percentList.length-i-1;
                             if(perItem >= 1){
                                 for(int j = i+1; j < percentList.length; j++){
                                     percentList[j] += perItem;
@@ -172,11 +172,8 @@ public class GameMap extends Map {
                 percentList[j-2]--;
             }
             else{
-                if(j == itemList.length-1) percentCake[i] = itemList[j];
-                else {
-                    j++;
-                    percentCake[i] = itemList[j];
-                }
+                if(j != itemList.length-1) j++;
+                percentCake[i] = itemList[j];
             }
         }
 

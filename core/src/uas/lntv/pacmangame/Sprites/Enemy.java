@@ -228,11 +228,11 @@ public class Enemy extends Actor {
             return Direction.RIGHT;
         }
         if(hunter.getXPosition() < 13* TILE_SIZE){
-            if(hunter.getYPosition() < 30* TILE_SIZE) aStar = new Pathfinder(this, 26* TILE_SIZE, 43* TILE_SIZE, false);
-            if(hunter.getYPosition() >= 30* TILE_SIZE) aStar = new Pathfinder(this, 26* TILE_SIZE, 15* TILE_SIZE, false);
+            if(hunter.getYPosition() < 30* TILE_SIZE) aStar = new Pathfinder(this, 26* TILE_SIZE, 43* TILE_SIZE);
+            if(hunter.getYPosition() >= 30* TILE_SIZE) aStar = new Pathfinder(this, 26* TILE_SIZE, 15* TILE_SIZE);
         } else{
-            if(hunter.getYPosition() < 30* TILE_SIZE) aStar = new Pathfinder(this, TILE_SIZE, 43* TILE_SIZE, false);
-            if(hunter.getYPosition() >= 30* TILE_SIZE) aStar = new Pathfinder(this, TILE_SIZE, 15* TILE_SIZE, false);
+            if(hunter.getYPosition() < 30* TILE_SIZE) aStar = new Pathfinder(this, TILE_SIZE, 43* TILE_SIZE);
+            if(hunter.getYPosition() >= 30* TILE_SIZE) aStar = new Pathfinder(this, TILE_SIZE, 15* TILE_SIZE);
         }
         Tile temp = aStar.aStarResult();
         if(temp == Map.getTile(xPosition, yPosition) || temp == null) return direction;
@@ -248,7 +248,7 @@ public class Enemy extends Actor {
      * @return One of the four directions
      */
     private Direction findHome(){
-        aStar = new Pathfinder(this, homeX, homeY, true);
+        aStar = new Pathfinder(this, homeX, homeY);
         Tile temp = aStar.aStarResult();
         if(temp.getY() > this.getYPosition()) return Direction.UP;
         if(temp.getY() < this.getYPosition()) return Direction.DOWN;

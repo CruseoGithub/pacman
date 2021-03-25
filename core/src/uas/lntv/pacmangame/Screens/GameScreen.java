@@ -3,7 +3,6 @@ package uas.lntv.pacmangame.Screens;
 import com.badlogic.gdx.Gdx;
 
 import uas.lntv.pacmangame.Managers.Assets;
-import uas.lntv.pacmangame.Maps.GameMap;
 import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.PacManGame;
@@ -167,6 +166,7 @@ public class GameScreen extends MapScreen {
                 this.itemTaken = true;
                 this.itemCoolDown += 10;
                 this.hud.time += 10;
+                this.hud.resetTimeStamp();
                 break;
             case LIFE:
                 this.itemTaken = true;
@@ -184,7 +184,7 @@ public class GameScreen extends MapScreen {
     private void updateCoolDown(){
         if(itemTaken){
             itemCoolDown -= Gdx.graphics.getDeltaTime();
-            switch(((GameMap)map).countItems()){
+            switch(map.countItems()){
                 case 4:
                     itemTaken = false;
                     break;

@@ -41,6 +41,7 @@ public class Hud {
     private boolean warned = false;
     private boolean red = false;
     private float timeStamp;
+    private final int WARNING_TIME = 30;
 
     /**
      * (Jabba)The HUD
@@ -128,13 +129,13 @@ public class Hud {
         pacman.update(dt);
         pacman.drawLife();
     }
+
     /**
      * Look of TIME changes according to time left
      * Number of PacMans in HUD change depending on lives left
      */
     @SuppressWarnings("DefaultLocale")
     public void update() {
-        int WARNING_TIME = 30;
         if (time < WARNING_TIME) {
             if (!warned) {
                 if (PrefManager.isSfxOn()) assets.manager.get(assets.ALARM).play(0.4f);
@@ -201,6 +202,15 @@ public class Hud {
         pacman.resetTexturePosition();
         pacman.setXPosition(pacman.getHomeX());
         pacman.setYPosition(pacman.getHomeY());
+    }
+
+    public void resetTimeStamp() {
+        if (time > WARNING_TIME){
+            TIME_TEXT_LABEL.setColor(Color.WHITE);
+            TIME_LABEL.setColor(Color.WHITE);
+            red = false;
+        }
+        timeStamp = time;
     }
 
 

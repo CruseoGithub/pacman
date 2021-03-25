@@ -20,7 +20,6 @@ public class Pathfinder {
     private final int MAP_WIDTH;
     private final int MAP_HEIGHT;
     private final int TILE_SIZE;
-    private final boolean FIND_HOME;
     private boolean noWay = false;
 
     /**
@@ -41,7 +40,6 @@ public class Pathfinder {
         this.HUNTER = hunter;
         this.TARGET_X = prey.getXPosition();
         this.TARGET_Y = prey.getYPosition();
-        this.FIND_HOME = false;
         int i = 0;
         for(int x = 0; x < MAP_WIDTH; x++){
             for(int y = 0; y < MAP_HEIGHT; y++){
@@ -68,7 +66,7 @@ public class Pathfinder {
      * Does the same as the first constructor, but uses x-/y-coordinates instead of an actor.
      * @see Pathfinder
      */
-    public Pathfinder(Enemy hunter, int targetX, int targetY, boolean findHome){
+    public Pathfinder(Enemy hunter, int targetX, int targetY){
         this.MAP_WIDTH = Map.getMapWidth();
         this.MAP_HEIGHT = Map.getMapHeight();
         this.TILE_SIZE = Map.getTileSize();
@@ -77,7 +75,6 @@ public class Pathfinder {
         this.HUNTER = hunter;
         this.TARGET_X = targetX;
         this.TARGET_Y = targetY;
-        this.FIND_HOME = findHome;
         int i = 0;
         for(int x = 0; x < MAP_WIDTH; x++){
             for(int y = 0; y < MAP_HEIGHT; y++){
@@ -176,7 +173,7 @@ public class Pathfinder {
                         && !(up.isOccupiedByGhost())
                         )
                         || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(up.isOccupiedByPacMan()))
-                    ) || FIND_HOME
+                    ) || HUNTER.getState() == Actor.State.HOMING
                     )
             ){
                 up.setCost(min.getCost() + 1);
@@ -192,7 +189,7 @@ public class Pathfinder {
                         && !(down.isOccupiedByGhost())
                         )
                         || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(down.isOccupiedByPacMan()))
-                    ) || FIND_HOME
+                    ) || HUNTER.getState() == Actor.State.HOMING
                     )
             ){
                 down.setCost(min.getCost() + 1);
@@ -208,7 +205,7 @@ public class Pathfinder {
                         && !(left.isOccupiedByGhost())
                         )
                         || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(left.isOccupiedByPacMan()))
-                    ) || FIND_HOME
+                    ) || HUNTER.getState() == Actor.State.HOMING
                     )
             ){
                 left.setCost(min.getCost() + 1);
@@ -224,7 +221,7 @@ public class Pathfinder {
                         && !(right.isOccupiedByGhost())
                         )
                         || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(right.isOccupiedByPacMan()))
-                    ) || FIND_HOME
+                    ) || HUNTER.getState() == Actor.State.HOMING
                     )
             ){
                 right.setCost(min.getCost() + 1);

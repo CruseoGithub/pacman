@@ -55,11 +55,11 @@ public class GameMap extends Map {
      * if a certain item already exists the likelihood of it spawning will decrease further.
      */
     public void generateSpecialItem(){
-        ArrayList<Tile.Item> exsitingItems = new ArrayList<Tile.Item>();
+        ArrayList<Tile.Item> exsitingItems = new ArrayList<>();
 
         //initializes two lists: itemList = all possible Items; existingItems= all exsisting items on the map
         Tile.Item[] tmpList = Tile.Item.values();
-        ArrayList<Tile.Item> itemList = new ArrayList<Tile.Item>();
+        ArrayList<Tile.Item> itemList = new ArrayList<>();
         for(int i = 2; i<Tile.Item.values().length; i++){
             itemList.add(tmpList[i]);
             exsitingItems.add(Tile.Item.EMPTY);
@@ -128,7 +128,7 @@ public class GameMap extends Map {
 
             //If the item already exists
             if(exsitingItems.get(i) != Tile.Item.EMPTY){
-                int rest = 0;
+                int rest;
                 //if the percentage of an item is above the minimum threshold
                 if(percentList[i] > threshold){
                     if(percentList[i] % 2 == 0){
@@ -163,7 +163,7 @@ public class GameMap extends Map {
             }
         }
 
-        //destributes the percentages to a array[100]
+        //distributes the percentages to an array[100]
         Tile.Item[] percentCake = new Tile.Item[100];
         int j = 2;
         for(int i = 0; i < 100; i++){

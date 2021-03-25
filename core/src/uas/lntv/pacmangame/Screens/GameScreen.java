@@ -1,6 +1,7 @@
 package uas.lntv.pacmangame.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Maps.Map;
@@ -78,6 +79,12 @@ public class GameScreen extends MapScreen {
         if(PacManGame.getLevel() >= 30){
             ghosts.get(2).setDifficulty(Enemy.Difficulty.HARD);
         }
+    }
+
+    @Override
+    public boolean handleInput(){
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) PauseActive = true;
+        return super.handleInput();
     }
 
     @Override

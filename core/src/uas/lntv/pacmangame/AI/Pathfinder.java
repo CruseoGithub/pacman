@@ -2,6 +2,7 @@ package uas.lntv.pacmangame.AI;
 
 import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.Tile;
+import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 
@@ -31,11 +32,11 @@ public class Pathfinder {
      * @param hunter actor that wants to find a shortest path
      * @param prey target of the actor
      */
-    public Pathfinder(Enemy hunter, Actor prey){
+    public Pathfinder(MapScreen screen, Enemy hunter, Actor prey){
         this.MAP_WIDTH = Map.getMapWidth();
         this.MAP_HEIGHT = Map.getMapHeight();
         this.TILE_SIZE = Map.getTileSize();
-        this.MATRIX = Map.getMatrix();
+        this.MATRIX = screen.getMap().getMatrix();
         this.open = new Tile[(MAP_WIDTH * MAP_HEIGHT)];
         this.HUNTER = hunter;
         this.TARGET_X = prey.getXPosition();
@@ -66,11 +67,11 @@ public class Pathfinder {
      * Does the same as the first constructor, but uses x-/y-coordinates instead of an actor.
      * @see Pathfinder
      */
-    public Pathfinder(Enemy hunter, int targetX, int targetY){
+    public Pathfinder(MapScreen screen, Enemy hunter, int targetX, int targetY){
         this.MAP_WIDTH = Map.getMapWidth();
         this.MAP_HEIGHT = Map.getMapHeight();
         this.TILE_SIZE = Map.getTileSize();
-        this.MATRIX = Map.getMatrix();
+        this.MATRIX = screen.getMap().getMatrix();
         this.open = new Tile[(MAP_WIDTH * MAP_HEIGHT)];
         this.HUNTER = hunter;
         this.TARGET_X = targetX;
@@ -99,7 +100,7 @@ public class Pathfinder {
 
     private int searchHunter(){
         int i = 0;
-        while(open[i] != Map.getTile(HUNTER.getXPosition(), HUNTER.getYPosition())){
+        while(open[i] != MATRIX[HUNTER.getXPosition()][HUNTER.getYPosition()]){
             i++;
         }
         return i;
@@ -162,7 +163,7 @@ public class Pathfinder {
             noWay = true;
             return true;
         }
-        if(min == Map.getTile(TARGET_X, TARGET_Y)) return true;
+        if(min == MATRIX[TARGET_X][TARGET_Y]) return true;
         int x = min.getX() / TILE_SIZE;
         int y = min.getY() / TILE_SIZE;
         if(y < (MAP_HEIGHT - 1)) {
@@ -237,11 +238,11 @@ public class Pathfinder {
      * @return next tile from the actor on the way to its target.
      */
     public Tile aStarResult(){
-        Tile temp = Map.getTile(TARGET_X, TARGET_Y);
+        Tile temp = MATRIX[TARGET_X][TARGET_Y];
         while(true){ if(aStarAlg()) break; }
         if(noWay) return null;
-        if(temp == Map.getTile(HUNTER.getXPosition(), HUNTER.getYPosition())) return temp;
-        while(temp.getPrev() != Map.getTile(HUNTER.getXPosition(), HUNTER.getYPosition())){
+        if(temp == MATRIX[HUNTER.getXPosition()][HUNTER.getYPosition()]) return temp;
+        while(temp.getPrev() != MATRIX[HUNTER.getXPosition()][HUNTER.getYPosition()]){
             temp = temp.getPrev();
         }
         return temp;

@@ -50,7 +50,7 @@ public class PacMan extends Actor {
         animationSpeed = 0.01f;
         mouthOpen = true;
 
-        animation = new Animation(this, assets, animationSpeed, this.screen,6);
+        animation = new Animation(this, assets, animationSpeed, this.SCREEN,6);
 
         region.flip(true, false);
         this.sprite = new Sprite(region);
@@ -84,7 +84,7 @@ public class PacMan extends Actor {
      */
     @Override
     public void collide() {
-        if(((GameScreen)screen).isPacManSuper()){
+        if(((GameScreen) SCREEN).isPacManSuper()){
             if(PrefManager.isSfxOn()) assets.manager.get(assets.KILL).play(0.15f);
             PacManGame.increaseScore(50);
         } else {
@@ -93,7 +93,7 @@ public class PacMan extends Actor {
             if (PacManGame.getLives() > 1) PacManGame.die();
             else {
                 PacManGame.die();
-                super.screen.dispose();
+                super.SCREEN.dispose();
                 if (PacManGame.prefManager.addScore(PacManGame.getScore(), "Killed", PacManGame.getLevel() + 1)) {
                     game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
                 } else {
@@ -124,7 +124,7 @@ public class PacMan extends Actor {
     @Override
     public void move(){
         super.move();
-        screen.map.collect(Map.getTile(xPosition, yPosition)); //collect Dots
+        MAP.collect(MAP.getTile(xPosition, yPosition)); //collect Dots
     }
 
 }

@@ -34,13 +34,13 @@ public abstract class Map {
     protected static int mapHeight;
     protected static int tileSize;
 
-    protected static Tile[][] matrix;
+    protected Tile[][] matrix;
 
     public static int getMapWidth(){ return mapWidth; }
     public static int getMapHeight(){ return mapHeight; }
     public static int getTileSize(){ return tileSize; }
 
-    public static Tile[][] getMatrix(){ return matrix; }
+    public Tile[][] getMatrix(){ return matrix; }
 
     //public Vector3 randomItemPos;
 
@@ -184,7 +184,7 @@ public abstract class Map {
      * @param yPosition y-position of the tile
      * @return returns the tile
      */
-    public static Tile getTile(int xPosition, int yPosition){
+    public Tile getTile(int xPosition, int yPosition){
         return matrix[xPosition / tileSize][yPosition / tileSize];
     }
 
@@ -195,7 +195,7 @@ public abstract class Map {
      * @param dir direction to the neighbouring tile
      * @return returns the neighbouring tile
      */
-    public static Tile getTile(int xPosition, int yPosition, Actor.Direction dir){
+    public Tile getTile(int xPosition, int yPosition, Actor.Direction dir){
         int nextCellX = ((xPosition/ tileSize));
         int nextCellY = ((yPosition/ tileSize));
         switch (dir) {

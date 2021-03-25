@@ -46,14 +46,14 @@ public class GameScreen extends MapScreen {
             this.ghosts.add(new Enemy(15 * TILE_SIZE, 30 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_2)));
             this.ghosts.get(1).setState(Actor.State.BOXED);
             this.ghosts.get(1).setBoxTimer(5);
-            Map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(1));
+            map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(1));
         }
 
         if(PacManGame.getLevel() >= 4) {
             this.ghosts.add(new Enemy(12 * TILE_SIZE, 30 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_3)));
             this.ghosts.get(2).setState(Actor.State.BOXED);
             this.ghosts.get(2).setBoxTimer(10);
-            Map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(2));
+            map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(2));
             ghosts.get(0).setDifficulty(Enemy.Difficulty.MEDIUM);
         }
 

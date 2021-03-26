@@ -14,9 +14,11 @@ import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
 public abstract class Actor {
+
+    /* Fields */
+
     public enum Direction {
         RIGHT, LEFT, UP, DOWN;
-
         public static Direction getRandomDirection() {
             Random random = new Random();
             return values()[random.nextInt(values().length)];
@@ -56,39 +58,44 @@ public abstract class Actor {
     protected float animationSpeed;
     protected boolean mouthOpen;
 
+
+    /* Constructor */
+
+    public Actor(Assets assets, int initX, int initY, MapScreen screen) {
+        this.assets = assets;
+        this.state = State.RUNNING;
+        this.xPosition = initX;
+        this.yPosition = initY;
+        this.rotation = 0;
+        this.speed = 2; // Values can be {0 == Stop , 1, 2 == default, 4, 8, 16}
+        this.TILE_SIZE = Map.getTileSize();
+        this.SCREEN = screen;
+        this.MAP = SCREEN.getMap();
+    }
+
+    /* Accessors */
+
     public Animation getAnimation(){ return this.animation; }
 
-    public int getSpeed() {
-        return speed;
-    }
+    public int getSpeed() { return speed; }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
+    public void setSpeed(int speed) { this.speed = speed; }
 
     public int getHomeX(){ return homeX; }
 
     public int getHomeY(){ return homeY; }
 
-    public int getXPosition() {
-        return xPosition;
-    }
+    public int getXPosition() { return xPosition; }
 
     public int getXCoordinate(){ return xPosition / TILE_SIZE; }
 
-    public void setXPosition(int xPosition) {
-        this.xPosition = xPosition;
-    }
+    public void setXPosition(int xPosition) { this.xPosition = xPosition; }
 
-    public int getYPosition() {
-        return yPosition;
-    }
+    public int getYPosition() { return yPosition; }
 
     public int getYCoordinate() { return yPosition / TILE_SIZE; }
 
-    public void setYPosition(int yPosition) {
-        this.yPosition = yPosition;
-    }
+    public void setYPosition(int yPosition) { this.yPosition = yPosition; }
 
     public void setTexture(Texture texture){ this.texture = texture; }
 
@@ -108,18 +115,6 @@ public abstract class Actor {
     public State getState(){ return this.state; }
 
     public void setState(State state){ this.state = state; }
-
-    public Actor(Assets assets, int initX, int initY, MapScreen screen) {
-        this.assets = assets;
-        this.state = State.RUNNING;
-        this.xPosition = initX;
-        this.yPosition = initY;
-        this.rotation = 0;
-        this.speed = 2; // Values can be {0 == Stop , 1, 2 == default, 4, 8, 16}
-        this.TILE_SIZE = Map.getTileSize();
-        this.SCREEN = screen;
-        this.MAP = SCREEN.getMap();
-    }
 
     public void correctPosition(Direction now) {
         switch (now) {
@@ -147,7 +142,7 @@ public abstract class Actor {
         ){
             prevDirection = direction;
             if (nextDirection != direction
-                    && MAP.getTile(xPosition, yPosition, nextDirection).type != Tile.Type.WALL
+                    && MAP.getTile(xPosition, yPosition, nextDirection).getType() != Tile.Type.WALL
                     && !( this instanceof Enemy && MAP.getTile(xPosition, yPosition, nextDirection).isOccupiedByGhost() )
             ) {
                 if (xPosition == MAP.getTile(xPosition, yPosition).getX() && yPosition == MAP.getTile(xPosition, yPosition).getY()) {
@@ -158,7 +153,7 @@ public abstract class Actor {
             Tile tempTile = MAP.getTile(xPosition, yPosition, direction);
             switch (direction) {
                 case RIGHT:
-                    if (tempTile.type != Tile.Type.WALL) {
+                    if (tempTile.getType() != Tile.Type.WALL) {
                         if (prevDirection != direction && !(this instanceof Enemy))
                             this.rotation = 0;
                         int temp = xPosition;
@@ -170,7 +165,7 @@ public abstract class Actor {
                     }
                     break;
                 case LEFT:
-                    if (tempTile.type == Tile.Type.WALL) {
+                    if (tempTile.getType() == Tile.Type.WALL) {
                         if (xPosition > MAP.getTile(xPosition, yPosition).getX()) {
                             int temp = xPosition;
                             xPosition -= speed;
@@ -191,7 +186,7 @@ public abstract class Actor {
                     }
                     break;
                 case UP:
-                    if (tempTile.type != Tile.Type.WALL) {
+                    if (tempTile.getType() != Tile.Type.WALL) {
                         if (prevDirection != direction && !(this instanceof Enemy))
                             this.rotation = 90;
                         int temp = yPosition;
@@ -203,7 +198,7 @@ public abstract class Actor {
                     }
                     break;
                 case DOWN:
-                    if (tempTile.type == Tile.Type.WALL) {
+                    if (tempTile.getType() == Tile.Type.WALL) {
                         if (yPosition > MAP.getTile(xPosition, yPosition).getY()) {
                             int temp = yPosition;
                             yPosition -= speed;

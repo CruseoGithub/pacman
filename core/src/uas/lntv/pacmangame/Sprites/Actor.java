@@ -49,7 +49,8 @@ public abstract class Actor {
     protected Sprite sprite;
     protected TextureRegion region;
     protected Texture texture;
-    protected MapScreen screen;
+    protected final MapScreen SCREEN;
+    protected final Map MAP;
 
     protected Animation animation;
     protected float animationSpeed;
@@ -73,6 +74,8 @@ public abstract class Actor {
         return xPosition;
     }
 
+    public int getXCoordinate(){ return xPosition / TILE_SIZE; }
+
     public void setXPosition(int xPosition) {
         this.xPosition = xPosition;
     }
@@ -80,6 +83,8 @@ public abstract class Actor {
     public int getYPosition() {
         return yPosition;
     }
+
+    public int getYCoordinate() { return yPosition / TILE_SIZE; }
 
     public void setYPosition(int yPosition) {
         this.yPosition = yPosition;
@@ -112,7 +117,8 @@ public abstract class Actor {
         this.rotation = 0;
         this.speed = 2; // Values can be {0 == Stop , 1, 2 == default, 4, 8, 16}
         this.TILE_SIZE = Map.getTileSize();
-        this.screen = screen;
+        this.SCREEN = screen;
+        this.MAP = SCREEN.getMap();
     }
 
     public void correctPosition(Direction now) {
@@ -137,19 +143,19 @@ public abstract class Actor {
                 && xPosition <= 26 * TILE_SIZE
                 && yPosition >= 15 * TILE_SIZE
                 && yPosition <= 44 * TILE_SIZE
-                || !(screen instanceof GameScreen)
+                || !(SCREEN instanceof GameScreen)
         ){
             prevDirection = direction;
             if (nextDirection != direction
-                    && Map.getTile(xPosition, yPosition, nextDirection).type != Tile.Type.WALL
-                    && !( this instanceof Enemy && Map.getTile(xPosition, yPosition, nextDirection).isOccupiedByGhost() )
+                    && MAP.getTile(xPosition, yPosition, nextDirection).type != Tile.Type.WALL
+                    && !( this instanceof Enemy && MAP.getTile(xPosition, yPosition, nextDirection).isOccupiedByGhost() )
             ) {
-                if (xPosition == Map.getTile(xPosition, yPosition).getX() && yPosition == Map.getTile(xPosition, yPosition).getY()) {
+                if (xPosition == MAP.getTile(xPosition, yPosition).getX() && yPosition == MAP.getTile(xPosition, yPosition).getY()) {
                     direction = nextDirection;
                 }
             }
 
-            Tile tempTile = Map.getTile(xPosition, yPosition, direction);
+            Tile tempTile = MAP.getTile(xPosition, yPosition, direction);
             switch (direction) {
                 case RIGHT:
                     if (tempTile.type != Tile.Type.WALL) {
@@ -158,19 +164,19 @@ public abstract class Actor {
                         int temp = xPosition;
                         xPosition += speed;
                         if (temp / TILE_SIZE != xPosition / TILE_SIZE && this.state != State.HOMING) {
-                            Map.getTile(temp, yPosition).leave(this);
-                            Map.getTile(xPosition, yPosition).enter(this);
+                            MAP.getTile(temp, yPosition).leave(this);
+                            MAP.getTile(xPosition, yPosition).enter(this);
                         }
                     }
                     break;
                 case LEFT:
                     if (tempTile.type == Tile.Type.WALL) {
-                        if (xPosition > Map.getTile(xPosition, yPosition).getX()) {
+                        if (xPosition > MAP.getTile(xPosition, yPosition).getX()) {
                             int temp = xPosition;
                             xPosition -= speed;
                             if (temp / TILE_SIZE != xPosition / TILE_SIZE && this.state != State.HOMING) {
-                                Map.getTile(temp, yPosition).leave(this);
-                                Map.getTile(xPosition, yPosition).enter(this);
+                                MAP.getTile(temp, yPosition).leave(this);
+                                MAP.getTile(xPosition, yPosition).enter(this);
                             }
                         }
                     } else {
@@ -179,8 +185,8 @@ public abstract class Actor {
                         int temp = xPosition;
                         xPosition -= speed;
                         if (temp / TILE_SIZE != xPosition / TILE_SIZE && this.state != State.HOMING) {
-                            Map.getTile(temp, yPosition).leave(this);
-                            Map.getTile(xPosition, yPosition).enter(this);
+                            MAP.getTile(temp, yPosition).leave(this);
+                            MAP.getTile(xPosition, yPosition).enter(this);
                         }
                     }
                     break;
@@ -191,19 +197,19 @@ public abstract class Actor {
                         int temp = yPosition;
                         yPosition += speed;
                         if (temp / TILE_SIZE != yPosition / TILE_SIZE && this.state != State.HOMING) {
-                            Map.getTile(xPosition, temp).leave(this);
-                            Map.getTile(xPosition, yPosition).enter(this);
+                            MAP.getTile(xPosition, temp).leave(this);
+                            MAP.getTile(xPosition, yPosition).enter(this);
                         }
                     }
                     break;
                 case DOWN:
                     if (tempTile.type == Tile.Type.WALL) {
-                        if (yPosition > Map.getTile(xPosition, yPosition).getY()) {
+                        if (yPosition > MAP.getTile(xPosition, yPosition).getY()) {
                             int temp = yPosition;
                             yPosition -= speed;
                             if (temp / TILE_SIZE != yPosition / TILE_SIZE && this.state != State.HOMING) {
-                                Map.getTile(xPosition, temp).leave(this);
-                                Map.getTile(xPosition, yPosition).enter(this);
+                                MAP.getTile(xPosition, temp).leave(this);
+                                MAP.getTile(xPosition, yPosition).enter(this);
                             }
                         }
                     } else {
@@ -212,8 +218,8 @@ public abstract class Actor {
                         int temp = yPosition;
                         yPosition -= speed;
                         if (temp / TILE_SIZE != yPosition / TILE_SIZE && this.state != State.HOMING) {
-                            Map.getTile(xPosition, temp).leave(this);
-                            Map.getTile(xPosition, yPosition).enter(this);
+                            MAP.getTile(xPosition, temp).leave(this);
+                            MAP.getTile(xPosition, yPosition).enter(this);
                         }
                     }
                     break;
@@ -222,26 +228,26 @@ public abstract class Actor {
             if (xPosition < TILE_SIZE) {
                 int temp = xPosition;
                 xPosition = 26 * TILE_SIZE - speed;
-                Map.getTile(temp, yPosition).leave(this);
-                Map.getTile(xPosition, yPosition).enter(this);
+                MAP.getTile(temp, yPosition).leave(this);
+                MAP.getTile(xPosition, yPosition).enter(this);
             }
             if (xPosition > 26 * TILE_SIZE) {
                 int temp = xPosition;
                 xPosition = TILE_SIZE + speed;
-                Map.getTile(temp, yPosition).leave(this);
-                Map.getTile(xPosition, yPosition).enter(this);
+                MAP.getTile(temp, yPosition).leave(this);
+                MAP.getTile(xPosition, yPosition).enter(this);
             }
             if (yPosition < 15 * TILE_SIZE) {
                 int temp = yPosition;
                 yPosition = 44 * TILE_SIZE - speed;
-                Map.getTile(xPosition, temp).leave(this);
-                Map.getTile(xPosition, yPosition).enter(this);
+                MAP.getTile(xPosition, temp).leave(this);
+                MAP.getTile(xPosition, yPosition).enter(this);
             }
             if (yPosition > 44 * TILE_SIZE) {
                 int temp = yPosition;
                 yPosition = 15 * TILE_SIZE + speed;
-                Map.getTile(xPosition, temp).leave(this);
-                Map.getTile(xPosition, yPosition).enter(this);
+                MAP.getTile(xPosition, temp).leave(this);
+                MAP.getTile(xPosition, yPosition).enter(this);
             }
         }
     }
@@ -260,10 +266,10 @@ public abstract class Actor {
 
     public void collide() {
         this.state = State.DIEING;
-        for(Enemy ghost : screen.getGhosts()){
+        for(Enemy ghost : SCREEN.getGhosts()){
             if (ghost.getState() != State.BOXED) {
                 ghost.setState(State.HOMING);
-                Map.getTile(ghost.xPosition, ghost.yPosition).leave(ghost);
+                MAP.getTile(ghost.xPosition, ghost.yPosition).leave(ghost);
             }
         }
     }

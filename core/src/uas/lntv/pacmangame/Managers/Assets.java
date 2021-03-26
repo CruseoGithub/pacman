@@ -17,14 +17,17 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
  */
 public class Assets {
 
+    /* Fields */
+
     public final AssetManager manager = new AssetManager();
 
+    //SETUP
     public final AssetDescriptor<Sound> DIAL_UP = new AssetDescriptor<>("setup/DialUp.mp3", Sound.class);
     public final AssetDescriptor<Texture> LNTV_Logo = new AssetDescriptor<>("setup/LNTVLogo.png", Texture.class);
     public final AssetDescriptor<Texture> GDX = new AssetDescriptor<>("setup/libGDXLogoDark.png", Texture.class);
     public final AssetDescriptor<Texture> LOADING = new AssetDescriptor<>("setup/LoadingPacMan256.png", Texture.class);
 
-
+    //MUSIC
     public final AssetDescriptor<Music> GAME_MUSIC = new AssetDescriptor<>("music/GameMusic.mp3", Music.class);
     public final AssetDescriptor<Music> GAME_MUSIC_2 = new AssetDescriptor<>("music/GameMusic2.mp3", Music.class);
     public final AssetDescriptor<Music> GAME_MUSIC_3 = new AssetDescriptor<>("music/GameMusic3.mp3", Music.class);
@@ -34,12 +37,14 @@ public class Assets {
     public final AssetDescriptor<Music> MENU_MUSIC = new AssetDescriptor<>("music/MenuMusic.MP3", Music.class);
     public final AssetDescriptor<Music> SETTINGS_MUSIC = new AssetDescriptor<>("music/SettingsMusic.mp3", Music.class);
 
+    //SOUNDS
     public final AssetDescriptor<Sound> ALARM = new AssetDescriptor<>("sounds/ALARM.mp3", Sound.class);
     public final AssetDescriptor<Sound> DIE = new AssetDescriptor<>("sounds/die.wav", Sound.class);
     public final AssetDescriptor<Sound> DOT = new AssetDescriptor<>("sounds/dot.wav", Sound.class);
     public final AssetDescriptor<Sound> KILL = new AssetDescriptor<>("sounds/kill.wav", Sound.class);
     public final AssetDescriptor<Sound> POWER_UP = new AssetDescriptor<>("sounds/PowerUp.wav", Sound.class);
 
+    //TEXTURES
     public final AssetDescriptor<Texture> PAC_MAN = new AssetDescriptor<>("textures/PacMan32.png", Texture.class);
     public final AssetDescriptor<Texture> SUPER_PAC = new AssetDescriptor<>("textures/SuperPacMan.png", Texture.class);
     public final AssetDescriptor<Texture> DEATH_PAC = new AssetDescriptor<>("textures/PacManDeath.png", Texture.class);
@@ -57,7 +62,7 @@ public class Assets {
     public final AssetDescriptor<Texture> JOYSTICK_ZONE = new AssetDescriptor<>("textures/JoystickZone.png", Texture.class);
     public final AssetDescriptor<Texture> JOYSTICK_KNOB = new AssetDescriptor<>("textures/JoystickKnob.png", Texture.class);
 
-
+    //PATHS OF THE MAPS
     public final String MAP_1 = "maps/map.tmx";
     public final String MAP_2 = "maps/map2.tmx";
     public final String MAP_3 = "maps/map3.tmx";
@@ -69,6 +74,13 @@ public class Assets {
     public final String CONTROL = "maps/controller.tmx";
     public final String PAUSE = "maps/PauseMap.tmx";
     public final String SPLASH = "maps/splash.tmx";
+
+    /* Methods */
+
+    /**
+     * Disposes everything, that has been loaded by this manager before.
+     */
+    public void dispose(){ manager.dispose(); }
 
     /**
      * Small method, that puts everything in the loading queue, that is needed for the splash- and
@@ -121,9 +133,4 @@ public class Assets {
         manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
         manager.load(CONTROL, TiledMap.class);
     }
-
-    /**
-     * Disposes everything, that has been loaded by this manager before.
-     */
-    public void dispose(){ manager.dispose(); }
 }

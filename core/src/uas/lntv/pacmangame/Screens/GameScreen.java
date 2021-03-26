@@ -1,10 +1,10 @@
 package uas.lntv.pacmangame.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Maps.GameMap;
-import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.ControllerButtons;
@@ -15,9 +15,10 @@ import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
-
+/**
+ *
+ */
 public class GameScreen extends MapScreen {
-
 
     private boolean PauseActive = false;
     private boolean paused = false;
@@ -54,14 +55,14 @@ public class GameScreen extends MapScreen {
             this.ghosts.add(new Enemy(15 * TILE_SIZE, 30 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_2)));
             this.ghosts.get(1).setState(Actor.State.BOXED);
             this.ghosts.get(1).setBoxTimer(5);
-            Map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(1));
+            map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(1));
         }
 
         if(PacManGame.getLevel() >= 4) {
             this.ghosts.add(new Enemy(12 * TILE_SIZE, 30 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_3)));
             this.ghosts.get(2).setState(Actor.State.BOXED);
             this.ghosts.get(2).setBoxTimer(10);
-            Map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(2));
+            map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(2));
             ghosts.get(0).setDifficulty(Enemy.Difficulty.MEDIUM);
         }
 
@@ -93,6 +94,12 @@ public class GameScreen extends MapScreen {
      * 
      */
     @Override
+    public boolean handleInput(){
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) PauseActive = true;
+        return super.handleInput();
+    }
+
+    @Override
     public void update(float dt) {
         super.update(dt);
         if(ready) hud.time -= Gdx.graphics.getDeltaTime();
@@ -113,7 +120,7 @@ public class GameScreen extends MapScreen {
             PacManGame.resetLevel();
         }
 
-        if(hud.levelScore == 150){
+        if(GameMap.getCollectedDots() == GameMap.TOTAL_DOTS){
             PacManGame.levelUp();
             PacManGame.increaseScore((int)hud.time);
             this.dispose();
@@ -184,6 +191,7 @@ public class GameScreen extends MapScreen {
                 this.itemTaken = true;
                 this.itemCoolDown += 10;
                 this.hud.time += 10;
+                this.hud.resetTimeStamp();
                 break;
             case LIFE:
                 this.itemTaken = true;
@@ -204,7 +212,7 @@ public class GameScreen extends MapScreen {
     private void updateCoolDown(){
         if(itemTaken){
             itemCoolDown -= Gdx.graphics.getDeltaTime();
-            switch(((GameMap)map).countItems()){
+            switch(map.countItems()){
                 case 4:
                     itemTaken = false;
                     break;

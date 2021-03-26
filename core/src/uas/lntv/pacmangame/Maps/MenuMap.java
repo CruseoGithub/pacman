@@ -13,7 +13,11 @@ import uas.lntv.pacmangame.Managers.PrefManager;
  */
 public class MenuMap extends Map {
 
+    /* Fields */
+
     private final ArrayList<TiledMapTileLayer> HIGHLIGHT_LAYERS = new ArrayList<>();
+
+    /* Constructor */
 
     /**
      * Does the same as the parent constructor, but creates no additional collectables.
@@ -31,15 +35,18 @@ public class MenuMap extends Map {
         generateCollectables(Tile.Item.DOT,0);
     }
 
+    /* Accessor */
 
     public ArrayList<TiledMapTileLayer> getHighlightLayers(){ return HIGHLIGHT_LAYERS; }
+
+    /* Methods */
 
     /**
      * searches for collectables in the tmx-mapfile layer and adds them to the tile matrix
      * @param amount the total amount of Dots/Points generated on the map
      */
     @Override
-    public void generateCollectables(Tile.Item item, int amount) {
+    protected void generateCollectables(Tile.Item item, int amount) {
         for(int x = 0; x < mapWidth; x++){
             for(int y = 0; y < mapHeight; y++){
                 if(layerCollect.getCell(x, y) != null){
@@ -50,7 +57,7 @@ public class MenuMap extends Map {
     }
 
     /**
-     * Does the same as the parent constructor.
+     * Does the same as the parent method and plays a sound.
      * @param tile specify the tile from which you want to collect an item
      */
     @Override

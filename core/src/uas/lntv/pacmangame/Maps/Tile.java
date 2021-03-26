@@ -7,96 +7,39 @@ import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
+/**
+ * The whole map is divided in several tiles, these tiles are defined here.
+ * They contain coordinates, the information of which item is placed on it and also all the
+ * information that is needed by the Pathfinder to calculate the shortest path via A*.
+ * @see uas.lntv.pacmangame.AI.Pathfinder
+ * @see Map
+ */
 public class Tile extends StaticTiledMapTile {
-    public enum Type { EMPTY,PATH, WALL, DOT}
-    public enum Item { EMPTY, DOT, TIME, SLOWMO, HUNTER, LIFE}
-    public Tile.Type type;
-    protected Tile.Item item;
 
-    private final int x,y;
+    /* Map-Specific Fields */
+
+    public enum Item { EMPTY, DOT, TIME, SLOWMO, HUNTER, LIFE}
+    public enum Type { EMPTY, PATH, WALL, DOT}
+
     private boolean occupiedByPacMan = false;
     private boolean occupiedByGhost = false;
+    private final int x,y;
+    private final Tile.Type TYPE;
+    private Tile.Item item;
 
-    private int cost;
-    private double heuristics;
-    private double total;
+    /* A*-Specific Fields */
 
-    private Tile prev;
+    private double heuristics;  // Length of direct connection between this tile and the aimed tile
+    private double total;       // = heuristics + cost
+    private int cost;           // No. of steps from the starting point
+    private Tile prev;          // Needed to find the shortest connection between start and goal
 
-    public int getX() {
-        return x;
-    }
 
-    public int getY() {
-        return y;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public int getCost() {
-        return cost;
-    }
-
-    public Tile setCost(int cost) {
-        this.cost = cost;
-        return this;
-    }
-
-    public double getHeuristics() {
-        return heuristics;
-    }
-
-    public void setHeuristics(double heuristics) {
-        this.heuristics = heuristics;
-    }
-
-    public double getTotal() {
-        return total;
-    }
-
-    public Tile setTotal(double total) {
-        this.total = total;
-        return this;
-    }
-
-    public Tile getPrev() {
-        return prev;
-    }
-
-    public Tile setPrev(Tile prev) {
-        this.prev = prev;
-        return this;
-    }
-
-    public boolean isOccupiedByGhost(){ return occupiedByGhost; }
-
-    public boolean isOccupiedByPacMan(){ return occupiedByPacMan; }
-
-    public void enter(Actor actor){
-        if(actor instanceof PacMan) occupiedByPacMan = true;
-        if(actor instanceof Enemy) occupiedByGhost = true;
-    }
-
-    public void leave(Actor actor){
-        if(actor instanceof PacMan) occupiedByPacMan = false;
-        if(actor instanceof Enemy) occupiedByGhost = false;
-    }
-
-    public boolean isItem(){
-        return item != Item.EMPTY;
-    }
-
-    public Item getItem(){ return this.item;}
-
-    public void placeItem(Tile.Item item){ this.item = item; }
-
-    public void takeItem(){ this.item = Item.EMPTY; }
+    /* Constructors */
 
     public Tile(){
         super(new TextureRegion());
-        this.type = null;
+        this.TYPE = null;
         this.prev = null;
         this.item = Item.EMPTY;
         this.x = 0;
@@ -108,7 +51,7 @@ public class Tile extends StaticTiledMapTile {
 
     public Tile(TextureRegion textureRegion) {
         super(textureRegion);
-        this.type = null;
+        this.TYPE = null;
         this.prev = null;
         this.item = Item.EMPTY;
         this.x = 0;
@@ -120,7 +63,7 @@ public class Tile extends StaticTiledMapTile {
 
     public Tile(TextureRegion textureRegion, Tile.Type type, int x, int y) {
         super(textureRegion);
-        this.type = type;
+        this.TYPE = type;
         this.item = Item.EMPTY;
         this.x = x;
         this.y = y;
@@ -131,7 +74,7 @@ public class Tile extends StaticTiledMapTile {
 
     public Tile(Type type, int x, int y) {
         super(new TextureRegion());
-        this.type = type;
+        this.TYPE = type;
         this.prev = null;
         this.item = Item.EMPTY;
         this.x = x;
@@ -140,5 +83,84 @@ public class Tile extends StaticTiledMapTile {
         this.heuristics = 0;
         this.total = 1000000;
     }
+
+
+    /* Accessors */
+
+    /**
+     * Kind of an accessor, that checks if there is an item on the tile.
+     * @return true if there is an item
+     */
+    public boolean isItem(){
+        return item != Item.EMPTY;
+    }
+
+    public boolean isOccupiedByGhost(){ return occupiedByGhost; }
+
+    public boolean isOccupiedByPacMan(){ return occupiedByPacMan; }
+
+    public double getHeuristics() { return heuristics; }
+
+    public double getTotal() { return total; }
+
+    public int getCost() { return cost; }
+
+    public int getX() { return x; }
+
+    public int getY() { return y; }
+
+    public Item getItem(){ return this.item;}
+
+    public Tile getPrev() { return prev; }
+
+    public Type getType() { return TYPE; }
+
+    /* Mutators */
+
+    public Tile setCost(int cost) {
+        this.cost = cost;
+        return this;
+    }
+
+    public Tile setTotal(double total) {
+        this.total = total;
+        return this;
+    }
+
+    public Tile setPrev(Tile prev) {
+        this.prev = prev;
+        return this;
+    }
+
+    /**
+     * Determines which kind of Actor occupies this tile.
+     * @param actor PacMan or Enemy
+     */
+    public void enter(Actor actor){
+        if(actor instanceof PacMan) occupiedByPacMan = true;
+        if(actor instanceof Enemy) occupiedByGhost = true;
+    }
+
+    /**
+     * Determines which kind of Actor doesn't occupy this tile anymore.
+     * @param actor PacMan or Enemy
+     */
+    public void leave(Actor actor){
+        if(actor instanceof PacMan) occupiedByPacMan = false;
+        if(actor instanceof Enemy) occupiedByGhost = false;
+    }
+
+    /**
+     * Tell the tile which kind of item will be put on it.
+     * @param item The kind of item that will be placed.
+     */
+    public void placeItem(Tile.Item item){ this.item = item; }
+
+    public void setHeuristics(double heuristics) { this.heuristics = heuristics; }
+
+    /**
+     * Takes the item that was placed on this tile. The tile will now be empty.
+     */
+    public void takeItem(){ this.item = Item.EMPTY; }
 
 }

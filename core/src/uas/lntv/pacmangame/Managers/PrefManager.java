@@ -11,20 +11,23 @@ import java.util.ArrayList;
  */
 public class PrefManager {
 
-    private static Preferences prefs;
-
-    private static final ArrayList<Integer> highScores = new ArrayList<>();
-    private static final ArrayList<String> names = new ArrayList<>();
-    private static final ArrayList<String> causeOfDeath = new ArrayList<>();
-    private static final ArrayList<Integer> level = new ArrayList<>();
-
-    private static String name;
+    /* Fields */
 
     private static boolean nameSet;
     private static boolean musicOn;
     private static boolean sfxOn;
     private static boolean joystick;
     private static boolean init = false;
+
+    private static final ArrayList<Integer> highScores = new ArrayList<>();
+    private static final ArrayList<Integer> level = new ArrayList<>();
+    private static final ArrayList<String> causeOfDeath = new ArrayList<>();
+    private static final ArrayList<String> names = new ArrayList<>();
+
+    private static Preferences prefs;
+    private static String name;
+
+    /* Constructor */
 
     /**
      * This constructor simply loads the saved high-scores and settings from the preferences.
@@ -43,15 +46,40 @@ public class PrefManager {
         }
     }
 
+    /* Accessors */
+
     public static ArrayList<Integer> getHighScores(){ return highScores; }
-
-    public static ArrayList<String> getNames(){ return names; }
-
-    public static ArrayList<String> getCauseOfDeath(){ return causeOfDeath; }
 
     public static ArrayList<Integer> getLevel(){ return level; }
 
+    public static ArrayList<String> getCauseOfDeath(){ return causeOfDeath; }
 
+    public static ArrayList<String> getNames(){ return names; }
+
+    public static boolean isJoystick() { return joystick; }
+
+    public static boolean isMusicOn() { return musicOn; }
+
+    public static boolean isSfxOn() { return sfxOn; }
+
+    public static boolean noNameSet(){ return !nameSet; }
+
+    /* Mutators */
+
+    public static void setJoystick(boolean joystick) { PrefManager.joystick = joystick; }
+
+    public static void setMusicOn(boolean musicOn) { PrefManager.musicOn = musicOn; }
+
+    public static void setNameSet(boolean nameSet){ PrefManager.nameSet = nameSet; }
+
+    public static void setSfxOn(boolean sfxOn) { PrefManager.sfxOn = sfxOn; }
+
+    /* Methods */
+
+    /**
+     * Gives the indecisive player the name "Anonymous Bastard".
+     */
+    private static void anonymous(){ name = "Anonymous Bastard"; }
 
     /**
      * This method compares the new score to all values in the high-score list. If the new score is
@@ -83,65 +111,6 @@ public class PrefManager {
         }
         return newHighScore;
     }
-
-    public static boolean noNameSet(){ return !nameSet; }
-
-    public static void setNameSet(boolean nameSet){ PrefManager.nameSet = nameSet; }
-
-    public static boolean isMusicOn() { return musicOn; }
-
-    public static void setMusicOn(boolean musicOn) { PrefManager.musicOn = musicOn; }
-
-    public static boolean isSfxOn() { return sfxOn; }
-
-    public static void setSfxOn(boolean sfxOn) { PrefManager.sfxOn = sfxOn; }
-
-    public static boolean isJoystick() { return joystick; }
-
-    public static void setJoystick(boolean joystick) { PrefManager.joystick = joystick; }
-
-    /**
-     * Gives the player two chances to insert a name, if he doesn't he will be treated as
-     * Anonymous Bastard.
-     */
-    public static void setName() {
-        Gdx.input.getTextInput(
-                new Input.TextInputListener() {
-                    @Override
-                    public void input(String text) {
-                        if (text.isEmpty()) {
-                            Gdx.input.getTextInput(
-                                    new Input.TextInputListener() {
-                                        @Override
-                                        public void input(String secondChance) {
-                                            if (secondChance.isEmpty()) anonymous();
-                                            name = secondChance;
-                                        }
-
-                                        @Override
-                                        public void canceled() {
-                                            anonymous();
-                                        }
-                                    },
-                                    "Are you sure?", "Anonymous Bastard", ""
-                            );
-                        } else name = text;
-                    }
-
-                    @Override
-                    public void canceled() {
-                        anonymous();
-                    }
-                },
-                "Please enter your name", "", "Name"
-        );
-        nameSet = true;
-    }
-
-    /**
-     * Gives the indecisive player the name "Anonymous Bastard".
-     */
-    private static void anonymous(){ name = "Anonymous Bastard"; }
 
     /**
      * Loads the scores and settings from the preferences folder into the game.
@@ -193,6 +162,65 @@ public class PrefManager {
         sfxOn = prefs.getBoolean("SFX");
         joystick = prefs.getBoolean("Controller");
         init = prefs.getBoolean("Initialized");
+    }
+
+    /**
+     * Resets everything to factory settings and clears the high-score list.
+     */
+    public static void resetScores(){
+        prefs.putInteger("high_score_1", 0);
+        prefs.putInteger("high_score_2", 0);
+        prefs.putInteger("high_score_3", 0);
+        prefs.putInteger("high_score_4", 0);
+        prefs.putInteger("high_score_5", 0);
+        prefs.putInteger("high_score_6", 0);
+        prefs.putInteger("high_score_7", 0);
+        prefs.putInteger("high_score_8", 0);
+        prefs.putInteger("high_score_9", 0);
+        prefs.putInteger("high_score_10", 0);
+        prefs.putString("names_1", "nobody");
+        prefs.putString("names_2", "nobody");
+        prefs.putString("names_3", "nobody");
+        prefs.putString("names_4", "nobody");
+        prefs.putString("names_5", "nobody");
+        prefs.putString("names_6", "nobody");
+        prefs.putString("names_7", "nobody");
+        prefs.putString("names_8", "nobody");
+        prefs.putString("names_9", "nobody");
+        prefs.putString("names_10", "nobody");
+        prefs.putString("cause_of_death_1", "Nothing happened");
+        prefs.putString("cause_of_death_2", "Nothing happened");
+        prefs.putString("cause_of_death_3", "Nothing happened");
+        prefs.putString("cause_of_death_4", "Nothing happened");
+        prefs.putString("cause_of_death_5", "Nothing happened");
+        prefs.putString("cause_of_death_6", "Nothing happened");
+        prefs.putString("cause_of_death_7", "Nothing happened");
+        prefs.putString("cause_of_death_8", "Nothing happened");
+        prefs.putString("cause_of_death_9", "Nothing happened");
+        prefs.putString("cause_of_death_10", "Nothing happened");
+        prefs.putInteger("level_1", 0);
+        prefs.putInteger("level_2", 0);
+        prefs.putInteger("level_3", 0);
+        prefs.putInteger("level_4", 0);
+        prefs.putInteger("level_5", 0);
+        prefs.putInteger("level_6", 0);
+        prefs.putInteger("level_7", 0);
+        prefs.putInteger("level_8", 0);
+        prefs.putInteger("level_9", 0);
+        prefs.putInteger("level_10", 0);
+        prefs.putString("player", "");
+        prefs.putBoolean("NameSet", false);
+        prefs.putBoolean("Music", true);
+        prefs.putBoolean("SFX", true);
+        prefs.putBoolean("Controller", false);
+        prefs.putBoolean("Initialized", true);
+
+        prefs.flush();
+        highScores.clear();
+        names.clear();
+        causeOfDeath.clear();
+        level.clear();
+        loadPrefs();
     }
 
     /**
@@ -249,60 +277,42 @@ public class PrefManager {
         prefs.flush();
     }
 
-    public static void resetScores(){
-        prefs.putInteger("high_score_1", 0);
-        prefs.putInteger("high_score_2", 0);
-        prefs.putInteger("high_score_3", 0);
-        prefs.putInteger("high_score_4", 0);
-        prefs.putInteger("high_score_5", 0);
-        prefs.putInteger("high_score_6", 0);
-        prefs.putInteger("high_score_7", 0);
-        prefs.putInteger("high_score_8", 0);
-        prefs.putInteger("high_score_9", 0);
-        prefs.putInteger("high_score_10", 0);
-        prefs.putString("names_1", "nobody");
-        prefs.putString("names_2", "nobody");
-        prefs.putString("names_3", "nobody");
-        prefs.putString("names_4", "nobody");
-        prefs.putString("names_5", "nobody");
-        prefs.putString("names_6", "nobody");
-        prefs.putString("names_7", "nobody");
-        prefs.putString("names_8", "nobody");
-        prefs.putString("names_9", "nobody");
-        prefs.putString("names_10", "nobody");
-        prefs.putString("cause_of_death_1", "Nothing happened");
-        prefs.putString("cause_of_death_2", "Nothing happened");
-        prefs.putString("cause_of_death_3", "Nothing happened");
-        prefs.putString("cause_of_death_4", "Nothing happened");
-        prefs.putString("cause_of_death_5", "Nothing happened");
-        prefs.putString("cause_of_death_6", "Nothing happened");
-        prefs.putString("cause_of_death_7", "Nothing happened");
-        prefs.putString("cause_of_death_8", "Nothing happened");
-        prefs.putString("cause_of_death_9", "Nothing happened");
-        prefs.putString("cause_of_death_10", "Nothing happened");
-        prefs.putInteger("level_1", 0);
-        prefs.putInteger("level_2", 0);
-        prefs.putInteger("level_3", 0);
-        prefs.putInteger("level_4", 0);
-        prefs.putInteger("level_5", 0);
-        prefs.putInteger("level_6", 0);
-        prefs.putInteger("level_7", 0);
-        prefs.putInteger("level_8", 0);
-        prefs.putInteger("level_9", 0);
-        prefs.putInteger("level_10", 0);
-        prefs.putString("player", "");
-        prefs.putBoolean("NameSet", false);
-        prefs.putBoolean("Music", true);
-        prefs.putBoolean("SFX", true);
-        prefs.putBoolean("Controller", false);
-        prefs.putBoolean("Initialized", true);
+    /**
+     * Gives the player two chances to insert a name, if he doesn't he will be treated as
+     * Anonymous Bastard.
+     */
+    public static void setName() {
+        Gdx.input.getTextInput(
+                new Input.TextInputListener() {
+                    @Override
+                    public void input(String text) {
+                        if (text.isEmpty()) {
+                            Gdx.input.getTextInput(
+                                    new Input.TextInputListener() {
+                                        @Override
+                                        public void input(String secondChance) {
+                                            if (secondChance.isEmpty()) anonymous();
+                                            name = secondChance;
+                                        }
 
-        prefs.flush();
-        highScores.clear();
-        names.clear();
-        causeOfDeath.clear();
-        level.clear();
-        loadPrefs();
+                                        @Override
+                                        public void canceled() {
+                                            anonymous();
+                                        }
+                                    },
+                                    "Are you sure?", "Anonymous Bastard", ""
+                            );
+                        } else name = text;
+                    }
+
+                    @Override
+                    public void canceled() {
+                        anonymous();
+                    }
+                },
+                "Please enter your name", "", "Name"
+        );
+        nameSet = true;
     }
 
 }

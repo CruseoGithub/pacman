@@ -40,7 +40,7 @@ public abstract class MapScreen implements Screen {
 
     protected final Assets assets;
 
-    public Map map;
+    protected Map map;
     public Hud hud;
 
     public PacMan pacman;
@@ -54,6 +54,8 @@ public abstract class MapScreen implements Screen {
 
 
     protected boolean ready = false;
+
+    public Map getMap(){ return this.map; }
 
     public MapScreen(PacManGame game, Assets assets, String path, MapScreen.Type type) {
         //Setzt Höhe und Breite des Desktopfensters (16:9 Format)

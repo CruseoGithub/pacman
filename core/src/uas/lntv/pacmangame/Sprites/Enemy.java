@@ -58,7 +58,7 @@ public class Enemy extends Actor {
         texturePositionY = 0;
         this.animationSpeed = 0.1f;
 
-        animation = new Animation(this, assets, animationSpeed, this.screen,4);
+        animation = new Animation(this, assets, animationSpeed, this.SCREEN,4);
 
         this.boxTimer = 0;
 
@@ -94,7 +94,7 @@ public class Enemy extends Actor {
      * outside of the box.
      */
     public void leaveBox(){
-        Map.getTile(xPosition, yPosition).leave(this);
+        MAP.getTile(xPosition, yPosition).leave(this);
         if(xPosition < 13 * TILE_SIZE) xPosition += 8;
         else if(xPosition > 13 * TILE_SIZE) xPosition -= 8;
         else if(yPosition < 33 * TILE_SIZE) yPosition += 8;
@@ -106,31 +106,31 @@ public class Enemy extends Actor {
      */
     public void enterBox() {
         if (yPosition > 30 * TILE_SIZE) yPosition -= 8;
-        else if (!(Map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
+        else if (!(MAP.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
             if(xPosition > 12 * TILE_SIZE) xPosition -= 8;
             if(xPosition == 12 * TILE_SIZE){
-                Map.getTile(xPosition, yPosition).enter(this);
+                MAP.getTile(xPosition, yPosition).enter(this);
                 setState(State.BOXED);
                 home = false;
                 boxTimer = 5;
                 texture = LIVING_BODY;
             }
         }
-        else if(!(Map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
+        else if(!(MAP.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
             if(xPosition< 15 * TILE_SIZE)xPosition += 8;
             if(xPosition == 15 * TILE_SIZE){
-                Map.getTile(xPosition, yPosition).enter(this);
+                MAP.getTile(xPosition, yPosition).enter(this);
                 setState(State.BOXED);
                 home = false;
                 boxTimer = 7.5f;
                 texture = LIVING_BODY;
             }
         }
-        else if (!(Map.getTile(14 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
+        else if (!(MAP.getTile(14 * TILE_SIZE, 30 * TILE_SIZE).isOccupiedByGhost())){
             if(xPosition < 14 * TILE_SIZE)xPosition += 8;
             if(xPosition > 14 * TILE_SIZE) xPosition -= 8;  //this could happen if the second and third ghost enter the box in short distance to each other (< TILE_SIZE)
             if(xPosition == 14 * TILE_SIZE) {
-                Map.getTile(xPosition, yPosition).enter(this);
+                MAP.getTile(xPosition, yPosition).enter(this);
                 setState(State.BOXED);
                 home = false;
                 boxTimer = 10;
@@ -203,9 +203,9 @@ public class Enemy extends Actor {
      */
     private Direction findNextDirectionHard(Actor target){
         if(collisionTest(target)) return Direction.RIGHT;
-        aStar = new Pathfinder(this, target);
+        aStar = new Pathfinder(SCREEN, this, target);
         Tile temp = aStar.aStarResult();
-        if(temp == Map.getTile(xPosition, yPosition) || temp == null) return direction;
+        if(temp == MAP.getTile(xPosition, yPosition) || temp == null) return direction;
         if(temp.getY() > this.getYPosition()) return Direction.UP;
         if(temp.getY() < this.getYPosition()) return Direction.DOWN;
         if(temp.getX() > this.getXPosition()) return Direction.RIGHT;
@@ -224,18 +224,18 @@ public class Enemy extends Actor {
             this.state = State.HOMING;
             this.texture = assets.manager.get(assets.BLUE_DEAD);
             home = false;
-            Map.getTile(xPosition, yPosition).leave(this);
+            MAP.getTile(xPosition, yPosition).leave(this);
             return Direction.RIGHT;
         }
         if(hunter.getXPosition() < 13* TILE_SIZE){
-            if(hunter.getYPosition() < 30* TILE_SIZE) aStar = new Pathfinder(this, 26* TILE_SIZE, 43* TILE_SIZE, false);
-            if(hunter.getYPosition() >= 30* TILE_SIZE) aStar = new Pathfinder(this, 26* TILE_SIZE, 15* TILE_SIZE, false);
+            if(hunter.getYPosition() < 30* TILE_SIZE) aStar = new Pathfinder(SCREEN, this, 26* TILE_SIZE, 43* TILE_SIZE);
+            if(hunter.getYPosition() >= 30* TILE_SIZE) aStar = new Pathfinder(SCREEN,this, 26* TILE_SIZE, 15* TILE_SIZE);
         } else{
-            if(hunter.getYPosition() < 30* TILE_SIZE) aStar = new Pathfinder(this, TILE_SIZE, 43* TILE_SIZE, false);
-            if(hunter.getYPosition() >= 30* TILE_SIZE) aStar = new Pathfinder(this, TILE_SIZE, 15* TILE_SIZE, false);
+            if(hunter.getYPosition() < 30* TILE_SIZE) aStar = new Pathfinder(SCREEN, this, TILE_SIZE, 43* TILE_SIZE);
+            if(hunter.getYPosition() >= 30* TILE_SIZE) aStar = new Pathfinder(SCREEN, this, TILE_SIZE, 15* TILE_SIZE);
         }
         Tile temp = aStar.aStarResult();
-        if(temp == Map.getTile(xPosition, yPosition) || temp == null) return direction;
+        if(temp == MAP.getTile(xPosition, yPosition) || temp == null) return direction;
         if(temp.getY() > this.getYPosition()) return Direction.UP;
         if(temp.getY() < this.getYPosition()) return Direction.DOWN;
         if(temp.getX() > this.getXPosition()) return Direction.RIGHT;
@@ -248,7 +248,7 @@ public class Enemy extends Actor {
      * @return One of the four directions
      */
     private Direction findHome(){
-        aStar = new Pathfinder(this, homeX, homeY, true);
+        aStar = new Pathfinder(SCREEN, this, homeX, homeY);
         Tile temp = aStar.aStarResult();
         if(temp.getY() > this.getYPosition()) return Direction.UP;
         if(temp.getY() < this.getYPosition()) return Direction.DOWN;
@@ -268,7 +268,7 @@ public class Enemy extends Actor {
         move();
         setSpeed(getSpeed() / 2);
         setSpeed(getSpeed() / 2);
-        if(Map.getTile(xPosition, yPosition) == Map.getTile(homeX, homeY)){
+        if(MAP.getTile(xPosition, yPosition) == MAP.getTile(homeX, homeY)){
             xPosition = homeX;
             yPosition = homeY;
             home = true;

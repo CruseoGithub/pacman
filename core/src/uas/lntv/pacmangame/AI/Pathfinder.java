@@ -1,7 +1,10 @@
 package uas.lntv.pacmangame.AI;
 
+import java.util.ArrayList;
+
 import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.Maps.Tile;
+import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 
@@ -12,16 +15,22 @@ import uas.lntv.pacmangame.Sprites.Enemy;
  * using the A*-Algorithm.
  */
 public class Pathfinder {
-    private final Tile[][] MATRIX;
-    private Tile[] open;
+
+    /* Fields */
+
     private final Enemy HUNTER;
+    private final Tile[][] MATRIX;
+    private final ArrayList<Tile> OPEN = new ArrayList<>();
+
     private final int TARGET_X;
     private final int TARGET_Y;
     private final int MAP_WIDTH;
     private final int MAP_HEIGHT;
     private final int TILE_SIZE;
-    private final boolean FIND_HOME;
+
     private boolean noWay = false;
+
+    /* Constructors */
 
     /**
      * This constructor is used to find the shortest path to an actor, which will be PacMan in this
@@ -32,125 +41,83 @@ public class Pathfinder {
      * @param hunter actor that wants to find a shortest path
      * @param prey target of the actor
      */
-    public Pathfinder(Enemy hunter, Actor prey){
+    public Pathfinder(MapScreen screen, Enemy hunter, Actor prey){
         this.MAP_WIDTH = Map.getMapWidth();
         this.MAP_HEIGHT = Map.getMapHeight();
         this.TILE_SIZE = Map.getTileSize();
-        this.MATRIX = Map.getMatrix();
-        this.open = new Tile[(MAP_WIDTH * MAP_HEIGHT)];
+        this.MATRIX = screen.getMap().getMatrix();
         this.HUNTER = hunter;
-        this.TARGET_X = prey.getXPosition();
-        this.TARGET_Y = prey.getYPosition();
-        this.FIND_HOME = false;
+        this.TARGET_X = prey.getXCoordinate();
+        this.TARGET_Y = prey.getYCoordinate();
         int i = 0;
+
+        //Putting all tiles of the map into the 'open'-list
         for(int x = 0; x < MAP_WIDTH; x++){
             for(int y = 0; y < MAP_HEIGHT; y++){
-                open[i] = this.MATRIX[x][y];
-                open[i++]
+                OPEN.add(this.MATRIX[x][y]);
+                OPEN.get(i++)
                         .setCost(1000000)
                         .setTotal(1000000)
                         .setPrev(null)
                         .setHeuristics(calcHeuristics(
                                 x,
                                 y,
-                                this.TARGET_X /this.TILE_SIZE,
-                                this.TARGET_Y /this.TILE_SIZE
+                                this.TARGET_X,
+                                this.TARGET_Y
                                 )
                         );
             }
         }
-        open[searchHunter()]
+
+        // Preparing the starting tile for the A*-Algorithm
+        OPEN.get(searchHunter())
                 .setCost(0)
-                .setTotal(open[searchHunter()].getHeuristics());
+                .setTotal(
+                        OPEN.get(searchHunter()).getHeuristics()
+                );
     }
 
     /**
      * Does the same as the first constructor, but uses x-/y-coordinates instead of an actor.
      * @see Pathfinder
      */
-    public Pathfinder(Enemy hunter, int targetX, int targetY, boolean findHome){
+    public Pathfinder(MapScreen screen, Enemy hunter, int targetX, int targetY){
         this.MAP_WIDTH = Map.getMapWidth();
         this.MAP_HEIGHT = Map.getMapHeight();
         this.TILE_SIZE = Map.getTileSize();
-        this.MATRIX = Map.getMatrix();
-        this.open = new Tile[(MAP_WIDTH * MAP_HEIGHT)];
+        this.MATRIX = screen.getMap().getMatrix();
         this.HUNTER = hunter;
-        this.TARGET_X = targetX;
-        this.TARGET_Y = targetY;
-        this.FIND_HOME = findHome;
+        this.TARGET_X = targetX / TILE_SIZE;
+        this.TARGET_Y = targetY / TILE_SIZE;
         int i = 0;
+
+        //Putting all tiles of the map into the 'open'-list
         for(int x = 0; x < MAP_WIDTH; x++){
             for(int y = 0; y < MAP_HEIGHT; y++){
-                open[i] = this.MATRIX[x][y];
-                open[i++]
+                OPEN.add(this.MATRIX[x][y]);
+                OPEN.get(i++)
                         .setCost(1000000)
                         .setTotal(1000000)
                         .setPrev(null)
                         .setHeuristics(calcHeuristics(
                                 x,
                                 y,
-                                this.TARGET_X /this.TILE_SIZE,
-                                this.TARGET_Y /this.TILE_SIZE
+                                this.TARGET_X,
+                                this.TARGET_Y
                                 )
                         );
             }
         }
-        open[searchHunter()]
+
+        // Preparing the starting tile for the A*-Algorithm
+        OPEN.get(searchHunter())
                 .setCost(0)
-                .setTotal(open[searchHunter()].getHeuristics());
+                .setTotal(
+                        OPEN.get(searchHunter()).getHeuristics()
+                );
     }
 
-    private int searchHunter(){
-        int i = 0;
-        while(open[i] != Map.getTile(HUNTER.getXPosition(), HUNTER.getYPosition())){
-            i++;
-        }
-        return i;
-    }
-
-    private double calcHeuristics(int xHunt, int yHunt, int xPrey, int yPrey){
-        return Math.sqrt( Math.pow(xHunt - xPrey, 2) + Math.pow(yHunt - yPrey, 2));
-    }
-
-    /**
-     * Runs through the whole 'open'-list and searches for the tile in the map with the lowest
-     * total-value, which is the sum of the costs and the heuristics.
-     * This tile is needed for the next step of the A*-algorithm and will be removed from the
-     * 'open'-list.
-     * @return Tile with lowest total-value
-     */
-    private Tile extractMinimum(){
-        Tile temp = new Tile();
-        int len = open.length;
-        if(len == 0) return null;                      //If the 'open'-list is empty, there is no possible path to the target.
-        for(int i = 0; i < len - 1; i++) {
-            if (temp.getTotal() > open[i].getTotal()) {
-                temp = open[i];
-            }
-        }
-        open = removeElement(open, temp);
-        return temp;
-    }
-
-    /**
-     * This method is used to remove a special element of a given list.
-     * @param list the list to be edited
-     * @param element the tile that is supposed to be removed
-     * @return The new list without the tile.
-     */
-    private Tile[] removeElement(Tile[] list, Tile element){
-        Tile[] copy = new Tile[list.length - 1];
-        int len = list.length;
-        int i = 0;
-        int c = 0;
-        while(i < len - 1){
-            if(list[i] != element){
-                copy[c++] = list[i];
-            }
-            i++;
-        }
-        return copy;
-    }
+    /* Methods */
 
     /**
      * In this method the magic happens.
@@ -165,7 +132,7 @@ public class Pathfinder {
             noWay = true;
             return true;
         }
-        if(min == Map.getTile(TARGET_X, TARGET_Y)) return true;
+        if(min == MATRIX[TARGET_X][TARGET_Y]) return true;
         int x = min.getX() / TILE_SIZE;
         int y = min.getY() / TILE_SIZE;
         if(y < (MAP_HEIGHT - 1)) {
@@ -173,11 +140,11 @@ public class Pathfinder {
             if(up.getType() != Tile.Type.WALL
                     && up.getCost() > min.getCost() + 1
                     && ((((HUNTER.getDifficulty() == Enemy.Difficulty.HARD || HUNTER.getDifficulty() == Enemy.Difficulty.MEDIUM)
-                        && !(up.isOccupiedByGhost())
-                        )
-                        || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(up.isOccupiedByPacMan()))
-                    ) || FIND_HOME
-                    )
+                    && !(up.isOccupiedByGhost())
+            )
+                    || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(up.isOccupiedByPacMan()))
+            ) || HUNTER.getState() == Actor.State.HOMING
+            )
             ){
                 up.setCost(min.getCost() + 1);
                 up.setTotal(up.getCost() + up.getHeuristics());
@@ -189,11 +156,11 @@ public class Pathfinder {
             if(down.getType() != Tile.Type.WALL
                     && down.getCost() > min.getCost() + 1
                     && ((((HUNTER.getDifficulty() == Enemy.Difficulty.HARD || HUNTER.getDifficulty() == Enemy.Difficulty.MEDIUM)
-                        && !(down.isOccupiedByGhost())
-                        )
-                        || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(down.isOccupiedByPacMan()))
-                    ) || FIND_HOME
-                    )
+                    && !(down.isOccupiedByGhost())
+            )
+                    || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(down.isOccupiedByPacMan()))
+            ) || HUNTER.getState() == Actor.State.HOMING
+            )
             ){
                 down.setCost(min.getCost() + 1);
                 down.setTotal(down.getCost() + down.getHeuristics());
@@ -205,11 +172,11 @@ public class Pathfinder {
             if(left.getType() != Tile.Type.WALL
                     && left.getCost() > min.getCost() + 1
                     && ((((HUNTER.getDifficulty() == Enemy.Difficulty.HARD || HUNTER.getDifficulty() == Enemy.Difficulty.MEDIUM)
-                        && !(left.isOccupiedByGhost())
-                        )
-                        || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(left.isOccupiedByPacMan()))
-                    ) || FIND_HOME
-                    )
+                    && !(left.isOccupiedByGhost())
+            )
+                    || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(left.isOccupiedByPacMan()))
+            ) || HUNTER.getState() == Actor.State.HOMING
+            )
             ){
                 left.setCost(min.getCost() + 1);
                 left.setTotal(left.getCost() + left.getHeuristics());
@@ -221,11 +188,11 @@ public class Pathfinder {
             if(right.getType() != Tile.Type.WALL
                     && right.getCost() > min.getCost() + 1
                     && ((((HUNTER.getDifficulty() == Enemy.Difficulty.HARD || HUNTER.getDifficulty() == Enemy.Difficulty.MEDIUM)
-                        && !(right.isOccupiedByGhost())
-                        )
-                        || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(right.isOccupiedByPacMan()))
-                    ) || FIND_HOME
-                    )
+                    && !(right.isOccupiedByGhost())
+            )
+                    || ((HUNTER.getDifficulty() == Enemy.Difficulty.RUNAWAY) && !(right.isOccupiedByPacMan()))
+            ) || HUNTER.getState() == Actor.State.HOMING
+            )
             ){
                 right.setCost(min.getCost() + 1);
                 right.setTotal(right.getCost() + right.getHeuristics());
@@ -236,15 +203,61 @@ public class Pathfinder {
     }
 
     /**
+     * Calculate the heuristics from a tile to a goal via Pythagoras' formula
+     * @param xTile x-coordinate of the starting tile
+     * @param yTile y-coordinate of the starting tile
+     * @param xGoal x-coordinate of the aimed tile
+     * @param yGoal y-coordinate of the aimed tile
+     * @return length of the direct connection between the tiles
+     */
+    private double calcHeuristics(int xTile, int yTile, int xGoal, int yGoal){
+        return Math.sqrt( Math.pow(xTile - xGoal, 2) + Math.pow(yTile - yGoal, 2));
+    }
+
+    /**
+     * Goes through the 'open'-list until it finds the tile on which the hunter is at right now.
+     * @return Index of the 'open'-list where the hunter's at
+     */
+    private int searchHunter(){
+        int i = 0;
+        while(OPEN.get(i) != MATRIX[HUNTER.getXCoordinate()][HUNTER.getYCoordinate()]){
+            i++;
+        }
+        return i;
+    }
+
+    /**
+     * Runs through the whole 'open'-list and searches for the tile in the map with the lowest
+     * total-value, which is the sum of the costs and the heuristics.
+     * This tile is needed for the next step of the A*-algorithm and will be removed from the
+     * 'open'-list.
+     * @return Tile with lowest total-value
+     */
+    private Tile extractMinimum(){
+        Tile temp = new Tile();
+        int tempPos = 0;
+        int len = OPEN.size();
+        if(len == 0) return null;                      //If the 'open'-list is empty, there is no possible path to the target.
+        for(int i = 0; i < len - 1; i++) {
+            if (temp.getTotal() > OPEN.get(i).getTotal()) {
+                temp = OPEN.get(i);
+                tempPos = i;
+            }
+        }
+        OPEN.remove(tempPos);
+        return temp;
+    }
+
+    /**
      * Calculates the shortest path to the target.
      * @return next tile from the actor on the way to its target.
      */
     public Tile aStarResult(){
-        Tile temp = Map.getTile(TARGET_X, TARGET_Y);
+        Tile temp = MATRIX[TARGET_X][TARGET_Y];
         while(true){ if(aStarAlg()) break; }
         if(noWay) return null;
-        if(temp == Map.getTile(HUNTER.getXPosition(), HUNTER.getYPosition())) return temp;
-        while(temp.getPrev() != Map.getTile(HUNTER.getXPosition(), HUNTER.getYPosition())){
+        if(temp == MATRIX[HUNTER.getXCoordinate()][HUNTER.getYCoordinate()]) return temp;
+        while(temp.getPrev() != MATRIX[HUNTER.getXCoordinate()][HUNTER.getYCoordinate()]){
             temp = temp.getPrev();
         }
         return temp;

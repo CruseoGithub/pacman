@@ -20,7 +20,7 @@ import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.PacMan;
 /**
- * Local variables used in this class
+ * (Jabba)The HUD shows: Score, Time, Lives and functions as a Pause-button.
  */
 public class Hud {
     public Stage stage;

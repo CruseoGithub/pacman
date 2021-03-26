@@ -29,7 +29,6 @@ public class Hud {
     private final MapScreen SCREEN;
 
     public float time;
-    public Integer levelScore;
     public boolean visible;
 
     private final ArrayList<String> STAGES = new ArrayList<>();
@@ -58,7 +57,6 @@ public class Hud {
         this.SCREEN = screen;
         int tileSize = Map.getTileSize();
         time = 120;
-        levelScore = 0;
         STAGES.add(assets.MAP_1);
         STAGES.add(assets.MAP_2);
         STAGES.add(assets.MAP_3);

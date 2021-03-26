@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 import uas.lntv.pacmangame.Managers.Assets;
-import uas.lntv.pacmangame.Maps.Map;
+import uas.lntv.pacmangame.Maps.GameMap;
 import uas.lntv.pacmangame.Maps.Tile;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Scenes.ControllerButtons;
@@ -15,9 +15,10 @@ import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
-
+/**
+ *
+ */
 public class GameScreen extends MapScreen {
-
 
     private boolean PauseActive = false;
     private boolean paused = false;
@@ -108,7 +109,7 @@ public class GameScreen extends MapScreen {
             PacManGame.resetLevel();
         }
 
-        if(hud.levelScore == 150){
+        if(GameMap.getCollectedDots() == GameMap.TOTAL_DOTS){
             PacManGame.levelUp();
             PacManGame.increaseScore((int)hud.time);
             this.dispose();

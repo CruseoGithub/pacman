@@ -18,31 +18,27 @@ import uas.lntv.pacmangame.Sprites.Actor;
  * This class is abstract and should be implemented as a GameMap or MenuMap
  */
 public abstract class Map {
+
+    /* Fields */
+
     private final boolean firstMap;
-    public OrthogonalTiledMapRenderer renderer;
+
     protected final Assets ASSETS;
-
-    public TiledMapTileLayer layerWall;
-    public TiledMapTileLayer layerPath;
-    public TiledMapTileLayer layerCollect;
-
-    protected  final TiledMap TMX_MAP;
-    public TiledMapTileLayer layerControlButton;
-    public TiledMapTileLayer layerControlZone;
-
+    protected final TiledMap TMX_MAP;
     protected static int mapWidth;
     protected static int mapHeight;
     protected static int tileSize;
-
     protected Tile[][] matrix;
 
-    public static int getMapWidth(){ return mapWidth; }
-    public static int getMapHeight(){ return mapHeight; }
-    public static int getTileSize(){ return tileSize; }
+    public OrthogonalTiledMapRenderer renderer;
+    public TiledMapTileLayer layerCollect;
+    public TiledMapTileLayer layerControlButton;
+    public TiledMapTileLayer layerControlZone;
+    public TiledMapTileLayer layerPath;
+    public TiledMapTileLayer layerWall;
 
-    public Tile[][] getMatrix(){ return matrix; }
 
-    //public Vector3 randomItemPos;
+    /* Constructor */
 
     /**
      * The constructor loads the graphic layers of the tmx-Mapfile and sets them up into a Maprenderer
@@ -77,6 +73,56 @@ public abstract class Map {
         //randomItemPos = new Vector3(9, 33, 0);
     }
 
+    /* Accessors */
+
+    public static int getMapHeight(){ return mapHeight; }
+
+    public static int getMapWidth(){ return mapWidth; }
+
+    public static int getTileSize(){ return tileSize; }
+
+    public Tile[][] getMatrix(){ return matrix; }
+
+    /**
+     * get a tile by position
+     * @param xPosition x-position of the tile
+     * @param yPosition y-position of the tile
+     * @return returns the tile
+     */
+    public Tile getTile(int xPosition, int yPosition){
+        return matrix[xPosition / tileSize][yPosition / tileSize];
+    }
+
+    /**
+     * get the neighbouring tile in a certain direction
+     * @param xPosition x-position of the current tile
+     * @param yPosition y-position of the current tile
+     * @param dir direction to the neighbouring tile
+     * @return returns the neighbouring tile
+     */
+    public Tile getTile(int xPosition, int yPosition, Actor.Direction dir){
+        int nextCellX = ((xPosition/ tileSize));
+        int nextCellY = ((yPosition/ tileSize));
+        switch (dir) {
+            case RIGHT:
+                nextCellX = ((xPosition+ tileSize) / tileSize);
+                break;
+            case LEFT:
+                nextCellX = ((xPosition- tileSize) / tileSize);
+                break;
+            case UP:
+                nextCellY = ((yPosition+ tileSize) / tileSize);
+                break;
+            case DOWN:
+                nextCellY = ((yPosition- tileSize) / tileSize);
+                break;
+
+        }
+        return matrix[nextCellX][nextCellY];
+    }
+
+    /* Methods */
+
     /**
      * This Method will generade the matrix which holds the information about every Tile in the Map
      * It iterates through the matrix and adds specific tiles to it depending on the tile type.
@@ -106,7 +152,11 @@ public abstract class Map {
      * Should be implemented in child classes.
      * @param amount the total amount of Dots/Points generated on the map
      */
-    public abstract void generateCollectables(Tile.Item item, int amount);
+    protected abstract void generateCollectables(Tile.Item item, int amount);
+
+    public int countItems() {
+        return 0;
+    }
 
     /**
      * this is a helper-method. it generates a cell with a textureregion depending on type specified.
@@ -170,63 +220,8 @@ public abstract class Map {
         return cell;
     }
 
-    public void generateRandomItem() {
-    }
-    public void generateRandomItem(Vector3 position) {
-    }
     public void generateSpecialItem(){
 
-    }
-
-    /**
-     * get a tile by position
-     * @param xPosition x-position of the tile
-     * @param yPosition y-position of the tile
-     * @return returns the tile
-     */
-    public Tile getTile(int xPosition, int yPosition){
-        return matrix[xPosition / tileSize][yPosition / tileSize];
-    }
-
-    /**
-     * get the neighbouring tile in a certain direction
-     * @param xPosition x-position of the current tile
-     * @param yPosition y-position of the current tile
-     * @param dir direction to the neighbouring tile
-     * @return returns the neighbouring tile
-     */
-    public Tile getTile(int xPosition, int yPosition, Actor.Direction dir){
-        int nextCellX = ((xPosition/ tileSize));
-        int nextCellY = ((yPosition/ tileSize));
-        switch (dir) {
-            case RIGHT:
-                nextCellX = ((xPosition+ tileSize) / tileSize);
-                break;
-            case LEFT:
-                nextCellX = ((xPosition- tileSize) / tileSize);
-                break;
-            case UP:
-                nextCellY = ((yPosition+ tileSize) / tileSize);
-                break;
-            case DOWN:
-                nextCellY = ((yPosition- tileSize) / tileSize);
-                break;
-
-        }
-        return matrix[nextCellX][nextCellY];
-    }
-
-    /**
-     * Not implemented !!!!!!!!!!!
-     * @param tile
-     * @param type
-     */
-    public void setTile(Tile tile, Tile.Type type){
-        tile.type = type;
-    }
-
-    public int countItems() {
-        return 0;
     }
 
     /**

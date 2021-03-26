@@ -74,6 +74,8 @@ public abstract class Actor {
         return xPosition;
     }
 
+    public int getXCoordinate(){ return xPosition / TILE_SIZE; }
+
     public void setXPosition(int xPosition) {
         this.xPosition = xPosition;
     }
@@ -81,6 +83,8 @@ public abstract class Actor {
     public int getYPosition() {
         return yPosition;
     }
+
+    public int getYCoordinate() { return yPosition / TILE_SIZE; }
 
     public void setYPosition(int yPosition) {
         this.yPosition = yPosition;

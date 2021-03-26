@@ -25,38 +25,30 @@ public abstract class Actor {
         }
     }
 
-    public enum State {
-        RUNNING, DIEING, HOMING, BOXED
-    }
+    public enum State { RUNNING, DIEING, HOMING, BOXED }
 
+    protected Animation animation;
     protected Assets assets;
-
+    protected boolean mouthOpen;
+    protected Direction direction;
+    protected Direction nextDirection;
+    protected Direction prevDirection;
+    protected final int TILE_SIZE;
+    protected final Map MAP;
+    protected final MapScreen SCREEN;
+    protected float animationSpeed;
+    protected float rotation;
     protected int xPosition;
     protected int yPosition;
     protected int homeX;
     protected int homeY;
-
-    protected final int TILE_SIZE;
-    protected float rotation;
-
     protected int speed;
     protected int texturePositionX;
     protected int texturePositionY;
-    protected Direction direction;
-    protected Direction nextDirection;
-    protected Direction prevDirection;
-
     protected State state;
-
     protected Sprite sprite;
-    protected TextureRegion region;
     protected Texture texture;
-    protected final MapScreen SCREEN;
-    protected final Map MAP;
-
-    protected Animation animation;
-    protected float animationSpeed;
-    protected boolean mouthOpen;
+    protected TextureRegion region;
 
 
     /* Constructor */
@@ -75,47 +67,68 @@ public abstract class Actor {
 
     /* Accessors */
 
-    public Animation getAnimation(){ return this.animation; }
+    public Animation getAnimation(){ return animation; }
 
-    public int getSpeed() { return speed; }
-
-    public void setSpeed(int speed) { this.speed = speed; }
+    public Direction getDirection() { return direction; }
 
     public int getHomeX(){ return homeX; }
 
     public int getHomeY(){ return homeY; }
 
-    public int getXPosition() { return xPosition; }
+    public int getSpeed() { return speed; }
 
+    /**
+     * Divides the pixel-coordinate x-position by the TILE_SIZE of the map.
+     * @return x-tile-coordinate
+     */
     public int getXCoordinate(){ return xPosition / TILE_SIZE; }
 
-    public void setXPosition(int xPosition) { this.xPosition = xPosition; }
+    public int getXPosition() { return xPosition; }
+
+    /**
+     * Divides the pixel-coordinate y-position by the TILE_SIZE of the map.
+     * @return y-tile-coordinate
+     */
+    public int getYCoordinate() { return yPosition / TILE_SIZE; }
 
     public int getYPosition() { return yPosition; }
 
-    public int getYCoordinate() { return yPosition / TILE_SIZE; }
+    public State getState(){ return state; }
 
-    public void setYPosition(int yPosition) { this.yPosition = yPosition; }
+    /* Mutators */
 
-    public void setTexture(Texture texture){ this.texture = texture; }
-
+    /**
+     * Resets the texturePosition to (0|0). This is needed for the lives in the HUD, when PacMan
+     * dies and regains a life in the same level.
+     */
     public void resetTexturePosition() {
         this.texturePositionX = 0;
         this.texturePositionY = 0;
     }
 
-    public Direction getDirection() { return direction; }
-
-    public void setNextDirection(Direction nextDirection) {
-        this.nextDirection = nextDirection;
-    }
+    public void setNextDirection(Direction nextDirection) { this.nextDirection = nextDirection; }
 
     public void setRotation(int rotation) { this.rotation = rotation; }
 
-    public State getState(){ return this.state; }
+    public void setSpeed(int speed) { this.speed = speed; }
 
     public void setState(State state){ this.state = state; }
 
+    public void setTexture(Texture texture){ this.texture = texture; }
+
+    public void setXPosition(int xPosition) { this.xPosition = xPosition; }
+
+    public void setYPosition(int yPosition) { this.yPosition = yPosition; }
+
+    /* Methods */
+
+    /**
+     * This is highly necessary, when you want to double the speed of an Actor as result of an
+     * action on the field. This usually happens, when one step on the tile has been made.
+     * If double the speed then without this correction, your Actor will not be able to detect
+     * WALLS anymore, because you won't end up moving on a multiple of TILE_SIZE.
+     * @param now the direction in which the Actor is moving right now.
+     */
     public void correctPosition(Direction now) {
         switch (now) {
             case UP:
@@ -133,6 +146,42 @@ public abstract class Actor {
         }
     }
 
+    /**
+     * Let the Actors collide with each other. If PacMan is not buffed, he will die, lose a life
+     * and the Ghosts will return to their place.
+     */
+    public void collide() {
+        this.state = State.DIEING;
+        for(Enemy ghost : SCREEN.getGhosts()){
+            if (ghost.getState() != State.BOXED) {
+                ghost.setState(State.HOMING);
+                MAP.getTile(ghost.xPosition, ghost.yPosition).leave(ghost);
+            }
+        }
+    }
+
+    /**
+     * General method to draw the Actor on the screen.
+     * The SpriteBatch must begin in instance.
+     */
+    public void draw(){
+        PacManGame.batch.draw(texture,
+                xPosition, yPosition,
+                sprite.getOriginX(), sprite.getOriginY(),
+                TILE_SIZE, TILE_SIZE,
+                sprite.getScaleX(), sprite.getScaleY(),
+                rotation,
+                texturePositionX, texturePositionY,
+                32, 32, false, false
+        );
+    }
+
+    /**
+     * This method moves the Actor as long as it's way isn't blocked.
+     * It also turns the Actor if it changes direction.
+     * If the Actor reaches the end of the transport-pipe on the GameScreen, it will also warp to
+     * the other side of the screen.
+     */
     public void move() {
         if (xPosition >= TILE_SIZE
                 && xPosition <= 26 * TILE_SIZE
@@ -247,28 +296,10 @@ public abstract class Actor {
         }
     }
 
-    public void draw(){
-        PacManGame.batch.draw(texture,
-                xPosition, yPosition,
-                sprite.getOriginX(), sprite.getOriginY(),
-                TILE_SIZE, TILE_SIZE,
-                sprite.getScaleX(), sprite.getScaleY(),
-                rotation,
-                texturePositionX, texturePositionY,
-                32, 32, false, false
-        );
-    }
-
-    public void collide() {
-        this.state = State.DIEING;
-        for(Enemy ghost : SCREEN.getGhosts()){
-            if (ghost.getState() != State.BOXED) {
-                ghost.setState(State.HOMING);
-                MAP.getTile(ghost.xPosition, ghost.yPosition).leave(ghost);
-            }
-        }
-    }
-
+    /**
+     * Updates the animation of the Actor.
+     * @param dt Time parameter used by libGDX
+     */
     public void update(float dt){ animation.update(dt); }
 
 }

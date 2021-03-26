@@ -8,15 +8,18 @@ import uas.lntv.pacmangame.Sprites.Actor.State;
 
 
 public class Animation {
+
+    /* Fields */
+
     private final Actor ACTOR;
     private final Assets ASSETS;
-    private float animationSpeed;
-    private final MapScreen SCREEN;
     private final int FRAME_WIDTH;
-
+    private final MapScreen SCREEN;
+    private float animationSpeed;
     private float tmpTimerAnimation = 0;
     private int tmp = 0;
 
+    /* Constructor */
 
     public Animation(Actor actor, final Assets ASSETS, float animationSpeed, MapScreen screen, int frameCount) {
         this.ACTOR = actor;
@@ -26,7 +29,7 @@ public class Animation {
         this.FRAME_WIDTH = actor.region.getRegionWidth() / frameCount;
     }
 
-    public void resetTmp(){ this.tmp = 0; }
+    /* Methods */
 
     public void animate() {
         if (ACTOR instanceof PacMan) {
@@ -101,6 +104,8 @@ public class Animation {
             } else ACTOR.texturePositionX = 0;
         }
     }
+
+    public void resetTmp(){ this.tmp = 0; }
 
     public void update(float dt) {
         tmpTimerAnimation += dt;

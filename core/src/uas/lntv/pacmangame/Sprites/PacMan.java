@@ -14,8 +14,8 @@ import uas.lntv.pacmangame.Screens.ScoreScreen;
 /**
  * PacMan is our protagonist. He is a yellow ball with a mouth with the size of half of his body.
  * PacMan is able to eat dots and collect items to get buffed.
- * He is very afraid of ghosts and should avoid contact with them unless he ate a cherrylicious
- * hunter item and became SuperPacMan, who is also able to eat ghosts.
+ * He is very afraid of ghosts and should avoid contact with them unless he eats a cherrylicious
+ * hunter item and becomes SuperPacMan, who is also able to eat ghosts.
  * PacMan is also representing himself in the HUD and displays the amount of remaining lives with
  * his own body.
  */

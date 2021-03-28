@@ -20,7 +20,14 @@ public class Animation {
     private int tmp = 0;
 
     /* Constructor */
-
+    /**
+     * Create a new animation
+     * @param actor the actor
+     * @param ASSETS asset management
+     * @param animationSpeed the speed for the animation
+     * @param screen the screen in which the animation will be created
+     * @param frameCount number of frames of a sprite
+     */
     public Animation(Actor actor, final Assets ASSETS, float animationSpeed, MapScreen screen, int frameCount) {
         this.ACTOR = actor;
         this.ASSETS = ASSETS;
@@ -30,7 +37,11 @@ public class Animation {
     }
 
     /* Methods */
-
+    /**
+     * Animates the actors Enemy and the pacman depending on his current state
+     * The method takes their sprite and draws a rectangle around the desired frame
+     * After that it goes to next one and repeats that
+     */
     public void animate() {
         if (ACTOR instanceof PacMan) {
             switch (ACTOR.state) {
@@ -107,6 +118,10 @@ public class Animation {
 
     public void resetTmp(){ this.tmp = 0; }
 
+    /**
+     * This method adjusts the speed for the animation depending on whose sprite is chosen
+     * @param dt time parameter used by libGDX
+     */
     public void update(float dt) {
         tmpTimerAnimation += dt;
         if (ACTOR instanceof PacMan && ACTOR.state != State.DIEING) {

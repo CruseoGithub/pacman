@@ -20,7 +20,7 @@
  This means, over time there will be more ghosts which get smarter. 
  Also the overall speed of every actor will increase. 
  
- The fist map features a classic pac-man design and layout. All other maps keep the same layout but have some very unique graphics. 
+ The first map features a classic pac-man design and layout. All other maps keep the same layout but have some very unique graphics. 
  We wanted to have our on take on the game, so we did put a lot of effort into designing these maps. Each map has its own look and feel.
  The custom SFX and music gives the game a personal touch too. ("ALARM!!!!")
  

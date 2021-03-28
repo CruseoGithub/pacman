@@ -24,34 +24,31 @@ import uas.lntv.pacmangame.PacManGame;
  * The SplashScreen is the first thing shown when the application starts.
  */
 public class SplashScreen implements Screen {
-    private final PacManGame GAME;
-    private final Assets ASSETS;
 
-    private final Sprite SPRITE;
-    private float checkpoint = 0.04f;
-    private int texturePositionX = 0;
-    private int texturePositionY = 0;
-    private float progress = 0;
-
-    private final OrthographicCamera CAM;
-    private final Viewport gamePort;
-
-    private final OrthogonalTiledMapRenderer renderer;
-
-    private final int MAP_WIDTH;
-    private final int MAP_HEIGHT;
-    private final int TILE_SIZE;
-
-    private final TiledMapTileLayer layerLNTV;
-    private final TiledMapTileLayer layerGDX;
-    private TiledMapTileLayer visibleLayer;
-
-    private float timer = 0;
-    private float time = 0;
-    private float alpha = 0;
+    /* Fields */
 
     private boolean touchEvent = false;
+    private final Assets ASSETS;
+    private final OrthographicCamera CAM;
+    private final OrthogonalTiledMapRenderer renderer;
+    private final PacManGame GAME;
+    private final Sprite SPRITE;
+    private final Viewport gamePort;
+    private final int MAP_HEIGHT;
+    private final int MAP_WIDTH;
+    private final int TILE_SIZE;
+    private final TiledMapTileLayer layerGDX;
+    private final TiledMapTileLayer layerLNTV;
+    private float alpha = 0;
+    private float checkpoint = 0.04f;
+    private float progress = 0;
+    private float timer = 0;
+    private float time = 0;
+    private int texturePositionX = 0;
+    private int texturePositionY = 0;
+    private TiledMapTileLayer visibleLayer;
 
+    /* Constructor */
 
     /**
      * Main constructor of the SplashScreen
@@ -59,8 +56,7 @@ public class SplashScreen implements Screen {
      * @param ASSETS asset management
      */
     public SplashScreen(final PacManGame GAME, final Assets ASSETS){
-
-        //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
+        //sets height and width of the desktop window (16:9-format)
         if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
             Gdx.graphics.setWindowedMode(450, 800);
         }
@@ -106,15 +102,87 @@ public class SplashScreen implements Screen {
 
     }
 
+    /* Methods */
+
+    /**
+     * Uses the update method to check the time and draws the logo on the screen.
+     * @param delta time parameter used by libGDX
+     */
     @Override
-    public void show() { }
+    public void render(float delta) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        renderer.setView(CAM);
+        renderer.render();
+
+        update();
 
 
+    }
+
+    /**
+     * rizises the splashscreen to the new values
+     * @param width new width of the screen
+     * @param height new height of the screen
+     */
+    @Override
+    public void resize(int width, int height) {
+        gamePort.update(width, height, false);
+        gamePort.getCamera().position.set(MAP_WIDTH * TILE_SIZE / 2f, MAP_HEIGHT * TILE_SIZE / 2f, 0);
+        gamePort.getCamera().update();
+    }
+
+    /**
+     * displays the the logos and then moves on to displaying the loading pacman icon
+     */
     private void update(){
         time = Gdx.graphics.getDeltaTime();
         timer += time;
         if(timer < 10) updateSplash();
         else updateLoading();
+    }
+
+    /**
+     * Displays the the loading pacman icon in the middle of the screen.
+     * The Icon shows the progess toward loading the game. When finished it changes to the menu screen.
+     */
+    private void updateLoading(){
+        visibleLayer.setVisible(false);
+
+        //Grabing the center point of the Screen
+        Vector3 center = new Vector3((float)(Gdx.graphics.getWidth()) / 2, (float)(Gdx.graphics.getHeight()) / 2, 0);
+        CAM.unproject(center);
+
+        //Move the center of Sprite from left/bottom corner to center
+        center.x -= 256 / 2f;
+        center.y -= 256 / 2f;
+
+        PacManGame.batch.begin();
+        PacManGame.batch.setProjectionMatrix(CAM.combined);
+
+        //Draws the Pacman icon on the screen
+        PacManGame.batch.draw(SPRITE.getTexture(), center.x, center.y, SPRITE.getOriginX(), SPRITE.getOriginY(),
+                256, 256, SPRITE.getScaleX(), SPRITE.getScaleY(), 0,
+                texturePositionX, texturePositionY, 256, 256, false, false
+        );
+        PacManGame.batch.end();
+
+        //lerps to the next texture position. when progress is finished it loads the menu screen.
+        progress = MathUtils.lerp(progress, ASSETS.manager.getProgress(), 0.025f);
+        if(progress > checkpoint){
+            checkpoint += 0.04f;
+            if(texturePositionX < 1024) texturePositionX += 256;
+            else{
+                texturePositionX = 0;
+                texturePositionY += 256;
+            }
+        }
+        if(ASSETS.manager.update() && progress > 0.99f){
+            this.dispose();
+            GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
+        }
+
     }
 
     /**
@@ -139,65 +207,13 @@ public class SplashScreen implements Screen {
         if(timer > 8 && timer < 10) alpha -= time / 2;
     }
 
-    private void updateLoading(){
-        visibleLayer.setVisible(false);
-
-        //Grabing the center point of the Screen
-        Vector3 center = new Vector3((float)(Gdx.graphics.getWidth()) / 2, (float)(Gdx.graphics.getHeight()) / 2, 0);
-        CAM.unproject(center);
-
-        //Move the center of Sprite from left/bottom corner to center
-        center.x -= 256 / 2f;
-        center.y -= 256 / 2f;
-
-        PacManGame.batch.begin();
-        PacManGame.batch.setProjectionMatrix(CAM.combined);
-
-        PacManGame.batch.draw(SPRITE.getTexture(), center.x, center.y, SPRITE.getOriginX(), SPRITE.getOriginY(),
-                256, 256, SPRITE.getScaleX(), SPRITE.getScaleY(), 0,
-                texturePositionX, texturePositionY, 256, 256, false, false
-        );
-        PacManGame.batch.end();
-
-        progress = MathUtils.lerp(progress, ASSETS.manager.getProgress(), 0.025f);
-        if(progress > checkpoint){
-            checkpoint += 0.04f;
-            if(texturePositionX < 1024) texturePositionX += 256;
-            else{
-                texturePositionX = 0;
-                texturePositionY += 256;
-            }
-        }
-        if(ASSETS.manager.update() && progress > 0.99f){
-            this.dispose();
-            GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
-        }
-
-    }
-
-    /**
-     * Uses the update method to check the time and draws the logo on the screen.
-     * @param delta time parameter used by libGDX
-     */
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        renderer.setView(CAM);
-        renderer.render();
-
-        update();
-
-
-    }
+    /* Unused methods that needed to be adopted from libGDX' Screen class. */
 
     @Override
-    public void resize(int width, int height) {
-        gamePort.update(width, height, false);
-        gamePort.getCamera().position.set(MAP_WIDTH * TILE_SIZE / 2f, MAP_HEIGHT * TILE_SIZE / 2f, 0);
-        gamePort.getCamera().update();
-    }
+    public void dispose() {  }
+
+    @Override
+    public void hide() {  }
 
     @Override
     public void pause() {  }
@@ -206,9 +222,6 @@ public class SplashScreen implements Screen {
     public void resume() {  }
 
     @Override
-    public void hide() {  }
-
-    @Override
-    public void dispose() {  }
+    public void show() { }
 
 }

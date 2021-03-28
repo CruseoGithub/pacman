@@ -58,5 +58,4 @@ public class MenuScreen extends MapScreen {
         }
     }
 
-
 }

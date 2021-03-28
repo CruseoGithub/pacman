@@ -19,8 +19,12 @@ import uas.lntv.pacmangame.Sprites.PacMan;
  */
 public class ScoreScreen extends MapScreen {
 
-    private final BitmapFont FONT;
+    /* Fields */
+
     private boolean resetAsked = false;
+    private final BitmapFont FONT;
+
+    /* Constructor */
 
     /**
      * This screen is a separate room where you can see the high-score list.
@@ -38,37 +42,7 @@ public class ScoreScreen extends MapScreen {
         FONT.getData().setScale(FONT.getScaleX()*2);
     }
 
-    /**
-     * Checks the position of PacMan for quitting this screen or resetting all settings.
-     * @param dt time parameter used by libGDX
-     */
-    @Override
-    public void update(float dt) {
-        super.update(dt);
-        if(pacman.getXPosition() <= 2* TILE_SIZE) {
-            this.dispose();
-            GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
-        }
-        if(pacman.getXPosition() == 24 * TILE_SIZE) resetAsked = false;
-        if(pacman.getXPosition() >= 25 * TILE_SIZE) {
-            if(!resetAsked) {
-                resetAsked = true;
-                Gdx.input.getTextInput(
-                        new Input.TextInputListener() {
-                            @Override
-                            public void input(String answer) {
-                                if (answer.equals("Yes")) PrefManager.resetScores();
-                            }
-
-                            @Override
-                            public void canceled() {
-                            }
-                        },
-                        "Type 'Yes' to do a factory reset!", "No", ""
-                );
-            }
-        }
-    }
+    /* Methods */
 
     /**
      * This method draws and animates PacMan on the high-score board and writes the scores with the
@@ -107,6 +81,38 @@ public class ScoreScreen extends MapScreen {
             );
         }
         PacManGame.batch.end();
+    }
+
+    /**
+     * Checks the position of PacMan for quitting this screen or resetting all settings.
+     * @param dt time parameter used by libGDX
+     */
+    @Override
+    public void update(float dt) {
+        super.update(dt);
+        if(pacman.getXPosition() <= 2* TILE_SIZE) {
+            this.dispose();
+            GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
+        }
+        if(pacman.getXPosition() == 24 * TILE_SIZE) resetAsked = false;
+        if(pacman.getXPosition() >= 25 * TILE_SIZE) {
+            if(!resetAsked) {
+                resetAsked = true;
+                Gdx.input.getTextInput(
+                        new Input.TextInputListener() {
+                            @Override
+                            public void input(String answer) {
+                                if (answer.equals("Yes")) PrefManager.resetScores();
+                            }
+
+                            @Override
+                            public void canceled() {
+                            }
+                        },
+                        "Type 'Yes' to do a factory reset!", "No", ""
+                );
+            }
+        }
     }
 
 }

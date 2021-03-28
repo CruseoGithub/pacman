@@ -30,6 +30,10 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.Joystick;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
+/**
+ * Abstract class for almost every screen, that will be used in our PacManGame.
+ * (Except of the SplashScreen)
+ */
 public abstract class MapScreen implements Screen {
 
     /* Fields */
@@ -186,7 +190,7 @@ public abstract class MapScreen implements Screen {
         controller.dispose();
         ASSETS.manager.get(ASSETS.HUNTING_MUSIC).stop();
         music.dispose();
-        hud.dispose();
+        if(!(this instanceof  PauseScreen)) hud.dispose();
     }
 
     /**

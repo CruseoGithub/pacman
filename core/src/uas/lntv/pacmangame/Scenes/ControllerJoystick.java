@@ -24,7 +24,7 @@ public class ControllerJoystick extends Controller {
     /**
      *
      * The joystick knob will move if the touch is dragged to any direction. How ever it wont leave the outer circle.
-     * It will set a new direction for pacman if the knob is moved for atleast 50 pixels.
+     * It will set a new direction for pacman if the knob is moved for at least 50 pixels.
      * it will calculate the direction
      *
      * Initializes with the parent constructor and sets the controller layer (grid) visible.
@@ -41,7 +41,7 @@ public class ControllerJoystick extends Controller {
      * getDirection - two methods:
      * (with boolean touchUp)
      * Checks the type of touch event. In case of a dragged event it will check
-     * if the current position moved atleast 50 Pixels from the touch down event.
+     * if the current position moved at least 50 Pixels from the touch down event.
      * In case of a touch up event it will skip this step and get the direction anyway. (efficient for short swipe gestures)
      * (without boolean touchUp)
      * Compares the touch down position to the given position and calculates angle.

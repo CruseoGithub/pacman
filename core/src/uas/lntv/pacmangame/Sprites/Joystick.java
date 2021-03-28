@@ -6,6 +6,9 @@ import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Managers.Assets;
 
+/**
+ * This class draws the joystick (circle and knob) on the screen
+ */
 public class Joystick extends Actor {
 
     /* Fields */
@@ -15,6 +18,11 @@ public class Joystick extends Actor {
 
     /* Constructor */
 
+    /**
+     * The constructor initializes the textures for the joystick circle and knob
+     * @param assets provide the assetsmanager instance
+     * @param screen instance of a screen which will contain the controller
+     */
     public Joystick(Assets assets, MapScreen screen){
         super(assets,0,0,screen);
         this.texture = assets.manager.get(assets.JOYSTICK_ZONE);
@@ -29,6 +37,9 @@ public class Joystick extends Actor {
 
     /* Methods */
 
+    /**
+     * draws the controller circle and knob on the screen
+     */
     @Override
     public void draw() {
         PacManGame.batch.draw(texture, getXPosition(), getYPosition(), 96, 96,

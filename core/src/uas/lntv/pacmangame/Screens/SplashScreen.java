@@ -56,8 +56,7 @@ public class SplashScreen implements Screen {
      * @param ASSETS asset management
      */
     public SplashScreen(final PacManGame GAME, final Assets ASSETS){
-
-        //Setzt Höhe und Breite des Desktopfensters (16:9 Format)
+        //sets height and width of the desktop window (16:9-format)
         if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
             Gdx.graphics.setWindowedMode(450, 800);
         }

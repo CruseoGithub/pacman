@@ -190,7 +190,7 @@ public abstract class MapScreen implements Screen {
         controller.dispose();
         ASSETS.manager.get(ASSETS.HUNTING_MUSIC).stop();
         music.dispose();
-        hud.dispose();
+        if(!(this instanceof  PauseScreen)) hud.dispose();
     }
 
     /**

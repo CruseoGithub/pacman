@@ -153,6 +153,7 @@ public class PauseScreen extends MapScreen {
         if(pacman.getYPosition() == 16*TILE_SIZE){
             if(pacman.getXPosition() <= 2*TILE_SIZE) {
                 this.dispose();
+                SCREEN.dispose();
                 if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Forfeited", PacManGame.getLevel() + 1)){
                     GAME.setScreen(new ScoreScreen(GAME, ASSETS, ASSETS.SCORE_MAP));
                 } else {

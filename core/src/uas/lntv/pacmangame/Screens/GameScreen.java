@@ -33,6 +33,13 @@ public class GameScreen extends MapScreen {
 
     /* Constructor */
 
+    /**
+     * Creates a screen with(out) HUD, PacMan, Ghost(s).
+     * According to current level, there are more (difficult) Ghosts.
+     * @param game running game
+     * @param assets asset management
+     * @param path the path where the map is stored
+     */
     public GameScreen(PacManGame game, Assets assets, String path) {
         super(game, assets, path, Type.GAME);
 
@@ -85,10 +92,15 @@ public class GameScreen extends MapScreen {
 
     /* Mutators */
 
+
     public void setPauseActive(boolean bool) { PauseActive = bool; }
+
 
     /* Methods */
 
+    /**
+     * Allows to generate new items when the cooldown is over and there are less than 4 items on the map.
+     */
     private void updateCoolDown(){
         if(itemTaken){
             itemCoolDown -= Gdx.graphics.getDeltaTime();
@@ -112,6 +124,10 @@ public class GameScreen extends MapScreen {
         }
     }
 
+    /**
+     * Changes back to normal PacMan after the Hunter-Item-Time is over.
+     * Ghosts also return to the difficulty they previously had and stop running away.
+     */
     private void updateHunter(){
         if(pacManSuper) {
             supStatusTime -= Gdx.graphics.getDeltaTime();
@@ -127,6 +143,9 @@ public class GameScreen extends MapScreen {
         }
     }
 
+    /**
+     * After the SloMo buff ends, the Ghosts return to their normal speed.
+     */
     private void updateSloMo(){
         if(enemiesSlow){
             slowDownTime -= Gdx.graphics.getDeltaTime();
@@ -140,12 +159,18 @@ public class GameScreen extends MapScreen {
         }
     }
 
+    /**
+     * Pause activation via spacebar.
+     */
     @Override
     protected boolean handleInput(){
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) PauseActive = true;
         return super.handleInput();
     }
 
+    /**
+     * Buffs of the different items that can be picked up.
+     */
     public void activateBuff(Tile.Item buffType){
         switch (buffType) {
             case HUNTER:
@@ -198,7 +223,10 @@ public class GameScreen extends MapScreen {
         }
         hud.stage.draw();
     }
-
+    /**
+     *  Game over when time hits 0, Level up when all dots are eaten.
+     *  When Pause is active the PauseScreen is opened.
+     */
     @Override
     public void update(float dt) {
         super.update(dt);

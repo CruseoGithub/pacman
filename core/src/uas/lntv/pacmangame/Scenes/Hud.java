@@ -20,28 +20,31 @@ import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.PacMan;
 /**
- * Local variables used in this class
+ * (Jabba)The HUD shows: Score, Time, Lives and functions as a Pause-button.
  */
 public class Hud {
 
-    public Stage stage;
-    private final Assets assets;
-    private final MapScreen SCREEN;
-
-    public float time;
-    public boolean visible;
-
-    private final ArrayList<String> STAGES = new ArrayList<>();
-    private final ArrayList<PacMan> LIVE_PAC_MEN = new ArrayList<>();
-
-    private final Label TIME_TEXT_LABEL;
-    private final Label TIME_LABEL;
-    private final Label SCORE_LABEL;
+    /* Fields */
 
     private boolean warned = false;
     private boolean red = false;
-    private float timeStamp;
+
     private final int WARNING_TIME = 30;
+    private final Assets assets;
+    private final ArrayList<PacMan> LIVE_PAC_MEN = new ArrayList<>();
+    private final ArrayList<String> STAGES = new ArrayList<>();
+    private final Label TIME_LABEL;
+    private final Label TIME_TEXT_LABEL;
+    private final Label SCORE_LABEL;
+    private final MapScreen SCREEN;
+
+    private float timeStamp;
+
+    public boolean visible;
+    public float time;
+    public Stage stage;
+
+    /* Constructor */
 
     /**
      * (Jabba)The HUD
@@ -49,7 +52,7 @@ public class Hud {
      * @param assets asset management
      * @param screen gets handed over
      * @param visible HUD only visible when true
-     * Arranges the HUD with SCORE, TIME & LIVES
+     * Arranges the HUD with SCORE, TIME and LIVES
      */
     @SuppressWarnings("DefaultLocale")
     public Hud(PacManGame game, Assets assets, MapScreen screen, boolean visible){
@@ -105,7 +108,7 @@ public class Hud {
         timeStamp = time;
     }
 
-    public final String getMap(){ return STAGES.get(PacManGame.getLevel() % 5); }
+    /* Methods */
 
     /**
      * Animates the images according to the lives of PacMan
@@ -127,6 +130,44 @@ public class Hud {
         pacman.setState(Actor.State.DIEING);
         pacman.update(dt);
         pacman.drawLife();
+    }
+
+    /**
+     * Function for redrawing the PacMans in the HUD
+     */
+    private void reset(PacMan pacman){
+        pacman.getAnimation().resetTmp();
+        pacman.setState(Actor.State.RUNNING);
+        pacman.resetTexturePosition();
+        pacman.setXPosition(pacman.getHomeX());
+        pacman.setYPosition(pacman.getHomeY());
+    }
+
+    public final String getMap(){ return STAGES.get(PacManGame.getLevel() % 5); }
+
+    public void dispose(){
+        stage.dispose();
+    }
+
+    /**
+     * Redraws the PacMans in the HUD when when you eat a LifeUp item.
+     */
+    public void resetLives(){
+        if (PacManGame.getLives() == 2) {
+            reset(LIVE_PAC_MEN.get(1));
+        }
+        if (PacManGame.getLives() == 3) {
+            reset(LIVE_PAC_MEN.get(2));
+        }
+    }
+
+    public void resetTimeStamp() {
+        if (time > WARNING_TIME){
+            TIME_TEXT_LABEL.setColor(Color.WHITE);
+            TIME_LABEL.setColor(Color.WHITE);
+            red = false;
+        }
+        timeStamp = time;
     }
 
     /**
@@ -180,40 +221,5 @@ public class Hud {
                 LIVE_PAC_MEN.get(2).drawLife();
             }
         }
-    }
-    /**
-     * Redraws the PacMans in the HUD when when you eat a LifeUp item.
-     */
-    public void resetLives(){
-        if (PacManGame.getLives() == 2) {
-            reset(LIVE_PAC_MEN.get(1));
-        }
-        if (PacManGame.getLives() == 3) {
-            reset(LIVE_PAC_MEN.get(2));
-        }
-    }
-    /**
-     * Function for redrawing the PacMans in the HUD
-     */
-    private void reset(PacMan pacman){
-        pacman.getAnimation().resetTmp();
-        pacman.setState(Actor.State.RUNNING);
-        pacman.resetTexturePosition();
-        pacman.setXPosition(pacman.getHomeX());
-        pacman.setYPosition(pacman.getHomeY());
-    }
-
-    public void resetTimeStamp() {
-        if (time > WARNING_TIME){
-            TIME_TEXT_LABEL.setColor(Color.WHITE);
-            TIME_LABEL.setColor(Color.WHITE);
-            red = false;
-        }
-        timeStamp = time;
-    }
-
-
-    public void dispose(){
-        stage.dispose();
     }
 }

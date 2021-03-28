@@ -12,7 +12,7 @@ import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 /**
- * The PauseScreen is an extension of the MapScreen class, it's shown when the game gets paused.
+ * The PauseScreen is shown when the game gets paused. You also can change some settings.
  * It will pop up, if you are inside a game and click in the area of the HUD (top).
  * When in this screen, the game is paused and can be resumed by selecting 'CONTINUE'.
  * Some options for sound and control can also be changed in here, you can also return to MENU.
@@ -234,5 +234,4 @@ public class PauseScreen extends MapScreen {
             ((MenuMap)map).getHighlightLayers().get(5).setVisible(true);
         }
     }
-
 }

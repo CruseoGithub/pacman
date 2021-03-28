@@ -42,7 +42,7 @@ public class GameScreen extends MapScreen {
     /**
      * Creates a screen with(out) HUD, PacMan, Ghost(s).
      * According to current level, there are more (difficult) Ghosts.
-     * @param game
+     * @param game running game
      * @param assets asset management
      * @param path the path where the map is stored
      */

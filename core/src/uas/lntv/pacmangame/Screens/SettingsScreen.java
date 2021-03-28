@@ -17,8 +17,8 @@ import uas.lntv.pacmangame.Sprites.PacMan;
  */
 public class SettingsScreen extends MapScreen {
 
-    private final BitmapFont FONT;
     private boolean controllerSet = false;
+    private final BitmapFont FONT;
 
     /**
      * Main constructor of the SettingsScreen

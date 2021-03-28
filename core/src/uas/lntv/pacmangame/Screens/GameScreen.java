@@ -20,21 +20,18 @@ import uas.lntv.pacmangame.Sprites.PacMan;
  */
 public class GameScreen extends MapScreen {
 
-    private boolean PauseActive = false;
-    private boolean paused = false;
+    /* Fields */
 
-    private boolean pacManSuper = false;
     private boolean enemiesSlow = false;
     private boolean itemTaken = false;
-
-    private float supStatusTime = 10;
-    private float slowDownTime = 10;
+    private boolean pacManSuper = false;
+    private boolean PauseActive = false;
+    private boolean paused = false;
     private float itemCoolDown = 0;
+    private float slowDownTime = 10;
+    private float supStatusTime = 10;
 
-    public void setPauseActive(boolean bool) {
-        PauseActive = bool;
-    }
-    public boolean isPacManSuper() { return pacManSuper; }
+    /* Constructor */
 
     public GameScreen(PacManGame game, Assets assets, String path) {
         super(game, assets, path, Type.GAME);
@@ -82,112 +79,17 @@ public class GameScreen extends MapScreen {
         }
     }
 
-    @Override
-    protected boolean handleInput(){
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) PauseActive = true;
-        return super.handleInput();
+    /* Accessors */
+
+    public boolean isPacManSuper() { return pacManSuper; }
+
+    /* Mutators */
+
+    public void setPauseActive(boolean bool) {
+        PauseActive = bool;
     }
 
-    @Override
-    public void update(float dt) {
-        super.update(dt);
-        if(ready) hud.time -= Gdx.graphics.getDeltaTime();
-
-        updateCoolDown();
-        updateHunter();
-        updateSloMo();
-
-        if(hud.time < 0){
-            this.dispose();
-            if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Time elapsed", PacManGame.getLevel() + 1)){
-                GAME.setScreen(new ScoreScreen(GAME, ASSETS, ASSETS.SCORE_MAP));
-            } else {
-                GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
-            }
-            PacManGame.resetLives();
-            PacManGame.resetScore();
-            PacManGame.resetLevel();
-        }
-
-        if(GameMap.getCollectedDots() == GameMap.TOTAL_DOTS){
-            PacManGame.levelUp();
-            PacManGame.increaseScore((int)hud.time);
-            this.dispose();
-            GAME.setScreen(new GameScreen(GAME, ASSETS, hud.getMap()));
-        }
-
-        if(paused) {
-            if(PrefManager.isJoystick()) this.controller = new ControllerJoystick(ASSETS, this);
-            else this.controller = new ControllerButtons(ASSETS,this);
-            if(PrefManager.isMusicOn()){
-                if(pacManSuper) ASSETS.manager.get(ASSETS.HUNTING_MUSIC).play();
-                else music.play();
-            }
-            paused = false;
-            PauseActive = false;
-        }
-
-        if(PauseActive){
-            if(music.isPlaying()) music.pause();
-            if(ASSETS.manager.get(ASSETS.HUNTING_MUSIC).isPlaying()) ASSETS.manager.get(ASSETS.HUNTING_MUSIC).pause();
-            GAME.setScreen(new PauseScreen(GAME, ASSETS, ASSETS.PAUSE, this, hud));
-            paused = true;
-        }
-
-    }
-
-    @Override
-    public void render(float delta) {
-        update(delta);
-        super.render(delta);
-        hud.update();
-        if (pacman.getState() == Actor.State.DIEING) {
-            hud.animateLives(delta);
-        }
-        hud.stage.draw();
-    }
-
-    public void activateBuff(Tile.Item buffType){
-        switch (buffType) {
-            case HUNTER:
-                this.itemTaken = true;
-                this.itemCoolDown += 10;
-                this.supStatusTime = 10;
-                if (!pacManSuper) {
-                    this.switchMusicHunting();
-                    this.pacman.setTexture(ASSETS.manager.get(ASSETS.SUPER_PAC));
-                    this.pacman.correctPosition(pacman.getDirection());
-                    this.pacman.setSpeed(this.pacman.getSpeed() * 2);
-                    this.pacManSuper = true;
-                }
-                break;
-            case SLOWMO:
-                this.itemTaken = true;
-                this.itemCoolDown += 10;
-                this.slowDownTime = 10;
-                if(!enemiesSlow) {
-                    for (Enemy ghost : GHOSTS) ghost.setSpeed(ghost.getSpeed() / 2);
-                    this.enemiesSlow = true;
-                }
-                break;
-            case TIME:
-                this.itemTaken = true;
-                this.itemCoolDown += 10;
-                this.hud.time += 10;
-                this.hud.resetTimeStamp();
-                break;
-            case LIFE:
-                this.itemTaken = true;
-                this.itemCoolDown += 10;
-                if(PacManGame.getLives() < 3) {
-                    PacManGame.addLive();
-                    hud.resetLives();
-                } else{
-                    PacManGame.increaseScore(75);
-                }
-                break;
-        }
-    }
+    /* Methods */
 
     private void updateCoolDown(){
         if(itemTaken){
@@ -241,8 +143,115 @@ public class GameScreen extends MapScreen {
     }
 
     @Override
+    protected boolean handleInput(){
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) PauseActive = true;
+        return super.handleInput();
+    }
+
+    public void activateBuff(Tile.Item buffType){
+        switch (buffType) {
+            case HUNTER:
+                this.itemTaken = true;
+                this.itemCoolDown += 10;
+                this.supStatusTime = 10;
+                if (!pacManSuper) {
+                    this.switchMusicHunting();
+                    this.pacman.setTexture(ASSETS.manager.get(ASSETS.SUPER_PAC));
+                    this.pacman.correctPosition(pacman.getDirection());
+                    this.pacman.setSpeed(this.pacman.getSpeed() * 2);
+                    this.pacManSuper = true;
+                }
+                break;
+            case SLOWMO:
+                this.itemTaken = true;
+                this.itemCoolDown += 10;
+                this.slowDownTime = 10;
+                if(!enemiesSlow) {
+                    for (Enemy ghost : GHOSTS) ghost.setSpeed(ghost.getSpeed() / 2);
+                    this.enemiesSlow = true;
+                }
+                break;
+            case TIME:
+                this.itemTaken = true;
+                this.itemCoolDown += 10;
+                this.hud.time += 10;
+                this.hud.resetTimeStamp();
+                break;
+            case LIFE:
+                this.itemTaken = true;
+                this.itemCoolDown += 10;
+                if(PacManGame.getLives() < 3) {
+                    PacManGame.addLive();
+                    hud.resetLives();
+                } else{
+                    PacManGame.increaseScore(75);
+                }
+                break;
+        }
+    }
+
+    @Override
     public void dispose() {
         super.dispose();
         hud.dispose();
+    }
+
+    @Override
+    public void render(float delta) {
+        update(delta);
+        super.render(delta);
+        hud.update();
+        if (pacman.getState() == Actor.State.DIEING) {
+            hud.animateLives(delta);
+        }
+        hud.stage.draw();
+    }
+
+    @Override
+    public void update(float dt) {
+        super.update(dt);
+        if(ready) hud.time -= Gdx.graphics.getDeltaTime();
+
+        updateCoolDown();
+        updateHunter();
+        updateSloMo();
+
+        if(hud.time < 0){
+            this.dispose();
+            if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Time elapsed", PacManGame.getLevel() + 1)){
+                GAME.setScreen(new ScoreScreen(GAME, ASSETS, ASSETS.SCORE_MAP));
+            } else {
+                GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
+            }
+            PacManGame.resetLives();
+            PacManGame.resetScore();
+            PacManGame.resetLevel();
+        }
+
+        if(GameMap.getCollectedDots() == GameMap.TOTAL_DOTS){
+            PacManGame.levelUp();
+            PacManGame.increaseScore((int)hud.time);
+            this.dispose();
+            GAME.setScreen(new GameScreen(GAME, ASSETS, hud.getMap()));
+        }
+
+        if(paused) {
+            if(PrefManager.isJoystick()) this.controller = new ControllerJoystick(ASSETS, this);
+            else this.controller = new ControllerButtons(ASSETS,this);
+            if(PrefManager.isMusicOn()){
+                if(pacManSuper) ASSETS.manager.get(ASSETS.HUNTING_MUSIC).play();
+                else music.play();
+            }
+            paused = false;
+            PauseActive = false;
+        }
+
+        if(PauseActive){
+            if(music.isPlaying()) music.pause();
+            if(ASSETS.manager.get(ASSETS.HUNTING_MUSIC).isPlaying()) ASSETS.manager.get(ASSETS.HUNTING_MUSIC).pause();
+            GAME.setScreen(new PauseScreen(GAME, ASSETS, ASSETS.PAUSE, this, hud));
+            paused = true;
+        }
+
     }
 }

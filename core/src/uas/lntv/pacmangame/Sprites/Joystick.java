@@ -7,19 +7,27 @@ import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Managers.Assets;
 
 public class Joystick extends Actor {
-    public Texture textureKnob;
+
+    /* Fields */
+
+    private final Texture TEXTURE_KNOB;
     protected int xPositionKnob, yPositionKnob;
 
-    public void setXPositionKnob(int xPositionKnob) { this.xPositionKnob = xPositionKnob; }
-    public void setYPositionKnob(int yPositionKnob) { this.yPositionKnob = yPositionKnob; }
-    public int getXPositionKnob() { return xPositionKnob; }
-    public int getYPositionKnob() { return yPositionKnob; }
+    /* Constructor */
 
     public Joystick(Assets assets, MapScreen screen){
         super(assets,0,0,screen);
         this.texture = assets.manager.get(assets.JOYSTICK_ZONE);
-        textureKnob = assets.manager.get(assets.JOYSTICK_KNOB);
+        TEXTURE_KNOB = assets.manager.get(assets.JOYSTICK_KNOB);
     }
+
+    /* Mutators */
+
+    public void setXPositionKnob(int xPositionKnob) { this.xPositionKnob = xPositionKnob; }
+
+    public void setYPositionKnob(int yPositionKnob) { this.yPositionKnob = yPositionKnob; }
+
+    /* Methods */
 
     @Override
     public void draw() {
@@ -27,6 +35,6 @@ public class Joystick extends Actor {
                 192, 192, 1, 1, rotation,
                 texturePositionX, texturePositionY, 192, 192, false, false
         );
-        PacManGame.batch.draw(textureKnob, xPositionKnob, yPositionKnob);
+        PacManGame.batch.draw(TEXTURE_KNOB, xPositionKnob, yPositionKnob);
     }
 }

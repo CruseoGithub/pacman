@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import uas.lntv.pacmangame.Managers.Assets;
-import uas.lntv.pacmangame.Maps.Map;
 import uas.lntv.pacmangame.PacManGame;
 import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Screens.GameScreen;
@@ -21,7 +20,12 @@ import uas.lntv.pacmangame.Screens.ScoreScreen;
  * his own body.
  */
 public class PacMan extends Actor {
-    protected PacManGame game;
+
+    /* Fields */
+
+    private final PacManGame GAME;
+
+    /* Constructor */
 
     /**
      * Create a new PacMan
@@ -40,7 +44,7 @@ public class PacMan extends Actor {
         homeX = initX;
         homeY = initY;
 
-        this.game = game;
+        this.GAME = game;
 
         this.texture = assets.manager.get(assets.PAC_MAN);
         region = new TextureRegion(texture);
@@ -55,6 +59,37 @@ public class PacMan extends Actor {
         region.flip(true, false);
         this.sprite = new Sprite(region);
         this.sprite.setOrigin(TILE_SIZE/2f, TILE_SIZE/2f);
+    }
+
+    /* Methods */
+
+    /**
+     * If PacMan as a hunter collides with a ghost, he will kill it.
+     * It will cause a sound effect and increase the score.
+     * Otherwise he will be killed by the ghost, lose a life and be set to his starting position.
+     */
+    @Override
+    public void collide() {
+        if(((GameScreen) SCREEN).isPacManSuper()){
+            if(PrefManager.isSfxOn()) assets.manager.get(assets.KILL).play(0.15f);
+            PacManGame.increaseScore(50);
+        } else {
+            super.collide();
+            if (PrefManager.isSfxOn()) assets.manager.get(assets.DIE).play(0.35f);
+            if (PacManGame.getLives() > 1) PacManGame.die();
+            else {
+                PacManGame.die();
+                super.SCREEN.dispose();
+                if (PacManGame.prefManager.addScore(PacManGame.getScore(), "Killed", PacManGame.getLevel() + 1)) {
+                    GAME.setScreen(new ScoreScreen(GAME, assets, assets.SCORE_MAP));
+                } else {
+                    GAME.setScreen(new MenuScreen(GAME, assets, assets.MENU_MAP));
+                }
+                PacManGame.resetScore();
+                PacManGame.resetLives();
+                PacManGame.resetLevel();
+            }
+        }
     }
 
     /**
@@ -78,32 +113,13 @@ public class PacMan extends Actor {
     }
 
     /**
-     * If PacMan as a hunter collides with a ghost, he will kill it.
-     * It will cause a sound effect and increase the score.
-     * Otherwise he will be killed by the ghost, lose a life and be set to his starting position.
+     * Moves like an Actor, but additionally collects dots and items while walking.
+     * @see Actor
      */
     @Override
-    public void collide() {
-        if(((GameScreen) SCREEN).isPacManSuper()){
-            if(PrefManager.isSfxOn()) assets.manager.get(assets.KILL).play(0.15f);
-            PacManGame.increaseScore(50);
-        } else {
-            super.collide();
-            if (PrefManager.isSfxOn()) assets.manager.get(assets.DIE).play(0.35f);
-            if (PacManGame.getLives() > 1) PacManGame.die();
-            else {
-                PacManGame.die();
-                super.SCREEN.dispose();
-                if (PacManGame.prefManager.addScore(PacManGame.getScore(), "Killed", PacManGame.getLevel() + 1)) {
-                    game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
-                } else {
-                    game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
-                }
-                PacManGame.resetScore();
-                PacManGame.resetLives();
-                PacManGame.resetLevel();
-            }
-        }
+    public void move(){
+        super.move();
+        MAP.collect(MAP.getTile(xPosition, yPosition)); //collect Dots
     }
 
     /**
@@ -115,16 +131,6 @@ public class PacMan extends Actor {
     public void update(float dt) {
         super.update(dt);
         if(getState() != State.DIEING) move();
-    }
-
-    /**
-     * Moves like an Actor, but additionally collects dots and items while walking.
-     * @see Actor
-     */
-    @Override
-    public void move(){
-        super.move();
-        MAP.collect(MAP.getTile(xPosition, yPosition)); //collect Dots
     }
 
 }

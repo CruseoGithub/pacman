@@ -18,17 +18,15 @@ public class Pathfinder {
 
     /* Fields */
 
-    private final Enemy HUNTER;
-    private final Tile[][] MATRIX;
+    private boolean noWay = false;
     private final ArrayList<Tile> OPEN = new ArrayList<>();
-
+    private final Enemy HUNTER;
     private final int TARGET_X;
     private final int TARGET_Y;
     private final int MAP_WIDTH;
     private final int MAP_HEIGHT;
     private final int TILE_SIZE;
-
-    private boolean noWay = false;
+    private final Tile[][] MATRIX;
 
     /* Constructors */
 

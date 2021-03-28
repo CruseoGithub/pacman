@@ -8,14 +8,52 @@ import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Joystick;
 
+/**
+ * This class creates a joystick controller.
+ * the joystick will show itself where ever you touch the screen and draws a circle with a joystick knob.
+ * Depending on where the knob is moved it will set a direction for pacman.
+ */
 public class ControllerJoystick extends Controller {
+
+    /* Fields */
+
     Vector3 touchDownPos;
     public Joystick joystick;
 
 
+    /**
+     *
+     * The joystick knob will move if the touch is dragged to any direction. How ever it wont leave the outer circle.
+     * It will set a new direction for pacman if the knob is moved for atleast 50 pixels.
+     * it will calculate the direction
+     *
+     * Initializes with the parent constructor and sets the controller layer (grid) visible.
+     * It implements methods to process touch inputs:
+     *
+     * touchDown - gets the touchdown position and sets the position of the joystick circle and knob to this position.
+     *
+     * touchDragged - checks if the dragged touch position results in a new direction for pacman.
+     * Draws the knob inside the circle relative to the angle of the touch position
+     *
+     * touchUp - checks if the final touch position results in a new direction for pacman.
+     * It will activate the pause menu if the touch position is correct.
+     *
+     * getDirection - two methods:
+     * (with boolean touchUp)
+     * Checks the type of touch event. In case of a dragged event it will check
+     * if the current position moved atleast 50 Pixels from the touch down event.
+     * In case of a touch up event it will skip this step and get the direction anyway. (efficient for short swipe gestures)
+     * (without boolean touchUp)
+     * Compares the touch down position to the given position and calculates angle.
+     * Depending on the angle it will set a new direction for pacman.
+     *
+     * @param assets provide the Assetsmanager instance for building the controller
+     * @param screen instance of a Screen which will contain the controller
+     */
     public ControllerJoystick(Assets assets, MapScreen screen){
+
         super(assets, screen);
-        touchEvent = false;
+        this.touchEvent = false;
         this.joystick = new Joystick(assets, screen);
         final int joystickZoneRadius = 192 / 2; // 192px x 192px
         final int joystickKnobRadius = 64 / 2; // 64px x 64px
@@ -24,6 +62,9 @@ public class ControllerJoystick extends Controller {
         screen.getMap().layerControlZone.setOpacity(1f);
 
         Gdx.input.setInputProcessor(new InputAdapter(){
+            /* Input Methods */
+
+            /*gets the touchdown position and sets the position of the joystick circle and knob to this position */
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 Vector3 touch = new Vector3(screenX, screenY, 0);
@@ -43,6 +84,8 @@ public class ControllerJoystick extends Controller {
                 return true;
             }
 
+            /*checks if the dragged touch position results in a new direction for pacman.
+            Draws the knob inside the circle relative to the angle of the touch position*/
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
                 if(touchDownPos == null) {return super.touchDragged(screenX, screenY, pointer);}
@@ -67,10 +110,12 @@ public class ControllerJoystick extends Controller {
 
                 return super.touchDragged(screenX, screenY, pointer);
             }
+
+            /* checks if the final touch position results in a new direction for pacman.
+            It will activate the pause menu if the touch position is correct. */
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 if(touchEvent) {
-                    //System.out.println("touch-up");
                     Vector3 touch = new Vector3(screenX, screenY, 0);
                     gameCam.unproject(touch);
                     setPause(touch.x, touch.y);
@@ -80,6 +125,10 @@ public class ControllerJoystick extends Controller {
                 return super.touchUp(screenX, screenY, pointer, button);
             }
 
+            /* Checks the type of touch event. In case of a dragged event it will check
+            if the current position moved atleast 50 Pixels from the touch down event.
+            In case of a touch up event it will skip this step and get the direction anyway. (efficient for short swipe gestures)
+             */
             public void getDirection(int screenX, int screenY, boolean touchUp){
                 if(!touchUp){
                     int minSwipe = 50;
@@ -96,13 +145,14 @@ public class ControllerJoystick extends Controller {
                     getDirection(screenX, screenY);
                 }
             }
+
+            /* compares the touch down position to the given position and calculates angle.
+            Depending on the angle it will set a new direction for pacman. */
             public void getDirection(int screenX, int screenY){
                 Vector3 touch = new Vector3(screenX, screenY, 0);
                 gameCam.unproject(touch);
-                //System.out.println("x:"+ touch.x+ "y:"+ touch.y);
 
                 double angle = Math.atan2((double) touch.x - touchDownPos.x, (double) touchDownPos.y - touch.y);
-                //System.out.println("Winkel: "+ angle);
 
                 if (angle > -0.5 && angle < 0.5){
                     //unten

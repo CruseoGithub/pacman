@@ -9,12 +9,41 @@ import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Screens.SplashScreen;
 
 public class PacManGame extends Game {
-	private static int level;
-	private static int score;
-	private static int lives;
-	public static SpriteBatch batch;
-	public static PrefManager prefManager;
+
+	/* Fields */
+
 	private Assets assets;
+	private static int level;
+	private static int lives;
+	private static int score;
+	public static PrefManager prefManager;
+	public static SpriteBatch batch;
+
+	/* Accessors */
+
+	public static int getLevel(){ return level; }
+
+	public static int getLives(){ return lives; }
+
+	public static int getScore(){ return score; }
+
+	/* Mutators */
+
+	public static void levelUp(){ level++; }
+
+	public static void resetLevel(){ level = 0; }
+
+	public static void increaseScore(int value){ score += value; }
+
+	public static void resetScore(){ score = 0; }
+
+	public static void die(){ lives--; }
+
+	public static void addLive(){ lives++; }
+
+	public static void resetLives(){ lives = 3; }
+
+	/* Methods */
 
 	@Override
 	public void create () {
@@ -28,31 +57,6 @@ public class PacManGame extends Game {
 		setScreen(new SplashScreen(this, assets));
 	}
 
-	public static int getLevel(){ return level; }
-
-	public static void levelUp(){
-		level++;
-	}
-
-	public static void resetLevel(){ level = 0; }
-
-	public static int getScore(){ return score; }
-
-	public static void increaseScore(int value){ score += value; }
-
-	public static void resetScore(){ score = 0; }
-
-	public static int getLives(){ return lives; }
-
-	public static void die(){ lives--; }
-
-	public static void addLive(){ lives++; }
-
-	public static void resetLives(){ lives = 3; }
-
-	@Override
-	public void render () { super.render(); }
-
 	@Override
 	public void dispose () {
 		super.dispose();
@@ -61,4 +65,8 @@ public class PacManGame extends Game {
 		Gdx.app.exit();
 		System.exit(0);
 	}
+
+	@Override
+	public void render () { super.render(); }
+
 }

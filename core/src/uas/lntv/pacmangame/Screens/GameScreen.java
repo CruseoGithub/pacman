@@ -27,76 +27,70 @@ public class GameScreen extends MapScreen {
     private boolean pacManSuper = false;
     private boolean PauseActive = false;
     private boolean paused = false;
-
-    private float supStatusTime = 10;
-    private float slowDownTime = 10;
     private float itemCoolDown = 0;
-
-    public boolean isPacManSuper() { return pacManSuper; }
-    public void setPauseActive(boolean bool) {
-        PauseActive = bool;
-    }
+    private float slowDownTime = 10;
+    private float supStatusTime = 10;
 
     /* Constructor */
 
-    /**
-     * Creates a screen with(out) HUD, PacMan, Ghost(s).
-     * According to current level, there are more (difficult) Ghosts.
-     * @param game running game
-     * @param assets asset management
-     * @param path the path where the map is stored
-     */
     public GameScreen(PacManGame game, Assets assets, String path) {
         super(game, assets, path, Type.GAME);
 
         this.hud = new Hud(game, assets, this, true);
         this.pacman = new PacMan(game, assets, 14 * TILE_SIZE, 21 * TILE_SIZE, this);
-        this.ghosts.add(new Enemy(13 * TILE_SIZE, 33 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_1)));
+        this.GHOSTS.add(new Enemy(13 * TILE_SIZE, 33 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_1)));
 
         if(PacManGame.getLevel() >= 2) {
-            this.ghosts.add(new Enemy(15 * TILE_SIZE, 30 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_2)));
-            this.ghosts.get(1).setState(Actor.State.BOXED);
-            this.ghosts.get(1).setBoxTimer(5);
-            map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(1));
+            this.GHOSTS.add(new Enemy(15 * TILE_SIZE, 30 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_2)));
+            this.GHOSTS.get(1).setState(Actor.State.BOXED);
+            this.GHOSTS.get(1).setBoxTimer(5);
+            map.getTile(15 * TILE_SIZE, 30 * TILE_SIZE).enter(this.GHOSTS.get(1));
         }
 
         if(PacManGame.getLevel() >= 4) {
-            this.ghosts.add(new Enemy(12 * TILE_SIZE, 30 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_3)));
-            this.ghosts.get(2).setState(Actor.State.BOXED);
-            this.ghosts.get(2).setBoxTimer(10);
-            map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).enter(this.ghosts.get(2));
-            ghosts.get(0).setDifficulty(Enemy.Difficulty.MEDIUM);
+            this.GHOSTS.add(new Enemy(12 * TILE_SIZE, 30 * TILE_SIZE, assets,this, assets.manager.get(assets.GHOST_3)));
+            this.GHOSTS.get(2).setState(Actor.State.BOXED);
+            this.GHOSTS.get(2).setBoxTimer(10);
+            map.getTile(12 * TILE_SIZE, 30 * TILE_SIZE).enter(this.GHOSTS.get(2));
+            GHOSTS.get(0).setDifficulty(Enemy.Difficulty.MEDIUM);
         }
 
         if(PacManGame.getLevel() >= 6){
-            ghosts.get(1).setDifficulty(Enemy.Difficulty.MEDIUM);
+            GHOSTS.get(1).setDifficulty(Enemy.Difficulty.MEDIUM);
             pacman.setSpeed(pacman.getSpeed()*2);
-            for(Enemy ghost : ghosts) ghost.setSpeed(pacman.getSpeed());
+            for(Enemy ghost : GHOSTS) ghost.setSpeed(pacman.getSpeed());
         }
 
         if(PacManGame.getLevel() >= 8){
-            ghosts.get(2).setDifficulty(Enemy.Difficulty.MEDIUM);
+            GHOSTS.get(2).setDifficulty(Enemy.Difficulty.MEDIUM);
         }
         if(PacManGame.getLevel() >= 12){
-            ghosts.get(0).setDifficulty(Enemy.Difficulty.HARD);
+            GHOSTS.get(0).setDifficulty(Enemy.Difficulty.HARD);
         }
         if(PacManGame.getLevel() >= 19){
-            ghosts.get(1).setDifficulty(Enemy.Difficulty.HARD);
+            GHOSTS.get(1).setDifficulty(Enemy.Difficulty.HARD);
         }
         if(PacManGame.getLevel() >= 24){
             pacman.setSpeed(pacman.getSpeed()*2);
-            for(Enemy ghost : ghosts) ghost.setSpeed(pacman.getSpeed());
+            for(Enemy ghost : GHOSTS) ghost.setSpeed(pacman.getSpeed());
         }
         if(PacManGame.getLevel() >= 30){
-            ghosts.get(2).setDifficulty(Enemy.Difficulty.HARD);
+            GHOSTS.get(2).setDifficulty(Enemy.Difficulty.HARD);
         }
+    }
+
+    /* Accessors */
+
+    public boolean isPacManSuper() { return pacManSuper; }
+
+    /* Mutators */
+
+    public void setPauseActive(boolean bool) {
+        PauseActive = bool;
     }
 
     /* Methods */
 
-    /**
-     * Allows to generate new items when the cooldown is over and there are less than 4 items on the map.
-     */
     private void updateCoolDown(){
         if(itemTaken){
             itemCoolDown -= Gdx.graphics.getDeltaTime();
@@ -120,33 +114,26 @@ public class GameScreen extends MapScreen {
         }
     }
 
-    /**
-     * Changes back to normal PacMan after the Hunter-Item-Time is over.
-     * Ghosts also return to the difficulty they previously had and stop running away.
-     */
     private void updateHunter(){
         if(pacManSuper) {
             supStatusTime -= Gdx.graphics.getDeltaTime();
             if (supStatusTime < 0) {
                 pacManSuper = false;
                 switchMusicGame();
-                pacman.setTexture(assets.manager.get(assets.PAC_MAN));
+                pacman.setTexture(ASSETS.manager.get(ASSETS.PAC_MAN));
                 pacman.setSpeed(pacman.getSpeed()/2);
-                for (Enemy ghost : ghosts) {
+                for (Enemy ghost : GHOSTS) {
                     ghost.resetDifficulty();
                 }
             }
         }
     }
 
-    /**
-     * After the SloMo buff ends, the Ghosts return to their normal speed.
-     */
     private void updateSloMo(){
         if(enemiesSlow){
             slowDownTime -= Gdx.graphics.getDeltaTime();
             if(slowDownTime < 0){
-                for (Enemy ghost : ghosts) {
+                for (Enemy ghost : GHOSTS) {
                     ghost.correctPosition(ghost.getDirection());
                     ghost.setSpeed(ghost.getSpeed()*2);
                 }
@@ -155,18 +142,12 @@ public class GameScreen extends MapScreen {
         }
     }
 
-    /**
-     * Pause activation via spacebar.
-     */
     @Override
-    public boolean handleInput(){
+    protected boolean handleInput(){
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) PauseActive = true;
         return super.handleInput();
     }
 
-    /**
-     * Buffs of the different items that can be picked up.
-     */
     public void activateBuff(Tile.Item buffType){
         switch (buffType) {
             case HUNTER:
@@ -175,7 +156,7 @@ public class GameScreen extends MapScreen {
                 this.supStatusTime = 10;
                 if (!pacManSuper) {
                     this.switchMusicHunting();
-                    this.pacman.setTexture(assets.manager.get(assets.SUPER_PAC));
+                    this.pacman.setTexture(ASSETS.manager.get(ASSETS.SUPER_PAC));
                     this.pacman.correctPosition(pacman.getDirection());
                     this.pacman.setSpeed(this.pacman.getSpeed() * 2);
                     this.pacManSuper = true;
@@ -186,7 +167,7 @@ public class GameScreen extends MapScreen {
                 this.itemCoolDown += 10;
                 this.slowDownTime = 10;
                 if(!enemiesSlow) {
-                    for (Enemy ghost : ghosts) ghost.setSpeed(ghost.getSpeed() / 2);
+                    for (Enemy ghost : GHOSTS) ghost.setSpeed(ghost.getSpeed() / 2);
                     this.enemiesSlow = true;
                 }
                 break;
@@ -215,9 +196,6 @@ public class GameScreen extends MapScreen {
         hud.dispose();
     }
 
-    /**
-     *
-     */
     @Override
     public void render(float delta) {
         update(delta);
@@ -229,10 +207,6 @@ public class GameScreen extends MapScreen {
         hud.stage.draw();
     }
 
-    /**
-     *  Game over when time hits 0, Level up when all dots are eaten.
-     *  When Pause is active the Pausescreen is opened.
-     */
     @Override
     public void update(float dt) {
         super.update(dt);
@@ -245,9 +219,9 @@ public class GameScreen extends MapScreen {
         if(hud.time < 0){
             this.dispose();
             if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Time elapsed", PacManGame.getLevel() + 1)){
-                game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
+                GAME.setScreen(new ScoreScreen(GAME, ASSETS, ASSETS.SCORE_MAP));
             } else {
-                game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
+                GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
             }
             PacManGame.resetLives();
             PacManGame.resetScore();
@@ -258,14 +232,14 @@ public class GameScreen extends MapScreen {
             PacManGame.levelUp();
             PacManGame.increaseScore((int)hud.time);
             this.dispose();
-            game.setScreen(new GameScreen(game, assets, hud.getMap()));
+            GAME.setScreen(new GameScreen(GAME, ASSETS, hud.getMap()));
         }
 
         if(paused) {
-            if(PrefManager.isJoystick()) this.controller = new ControllerJoystick(assets, this);
-            else this.controller = new ControllerButtons(assets,this);
+            if(PrefManager.isJoystick()) this.controller = new ControllerJoystick(ASSETS, this);
+            else this.controller = new ControllerButtons(ASSETS,this);
             if(PrefManager.isMusicOn()){
-                if(pacManSuper) assets.manager.get(assets.HUNTING_MUSIC).play();
+                if(pacManSuper) ASSETS.manager.get(ASSETS.HUNTING_MUSIC).play();
                 else music.play();
             }
             paused = false;
@@ -274,14 +248,10 @@ public class GameScreen extends MapScreen {
 
         if(PauseActive){
             if(music.isPlaying()) music.pause();
-            if(assets.manager.get(assets.HUNTING_MUSIC).isPlaying()) assets.manager.get(assets.HUNTING_MUSIC).pause();
-            game.setScreen(new PauseScreen(game, assets, assets.PAUSE, this, hud));
+            if(ASSETS.manager.get(ASSETS.HUNTING_MUSIC).isPlaying()) ASSETS.manager.get(ASSETS.HUNTING_MUSIC).pause();
+            GAME.setScreen(new PauseScreen(GAME, ASSETS, ASSETS.PAUSE, this, hud));
             paused = true;
         }
 
     }
-
-
-
-
 }

@@ -85,9 +85,7 @@ public class GameScreen extends MapScreen {
 
     /* Mutators */
 
-    public void setPauseActive(boolean bool) {
-        PauseActive = bool;
-    }
+    public void setPauseActive(boolean bool) { PauseActive = bool; }
 
     /* Methods */
 
@@ -188,12 +186,6 @@ public class GameScreen extends MapScreen {
                 }
                 break;
         }
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        hud.dispose();
     }
 
     @Override

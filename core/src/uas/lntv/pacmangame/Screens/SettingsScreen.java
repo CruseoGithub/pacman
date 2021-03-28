@@ -17,8 +17,12 @@ import uas.lntv.pacmangame.Sprites.PacMan;
  */
 public class SettingsScreen extends MapScreen {
 
+    /* Fields */
+
     private boolean controllerSet = false;
     private final BitmapFont FONT;
+
+    /* Constructor */
 
     /**
      * Main constructor of the SettingsScreen
@@ -36,6 +40,102 @@ public class SettingsScreen extends MapScreen {
         FONT.getData().setScale(FONT.getScaleX()*2);
     }
 
+    /* Methods */
+
+    /**
+     * In addition to the render method of the abstract MapScreen class, this render method also
+     * draws words on the screen, so that the player knows which option he can use in which place
+     * and it uses the classes own update method to check PacMan's place.
+     * @param delta time parameter used by libGDX
+     * @see MapScreen
+     */
+    @Override
+    public void render(float delta) {
+        update(delta);
+        super.render(delta);
+
+        PacManGame.batch.begin();
+        FONT.draw(
+                PacManGame.batch,
+                "MUSIC",
+                20 * TILE_SIZE,
+                46 * TILE_SIZE
+        );
+        FONT.draw(
+                PacManGame.batch,
+                "ON",
+                18 * TILE_SIZE,
+                42 * TILE_SIZE
+        );
+        FONT.draw(
+                PacManGame.batch,
+                "OFF",
+                22 * TILE_SIZE,
+                42 * TILE_SIZE
+        );
+        FONT.draw(
+                PacManGame.batch,
+                "SOUND",
+                12 * TILE_SIZE,
+                42 * TILE_SIZE
+        );
+        FONT.draw(
+                PacManGame.batch,
+                "ON",
+                10 * TILE_SIZE,
+                38 * TILE_SIZE
+        );
+        FONT.draw(
+                PacManGame.batch,
+                "OFF",
+                14 * TILE_SIZE,
+                38 * TILE_SIZE
+        );
+        FONT.draw(
+                PacManGame.batch,
+                "JOYSTICK",
+                19 * TILE_SIZE,
+                38 * TILE_SIZE
+        );
+        FONT.draw(
+                PacManGame.batch,
+                "CONTROL",
+                19 * TILE_SIZE,
+                34 * TILE_SIZE
+        );
+        FONT.draw(
+                PacManGame.batch,
+                "BUTTONS",
+                19 * TILE_SIZE,
+                30 * TILE_SIZE
+        );
+        FONT.draw(
+                PacManGame.batch,
+                "USER",
+                13 * TILE_SIZE,
+                30 * TILE_SIZE
+        );
+        FONT.draw(
+                PacManGame.batch,
+                "SCORES",
+                19 * TILE_SIZE,
+                26 * TILE_SIZE
+        );
+        FONT.draw(
+                PacManGame.batch,
+                "CREDITS",
+                19 * TILE_SIZE,
+                22 * TILE_SIZE
+        );
+        FONT.draw(
+                PacManGame.batch,
+                "RETURN",
+                19 * TILE_SIZE,
+                18 * TILE_SIZE
+        );
+        PacManGame.batch.end();
+    }
+
     /**
      * Update checks the position of PacMan, so find out if any of the options were chosen by
      * the player.
@@ -48,17 +148,17 @@ public class SettingsScreen extends MapScreen {
 
         //Stopping points, to make the movement through the menu easier
         if(
-            !(pacman.getXPosition() == 4 * TILE_SIZE &&
-            (pacman.getYPosition() == 21 * TILE_SIZE
-            || pacman.getYPosition() == 25 * TILE_SIZE
-            || pacman.getYPosition() == 29 * TILE_SIZE
-            || pacman.getYPosition() == 33 * TILE_SIZE
-            || pacman.getYPosition() == 41 * TILE_SIZE)
-            )
-            && !(pacman.getYPosition() == 41 * TILE_SIZE && pacman.getXPosition() == 11 * TILE_SIZE)
-            && !(pacman.getYPosition() == 45 * TILE_SIZE && pacman.getXPosition() == 19 * TILE_SIZE)
-            && !(pacman.getYPosition() == 33 * TILE_SIZE && pacman.getXPosition() == 23 * TILE_SIZE)
-            || moving
+                !(pacman.getXPosition() == 4 * TILE_SIZE &&
+                        (pacman.getYPosition() == 21 * TILE_SIZE
+                                || pacman.getYPosition() == 25 * TILE_SIZE
+                                || pacman.getYPosition() == 29 * TILE_SIZE
+                                || pacman.getYPosition() == 33 * TILE_SIZE
+                                || pacman.getYPosition() == 41 * TILE_SIZE)
+                )
+                        && !(pacman.getYPosition() == 41 * TILE_SIZE && pacman.getXPosition() == 11 * TILE_SIZE)
+                        && !(pacman.getYPosition() == 45 * TILE_SIZE && pacman.getXPosition() == 19 * TILE_SIZE)
+                        && !(pacman.getYPosition() == 33 * TILE_SIZE && pacman.getXPosition() == 23 * TILE_SIZE)
+                        || moving
         ){
             pacman.update(dt);
             pacman.move();
@@ -161,100 +261,6 @@ public class SettingsScreen extends MapScreen {
         GHOSTS.get(0).move();
         GAME_CAM.update();
         map.renderer.setView(GAME_CAM);
-    }
-
-    /**
-     * In addition to the render method of the abstract MapScreen class, this render method also
-     * draws words on the screen, so that the player knows which option he can use in which place
-     * and it uses the classes own update method to check PacMan's place.
-     * @param delta time parameter used by libGDX
-     * @see MapScreen
-     */
-    @Override
-    public void render(float delta) {
-        update(delta);
-        super.render(delta);
-
-        PacManGame.batch.begin();
-        FONT.draw(
-                PacManGame.batch,
-                "MUSIC",
-                20 * TILE_SIZE,
-                46 * TILE_SIZE
-        );
-        FONT.draw(
-                PacManGame.batch,
-                "ON",
-                18 * TILE_SIZE,
-                42 * TILE_SIZE
-        );
-        FONT.draw(
-                PacManGame.batch,
-                "OFF",
-                22 * TILE_SIZE,
-                42 * TILE_SIZE
-        );
-        FONT.draw(
-                PacManGame.batch,
-                "SOUND",
-                12 * TILE_SIZE,
-                42 * TILE_SIZE
-        );
-        FONT.draw(
-                PacManGame.batch,
-                "ON",
-                10 * TILE_SIZE,
-                38 * TILE_SIZE
-        );
-        FONT.draw(
-                PacManGame.batch,
-                "OFF",
-                14 * TILE_SIZE,
-                38 * TILE_SIZE
-        );
-        FONT.draw(
-                PacManGame.batch,
-                "JOYSTICK",
-                19 * TILE_SIZE,
-                38 * TILE_SIZE
-        );
-        FONT.draw(
-                PacManGame.batch,
-                "CONTROL",
-                19 * TILE_SIZE,
-                34 * TILE_SIZE
-        );
-        FONT.draw(
-                PacManGame.batch,
-                "BUTTONS",
-                19 * TILE_SIZE,
-                30 * TILE_SIZE
-        );
-        FONT.draw(
-                PacManGame.batch,
-                "USER",
-                13 * TILE_SIZE,
-                30 * TILE_SIZE
-        );
-        FONT.draw(
-                PacManGame.batch,
-                "SCORES",
-                19 * TILE_SIZE,
-                26 * TILE_SIZE
-        );
-        FONT.draw(
-                PacManGame.batch,
-                "CREDITS",
-                19 * TILE_SIZE,
-                22 * TILE_SIZE
-        );
-        FONT.draw(
-                PacManGame.batch,
-                "RETURN",
-                19 * TILE_SIZE,
-                18 * TILE_SIZE
-        );
-        PacManGame.batch.end();
     }
 
 }

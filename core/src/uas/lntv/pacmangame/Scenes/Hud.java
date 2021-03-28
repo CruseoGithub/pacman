@@ -52,7 +52,7 @@ public class Hud {
      * @param assets asset management
      * @param screen gets handed over
      * @param visible HUD only visible when true
-     * Arranges the HUD with SCORE, TIME & LIVES
+     * Arranges the HUD with SCORE, TIME and LIVES
      */
     @SuppressWarnings("DefaultLocale")
     public Hud(PacManGame game, Assets assets, MapScreen screen, boolean visible){

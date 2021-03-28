@@ -24,34 +24,31 @@ import uas.lntv.pacmangame.PacManGame;
  * The SplashScreen is the first thing shown when the application starts.
  */
 public class SplashScreen implements Screen {
-    private final PacManGame GAME;
-    private final Assets ASSETS;
 
-    private final Sprite SPRITE;
-    private float checkpoint = 0.04f;
-    private int texturePositionX = 0;
-    private int texturePositionY = 0;
-    private float progress = 0;
-
-    private final OrthographicCamera CAM;
-    private final Viewport gamePort;
-
-    private final OrthogonalTiledMapRenderer renderer;
-
-    private final int MAP_WIDTH;
-    private final int MAP_HEIGHT;
-    private final int TILE_SIZE;
-
-    private final TiledMapTileLayer layerLNTV;
-    private final TiledMapTileLayer layerGDX;
-    private TiledMapTileLayer visibleLayer;
-
-    private float timer = 0;
-    private float time = 0;
-    private float alpha = 0;
+    /* Fields */
 
     private boolean touchEvent = false;
+    private final Assets ASSETS;
+    private final OrthographicCamera CAM;
+    private final OrthogonalTiledMapRenderer renderer;
+    private final PacManGame GAME;
+    private final Sprite SPRITE;
+    private final Viewport gamePort;
+    private final int MAP_HEIGHT;
+    private final int MAP_WIDTH;
+    private final int TILE_SIZE;
+    private final TiledMapTileLayer layerGDX;
+    private final TiledMapTileLayer layerLNTV;
+    private float alpha = 0;
+    private float checkpoint = 0.04f;
+    private float progress = 0;
+    private float timer = 0;
+    private float time = 0;
+    private int texturePositionX = 0;
+    private int texturePositionY = 0;
+    private TiledMapTileLayer visibleLayer;
 
+    /* Constructor */
 
     /**
      * Main constructor of the SplashScreen
@@ -106,37 +103,37 @@ public class SplashScreen implements Screen {
 
     }
 
-    @Override
-    public void show() { }
+    /* Methods */
 
+    /**
+     * Uses the update method to check the time and draws the logo on the screen.
+     * @param delta time parameter used by libGDX
+     */
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        renderer.setView(CAM);
+        renderer.render();
+
+        update();
+
+
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        gamePort.update(width, height, false);
+        gamePort.getCamera().position.set(MAP_WIDTH * TILE_SIZE / 2f, MAP_HEIGHT * TILE_SIZE / 2f, 0);
+        gamePort.getCamera().update();
+    }
 
     private void update(){
         time = Gdx.graphics.getDeltaTime();
         timer += time;
         if(timer < 10) updateSplash();
         else updateLoading();
-    }
-
-    /**
-     * Checks the time, the SplashScreen is shown yet and reacts according to it.
-     * It changes the used logo and simulates the fade-effects.
-     */
-    private void updateSplash() {
-        if(timer>=5 && visibleLayer == layerLNTV){
-            visibleLayer.setVisible(false);
-            visibleLayer = layerGDX;
-            visibleLayer.setOpacity(0f);
-            visibleLayer.setVisible(true);
-        }
-
-        visibleLayer.setOpacity(alpha);
-
-        if(timer < 2) alpha += time / 2;
-        if(timer > 2 && timer < 3) alpha = 1;
-        if(timer > 3 && timer < 5) alpha -= time / 2;
-        if(timer > 5 && timer < 7) alpha +=  time / 2;
-        if(timer > 7 && timer < 8) alpha = 1;
-        if(timer > 8 && timer < 10) alpha -= time / 2;
     }
 
     private void updateLoading(){
@@ -176,28 +173,34 @@ public class SplashScreen implements Screen {
     }
 
     /**
-     * Uses the update method to check the time and draws the logo on the screen.
-     * @param delta time parameter used by libGDX
+     * Checks the time, the SplashScreen is shown yet and reacts according to it.
+     * It changes the used logo and simulates the fade-effects.
      */
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    private void updateSplash() {
+        if(timer>=5 && visibleLayer == layerLNTV){
+            visibleLayer.setVisible(false);
+            visibleLayer = layerGDX;
+            visibleLayer.setOpacity(0f);
+            visibleLayer.setVisible(true);
+        }
 
-        renderer.setView(CAM);
-        renderer.render();
+        visibleLayer.setOpacity(alpha);
 
-        update();
-
-
+        if(timer < 2) alpha += time / 2;
+        if(timer > 2 && timer < 3) alpha = 1;
+        if(timer > 3 && timer < 5) alpha -= time / 2;
+        if(timer > 5 && timer < 7) alpha +=  time / 2;
+        if(timer > 7 && timer < 8) alpha = 1;
+        if(timer > 8 && timer < 10) alpha -= time / 2;
     }
 
+    /* Unused methods that needed to be adopted from libGDX' Screen class. */
+
     @Override
-    public void resize(int width, int height) {
-        gamePort.update(width, height, false);
-        gamePort.getCamera().position.set(MAP_WIDTH * TILE_SIZE / 2f, MAP_HEIGHT * TILE_SIZE / 2f, 0);
-        gamePort.getCamera().update();
-    }
+    public void dispose() {  }
+
+    @Override
+    public void hide() {  }
 
     @Override
     public void pause() {  }
@@ -206,9 +209,6 @@ public class SplashScreen implements Screen {
     public void resume() {  }
 
     @Override
-    public void hide() {  }
-
-    @Override
-    public void dispose() {  }
+    public void show() { }
 
 }

@@ -30,7 +30,7 @@ public class SettingsScreen extends MapScreen {
         super(game, assets, path, Type.SETTINGS);
         this.pacman = new PacMan(game, assets, 2 * TILE_SIZE, 33 * TILE_SIZE, this);
         this.pacman.setSpeed(8);
-        this.ghosts.add(new Enemy(25 * TILE_SIZE, 3 * TILE_SIZE,  assets, this, assets.manager.get(assets.GHOST_1)));
+        this.GHOSTS.add(new Enemy(25 * TILE_SIZE, 3 * TILE_SIZE,  assets, this, assets.manager.get(assets.GHOST_1)));
         this.hud = new Hud(game, assets,this, false);
         this.FONT = new BitmapFont();
         FONT.getData().setScale(FONT.getScaleX()*2);
@@ -69,19 +69,19 @@ public class SettingsScreen extends MapScreen {
             //RETURN TO  MAIN MENU
             if(pacman.getYPosition() == 17 * TILE_SIZE){
                 this.dispose();
-                game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
+                GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
             }
             //ENTER SCORE SCREEN
             if(pacman.getYPosition() == 25 * TILE_SIZE){
                 this.dispose();
-                game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
+                GAME.setScreen(new ScoreScreen(GAME, ASSETS, ASSETS.SCORE_MAP));
             }
             //SET CONTROLLER TO JOYSTICK
             if(pacman.getYPosition() == 37 * TILE_SIZE && !controllerSet){
                 PrefManager.setJoystick(true);
                 PrefManager.savePrefs();
                 controller.dispose();
-                controller = new ControllerJoystick(assets,this);
+                controller = new ControllerJoystick(ASSETS,this);
                 controllerSet = true;
             }
             //SET CONTROLLER TO BUTTONS
@@ -89,7 +89,7 @@ public class SettingsScreen extends MapScreen {
                 PrefManager.setJoystick(false);
                 PrefManager.savePrefs();
                 controller.dispose();
-                controller = new ControllerButtons(assets, this);
+                controller = new ControllerButtons(ASSETS, this);
                 controllerSet = true;
             }
         }
@@ -157,10 +157,10 @@ public class SettingsScreen extends MapScreen {
             ((MenuMap)map).getHighlightLayers().get(5).setVisible(true);
         }
 
-        ghosts.get(0).update(dt);
-        ghosts.get(0).move();
-        gameCam.update();
-        map.renderer.setView(gameCam);
+        GHOSTS.get(0).update(dt);
+        GHOSTS.get(0).move();
+        GAME_CAM.update();
+        map.renderer.setView(GAME_CAM);
     }
 
     /**

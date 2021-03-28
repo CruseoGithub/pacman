@@ -22,8 +22,7 @@ public class Enemy extends Actor {
     }
 
     private boolean home = false;
-    private Difficulty difficulty;
-    private Difficulty levelDiff;
+    private Difficulty difficulty, levelDiff;
     private final Texture LIVING_BODY;
     private float boxTimer;
     private Pathfinder aStar;

@@ -228,7 +228,7 @@ public class GameMap extends Map {
                 if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.DOT).play(0.25f);
                 PacManGame.increaseScore(1);
                 collectedDots++;
-                SCREEN.hud.update();
+                SCREEN.getHud().update();
                 break;
             case HUNTER:
                 tile.takeItem();

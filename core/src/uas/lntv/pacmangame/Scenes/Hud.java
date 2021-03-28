@@ -164,7 +164,7 @@ public class Hud {
                 for(PacMan pacman : LIVE_PAC_MEN) {
                     pacman.setTexture(assets.manager.get(assets.SUPER_PAC));
                 }
-            } else if (SCREEN.pacman.getState() != Actor.State.DIEING){
+            } else if (SCREEN.getPacman().getState() != Actor.State.DIEING){
                 for(PacMan pacman : LIVE_PAC_MEN) {
                     pacman.setTexture(assets.manager.get(assets.PAC_MAN));
                 }

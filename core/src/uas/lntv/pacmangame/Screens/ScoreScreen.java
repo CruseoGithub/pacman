@@ -32,7 +32,7 @@ public class ScoreScreen extends MapScreen {
         super(game, assets, path, Type.SCORE);
         this.pacman = new PacMan(game, assets, 14 * TILE_SIZE, 46 * TILE_SIZE, this);
         this.pacman.setSpeed(16);
-        this.ghosts.add(new Enemy(25 * TILE_SIZE, 3 * TILE_SIZE,  assets, this, assets.manager.get(assets.WHITE_DEAD)));
+        this.GHOSTS.add(new Enemy(25 * TILE_SIZE, 3 * TILE_SIZE,  assets, this, assets.manager.get(assets.WHITE_DEAD)));
         this.hud = new Hud(game, assets,this, false);
         this.FONT = new BitmapFont();
         FONT.getData().setScale(FONT.getScaleX()*2);
@@ -47,7 +47,7 @@ public class ScoreScreen extends MapScreen {
         super.update(dt);
         if(pacman.getXPosition() <= 2* TILE_SIZE) {
             this.dispose();
-            game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
+            GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
         }
         if(pacman.getXPosition() == 24 * TILE_SIZE) resetAsked = false;
         if(pacman.getXPosition() >= 25 * TILE_SIZE) {
@@ -109,9 +109,4 @@ public class ScoreScreen extends MapScreen {
         PacManGame.batch.end();
     }
 
-    @Override
-    public void dispose() {
-        super.dispose();
-        hud.dispose();
-    }
 }

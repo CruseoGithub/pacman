@@ -213,7 +213,7 @@ public class Pathfinder {
     }
 
     /**
-     * Goes through the 'open'-list until it finds the tile on which the hunter is at right now.
+     * Runs through the 'open'-list until it finds the tile on which the hunter is at right now.
      * @return Index of the 'open'-list where the hunter's at
      */
     private int searchHunter(){

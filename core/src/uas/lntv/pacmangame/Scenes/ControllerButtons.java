@@ -7,13 +7,39 @@ import com.badlogic.gdx.math.Vector3;
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Screens.MapScreen;
 
+/**
+ * This class creates a on screen controller.
+ * Depending on the touch down position it will set a direction for pacman
+ */
 public class ControllerButtons extends Controller {
+
+    /* Constructor */
+
+    /**
+     * Initializes with the parent constructor and sets the controller layers (grid and buttons) visible.
+     * It implements methods to process touch inputs:
+     *
+     * touchDown - gets the touchdown position and depending on the angle from the center of the button layout
+     * it sets a direction for pacman.
+     *
+     * touchUp - it will activate the pause menu if the touch position is correct
+     *
+     * getAngleFromCenter - calculates the angle from the center of the button layout to a touch position.
+     *
+     * @param assets provide the Assetsmanager instance for building the controller
+     * @param screen instance of a Screen which will contain the controller
+     */
     public ControllerButtons(Assets assets, MapScreen screen){
         super(assets, screen);
         screen.getMap().layerControlZone.setOpacity(1f);
         screen.getMap().layerControlButton.setOpacity(1f);
 
         Gdx.input.setInputProcessor(new InputAdapter(){
+
+            /* Input Methods */
+
+            /*gets the touchdown position and depending on the angle from the center of the button layout
+            it sets a direction for pacman. */
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 Vector3 touch = new Vector3(screenX, screenY, 0);
@@ -21,8 +47,6 @@ public class ControllerButtons extends Controller {
 
                 ready(touch.x, touch.y);
 
-                /*System.out.println("Screen coordinates an angle from center: "
-                        + "X: " + touch.x + " Y: " + touch.y + " Angle: " + getAngleFromCenter(touch));*/
 
                 if(!PauseReady){
                     float angle = getAngleFromCenter(touch);
@@ -34,6 +58,7 @@ public class ControllerButtons extends Controller {
                 return true;
             }
 
+            /* it will activate the pause menu if the touch position is correct */
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 Vector3 touch = new Vector3(screenX, screenY, 0);
@@ -41,6 +66,8 @@ public class ControllerButtons extends Controller {
                 setPause(touch.x, touch.y);
                 return super.touchUp(screenX, screenY, pointer, button);
             }
+
+            /* calculates the angle from the center of the button layout to given touch position. */
             public float getAngleFromCenter(Vector3 target) {
                 //Center { x = 14, y = 7 }
                 float angle = (float) Math.toDegrees(Math.atan2(target.y - (7 * TILE_SIZE), target.x - (14 * TILE_SIZE)));

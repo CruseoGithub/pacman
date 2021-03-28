@@ -7,7 +7,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector3;
 
 import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Sprites.Actor;
@@ -84,7 +83,7 @@ public abstract class Map {
     public Tile[][] getMatrix(){ return matrix; }
 
     /**
-     * get a tile by position
+     * Get a tile by position.
      * @param xPosition x-position of the tile
      * @param yPosition y-position of the tile
      * @return returns the tile
@@ -94,7 +93,7 @@ public abstract class Map {
     }
 
     /**
-     * get the neighbouring tile in a certain direction
+     * Get the neighbouring tile in a certain direction.
      * @param xPosition x-position of the current tile
      * @param yPosition y-position of the current tile
      * @param dir direction to the neighbouring tile
@@ -116,7 +115,6 @@ public abstract class Map {
             case DOWN:
                 nextCellY = ((yPosition- tileSize) / tileSize);
                 break;
-
         }
         return matrix[nextCellX][nextCellY];
     }
@@ -124,9 +122,9 @@ public abstract class Map {
     /* Methods */
 
     /**
-     * This Method will generade the matrix which holds the information about every Tile in the Map
+     * This Method will generate the matrix which holds the information about every Tile in the Map
      * It iterates through the matrix and adds specific tiles to it depending on the tile type.
-     * it gets this information from the tmx-file layers
+     * It gets this information from the tmx-file layers.
      */
     private void generateScreenMap(){
         for(int x = 0; x < mapWidth; x++){
@@ -148,7 +146,7 @@ public abstract class Map {
     }
 
     /**
-     * generates all simple dots/scorepoints which can be collected by Pac-Man.
+     * Generates all simple dots/score-points which can be collected by Pac-Man.
      * Should be implemented in child classes.
      * @param amount the total amount of Dots/Points generated on the map
      */
@@ -159,7 +157,7 @@ public abstract class Map {
     }
 
     /**
-     * this is a helper-method. it generates a cell with a textureregion depending on type specified.
+     * This is a helper-method. it generates a cell with a texture-region depending on type specified.
      * it is mostly used to generate the correct texture for Collectables.
      * @param type specify type of the tile (exp. DOT)
      * @return returns the cell for the type specified
@@ -209,9 +207,6 @@ public abstract class Map {
                 region.setRegionWidth(32);
                 region.setRegionY(0);
                 region.setRegionHeight(32);
-                break;
-            default:
-                int i = 0;
                 break;
         }
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();

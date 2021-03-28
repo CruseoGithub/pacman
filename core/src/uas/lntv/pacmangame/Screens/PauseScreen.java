@@ -39,7 +39,7 @@ public class PauseScreen extends MapScreen {
         this.hud = hud;
         this.pacman = new PacMan(game, assets, 25*TILE_SIZE, 43*TILE_SIZE, this);
         this.pacman.setSpeed(8);
-        ghosts.add(new Enemy(25*TILE_SIZE, 3*TILE_SIZE, assets, this, assets.manager.get(assets.BLUE_DEAD)));
+        GHOSTS.add(new Enemy(25*TILE_SIZE, 3*TILE_SIZE, assets, this, assets.manager.get(assets.BLUE_DEAD)));
         this.FONT = new BitmapFont();
         FONT.getData().setScale(FONT.getScaleX()*2);
         this.SCREEN = screen;
@@ -145,7 +145,7 @@ public class PauseScreen extends MapScreen {
         if(pacman.getYPosition() == 43 * TILE_SIZE){
             if(pacman.getXPosition() <= TILE_SIZE) {
                 this.dispose();
-                game.setScreen(SCREEN);
+                GAME.setScreen(SCREEN);
             }
         }
 
@@ -154,9 +154,9 @@ public class PauseScreen extends MapScreen {
             if(pacman.getXPosition() <= 2*TILE_SIZE) {
                 this.dispose();
                 if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Forfeited", PacManGame.getLevel() + 1)){
-                    game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
+                    GAME.setScreen(new ScoreScreen(GAME, ASSETS, ASSETS.SCORE_MAP));
                 } else {
-                    game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
+                    GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
                 }
                 PacManGame.resetLives();
                 PacManGame.resetScore();
@@ -172,7 +172,7 @@ public class PauseScreen extends MapScreen {
             }
             if(pacman.getXPosition() == 7*TILE_SIZE) {
                 PrefManager.setMusicOn(false);
-                assets.manager.get(assets.HUNTING_MUSIC).stop();
+                ASSETS.manager.get(ASSETS.HUNTING_MUSIC).stop();
                 music.stop();
             }
             PrefManager.savePrefs();
@@ -194,14 +194,14 @@ public class PauseScreen extends MapScreen {
                 PrefManager.setJoystick(true);
                 PrefManager.savePrefs();
                 controller.dispose();
-                controller = new ControllerJoystick(assets,this);
+                controller = new ControllerJoystick(ASSETS,this);
                 controllerSet = true;
             }
             if(pacman.getYPosition() == 20 * TILE_SIZE && !controllerSet){
                 PrefManager.setJoystick(false);
                 PrefManager.savePrefs();
                 controller.dispose();
-                controller = new ControllerButtons(assets, this);
+                controller = new ControllerButtons(ASSETS, this);
                 controllerSet = true;
             }
         }

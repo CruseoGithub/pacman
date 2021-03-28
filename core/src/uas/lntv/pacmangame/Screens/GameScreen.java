@@ -16,7 +16,7 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 /**
- *
+ * 
  */
 public class GameScreen extends MapScreen {
 
@@ -32,6 +32,7 @@ public class GameScreen extends MapScreen {
     private float supStatusTime = 10;
 
     /* Constructor */
+
     /**
      * Creates a screen with(out) HUD, PacMan, Ghost(s).
      * According to current level, there are more (difficult) Ghosts.
@@ -96,6 +97,7 @@ public class GameScreen extends MapScreen {
 
 
     /* Methods */
+
     /**
      * Allows to generate new items when the cooldown is over and there are less than 4 items on the map.
      */
@@ -121,6 +123,7 @@ public class GameScreen extends MapScreen {
             }
         }
     }
+
     /**
      * Changes back to normal PacMan after the Hunter-Item-Time is over.
      * Ghosts also return to the difficulty they previously had and stop running away.
@@ -139,6 +142,7 @@ public class GameScreen extends MapScreen {
             }
         }
     }
+
     /**
      * After the SloMo buff ends, the Ghosts return to their normal speed.
      */
@@ -221,7 +225,7 @@ public class GameScreen extends MapScreen {
     }
     /**
      *  Game over when time hits 0, Level up when all dots are eaten.
-     *  When Pause is active the Pausescreen is opened.
+     *  When Pause is active the PauseScreen is opened.
      */
     @Override
     public void update(float dt) {

@@ -20,21 +20,24 @@ import uas.lntv.pacmangame.Sprites.PacMan;
  */
 public class GameScreen extends MapScreen {
 
-    private boolean PauseActive = false;
-    private boolean paused = false;
+    /* Fields */
 
-    private boolean pacManSuper = false;
     private boolean enemiesSlow = false;
     private boolean itemTaken = false;
+    private boolean pacManSuper = false;
+    private boolean PauseActive = false;
+    private boolean paused = false;
 
     private float supStatusTime = 10;
     private float slowDownTime = 10;
     private float itemCoolDown = 0;
 
+    public boolean isPacManSuper() { return pacManSuper; }
     public void setPauseActive(boolean bool) {
         PauseActive = bool;
     }
-    public boolean isPacManSuper() { return pacManSuper; }
+
+    /* Constructor */
 
     /**
      * Creates a screen with(out) HUD, PacMan, Ghost(s).
@@ -43,7 +46,6 @@ public class GameScreen extends MapScreen {
      * @param assets asset management
      * @param path the path where the map is stored
      */
-
     public GameScreen(PacManGame game, Assets assets, String path) {
         super(game, assets, path, Type.GAME);
 
@@ -90,8 +92,12 @@ public class GameScreen extends MapScreen {
         }
     }
 
+    /* Methods */
+
+
+
     /**
-     * 
+     * Pause activation via spacebar.
      */
     @Override
     public boolean handleInput(){
@@ -99,6 +105,10 @@ public class GameScreen extends MapScreen {
         return super.handleInput();
     }
 
+    /**
+     *  Game over when time hits 0, Level up when all dots are eaten.
+     *  When Pause is active the Pausescreen is opened.
+     */
     @Override
     public void update(float dt) {
         super.update(dt);
@@ -162,7 +172,7 @@ public class GameScreen extends MapScreen {
     }
 
     /**
-     *
+     * Buffs of the different items that can be picked up.
      */
     public void activateBuff(Tile.Item buffType){
         switch (buffType) {
@@ -207,7 +217,7 @@ public class GameScreen extends MapScreen {
     }
 
     /**
-     *
+     * Allows to generate new items when the cooldown is over and there are less than 4 items on the map.
      */
     private void updateCoolDown(){
         if(itemTaken){
@@ -233,7 +243,8 @@ public class GameScreen extends MapScreen {
     }
 
     /**
-     *
+     * Changes back to normal PacMan after the Hunter-Item-Time is over.
+     * Ghosts also return to the difficulty they previously had and stop running away.
      */
     private void updateHunter(){
         if(pacManSuper) {
@@ -251,7 +262,7 @@ public class GameScreen extends MapScreen {
     }
 
     /**
-     *
+     * After the SloMo buff ends, the Ghosts return to their normal speed.
      */
     private void updateSloMo(){
         if(enemiesSlow){

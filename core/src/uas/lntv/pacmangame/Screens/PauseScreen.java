@@ -12,15 +12,20 @@ import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 /**
- * The PauseScreen is an extension of the MapScreen class, it's shown when the game gets paused.
+ * The PauseScreen is shown when the game gets paused. You also can change some settings.
  * It will pop up, if you are inside a game and click in the area of the HUD (top).
  * When in this screen, the game is paused and can be resumed by selecting 'CONTINUE'.
  * Some options for sound and control can also be changed in here, you can also return to MENU.
  */
 public class PauseScreen extends MapScreen {
-    private final GameScreen SCREEN;
-    private final BitmapFont FONT;
+
+    /* Fields */
+
     private boolean controllerSet = false;
+    private final BitmapFont FONT;
+    private final GameScreen SCREEN;
+
+    /* Constructor */
 
     /**
      * Main constructor of the PauseScreen
@@ -38,6 +43,79 @@ public class PauseScreen extends MapScreen {
         this.FONT = new BitmapFont();
         FONT.getData().setScale(FONT.getScaleX()*2);
         this.SCREEN = screen;
+    }
+
+    /* Methods */
+
+    /**
+     * Draws labels on the screen, where options.
+     * @param delta time value
+     */
+    @Override
+    public void render(float delta) {
+
+        super.render(delta);
+        update(delta);
+        hud.stage.draw();
+        hud.update();
+
+        PacManGame.batch.begin();
+            FONT.draw(PacManGame.batch,
+                    "CONTINUE",
+                    TILE_SIZE + 15,
+                    44* TILE_SIZE - 6);
+
+            FONT.draw(PacManGame.batch,
+                    "RETURN TO MENU",
+                    2 * TILE_SIZE,
+                    17* TILE_SIZE);
+
+            FONT.draw(PacManGame.batch,
+                    "MUSIC",
+                    3 * TILE_SIZE + 20,
+                    40* TILE_SIZE);
+
+            FONT.draw(PacManGame.batch,
+                    "ON",
+                    2 * TILE_SIZE,
+                    35* TILE_SIZE -5);
+
+            FONT.draw(PacManGame.batch,
+                    "OFF",
+                    7 * TILE_SIZE,
+                    35* TILE_SIZE -5);
+
+            FONT.draw(PacManGame.batch,
+                    "SOUND",
+                    13 * TILE_SIZE +13 ,
+                    35* TILE_SIZE);
+
+            FONT.draw(PacManGame.batch,
+                    "ON",
+                    12 * TILE_SIZE,
+                    30* TILE_SIZE -5);
+
+            FONT.draw(PacManGame.batch,
+                    "OFF",
+                    17 * TILE_SIZE,
+                    30* TILE_SIZE -5);
+
+            FONT.draw(PacManGame.batch,
+                    "CONTROLLER",
+                    6 * TILE_SIZE,
+                    24* TILE_SIZE );
+
+            FONT.draw(PacManGame.batch,
+                    "JOYSTICK",
+                    4 * TILE_SIZE,
+                    27* TILE_SIZE -4);
+
+            FONT.draw(PacManGame.batch,
+                    "BUTTONS",
+                    4 * TILE_SIZE,
+                    21* TILE_SIZE -4);
+
+        PacManGame.batch.end();
     }
 
     /**
@@ -155,76 +233,4 @@ public class PauseScreen extends MapScreen {
             ((MenuMap)map).getHighlightLayers().get(5).setVisible(true);
         }
     }
-
-    /**
-     * Draws labels on the screen, where options.
-     * @param delta time value
-     */
-    @Override
-    public void render(float delta) {
-
-        super.render(delta);
-        update(delta);
-        hud.stage.draw();
-        hud.update();
-
-        PacManGame.batch.begin();
-            FONT.draw(PacManGame.batch,
-                    "CONTINUE",
-                    TILE_SIZE + 15,
-                    44* TILE_SIZE - 6);
-
-            FONT.draw(PacManGame.batch,
-                    "RETURN TO MENU",
-                    2 * TILE_SIZE,
-                    17* TILE_SIZE);
-
-            FONT.draw(PacManGame.batch,
-                    "MUSIC",
-                    3 * TILE_SIZE + 20,
-                    40* TILE_SIZE);
-
-            FONT.draw(PacManGame.batch,
-                    "ON",
-                    2 * TILE_SIZE,
-                    35* TILE_SIZE -5);
-
-            FONT.draw(PacManGame.batch,
-                    "OFF",
-                    7 * TILE_SIZE,
-                    35* TILE_SIZE -5);
-
-            FONT.draw(PacManGame.batch,
-                    "SOUND",
-                    13 * TILE_SIZE +13 ,
-                    35* TILE_SIZE);
-
-            FONT.draw(PacManGame.batch,
-                    "ON",
-                    12 * TILE_SIZE,
-                    30* TILE_SIZE -5);
-
-            FONT.draw(PacManGame.batch,
-                    "OFF",
-                    17 * TILE_SIZE,
-                    30* TILE_SIZE -5);
-
-            FONT.draw(PacManGame.batch,
-                    "CONTROLLER",
-                    6 * TILE_SIZE,
-                    24* TILE_SIZE );
-
-            FONT.draw(PacManGame.batch,
-                    "JOYSTICK",
-                    4 * TILE_SIZE,
-                    27* TILE_SIZE -4);
-
-            FONT.draw(PacManGame.batch,
-                    "BUTTONS",
-                    4 * TILE_SIZE,
-                    21* TILE_SIZE -4);
-
-        PacManGame.batch.end();
-    }
-
 }

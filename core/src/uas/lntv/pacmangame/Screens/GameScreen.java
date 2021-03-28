@@ -16,7 +16,9 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 /**
- *
+ * The GameScreen is the screen, where the main action takes place. It offers different PowerUps
+ * on designated places. There are also a lot of dots, that are supposed to be eaten by PacMan
+ * to get into the next level.
  */
 public class GameScreen extends MapScreen {
 
@@ -34,9 +36,9 @@ public class GameScreen extends MapScreen {
     /* Constructor */
 
     /**
-     * Creates a screen with(out) HUD, PacMan, Ghost(s).
-     * According to current level, there are more (difficult) Ghosts.
-     * @param game running game
+     * Initializes the GameScreen depending on the level. It sets the moving speed of the actors
+     * and the number of ghosts and each ghost's difficulty.
+     * @param game the running PacManGame
      * @param assets asset management
      * @param path the path where the map is stored
      */
@@ -99,7 +101,9 @@ public class GameScreen extends MapScreen {
     /* Methods */
 
     /**
-     * Allows to generate new items when the cooldown is over and there are less than 4 items on the map.
+     * Updates the timer of the cool-down and checks, if the different time thresholds are reached.
+     * Compares the remaining cool-down time with the amount of items on the map and acts according
+     * to it.
      */
     private void updateCoolDown(){
         if(itemTaken){
@@ -125,6 +129,7 @@ public class GameScreen extends MapScreen {
     }
 
     /**
+     * Updates the timer of the hunting buff and checks if the time is up.
      * Changes back to normal PacMan after the Hunter-Item-Time is over.
      * Ghosts also return to the difficulty they previously had and stop running away.
      */
@@ -144,6 +149,7 @@ public class GameScreen extends MapScreen {
     }
 
     /**
+     * Updates the timer of the SloMo buff and checks if the time is up.
      * After the SloMo buff ends, the Ghosts return to their normal speed.
      */
     private void updateSloMo(){
@@ -160,7 +166,7 @@ public class GameScreen extends MapScreen {
     }
 
     /**
-     * Pause activation via spacebar.
+     * Additional pause activation via SPACE bar.
      */
     @Override
     protected boolean handleInput(){
@@ -213,6 +219,10 @@ public class GameScreen extends MapScreen {
         }
     }
 
+    /**
+     * Checks for updates on the screen, renders the game and updates the hud.
+     * @param delta time parameter used by libGDX
+     */
     @Override
     public void render(float delta) {
         update(delta);

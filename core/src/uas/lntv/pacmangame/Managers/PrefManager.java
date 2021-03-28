@@ -37,12 +37,7 @@ public class PrefManager {
         prefs = Gdx.app.getPreferences("PacManPreferences");
         loadPrefs();
         if(!init){
-            // Default settings
-            musicOn = true;
-            sfxOn = true;
-            joystick = false;
-            init = true;
-            savePrefs();
+            resetScores();
         }
     }
 

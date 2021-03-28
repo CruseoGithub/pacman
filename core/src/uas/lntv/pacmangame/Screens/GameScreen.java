@@ -203,7 +203,7 @@ public class GameScreen extends MapScreen {
             case TIME:
                 this.itemTaken = true;
                 this.itemCoolDown += 10;
-                this.hud.time += 10;
+                this.hud.updateTime(-10);
                 this.hud.resetTimeStamp();
                 break;
             case LIFE:
@@ -231,7 +231,7 @@ public class GameScreen extends MapScreen {
         if (pacman.getState() == Actor.State.DIEING) {
             hud.animateLives(delta);
         }
-        hud.stage.draw();
+        hud.getStage().draw();
     }
     /**
      *  Game over when time hits 0, Level up when all dots are eaten.
@@ -240,13 +240,13 @@ public class GameScreen extends MapScreen {
     @Override
     public void update(float dt) {
         super.update(dt);
-        if(ready) hud.time -= Gdx.graphics.getDeltaTime();
+        if(ready) hud.updateTime(Gdx.graphics.getDeltaTime());
 
         updateCoolDown();
         updateHunter();
         updateSloMo();
 
-        if(hud.time < 0){
+        if(hud.getTime() < 0){
             this.dispose();
             if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Time elapsed", PacManGame.getLevel() + 1)){
                 GAME.setScreen(new ScoreScreen(GAME, ASSETS, ASSETS.SCORE_MAP));
@@ -260,7 +260,7 @@ public class GameScreen extends MapScreen {
 
         if(GameMap.getCollectedDots() == GameMap.TOTAL_DOTS){
             PacManGame.levelUp();
-            PacManGame.increaseScore((int)hud.time);
+            PacManGame.increaseScore((int)hud.getTime());
             this.dispose();
             GAME.setScreen(new GameScreen(GAME, ASSETS, hud.getMap()));
         }
@@ -282,6 +282,6 @@ public class GameScreen extends MapScreen {
             GAME.setScreen(new PauseScreen(GAME, ASSETS, ASSETS.PAUSE, this, hud));
             paused = true;
         }
-
     }
+
 }

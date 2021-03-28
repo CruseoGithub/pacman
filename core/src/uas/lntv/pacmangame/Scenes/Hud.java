@@ -29,20 +29,20 @@ public class Hud {
     private boolean warned = false;
     private boolean red = false;
 
-    private final int WARNING_TIME = 30;
     private final Assets assets;
     private final ArrayList<PacMan> LIVE_PAC_MEN = new ArrayList<>();
     private final ArrayList<String> STAGES = new ArrayList<>();
+    private final boolean VISIBLE;
+    private final int WARNING_TIME = 30;
     private final Label TIME_LABEL;
     private final Label TIME_TEXT_LABEL;
     private final Label SCORE_LABEL;
     private final MapScreen SCREEN;
+    private final Stage STAGE;
 
+    private float time;
     private float timeStamp;
 
-    public boolean visible;
-    public float time;
-    public Stage stage;
 
     /* Constructor */
 
@@ -67,14 +67,14 @@ public class Hud {
         STAGES.add(assets.MAP_4);
         STAGES.add(assets.MAP_5);
 
-        this.visible = visible;
+        this.VISIBLE = visible;
 
         Viewport viewport = new FitViewport(
                 Map.getMapWidth() * tileSize,
                 Map.getMapHeight() * tileSize,
                 new OrthographicCamera()
         );
-        stage = new Stage(viewport, PacManGame.batch);
+        STAGE = new Stage(viewport, PacManGame.batch);
 
         Table table = new Table();
         table.top();
@@ -100,7 +100,7 @@ public class Hud {
         table.row();
         table.add(SCORE_LABEL).expandX().padTop(0);
         table.add(TIME_LABEL).expandX().padTop(0);
-        if(visible) stage.addActor(table);
+        if(visible) STAGE.addActor(table);
 
         for(int i = 0; i < 3; i++) {
             LIVE_PAC_MEN.add(new PacMan(game, assets, (20 + (2 * i)) * tileSize, (45 * tileSize + tileSize / 2), screen));
@@ -108,6 +108,17 @@ public class Hud {
 
         timeStamp = time;
     }
+
+    /* Accessors */
+
+    public float getTime(){ return this.time; }
+
+    public Stage getStage(){ return this.STAGE; }
+
+    /* Mutators */
+
+    public void updateTime(float delta){ this.time -= delta; }
+
 
     /* Methods */
 
@@ -144,10 +155,17 @@ public class Hud {
         pacman.setYPosition(pacman.getHomeY());
     }
 
+    /**
+     * Checks the level of the game and returns the according path to the map.
+     * @return path of map as a String
+     */
     public final String getMap(){ return STAGES.get(PacManGame.getLevel() % 5); }
 
+    /**
+     * Disposes the created stage.
+     */
     public void dispose(){
-        stage.dispose();
+        STAGE.dispose();
     }
 
     /**
@@ -197,7 +215,7 @@ public class Hud {
         }
 
 
-        if (visible) {
+        if (VISIBLE) {
             SCORE_LABEL.setText(String.format("%06d", PacManGame.getScore()));
             TIME_LABEL.setText(String.format("%03d", (int) time));
 

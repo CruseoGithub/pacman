@@ -56,7 +56,7 @@ public class PauseScreen extends MapScreen {
 
         super.render(delta);
         update(delta);
-        hud.stage.draw();
+        hud.getStage().draw();
         hud.update();
 
         PacManGame.batch.begin();

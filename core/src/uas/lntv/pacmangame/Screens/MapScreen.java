@@ -232,7 +232,7 @@ public abstract class MapScreen implements Screen {
 
         PacManGame.batch.end();
 
-        PacManGame.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        PacManGame.batch.setProjectionMatrix(hud.getStage().getCamera().combined);
     }
 
     /**

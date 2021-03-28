@@ -30,6 +30,10 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.Joystick;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
+/**
+ * Abstract class for almost every screen, that will be used in our PacManGame.
+ * (Except of the SplashScreen)
+ */
 public abstract class MapScreen implements Screen {
 
     /* Fields */

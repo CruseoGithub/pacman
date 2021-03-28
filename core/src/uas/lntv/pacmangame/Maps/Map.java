@@ -41,6 +41,7 @@ public abstract class Map {
 
     /**
      * The constructor loads the graphic layers of the tmx-Mapfile and sets them up into a Maprenderer
+     * Additionaly it loads all graphic layers for the on screen controller (initially they are invisible).
      * It generates a matrix of the Map which contains a Tile for each cell.
      * It provides methods for generating and collecting Collectables which should be implemented as needed by the child class.
      * @param path String value which contains the path to a tmx-Mapfile.
@@ -66,10 +67,9 @@ public abstract class Map {
         TMX_MAP.getLayers().add(layerControlZone);
         TMX_MAP.getLayers().add(layerControlButton);
 
-        //layerPath.setOpacity(0.5f);
+
         matrix = new Tile[mapWidth][mapHeight];
         generateScreenMap();
-        //randomItemPos = new Vector3(9, 33, 0);
     }
 
     /* Accessors */

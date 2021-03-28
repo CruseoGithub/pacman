@@ -121,6 +121,11 @@ public class SplashScreen implements Screen {
 
     }
 
+    /**
+     * rizises the splashscreen to the new values
+     * @param width new width of the screen
+     * @param height new height of the screen
+     */
     @Override
     public void resize(int width, int height) {
         gamePort.update(width, height, false);
@@ -128,6 +133,9 @@ public class SplashScreen implements Screen {
         gamePort.getCamera().update();
     }
 
+    /**
+     * displays the the logos and then moves on to displaying the loading pacman icon
+     */
     private void update(){
         time = Gdx.graphics.getDeltaTime();
         timer += time;
@@ -135,6 +143,10 @@ public class SplashScreen implements Screen {
         else updateLoading();
     }
 
+    /**
+     * Displays the the loading pacman icon in the middle of the screen.
+     * The Icon shows the progess toward loading the game. When finished it changes to the menu screen.
+     */
     private void updateLoading(){
         visibleLayer.setVisible(false);
 
@@ -149,12 +161,14 @@ public class SplashScreen implements Screen {
         PacManGame.batch.begin();
         PacManGame.batch.setProjectionMatrix(CAM.combined);
 
+        //Draws the Pacman icon on the screen
         PacManGame.batch.draw(SPRITE.getTexture(), center.x, center.y, SPRITE.getOriginX(), SPRITE.getOriginY(),
                 256, 256, SPRITE.getScaleX(), SPRITE.getScaleY(), 0,
                 texturePositionX, texturePositionY, 256, 256, false, false
         );
         PacManGame.batch.end();
 
+        //lerps to the next texture position. when progress is finished it loads the menu screen.
         progress = MathUtils.lerp(progress, ASSETS.manager.getProgress(), 0.025f);
         if(progress > checkpoint){
             checkpoint += 0.04f;

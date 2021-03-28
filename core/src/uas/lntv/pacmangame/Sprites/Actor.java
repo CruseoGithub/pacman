@@ -147,7 +147,7 @@ public abstract class Actor {
         ){
             prevDirection = direction;
             if (nextDirection != direction
-                    && MAP.getTile(xPosition, yPosition, nextDirection).type != Tile.Type.WALL
+                    && MAP.getTile(xPosition, yPosition, nextDirection).getType() != Tile.Type.WALL
                     && !( this instanceof Enemy && MAP.getTile(xPosition, yPosition, nextDirection).isOccupiedByGhost() )
             ) {
                 if (xPosition == MAP.getTile(xPosition, yPosition).getX() && yPosition == MAP.getTile(xPosition, yPosition).getY()) {
@@ -158,7 +158,7 @@ public abstract class Actor {
             Tile tempTile = MAP.getTile(xPosition, yPosition, direction);
             switch (direction) {
                 case RIGHT:
-                    if (tempTile.type != Tile.Type.WALL) {
+                    if (tempTile.getType() != Tile.Type.WALL) {
                         if (prevDirection != direction && !(this instanceof Enemy))
                             this.rotation = 0;
                         int temp = xPosition;
@@ -170,7 +170,7 @@ public abstract class Actor {
                     }
                     break;
                 case LEFT:
-                    if (tempTile.type == Tile.Type.WALL) {
+                    if (tempTile.getType() == Tile.Type.WALL) {
                         if (xPosition > MAP.getTile(xPosition, yPosition).getX()) {
                             int temp = xPosition;
                             xPosition -= speed;
@@ -191,7 +191,7 @@ public abstract class Actor {
                     }
                     break;
                 case UP:
-                    if (tempTile.type != Tile.Type.WALL) {
+                    if (tempTile.getType() != Tile.Type.WALL) {
                         if (prevDirection != direction && !(this instanceof Enemy))
                             this.rotation = 90;
                         int temp = yPosition;
@@ -203,7 +203,7 @@ public abstract class Actor {
                     }
                     break;
                 case DOWN:
-                    if (tempTile.type == Tile.Type.WALL) {
+                    if (tempTile.getType() == Tile.Type.WALL) {
                         if (yPosition > MAP.getTile(xPosition, yPosition).getY()) {
                             int temp = yPosition;
                             yPosition -= speed;

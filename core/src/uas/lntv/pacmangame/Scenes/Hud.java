@@ -48,11 +48,12 @@ public class Hud {
 
     /**
      * (Jabba)The HUD
+     * Arranges the HUD with SCORE, TIME and LIVES
+     *
      * @param game gets handed over
      * @param assets asset management
      * @param screen gets handed over
      * @param visible HUD only visible when true
-     * Arranges the HUD with SCORE, TIME and LIVES
      */
     @SuppressWarnings("DefaultLocale")
     public Hud(PacManGame game, Assets assets, MapScreen screen, boolean visible){
@@ -171,7 +172,7 @@ public class Hud {
     }
 
     /**
-     * Look of TIME changes according to time left
+     * Changes the Color of the displayed TIME according to time left
      * Number of PacMans in HUD change depending on lives left
      */
     @SuppressWarnings("DefaultLocale")

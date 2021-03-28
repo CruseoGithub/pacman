@@ -16,7 +16,7 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 /**
- * 
+ *
  */
 public class GameScreen extends MapScreen {
 

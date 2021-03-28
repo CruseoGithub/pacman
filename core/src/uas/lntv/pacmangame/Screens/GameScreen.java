@@ -94,128 +94,6 @@ public class GameScreen extends MapScreen {
 
     /* Methods */
 
-
-
-    /**
-     * Pause activation via spacebar.
-     */
-    @Override
-    public boolean handleInput(){
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) PauseActive = true;
-        return super.handleInput();
-    }
-
-    /**
-     *  Game over when time hits 0, Level up when all dots are eaten.
-     *  When Pause is active the Pausescreen is opened.
-     */
-    @Override
-    public void update(float dt) {
-        super.update(dt);
-        if(ready) hud.time -= Gdx.graphics.getDeltaTime();
-
-        updateCoolDown();
-        updateHunter();
-        updateSloMo();
-
-        if(hud.time < 0){
-            this.dispose();
-            if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Time elapsed", PacManGame.getLevel() + 1)){
-                game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
-            } else {
-                game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
-            }
-            PacManGame.resetLives();
-            PacManGame.resetScore();
-            PacManGame.resetLevel();
-        }
-
-        if(GameMap.getCollectedDots() == GameMap.TOTAL_DOTS){
-            PacManGame.levelUp();
-            PacManGame.increaseScore((int)hud.time);
-            this.dispose();
-            game.setScreen(new GameScreen(game, assets, hud.getMap()));
-        }
-
-        if(paused) {
-            if(PrefManager.isJoystick()) this.controller = new ControllerJoystick(assets, this);
-            else this.controller = new ControllerButtons(assets,this);
-            if(PrefManager.isMusicOn()){
-                if(pacManSuper) assets.manager.get(assets.HUNTING_MUSIC).play();
-                else music.play();
-            }
-            paused = false;
-            PauseActive = false;
-        }
-
-        if(PauseActive){
-            if(music.isPlaying()) music.pause();
-            if(assets.manager.get(assets.HUNTING_MUSIC).isPlaying()) assets.manager.get(assets.HUNTING_MUSIC).pause();
-            game.setScreen(new PauseScreen(game, assets, assets.PAUSE, this, hud));
-            paused = true;
-        }
-
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void render(float delta) {
-        update(delta);
-        super.render(delta);
-        hud.update();
-        if (pacman.getState() == Actor.State.DIEING) {
-            hud.animateLives(delta);
-        }
-        hud.stage.draw();
-    }
-
-    /**
-     * Buffs of the different items that can be picked up.
-     */
-    public void activateBuff(Tile.Item buffType){
-        switch (buffType) {
-            case HUNTER:
-                this.itemTaken = true;
-                this.itemCoolDown += 10;
-                this.supStatusTime = 10;
-                if (!pacManSuper) {
-                    this.switchMusicHunting();
-                    this.pacman.setTexture(assets.manager.get(assets.SUPER_PAC));
-                    this.pacman.correctPosition(pacman.getDirection());
-                    this.pacman.setSpeed(this.pacman.getSpeed() * 2);
-                    this.pacManSuper = true;
-                }
-                break;
-            case SLOWMO:
-                this.itemTaken = true;
-                this.itemCoolDown += 10;
-                this.slowDownTime = 10;
-                if(!enemiesSlow) {
-                    for (Enemy ghost : ghosts) ghost.setSpeed(ghost.getSpeed() / 2);
-                    this.enemiesSlow = true;
-                }
-                break;
-            case TIME:
-                this.itemTaken = true;
-                this.itemCoolDown += 10;
-                this.hud.time += 10;
-                this.hud.resetTimeStamp();
-                break;
-            case LIFE:
-                this.itemTaken = true;
-                this.itemCoolDown += 10;
-                if(PacManGame.getLives() < 3) {
-                    PacManGame.addLive();
-                    hud.resetLives();
-                } else{
-                    PacManGame.increaseScore(75);
-                }
-                break;
-        }
-    }
-
     /**
      * Allows to generate new items when the cooldown is over and there are less than 4 items on the map.
      */
@@ -277,9 +155,133 @@ public class GameScreen extends MapScreen {
         }
     }
 
+    /**
+     * Pause activation via spacebar.
+     */
+    @Override
+    public boolean handleInput(){
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) PauseActive = true;
+        return super.handleInput();
+    }
+
+    /**
+     * Buffs of the different items that can be picked up.
+     */
+    public void activateBuff(Tile.Item buffType){
+        switch (buffType) {
+            case HUNTER:
+                this.itemTaken = true;
+                this.itemCoolDown += 10;
+                this.supStatusTime = 10;
+                if (!pacManSuper) {
+                    this.switchMusicHunting();
+                    this.pacman.setTexture(assets.manager.get(assets.SUPER_PAC));
+                    this.pacman.correctPosition(pacman.getDirection());
+                    this.pacman.setSpeed(this.pacman.getSpeed() * 2);
+                    this.pacManSuper = true;
+                }
+                break;
+            case SLOWMO:
+                this.itemTaken = true;
+                this.itemCoolDown += 10;
+                this.slowDownTime = 10;
+                if(!enemiesSlow) {
+                    for (Enemy ghost : ghosts) ghost.setSpeed(ghost.getSpeed() / 2);
+                    this.enemiesSlow = true;
+                }
+                break;
+            case TIME:
+                this.itemTaken = true;
+                this.itemCoolDown += 10;
+                this.hud.time += 10;
+                this.hud.resetTimeStamp();
+                break;
+            case LIFE:
+                this.itemTaken = true;
+                this.itemCoolDown += 10;
+                if(PacManGame.getLives() < 3) {
+                    PacManGame.addLive();
+                    hud.resetLives();
+                } else{
+                    PacManGame.increaseScore(75);
+                }
+                break;
+        }
+    }
+
     @Override
     public void dispose() {
         super.dispose();
         hud.dispose();
     }
+
+    /**
+     *
+     */
+    @Override
+    public void render(float delta) {
+        update(delta);
+        super.render(delta);
+        hud.update();
+        if (pacman.getState() == Actor.State.DIEING) {
+            hud.animateLives(delta);
+        }
+        hud.stage.draw();
+    }
+
+    /**
+     *  Game over when time hits 0, Level up when all dots are eaten.
+     *  When Pause is active the Pausescreen is opened.
+     */
+    @Override
+    public void update(float dt) {
+        super.update(dt);
+        if(ready) hud.time -= Gdx.graphics.getDeltaTime();
+
+        updateCoolDown();
+        updateHunter();
+        updateSloMo();
+
+        if(hud.time < 0){
+            this.dispose();
+            if(PacManGame.prefManager.addScore(PacManGame.getScore(), "Time elapsed", PacManGame.getLevel() + 1)){
+                game.setScreen(new ScoreScreen(game, assets, assets.SCORE_MAP));
+            } else {
+                game.setScreen(new MenuScreen(game, assets, assets.MENU_MAP));
+            }
+            PacManGame.resetLives();
+            PacManGame.resetScore();
+            PacManGame.resetLevel();
+        }
+
+        if(GameMap.getCollectedDots() == GameMap.TOTAL_DOTS){
+            PacManGame.levelUp();
+            PacManGame.increaseScore((int)hud.time);
+            this.dispose();
+            game.setScreen(new GameScreen(game, assets, hud.getMap()));
+        }
+
+        if(paused) {
+            if(PrefManager.isJoystick()) this.controller = new ControllerJoystick(assets, this);
+            else this.controller = new ControllerButtons(assets,this);
+            if(PrefManager.isMusicOn()){
+                if(pacManSuper) assets.manager.get(assets.HUNTING_MUSIC).play();
+                else music.play();
+            }
+            paused = false;
+            PauseActive = false;
+        }
+
+        if(PauseActive){
+            if(music.isPlaying()) music.pause();
+            if(assets.manager.get(assets.HUNTING_MUSIC).isPlaying()) assets.manager.get(assets.HUNTING_MUSIC).pause();
+            game.setScreen(new PauseScreen(game, assets, assets.PAUSE, this, hud));
+            paused = true;
+        }
+
+    }
+
+
+
+
 }

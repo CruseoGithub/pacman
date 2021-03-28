@@ -19,7 +19,7 @@ public class ControllerButtons extends Controller {
      * Initializes with the parent constructor and sets the controller layers (grid and buttons) visible.
      * It implements methods to process touch inputs:
      *
-     * touchDown - gets the touchdown position and depending on the angle from the center of the button layout
+     * touchDown - gets the touchdown position. Depending on the angle from the center of the button layout
      * it sets a direction for pacman.
      *
      * touchUp - it will activate the pause menu if the touch position is correct

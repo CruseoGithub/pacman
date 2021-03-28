@@ -44,7 +44,7 @@ public class ControllerJoystick extends Controller {
      * if the current position moved at least 50 Pixels from the touch down event.
      * In case of a touch up event it will skip this step and get the direction anyway. (efficient for short swipe gestures)
      * (without boolean touchUp)
-     * Compares the touch down position to the given position and calculates angle.
+     * Compares the touch down position to the given position and calculates the angle.
      * Depending on the angle it will set a new direction for pacman.
      *
      * @param assets provide the Assetsmanager instance for building the controller

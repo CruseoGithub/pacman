@@ -54,15 +54,15 @@
  
  The higher your level is, the more difficult the game gets:
  Changes:
- Level 1: No. of ghosts: 1, Difficulty: red-easy, Speed: 2
- Level 3: No. of ghosts: 2, Difficulty: orange-easy
- Level 5: No. of ghosts: 3, Difficulty: red-medium, pink-easy
- Level 7: Difficulty: orange-medium Speed: 4
- Level 9: Difficulty: pink-medium
- Level 13: Difficulty: red-hard
- Level 20: Difficulty: orange-hard
- Level 25: Speed: 8
- Level 31: Difficulty: pink-hard
+ 1. Level 1: No. of ghosts: 1, Difficulty: red-easy, Speed: 2
+ 2. Level 3: No. of ghosts: 2, Difficulty: orange-easy
+ 3. Level 5: No. of ghosts: 3, Difficulty: red-medium, pink-easy
+ 4. Level 7: Difficulty: orange-medium Speed: 4
+ 5. Level 9: Difficulty: pink-medium
+ 6. Level 13: Difficulty: red-hard
+ 7. Level 20: Difficulty: orange-hard
+ 8. Level 25: Speed: 8
+ 9. Level 31: Difficulty: pink-hard
  
  Ghost difficulties:
  Easy: Moves randomly until the distance to PacMan is lower than 16 tiles. Then it will just compare the horizontal to the vertical distance and will try to decrease the bigger one.

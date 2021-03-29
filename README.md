@@ -52,8 +52,7 @@
  
  You can pause the game by touching the HUD or on desktop version by hitting SPACE.
  
- The higher your level is, the more difficult the game gets:
- Changes:
+ The higher your level is, the more difficult the game gets. Here you can see the changes:
  1. Level 1: No. of ghosts: 1, Difficulty: red-easy, Speed: 2
  2. Level 3: No. of ghosts: 2, Difficulty: orange-easy
  3. Level 5: No. of ghosts: 3, Difficulty: red-medium, pink-easy

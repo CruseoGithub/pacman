@@ -83,20 +83,20 @@
  - Where to find APK file.
  - 
  - How to run on Desktops?
- - Download and install Android Studio.
- - Click on open project and select the game folder.
- - For execution in desktop mode: 
- - Add a Run/Debug Configuration as Application
- - For Main class select "uas.lntv.pacmangame.desktop.DesktopLauncher"
- - For use of classpath module select "Pacman.desktop"
- - Select your JRE.
- - Apply and Run.
+ - -Download and install Android Studio.
+ - -Click on open project and select the game folder.
+ - -For execution in desktop mode: 
+ - -Add a Run/Debug Configuration as Application
+ - -For Main class select "uas.lntv.pacmangame.desktop.DesktopLauncher"
+ - -For use of classpath module select "Pacman.desktop"
+ - -Select your JRE.
+ - -Apply and Run.
  - 
  - For execution in Phone mode:
- - Create a virtual device (We went with PIxel 4, API 29 and Android 10).
- - Add a Run/Debug Configuration as Android app.
- - For Module select "Pacman.android"
- - Apply and Run.
+ - -Create a virtual device (We went with PIxel 4, API 29 and Android 10).
+ - -Add a Run/Debug Configuration as Android app.
+ - -For Module select "Pacman.android"
+ - -Apply and Run.
  - 
  - 
  

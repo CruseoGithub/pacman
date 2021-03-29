@@ -191,7 +191,7 @@ public class GameScreen extends MapScreen {
                     this.pacManSuper = true;
                 }
                 break;
-            case SLOWMO:
+            case SLO_MO:
                 this.itemTaken = true;
                 this.itemCoolDown += 10;
                 this.slowDownTime = 10;

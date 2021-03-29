@@ -202,7 +202,7 @@ public class GameMap extends Map {
                         if (layerPath.getCell(x, y) != null & !matrix[x][y].isItem() && x > 0 && x < (mapWidth - 2)) { //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
                             int max = 1;
                             int min = 0;
-                            int random = (int) (Math.random() * (max - min + 1) + min); // random ist entweder 0 oder 1
+                            int random = (int) (Math.random() * (max - min + 1) + min); // random is either 0 or 1
                             if (random > 0) {
                                 layerCollect.setCell(x, y, createItem(item));
                                 matrix[x][y].placeItem(item);
@@ -238,19 +238,19 @@ public class GameMap extends Map {
                     ghost.setDifficulty(Enemy.Difficulty.RUNAWAY);
                 }
                 break;
-            case SLOWMO:
+            case SLO_MO:
                 tile.takeItem();
-                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
-                SCREEN.activateBuff(Tile.Item.SLOWMO);
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.SLO_MO).play(0.1f);
+                SCREEN.activateBuff(Tile.Item.SLO_MO);
                 break;
             case TIME:
                 tile.takeItem();
-                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.TIME).play(0.1f);
                 SCREEN.activateBuff(Tile.Item.TIME);
                 break;
             case LIFE:
                 tile.takeItem();
-                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.LIFE_UP).play(0.1f);
                 SCREEN.activateBuff(Tile.Item.LIFE);
                 break;
         }

@@ -49,7 +49,7 @@ public abstract class Map {
      */
     public Map(String path, Assets assets){
         this.ASSETS = assets;
-        firstMap = path.equals("maps/map.tmx");
+        firstMap = path.equals("maps/map_1.tmx");
         TmxMapLoader tmxMapLoader = new TmxMapLoader();
         TMX_MAP = tmxMapLoader.load(path);
         TiledMap TMX_CONTROL = assets.manager.get(assets.CONTROL);
@@ -184,8 +184,8 @@ public abstract class Map {
                 region.setRegionY(0);
                 region.setRegionHeight(32);
                 break;
-            case SLOWMO:
-                Texture tex2 = ASSETS.manager.get(ASSETS.ITEM_SLOWMO);
+            case SLO_MO:
+                Texture tex2 = ASSETS.manager.get(ASSETS.ITEM_SLO_MO);
                 region = new TextureRegion(tex2);
                 region.setRegionX(0);
                 region.setRegionWidth(32);

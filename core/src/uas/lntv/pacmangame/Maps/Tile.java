@@ -18,7 +18,7 @@ public class Tile extends StaticTiledMapTile {
 
     /* Map-Specific Fields */
 
-    public enum Item { EMPTY, DOT, TIME, SLOWMO, HUNTER, LIFE}
+    public enum Item { EMPTY, DOT, TIME, SLO_MO, HUNTER, LIFE}
     public enum Type { EMPTY, PATH, WALL, DOT}
 
     private boolean occupiedByPacMan = false;

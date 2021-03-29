@@ -20,6 +20,7 @@ public class Animation {
     private int tmp = 0;
 
     /* Constructor */
+
     /**
      * Create a new animation
      * @param actor the actor
@@ -37,6 +38,7 @@ public class Animation {
     }
 
     /* Methods */
+
     /**
      * Animates the actors Enemy and the pacman depending on his current state
      * The method takes their sprite and draws a rectangle around the desired frame

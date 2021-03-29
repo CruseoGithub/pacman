@@ -21,14 +21,14 @@ public abstract class Controller {
 
     /* Fields */
 
-    protected Assets assets;
     protected boolean upPressed, downPressed, leftPressed, rightPressed, touchEvent;
     protected boolean PauseReady = false;
+    protected final Assets ASSETS;
     protected final int TILE_SIZE;
-    protected MapScreen screen;
-    protected OrthographicCamera gameCam;
-    protected Stage stage;
-    protected Viewport viewport;
+    protected final MapScreen SCREEN;
+    protected final OrthographicCamera GAME_CAM;
+    protected final Stage STAGE;
+    protected final Viewport VIEWPORT;
 
     /* Constructor */
 
@@ -39,15 +39,15 @@ public abstract class Controller {
      * @param screen instance of a Screen which will contain the controller
      */
     public Controller(Assets assets, MapScreen screen){
-        this.assets = assets;
-        this.screen = screen;
+        this.ASSETS = assets;
+        this.SCREEN = screen;
         this.TILE_SIZE = Map.getTileSize();
-        this.gameCam = new OrthographicCamera();
-        this.viewport = new FitViewport(
+        this.GAME_CAM = new OrthographicCamera();
+        this.VIEWPORT = new FitViewport(
                 Map.getMapWidth() * TILE_SIZE,
                 Map.getMapHeight() * TILE_SIZE,
-                gameCam);
-        this.stage = new Stage(viewport, PacManGame.batch);
+                GAME_CAM);
+        this.STAGE = new Stage(VIEWPORT, PacManGame.batch);
     }
 
     /* Accessors */
@@ -86,7 +86,7 @@ public abstract class Controller {
             this.PauseReady = false;
             if (y >= 45 * TILE_SIZE && y <= 50 * TILE_SIZE) {
                 if (x >= 2 * TILE_SIZE && x <= 26 * TILE_SIZE) {
-                    ((GameScreen) screen).setPauseActive(true);
+                    ((GameScreen) SCREEN).setPauseActive(true);
                 }
             }
         }
@@ -111,7 +111,7 @@ public abstract class Controller {
      * @param y y-value of the touch input
      */
     public void ready(float x, float y){
-        if (screen instanceof GameScreen) {
+        if (SCREEN instanceof GameScreen) {
             if (y >= 45 * TILE_SIZE && y <= 50 * TILE_SIZE) {
                 if (x >= 2 * TILE_SIZE && x <= 26 * TILE_SIZE) {
                     this.PauseReady = true;
@@ -124,7 +124,7 @@ public abstract class Controller {
      * Disposes the controller.
      */
     public void dispose(){
-        stage.dispose();
+        STAGE.dispose();
     }
 
     /**
@@ -133,7 +133,7 @@ public abstract class Controller {
      * @param height new height of the viewport
      */
     public void resize(int width, int height){
-        viewport.update(width, height);
+        VIEWPORT.update(width, height);
     }
 }
 

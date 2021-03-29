@@ -23,8 +23,8 @@ public abstract class Map {
     private final boolean firstMap;
 
     protected final Assets ASSETS;
+    protected final OrthogonalTiledMapRenderer RENDERER;
     protected final TiledMap TMX_MAP;
-    protected OrthogonalTiledMapRenderer renderer;
     protected static int mapWidth;
     protected static int mapHeight;
     protected static int tileSize;
@@ -53,7 +53,7 @@ public abstract class Map {
         TmxMapLoader tmxMapLoader = new TmxMapLoader();
         TMX_MAP = tmxMapLoader.load(path);
         TiledMap TMX_CONTROL = assets.manager.get(assets.CONTROL);
-        renderer = new OrthogonalTiledMapRenderer(TMX_MAP);
+        RENDERER = new OrthogonalTiledMapRenderer(TMX_MAP);
 
         mapWidth = Integer.parseInt(TMX_MAP.getProperties().get("width").toString());
         mapHeight = Integer.parseInt(TMX_MAP.getProperties().get("height").toString());
@@ -74,7 +74,7 @@ public abstract class Map {
 
     /* Accessors */
 
-    public OrthogonalTiledMapRenderer getRenderer() { return renderer; }
+    public OrthogonalTiledMapRenderer getRenderer() { return RENDERER; }
 
     public TiledMapTileLayer getLayerControlButton() { return layerControlButton; }
 

@@ -14,6 +14,9 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
  * Assets are NOT supposed to run static! This can cause problems on Android devices!
  * This class is used to manage the assets. It loads all needed assets once in the beginning and
  * disposes them when the application is closed.
+ *
+ * File-names are supposed to be written in lowercase letters and separated with underscores to work
+ * properly on most android devices.
  */
 public class Assets {
 
@@ -84,16 +87,6 @@ public class Assets {
     public void dispose(){ manager.dispose(); }
 
     /**
-     * Small method, that puts everything in the loading queue, that is needed for the splash- and
-     * loading screen. The method will also block everything until loading is finished.
-     */
-    public void loadSetup(){
-        manager.load(DIAL_UP);
-        manager.load(LOADING);
-        manager.finishLoading();
-    }
-
-    /**
      * This method puts everything in the loading queue, that is needed in the application.
      */
     public void load(){
@@ -135,4 +128,15 @@ public class Assets {
         manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
         manager.load(CONTROL, TiledMap.class);
     }
+
+    /**
+     * Small method, that puts everything in the loading queue, that is needed for the splash- and
+     * loading screen. The method will also block everything until loading is finished.
+     */
+    public void loadSetup(){
+        manager.load(DIAL_UP);
+        manager.load(LOADING);
+        manager.finishLoading();
+    }
+
 }

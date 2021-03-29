@@ -31,8 +31,8 @@ public class ControllerButtons extends Controller {
      */
     public ControllerButtons(Assets assets, MapScreen screen){
         super(assets, screen);
-        screen.getMap().layerControlZone.setOpacity(1f);
-        screen.getMap().layerControlButton.setOpacity(1f);
+        screen.getMap().getLayerControlZone().setOpacity(1f);
+        screen.getMap().getLayerControlButton().setOpacity(1f);
 
         Gdx.input.setInputProcessor(new InputAdapter(){
 
@@ -78,4 +78,5 @@ public class ControllerButtons extends Controller {
             }
         });
     }
+
 }

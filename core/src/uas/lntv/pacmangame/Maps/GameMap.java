@@ -1,6 +1,5 @@
 package uas.lntv.pacmangame.Maps;
 
-
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -23,12 +22,13 @@ public class GameMap extends Map {
     private final ArrayList<Vector2> ITEM_POSITIONS = new ArrayList<>();
     private final MapScreen SCREEN;
     private static int collectedDots;
+
     public final static int TOTAL_DOTS = 150;
 
 	/* Constructor */
 
     /**
-     * does the same as the parent constructor.
+     * Does the same as the parent constructor.
      * Additionally it generates collectables and provides a method to collect them.
      * @param assets instance of the assets manager
      * @param path  string value which contains the path to a tmx-map-file.
@@ -72,7 +72,7 @@ public class GameMap extends Map {
     }
 
     /**
-     * it calculates a percentage portion for each item based on the golden ration. (it wont amount to exactly 100% though)
+     * It calculates a percentage portion for each item based on the golden ration. (it wont amount to exactly 100% though)
      * Any left over percentages will be distributed equally to every item
      * @param items total number of items
      * @return returns a list of percentages for each item
@@ -190,7 +190,7 @@ public class GameMap extends Map {
     }
 
     /**
-     * generates all simple dots/scorepoints which can be collected by Pac-Man. (would also work for special items)
+     * Generates all simple dots/score-points which can be collected by Pac-Man. (would also work for special items)
      * It does this by iterating through the tile matrix and placing items by chance (default: 50% chance) until it reaches a total amount of items.
      * @param amount the total amount of Dots/Points generated on the map
      */
@@ -216,7 +216,7 @@ public class GameMap extends Map {
     }
 
     /**
-     * this will delete a collectable from the map and plays a sound
+     * This will delete a collectable from the map and plays a sound
      * additionally it will in increase Pac-Mans score value.
      * If the collectable is a hunter item it will evolve Pac-Man to SuperPacMan and set the ghosts to a frightened state.
      * @param tile specify the tile from which you want to collect an item
@@ -258,8 +258,8 @@ public class GameMap extends Map {
     }
 
     /**
-     * counts the number of items that are placed on the map already (no dots)
-     * @return number of items (0-4)
+     * Counts the number of items that are placed on the map already. (no dots)
+     * @return number of buff items (0-4)
      */
     @Override
     public int countItems(){
@@ -271,7 +271,7 @@ public class GameMap extends Map {
     }
 
     /**
-     * This method looks for special Items on the map an will generate a new special item in a free slot
+     * This method looks for special Items on the map an will generate a new special item in a free slot.
      * The selection of which item to generate will be decided via an algorithm which is loosely based on the golden ratio.
      * if a certain item already exists the likelihood of it spawning will decrease further.
      */

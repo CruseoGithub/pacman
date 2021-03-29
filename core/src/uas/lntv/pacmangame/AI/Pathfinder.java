@@ -47,32 +47,9 @@ public class Pathfinder {
         this.HUNTER = hunter;
         this.TARGET_X = prey.getXCoordinate();
         this.TARGET_Y = prey.getYCoordinate();
-        int i = 0;
 
-        //Putting all tiles of the map into the 'open'-list
-        for(int x = 0; x < MAP_WIDTH; x++){
-            for(int y = 0; y < MAP_HEIGHT; y++){
-                OPEN.add(this.MATRIX[x][y]);
-                OPEN.get(i++)
-                        .setCost(1000000)
-                        .setTotal(1000000)
-                        .setPrev(null)
-                        .setHeuristics(calcHeuristics(
-                                x,
-                                y,
-                                this.TARGET_X,
-                                this.TARGET_Y
-                                )
-                        );
-            }
-        }
-
-        // Preparing the starting tile for the A*-Algorithm
-        OPEN.get(searchHunter())
-                .setCost(0)
-                .setTotal(
-                        OPEN.get(searchHunter()).getHeuristics()
-                );
+        setupOpenList();
+        prepareHunterTile();
     }
 
     /**
@@ -87,32 +64,9 @@ public class Pathfinder {
         this.HUNTER = hunter;
         this.TARGET_X = targetX / TILE_SIZE;
         this.TARGET_Y = targetY / TILE_SIZE;
-        int i = 0;
 
-        //Putting all tiles of the map into the 'open'-list
-        for(int x = 0; x < MAP_WIDTH; x++){
-            for(int y = 0; y < MAP_HEIGHT; y++){
-                OPEN.add(this.MATRIX[x][y]);
-                OPEN.get(i++)
-                        .setCost(1000000)
-                        .setTotal(1000000)
-                        .setPrev(null)
-                        .setHeuristics(calcHeuristics(
-                                x,
-                                y,
-                                this.TARGET_X,
-                                this.TARGET_Y
-                                )
-                        );
-            }
-        }
-
-        // Preparing the starting tile for the A*-Algorithm
-        OPEN.get(searchHunter())
-                .setCost(0)
-                .setTotal(
-                        OPEN.get(searchHunter()).getHeuristics()
-                );
+        setupOpenList();
+        prepareHunterTile();
     }
 
     /* Methods */
@@ -244,6 +198,43 @@ public class Pathfinder {
         }
         OPEN.remove(tempPos);
         return temp;
+    }
+
+    /**
+     * Preparing the starting tile for the A*-Algorithm
+     * Cost = 0
+     * Total = Heuristics
+     */
+    private void prepareHunterTile(){
+        OPEN.get(searchHunter())
+                .setCost(0)
+                .setTotal(
+                        OPEN.get(searchHunter()).getHeuristics()
+                );
+    }
+
+    /**
+     * Putting all tiles of the map into the 'open'-list
+     */
+    private void setupOpenList(){
+        int i = 0;
+
+        for(int x = 0; x < MAP_WIDTH; x++){
+            for(int y = 0; y < MAP_HEIGHT; y++){
+                OPEN.add(this.MATRIX[x][y]);
+                OPEN.get(i++)
+                        .setCost(1000000)
+                        .setTotal(1000000)
+                        .setPrev(null)
+                        .setHeuristics(calcHeuristics(
+                                x,
+                                y,
+                                this.TARGET_X,
+                                this.TARGET_Y
+                                )
+                        );
+            }
+        }
     }
 
     /**

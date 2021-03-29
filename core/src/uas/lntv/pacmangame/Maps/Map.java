@@ -24,28 +24,28 @@ public abstract class Map {
 
     protected final Assets ASSETS;
     protected final TiledMap TMX_MAP;
+    protected OrthogonalTiledMapRenderer renderer;
     protected static int mapWidth;
     protected static int mapHeight;
     protected static int tileSize;
     protected Tile[][] matrix;
+    protected TiledMapTileLayer layerCollect;
+    protected TiledMapTileLayer layerControlButton;
+    protected TiledMapTileLayer layerControlZone;
+    protected TiledMapTileLayer layerPath;
+    protected TiledMapTileLayer layerWall;
 
-    public OrthogonalTiledMapRenderer renderer;
-    public TiledMapTileLayer layerCollect;
-    public TiledMapTileLayer layerControlButton;
-    public TiledMapTileLayer layerControlZone;
-    public TiledMapTileLayer layerPath;
-    public TiledMapTileLayer layerWall;
 
 
     /* Constructor */
 
     /**
-     * The constructor loads the graphic layers of the tmx-Mapfile and sets them up into a Maprenderer
-     * Additionaly it loads all graphic layers for the on screen controller (initially they are invisible).
+     * The constructor loads the graphic layers of the tmx-map-file and sets them up into a map-renderer
+     * Additionally it loads all graphic layers for the on screen controller (initially they are invisible).
      * It generates a matrix of the Map which contains a Tile for each cell.
      * It provides methods for generating and collecting Collectables which should be implemented as needed by the child class.
-     * @param path String value which contains the path to a tmx-Mapfile.
-     * @param assets provide the Assetsmanager instance of the game.
+     * @param path String value which contains the path to a tmx-map-file.
+     * @param assets provide the assets manager instance of the game.
      */
     public Map(String path, Assets assets){
         this.ASSETS = assets;
@@ -73,6 +73,12 @@ public abstract class Map {
     }
 
     /* Accessors */
+
+    public OrthogonalTiledMapRenderer getRenderer() { return renderer; }
+
+    public TiledMapTileLayer getLayerControlButton() { return layerControlButton; }
+
+    public TiledMapTileLayer getLayerControlZone() { return layerControlZone; }
 
     public static int getMapHeight(){ return mapHeight; }
 
@@ -215,12 +221,10 @@ public abstract class Map {
         return cell;
     }
 
-    public void generateSpecialItem(){
-
-    }
+    public void generateSpecialItem(){ }
 
     /**
-     * this will delete a collectable from the map and plays a sound
+     * This will delete a collectable from the map and plays a sound.
      * @param tile specify the tile from which you want to collect an item
      */
     public void collect(Tile tile){

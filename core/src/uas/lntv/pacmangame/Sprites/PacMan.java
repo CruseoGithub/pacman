@@ -71,19 +71,19 @@ public class PacMan extends Actor {
     @Override
     public void collide() {
         if(((GameScreen) SCREEN).isPacManSuper()){
-            if(PrefManager.isSfxOn()) assets.manager.get(assets.KILL).play(0.15f);
+            if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.KILL).play(0.15f);
             PacManGame.increaseScore(50);
         } else {
             super.collide();
-            if (PrefManager.isSfxOn()) assets.manager.get(assets.DIE).play(0.35f);
+            if (PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.DIE).play(0.35f);
             if (PacManGame.getLives() > 1) PacManGame.die();
             else {
                 PacManGame.die();
                 super.SCREEN.dispose();
                 if (PacManGame.prefManager.addScore(PacManGame.getScore(), "Killed", PacManGame.getLevel() + 1)) {
-                    GAME.setScreen(new ScoreScreen(GAME, assets, assets.SCORE_MAP));
+                    GAME.setScreen(new ScoreScreen(GAME, ASSETS, ASSETS.SCORE_MAP));
                 } else {
-                    GAME.setScreen(new MenuScreen(GAME, assets, assets.MENU_MAP));
+                    GAME.setScreen(new MenuScreen(GAME, ASSETS, ASSETS.MENU_MAP));
                 }
                 PacManGame.resetScore();
                 PacManGame.resetLives();

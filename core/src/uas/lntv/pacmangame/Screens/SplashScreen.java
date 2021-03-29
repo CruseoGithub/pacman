@@ -51,7 +51,7 @@ public class SplashScreen implements Screen {
     /* Constructor */
 
     /**
-     * Main constructor of the SplashScreen
+     * Main constructor of the SplashScreen.
      * @param game running game
      * @param assets asset management
      */
@@ -122,7 +122,7 @@ public class SplashScreen implements Screen {
     }
 
     /**
-     * rizises the splashscreen to the new values
+     * Resize the splashscreen to the new values
      * @param width new width of the screen
      * @param height new height of the screen
      */
@@ -134,7 +134,7 @@ public class SplashScreen implements Screen {
     }
 
     /**
-     * displays the the logos and then moves on to displaying the loading pacman icon
+     * Displays the the logos and then moves on to displaying the loading pacman icon.
      */
     private void update(){
         time = Gdx.graphics.getDeltaTime();
@@ -207,7 +207,7 @@ public class SplashScreen implements Screen {
         if(timer > 8 && timer < 10) alpha -= time / 2;
     }
 
-    /* Unused methods that needed to be adopted from libGDX' Screen class. */
+    /* Unused methods that needed to be overridden from libGDX' Screen class. */
 
     @Override
     public void dispose() {  }

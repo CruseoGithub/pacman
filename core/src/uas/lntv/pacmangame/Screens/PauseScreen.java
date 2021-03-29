@@ -28,7 +28,7 @@ public class PauseScreen extends MapScreen {
     /* Constructor */
 
     /**
-     * Main constructor of the PauseScreen
+     * Main constructor of the PauseScreen.
      * @param game running game
      * @param assets asset management
      * @param mapPath the path where the map is stored
@@ -234,4 +234,5 @@ public class PauseScreen extends MapScreen {
             ((MenuMap)map).getHighlightLayers().get(5).setVisible(true);
         }
     }
+
 }

@@ -48,4 +48,5 @@ public class Joystick extends Actor {
         );
         PacManGame.batch.draw(TEXTURE_KNOB, xPositionKnob, yPositionKnob);
     }
+
 }

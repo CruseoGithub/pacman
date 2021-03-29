@@ -28,9 +28,9 @@ public abstract class Actor {
     public enum State { RUNNING, DIEING, HOMING, BOXED }
 
     protected Animation animation;
-    protected Assets assets;
     protected boolean mouthOpen;
     protected Direction direction, nextDirection, prevDirection;
+    protected final Assets ASSETS;
     protected final int TILE_SIZE;
     protected final Map MAP;
     protected final MapScreen SCREEN;
@@ -49,7 +49,7 @@ public abstract class Actor {
     /* Constructor */
 
     public Actor(Assets assets, int initX, int initY, MapScreen screen) {
-        this.assets = assets;
+        this.ASSETS = assets;
         this.state = State.RUNNING;
         this.xPosition = initX;
         this.yPosition = initY;

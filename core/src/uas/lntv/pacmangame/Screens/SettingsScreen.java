@@ -260,7 +260,7 @@ public class SettingsScreen extends MapScreen {
         GHOSTS.get(0).update(dt);
         GHOSTS.get(0).move();
         GAME_CAM.update();
-        map.renderer.setView(GAME_CAM);
+        map.getRenderer().setView(GAME_CAM);
     }
 
 }

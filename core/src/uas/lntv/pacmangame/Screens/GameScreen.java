@@ -27,11 +27,11 @@ public class GameScreen extends MapScreen {
     private boolean enemiesSlow = false;
     private boolean itemTaken = false;
     private boolean pacManSuper = false;
-    private boolean PauseActive = false;
+    private boolean pauseActive = false;
     private boolean paused = false;
     private float itemCoolDown = 0;
-    private float slowDownTime = 10;
-    private float supStatusTime = 10;
+    private float slowDownTime;
+    private float supStatusTime;
 
     /* Constructor */
 
@@ -94,9 +94,7 @@ public class GameScreen extends MapScreen {
 
     /* Mutators */
 
-
-    public void setPauseActive(boolean bool) { PauseActive = bool; }
-
+    public void setPauseActive(boolean bool) { pauseActive = bool; }
 
     /* Methods */
 
@@ -170,7 +168,7 @@ public class GameScreen extends MapScreen {
      */
     @Override
     protected boolean handleInput(){
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) PauseActive = true;
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) pauseActive = true;
         return super.handleInput();
     }
 
@@ -233,6 +231,7 @@ public class GameScreen extends MapScreen {
         }
         hud.getStage().draw();
     }
+
     /**
      *  Game over when time hits 0, Level up when all dots are eaten.
      *  When Pause is active the PauseScreen is opened.
@@ -273,10 +272,10 @@ public class GameScreen extends MapScreen {
                 else music.play();
             }
             paused = false;
-            PauseActive = false;
+            pauseActive = false;
         }
 
-        if(PauseActive){
+        if(pauseActive){
             if(music.isPlaying()) music.pause();
             if(ASSETS.manager.get(ASSETS.HUNTING_MUSIC).isPlaying()) ASSETS.manager.get(ASSETS.HUNTING_MUSIC).pause();
             GAME.setScreen(new PauseScreen(GAME, ASSETS, ASSETS.PAUSE, this, hud));

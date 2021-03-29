@@ -118,6 +118,10 @@ public class Animation {
         }
     }
 
+    /**
+     * This is needed in the HUD, when PacMan died and regained a life in the same level.
+     * It avoids bugs on the life displaying.
+     */
     public void resetTmp(){ this.tmp = 0; }
 
     /**
@@ -145,4 +149,5 @@ public class Animation {
             }
         }
     }
+
 }

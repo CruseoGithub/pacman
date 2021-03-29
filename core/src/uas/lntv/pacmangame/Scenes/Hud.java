@@ -19,6 +19,7 @@ import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.PacMan;
+
 /**
  * (Jabba)The HUD shows: Score, Time, Lives and functions as a Pause-button.
  */
@@ -28,7 +29,6 @@ public class Hud {
 
     private boolean warned = false;
     private boolean red = false;
-
     private final Assets assets;
     private final ArrayList<PacMan> LIVE_PAC_MEN = new ArrayList<>();
     private final ArrayList<String> STAGES = new ArrayList<>();
@@ -39,10 +39,8 @@ public class Hud {
     private final Label SCORE_LABEL;
     private final MapScreen SCREEN;
     private final Stage STAGE;
-
     private float time;
     private float timeStamp;
-
 
     /* Constructor */
 
@@ -119,11 +117,10 @@ public class Hud {
 
     public void updateTime(float delta){ this.time -= delta; }
 
-
     /* Methods */
 
     /**
-     * Animates the images according to the lives of PacMan
+     * Animates the images according to the lives of PacMan.
      */
     public void animateLives(float dt) {
         if (PacManGame.getLives() == 1) {
@@ -136,7 +133,7 @@ public class Hud {
     }
 
     /**
-     * Animation of dying
+     * Animation of dying.
      */
     private void animate(PacMan pacman, float dt){
         pacman.setState(Actor.State.DIEING);
@@ -159,7 +156,7 @@ public class Hud {
      * Checks the level of the game and returns the according path to the map.
      * @return path of map as a String
      */
-    public final String getMap(){ return STAGES.get(PacManGame.getLevel() % 5); }
+    public String getMap(){ return STAGES.get(PacManGame.getLevel() % 5); }
 
     /**
      * Disposes the created stage.
@@ -241,4 +238,5 @@ public class Hud {
             }
         }
     }
+
 }

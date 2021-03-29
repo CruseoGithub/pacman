@@ -37,6 +37,10 @@ public class Tile extends StaticTiledMapTile {
 
     /* Constructors */
 
+    /**
+     * Creates a tile without a texture or special type.
+     * This would certainly be a raw tile, that will be changed soon.
+     */
     public Tile(){
         super(new TextureRegion());
         this.TYPE = null;
@@ -49,6 +53,11 @@ public class Tile extends StaticTiledMapTile {
         this.total = 1000000;
     }
 
+    /**
+     * Creates a tile with a texture region, that still needs to be put in place and needs
+     * to be characterized.
+     * @param textureRegion TILE_SIZE x TILE_SIZE pixels region of a texture
+     */
     public Tile(TextureRegion textureRegion) {
         super(textureRegion);
         this.TYPE = null;
@@ -61,6 +70,13 @@ public class Tile extends StaticTiledMapTile {
         this.total = 1000000;
     }
 
+    /**
+     * Creates a tile with a texture region and type and also puts it on the right place of the map.
+     * @param textureRegion TILE_SIZE x TILE_SIZE pixels region of a texture
+     * @param type the kind of tile
+     * @param x x-position in pixels
+     * @param y y-position in pixels
+     */
     public Tile(TextureRegion textureRegion, Tile.Type type, int x, int y) {
         super(textureRegion);
         this.TYPE = type;
@@ -72,6 +88,13 @@ public class Tile extends StaticTiledMapTile {
         this.total = 1000000;
     }
 
+    /**
+     * Puts a tile with it's attribute in the right place on the map without giving it a
+     * texture.
+     * @param type the kind of tile
+     * @param x x-position in pixels
+     * @param y y-position in pixels
+     */
     public Tile(Type type, int x, int y) {
         super(new TextureRegion());
         this.TYPE = type;
@@ -83,7 +106,6 @@ public class Tile extends StaticTiledMapTile {
         this.heuristics = 0;
         this.total = 1000000;
     }
-
 
     /* Accessors */
 

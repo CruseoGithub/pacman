@@ -20,7 +20,6 @@ public class ControllerJoystick extends Controller {
     Vector3 touchDownPos;
     public Joystick joystick;
 
-
     /**
      *
      * The joystick knob will move if the touch is dragged to any direction. How ever it wont leave the outer circle.
@@ -58,8 +57,8 @@ public class ControllerJoystick extends Controller {
         final int joystickZoneRadius = 192 / 2; // 192px x 192px
         final int joystickKnobRadius = 64 / 2; // 64px x 64px
 
-        screen.getMap().layerControlButton.setOpacity(0);
-        screen.getMap().layerControlZone.setOpacity(1f);
+        screen.getMap().getLayerControlButton().setOpacity(0);
+        screen.getMap().getLayerControlZone().setOpacity(1f);
 
         Gdx.input.setInputProcessor(new InputAdapter(){
             /* Input Methods */
@@ -177,4 +176,5 @@ public class ControllerJoystick extends Controller {
             }
         });
     }
+
 }

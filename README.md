@@ -90,6 +90,7 @@
  - fesliyanstudios.com
  - audiotrimmer.com
  - clipconverter.cc
+ - mapeditor.org
  - GIMP2
  - usw.
  

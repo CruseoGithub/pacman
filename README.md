@@ -83,13 +83,13 @@
  - How to run on Desktops?
  
  # Credits:
- -Libgdx
- -bfxr.net
- -beepbox.co
- -soundjay.com
- -fesliyanstudios.com
- -audiotrimmer.com
- -clipconverter.cc
- -GIMP2
+ - Libgdx
+ - bfxr.net
+ - beepbox.co
+ - soundjay.com
+ - fesliyanstudios.com
+ - audiotrimmer.com
+ - clipconverter.cc
+ - GIMP2
  - usw.
  

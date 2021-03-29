@@ -1,0 +1,189 @@
+@startuml
+
+title __SCREENS's Class Diagram__\n
+
+  namespace uas.lntv.pacmangame {
+    namespace Screens {
+      class uas.lntv.pacmangame.Screens.GameScreen {
+          - enemiesSlow : boolean
+          - itemCoolDown : float
+          - itemTaken : boolean
+          - pacManSuper : boolean
+          - pauseActive : boolean
+          - paused : boolean
+          - slowDownTime : float
+          - supStatusTime : float
+          + GameScreen()
+          + activateBuff()
+          + isPacManSuper()
+          + render()
+          + setPauseActive()
+          + update()
+          # handleInput()
+          - updateCoolDown()
+          - updateHunter()
+          - updateSloMo()
+      }
+    }
+  }
+  
+
+  namespace uas.lntv.pacmangame {
+    namespace Screens {
+      abstract class uas.lntv.pacmangame.Screens.MapScreen {
+          # GAME_CAM : OrthographicCamera
+          # GAME_PORT : Viewport
+          # GHOSTS : ArrayList<Enemy>
+          # TILE_SIZE : int
+          # music : Music
+          # ready : boolean
+          + MapScreen()
+          + activateBuff()
+          + dispose()
+          + getGhosts()
+          + getHud()
+          + getMap()
+          + getPacman()
+          + hide()
+          + notReady()
+          + pause()
+          + render()
+          + resize()
+          + resume()
+          + show()
+          + update()
+          # handleInput()
+          # switchMusicGame()
+          # switchMusicHunting()
+      }
+    }
+  }
+  
+
+  namespace uas.lntv.pacmangame {
+    namespace Screens {
+      enum Type {
+        GAME
+        MENU
+        SCORE
+        SETTINGS
+      }
+    }
+  }
+  
+
+  namespace uas.lntv.pacmangame {
+    namespace Screens {
+      class uas.lntv.pacmangame.Screens.MenuScreen {
+          + MenuScreen()
+          + dispose()
+          + render()
+      }
+    }
+  }
+  
+
+  namespace uas.lntv.pacmangame {
+    namespace Screens {
+      class uas.lntv.pacmangame.Screens.PauseScreen {
+          - FONT : BitmapFont
+          - controllerSet : boolean
+          + PauseScreen()
+          + render()
+          + update()
+      }
+    }
+  }
+  
+
+  namespace uas.lntv.pacmangame {
+    namespace Screens {
+      class uas.lntv.pacmangame.Screens.ScoreScreen {
+          - FONT : BitmapFont
+          - resetAsked : boolean
+          + ScoreScreen()
+          + render()
+          + update()
+      }
+    }
+  }
+  
+
+  namespace uas.lntv.pacmangame {
+    namespace Screens {
+      class uas.lntv.pacmangame.Screens.SettingsScreen {
+          - FONT : BitmapFont
+          - controllerSet : boolean
+          + SettingsScreen()
+          + render()
+          + update()
+      }
+    }
+  }
+  
+
+  namespace uas.lntv.pacmangame {
+    namespace Screens {
+      class uas.lntv.pacmangame.Screens.SplashScreen {
+          - CAM : OrthographicCamera
+          - GAME_PORT : Viewport
+          - LAYER_GDX : TiledMapTileLayer
+          - LAYER_LNTV : TiledMapTileLayer
+          - MAP_HEIGHT : int
+          - MAP_WIDTH : int
+          - RENDERER : OrthogonalTiledMapRenderer
+          - SPRITE : Sprite
+          - TILE_SIZE : int
+          - alpha : float
+          - checkpoint : float
+          - progress : float
+          - texturePositionX : int
+          - texturePositionY : int
+          - time : float
+          - timer : float
+          - touchEvent : boolean
+          - visibleLayer : TiledMapTileLayer
+          + SplashScreen()
+          + dispose()
+          + hide()
+          + pause()
+          + render()
+          + resize()
+          + resume()
+          + show()
+          - update()
+          - updateLoading()
+          - updateSplash()
+      }
+    }
+  }
+  
+
+  uas.lntv.pacmangame.Screens.GameScreen -up-|> uas.lntv.pacmangame.Screens.MapScreen
+  uas.lntv.pacmangame.Screens.MapScreen .up.|> com.badlogic.gdx.Screen
+  uas.lntv.pacmangame.Screens.MapScreen o-- uas.lntv.pacmangame.Managers.Assets : ASSETS
+  uas.lntv.pacmangame.Screens.MapScreen o-- uas.lntv.pacmangame.PacManGame : GAME
+  uas.lntv.pacmangame.Screens.MapScreen o-- uas.lntv.pacmangame.Scenes.Controller : controller
+  uas.lntv.pacmangame.Screens.MapScreen o-- uas.lntv.pacmangame.Scenes.Hud : hud
+  uas.lntv.pacmangame.Screens.MapScreen o-- uas.lntv.pacmangame.Sprites.Joystick : joystick
+  uas.lntv.pacmangame.Screens.MapScreen o-- uas.lntv.pacmangame.Maps.Map : map
+  uas.lntv.pacmangame.Screens.MapScreen o-- uas.lntv.pacmangame.Sprites.PacMan : pacman
+  uas.lntv.pacmangame.Screens.MapScreen +-down- uas.lntv.pacmangame.Screens.MapScreen.Type
+  uas.lntv.pacmangame.Screens.MenuScreen -up-|> uas.lntv.pacmangame.Screens.MapScreen
+  uas.lntv.pacmangame.Screens.PauseScreen -up-|> uas.lntv.pacmangame.Screens.MapScreen
+  uas.lntv.pacmangame.Screens.PauseScreen o-- uas.lntv.pacmangame.Screens.GameScreen : SCREEN
+  uas.lntv.pacmangame.Screens.ScoreScreen -up-|> uas.lntv.pacmangame.Screens.MapScreen
+  uas.lntv.pacmangame.Screens.SettingsScreen -up-|> uas.lntv.pacmangame.Screens.MapScreen
+  uas.lntv.pacmangame.Screens.SplashScreen .up.|> com.badlogic.gdx.Screen
+  uas.lntv.pacmangame.Screens.SplashScreen o-- uas.lntv.pacmangame.Managers.Assets : ASSETS
+  uas.lntv.pacmangame.Screens.SplashScreen o-- uas.lntv.pacmangame.PacManGame : GAME
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

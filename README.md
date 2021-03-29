@@ -31,7 +31,7 @@
  After loading you will see PacMan in the MenuScreen, where you need to move PacMan onto the panel you would like to activate (Play or Settings).
  If it's your first time here, you will be asked for your name.
  The game is basically controlled via moving into the 4 directions.
- If you're playing on the destop version, you can use the arrow keys of your keyboard (all the time).
+ If you're playing on the desktop version, you can use the arrow keys of your keyboard (all the time).
  The default setting draws 4 arrows on the screen, which will detect the touch anywhere on the screen in the direction of the arrow
  (so more than half of the screen is direction UP).
  In the SettingsScreen PacMan will stop at every crossroads which will make it easier to reach the desired settings (Same in the PauseScreen).

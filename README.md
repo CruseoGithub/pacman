@@ -1,7 +1,7 @@
 # Pac-Man Game
  created by LNTV productions.
  This project was created as a team effort over a period of 9 weeks.
- Many thanks to everyone who was involved.
+ Very mucho danke to everyone who was involved.
 
  # About the Game
 

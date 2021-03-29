@@ -154,6 +154,7 @@ public abstract class Map {
     /**
      * Generates all simple dots/score-points which can be collected by Pac-Man.
      * Should be implemented in child classes.
+     * @param item the kind of item that will be generated (At the moment it's only dots, but there is the option for more)
      * @param amount the total amount of Dots/Points generated on the map
      */
     protected abstract void generateCollectables(Tile.Item item, int amount);

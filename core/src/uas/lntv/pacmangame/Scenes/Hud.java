@@ -121,6 +121,7 @@ public class Hud {
 
     /**
      * Animates the images according to the lives of PacMan.
+     * @param dt time parameter used by libGDX
      */
     public void animateLives(float dt) {
         if (PacManGame.getLives() == 1) {
@@ -134,6 +135,8 @@ public class Hud {
 
     /**
      * Animation of dying.
+     * @param pacman one of the drawn lives
+     * @param dt time parameter used by libGDX
      */
     private void animate(PacMan pacman, float dt){
         pacman.setState(Actor.State.DIEING);
@@ -142,7 +145,8 @@ public class Hud {
     }
 
     /**
-     * Function for redrawing the PacMans in the HUD
+     * Ends the dying animation and sets PacMan back to the displayable state he used to have.
+     * @param pacman one of the drawn lives
      */
     private void reset(PacMan pacman){
         pacman.getAnimation().resetTmp();

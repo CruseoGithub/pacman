@@ -29,6 +29,7 @@ public class ScoreScreen extends MapScreen {
     /**
      * This screen is a separate room where you can see the high-score list.
      * @param game Insert the running game
+     * @param assets the assets management of the game
      * @param path the path where the map is stored
      * @see MapScreen
      */

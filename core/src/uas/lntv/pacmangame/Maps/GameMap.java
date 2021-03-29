@@ -121,6 +121,7 @@ public class GameMap extends Map {
     /**
      * It will generate an array that represents a percentage cake that includes every item based on its specific priority
      * From this array it will choose a random item.
+     * @param existingItems the ArrayList that contains which kinds of items are already on the map
      * @return returns a random item based on percentage ( percentage is based on the golden ratio )
      */
     private Tile.Item newItem(ArrayList<Tile.Item> existingItems){

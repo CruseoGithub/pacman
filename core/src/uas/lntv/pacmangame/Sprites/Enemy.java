@@ -33,6 +33,7 @@ public class Enemy extends Actor {
      * Create a new ghost
      * @param initX starting x-coordinate
      * @param initY starting y-coordinate
+     * @param assets the assets management of the game
      * @param screen the screen in which the ghost will be created
      * @param ghost name or path of the png-file that makes the ghost look beautiful
      */

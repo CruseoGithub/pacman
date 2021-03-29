@@ -36,6 +36,7 @@ public class Pathfinder {
      * It generates a matrix of the whole map and also calculates the heuristics to the target.
      * It also prepares to search by creating a 'open' list with all tiles of the map, setting the
      * cost of the starting tile to 0 and creating a yet empty 'closed' list.
+     * @param screen the screen on which you are searching the path
      * @param hunter actor that wants to find a shortest path
      * @param prey target of the actor
      */
@@ -54,6 +55,10 @@ public class Pathfinder {
 
     /**
      * Does the same as the first constructor, but uses x-/y-coordinates instead of an actor.
+     * @param screen the screen on which you are searching the path
+     * @param hunter actor that wants to find a shortest path
+     * @param targetX x-position of the aimed tile
+     * @param targetY y-position of the aimed tile
      * @see Pathfinder
      */
     public Pathfinder(MapScreen screen, Enemy hunter, int targetX, int targetY){

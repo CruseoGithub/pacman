@@ -79,6 +79,8 @@ public class PrefManager {
      * higher than an existing score, it will be put on the right place. The lower scores will
      * increase their positions by one and the lowest score in the list will be deleted.
      * @param newScore Achieved score that tries to be put into the high-score list
+     * @param causeOfDeath the reason why the game ended
+     * @param level the level in which the game ended
      * @return boolean value, that tells you whether the score made it into the list or not
      */
     public boolean addScore(int newScore, String causeOfDeath, int level){

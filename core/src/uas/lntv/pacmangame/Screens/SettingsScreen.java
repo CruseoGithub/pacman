@@ -123,7 +123,7 @@ public class SettingsScreen extends MapScreen {
         );
         FONT.draw(
                 PacManGame.batch,
-                "CREDITS",
+                "COMING SOON...",
                 19 * TILE_SIZE,
                 22 * TILE_SIZE
         );

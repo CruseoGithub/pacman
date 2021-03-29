@@ -78,9 +78,9 @@
 
  Write text here. 
  - Where to find Java Doc file.
- - 
+ - -pacman\javadocs
  - Where to find APK file.
- - 
+ - -pacman\android\release
  - How to run on Desktops?
  - -Download and install Android Studio.
  - -Click on open project and select the game folder.

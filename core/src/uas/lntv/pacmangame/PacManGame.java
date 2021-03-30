@@ -8,6 +8,13 @@ import uas.lntv.pacmangame.Managers.Assets;
 import uas.lntv.pacmangame.Managers.PrefManager;
 import uas.lntv.pacmangame.Screens.SplashScreen;
 
+/**
+ * This game is inspired by the original arcade pac-man game. The protagonist is Pac-Man a yellow
+ * ball with a mouth. Pac-Man finds himself in a maze that he can not escape from. Only eating all
+ * the dots which are scattered around the map will get pac-man to the next level. But beware!
+ * There are enemy ghosts on the map too and they are deadly! At first, they might not seem too
+ * smart but they will get more and more intelligent.
+ */
 public class PacManGame extends Game {
 
 	/* Fields */
@@ -45,6 +52,10 @@ public class PacManGame extends Game {
 
 	/* Methods */
 
+	/**
+	 * The origin of all life. This method creates the foundation of the game and turns on the
+	 * first screen.
+	 */
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -57,6 +68,10 @@ public class PacManGame extends Game {
 		setScreen(new SplashScreen(this, assets));
 	}
 
+	/**
+	 * Apocalypse incoming!
+	 * This method is called, when the game is closed. It will clean up and close the game safely.
+	 */
 	@Override
 	public void dispose () {
 		super.dispose();
@@ -66,6 +81,9 @@ public class PacManGame extends Game {
 		System.exit(0);
 	}
 
+	/**
+	 * Renders the screen. Method by libGDX.
+	 */
 	@Override
 	public void render () { super.render(); }
 

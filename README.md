@@ -1,4 +1,5 @@
 # Pac-Man Game
+<img src="https://github.com/CruseoGithub/pacman/blob/main/android/assets/setup/LNTVLogo.png" width="100" height="100" />
  created by LNTV productions.
  This project was created as a team effort over a period of 9 weeks.
  Very mucho danke to everyone who was involved.

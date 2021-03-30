@@ -79,12 +79,10 @@
 
  # Installation Guide:
 
- <p>Where to find Java Documentation:&nbsp;<a href="https://github.com/CruseoGithub/pacman/tree/main/Javadocs">pacman\javadocs</a></p>
+<p>Where to find Java Documentation:&nbsp;<a href="https://github.com/CruseoGithub/pacman/tree/main/Javadocs">pacman\javadocs</a></p>
 <p>Where to find APK file:&nbsp;<a href="https://github.com/CruseoGithub/pacman/tree/main/android/release">pacman\android\release</a></p>
-<p>&nbsp;</p>
 <h3>How to run on Smartphones:</h3>
 <p>Download the APK-file to your smartphone. Installing it might prompt a warning: In this case, you have to agree to "insecure Sources" in your android settings first. After installing the APK-file run the game from your home screen.</p>
-<p>&nbsp;</p>
 <h3>How to run on PC:</h3>
 <p>Download and install Android Studio.&nbsp;Click on open project and select the pacman project.&nbsp;You can run the game with a Desktop Launcher or via a virtual android environment.</p>
 <p><strong>Desktop Launcher:</strong></p>
@@ -95,7 +93,6 @@
 <p>Create a new virtual device: Click on Tools -&gt; AVD Manager -&gt; "Create Virtual Device..."&nbsp;(We went with Pixel 4, API 29).</p>
 <p>After that you have to add an Android Launcher: Click on Run -&gt; "Edit Configurations..." and add a new Android app.</p>
 <p>For the Module select "Pacman.android"</p>
-
  
  # Credits:
  - Libgdx

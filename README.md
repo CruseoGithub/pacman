@@ -14,12 +14,7 @@
  Only eating all the dots which are scattered around the map will get pac-man to the next level. 
  But beware! There are enemy ghosts on the map too and they are deadly! At first, they might not seem too smart but they will get more and more intelligent.
  Keep in mind, they eventually will try to cut off every escape route.
- Don't be too freighted though, there are some special items to collect which will give pac-man some pretty cool buffs:
- - Hunter item: pac-man gets into rage mode! He becomes very fast and can kill ghosts for a period of time.
- - Life item: Pac-Man gets an extra Life (1up)
- - Slow item: Ghosts are slower for a short time
- - Time item: The clock is always ticking! ...but now Pac-Man has 10 more seconds.
- 
+ Don't be too freighted though, there are some special items to collect which will give pac-man some pretty cool buffs, like killing or slowing down ghosts, or getting some bonus time or lives.
  The game will iterate through a bunch of maps and increase the difficulty each time. 
  This means, over time there will be more ghosts that get smarter. 
  Also, the overall speed of every actor will increase. 
@@ -57,15 +52,15 @@
  You can pause the game by touching the HUD or on the desktop version by hitting SPACE.
  
  The higher your level is, the more difficult the game gets. Here you can see the changes:
- 1. Level 1: No. of ghosts: 1, Difficulty: red-easy, Speed: 2
- 2. Level 3: No. of ghosts: 2, Difficulty: orange-easy
- 3. Level 5: No. of ghosts: 3, Difficulty: red-medium, pink-easy
- 4. Level 7: Difficulty: orange-medium Speed: 4
- 5. Level 9: Difficulty: pink-medium
- 6. Level 13: Difficulty: red-hard
- 7. Level 20: Difficulty: orange-hard
- 8. Level 25: Speed: 8
- 9. Level 31: Difficulty: pink-hard
+ - Level 1: No. of ghosts: 1, Difficulty: red-easy, Speed: 2
+ - Level 3: No. of ghosts: 2, Difficulty: orange-easy
+ - Level 5: No. of ghosts: 3, Difficulty: red-medium, pink-easy
+ - Level 7: Difficulty: orange-medium Speed: 4
+ - Level 9: Difficulty: pink-medium
+ - Level 13: Difficulty: red-hard
+ - Level 20: Difficulty: orange-hard
+ - Level 25: Speed: 8
+ - Level 31: Difficulty: pink-hard
  
  Ghost difficulties:
  

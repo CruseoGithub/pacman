@@ -77,9 +77,9 @@
 
  Write text here. 
  - Where to find Java Doc file.
- - -pacman\javadocs
+ - -[pacman\javadocs](https://github.com/CruseoGithub/pacman/tree/main/Javadocs)
  - Where to find APK file.
- - -pacman\android\release
+ - -[pacman\android\release](https://github.com/CruseoGithub/pacman/tree/main/android/release)
  - How to run on Desktops?
  - -Download and install Android Studio.
  - -Click on open project and select the game folder.
@@ -89,7 +89,7 @@
  - -For use of classpath module select "Pacman.desktop"
  - -Select your JRE.
  - -Apply and Run.
- - For execution in Phone mode:
+ - For execution in a virtual environment:
  - -Create a virtual device (We went with Pixel 4, API 29 and Android 10).
  - -Add a Run/Debug Configuration as Android app.
  - -For Module select "Pacman.android"

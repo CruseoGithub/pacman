@@ -3,7 +3,7 @@
   <img style="vertical-align:middle" src="https://github.com/CruseoGithub/pacman/blob/main/android/assets/setup/LNTVLogo.png" width="150" height="100" />
 </div>
 
- created by LNTV productions.
+ Created by LNTV productions.
  This project was created as a team effort over a period of 9 weeks.
  Very mucho danke to everyone who was involved.
 
@@ -68,13 +68,16 @@
  9. Level 31: Difficulty: pink-hard
  
  Ghost difficulties:
+ 
  Easy: Moves randomly until the distance to PacMan is lower than 16 tiles. Then it will just compare the horizontal to the vertical distance and will try to decrease the bigger one. Doesn't look out for walls while searching for PacMan.
+ 
  Medium: Moves randomly until the distance to PacMan is lower than 16 tiles. Then it will use the A*-Algorithm to find the shortest path to PacMan and go that way.
  The A*-Algorithm will consider other ghosts as obstacles and will choose another path. This avoids stacking ghosts, which would make you lose more than one life by contact.
  It also makes the ghosts more dangerous, because they can cut off the way of PacMan.
+ 
  Hard: Uses the A*-Algorithm permanently. Very dangerous. Very vicious... RUN!
  
- If the countdown timer is almost done (10 sec), you will hear an alert sound and the time display will blink red and white.
+ If the time is almost up (30 seconds remaining), you will hear an alert sound and the time display will blink red and white.
  If the time elapses or you lose all of your lives, the game will end and lead you back into the MenuScreen, unless you achieved a new highscore, this will lead you to the ScoreScreen.
 
  # Installation Guide:

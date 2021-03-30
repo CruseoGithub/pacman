@@ -31,8 +31,8 @@ public class ControllerButtons extends Controller {
      */
     public ControllerButtons(Assets assets, MapScreen screen){
         super(assets, screen);
-        screen.getMap().layerControlZone.setOpacity(1f);
-        screen.getMap().layerControlButton.setOpacity(1f);
+        screen.getMap().getLayerControlZone().setOpacity(1f);
+        screen.getMap().getLayerControlButton().setOpacity(1f);
 
         Gdx.input.setInputProcessor(new InputAdapter(){
 
@@ -43,7 +43,7 @@ public class ControllerButtons extends Controller {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 Vector3 touch = new Vector3(screenX, screenY, 0);
-                gameCam.unproject(touch);
+                GAME_CAM.unproject(touch);
 
                 ready(touch.x, touch.y);
 
@@ -62,7 +62,7 @@ public class ControllerButtons extends Controller {
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 Vector3 touch = new Vector3(screenX, screenY, 0);
-                gameCam.unproject(touch);
+                GAME_CAM.unproject(touch);
                 setPause(touch.x, touch.y);
                 return super.touchUp(screenX, screenY, pointer, button);
             }
@@ -78,4 +78,5 @@ public class ControllerButtons extends Controller {
             }
         });
     }
+
 }

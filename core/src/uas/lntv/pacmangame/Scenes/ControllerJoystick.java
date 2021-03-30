@@ -20,7 +20,6 @@ public class ControllerJoystick extends Controller {
     Vector3 touchDownPos;
     public Joystick joystick;
 
-
     /**
      *
      * The joystick knob will move if the touch is dragged to any direction. How ever it wont leave the outer circle.
@@ -58,8 +57,8 @@ public class ControllerJoystick extends Controller {
         final int joystickZoneRadius = 192 / 2; // 192px x 192px
         final int joystickKnobRadius = 64 / 2; // 64px x 64px
 
-        screen.getMap().layerControlButton.setOpacity(0);
-        screen.getMap().layerControlZone.setOpacity(1f);
+        screen.getMap().getLayerControlButton().setOpacity(0);
+        screen.getMap().getLayerControlZone().setOpacity(1f);
 
         Gdx.input.setInputProcessor(new InputAdapter(){
             /* Input Methods */
@@ -68,7 +67,7 @@ public class ControllerJoystick extends Controller {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 Vector3 touch = new Vector3(screenX, screenY, 0);
-                gameCam.unproject(touch);
+                GAME_CAM.unproject(touch);
 
                 ready(touch.x, touch.y);
 
@@ -93,7 +92,7 @@ public class ControllerJoystick extends Controller {
                 if(touchEvent) getDirection(screenX, screenY, false);
 
                 Vector3 touch = new Vector3(screenX, screenY, 0);
-                gameCam.unproject(touch);
+                GAME_CAM.unproject(touch);
                 Vector3 current = new Vector3(touch.x, touch.y, 0);
                 Vector3 center = new Vector3(touchDownPos.x, touchDownPos.y, 0);
                 float distance = current.dst(center); //distance from Center to Knob
@@ -117,7 +116,7 @@ public class ControllerJoystick extends Controller {
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 if(touchEvent) {
                     Vector3 touch = new Vector3(screenX, screenY, 0);
-                    gameCam.unproject(touch);
+                    GAME_CAM.unproject(touch);
                     setPause(touch.x, touch.y);
                     touchEvent = false;
                     getDirection(screenX, screenY, true);
@@ -133,7 +132,7 @@ public class ControllerJoystick extends Controller {
                 if(!touchUp){
                     int minSwipe = 50;
                     Vector3 touch = new Vector3(screenX, screenY, 0);
-                    gameCam.unproject(touch);
+                    GAME_CAM.unproject(touch);
                     if((touch.x - touchDownPos.x) > minSwipe ||
                             (touch.x - touchDownPos.x) < -minSwipe ||
                             (touch.y - touchDownPos.y) > minSwipe ||
@@ -150,7 +149,7 @@ public class ControllerJoystick extends Controller {
             Depending on the angle it will set a new direction for pacman. */
             public void getDirection(int screenX, int screenY){
                 Vector3 touch = new Vector3(screenX, screenY, 0);
-                gameCam.unproject(touch);
+                GAME_CAM.unproject(touch);
 
                 double angle = Math.atan2((double) touch.x - touchDownPos.x, (double) touchDownPos.y - touch.y);
 
@@ -177,4 +176,5 @@ public class ControllerJoystick extends Controller {
             }
         });
     }
+
 }

@@ -23,37 +23,37 @@ public abstract class Map {
     private final boolean firstMap;
 
     protected final Assets ASSETS;
+    protected final OrthogonalTiledMapRenderer RENDERER;
     protected final TiledMap TMX_MAP;
     protected static int mapWidth;
     protected static int mapHeight;
     protected static int tileSize;
     protected Tile[][] matrix;
+    protected TiledMapTileLayer layerCollect;
+    protected TiledMapTileLayer layerControlButton;
+    protected TiledMapTileLayer layerControlZone;
+    protected TiledMapTileLayer layerPath;
+    protected TiledMapTileLayer layerWall;
 
-    public OrthogonalTiledMapRenderer renderer;
-    public TiledMapTileLayer layerCollect;
-    public TiledMapTileLayer layerControlButton;
-    public TiledMapTileLayer layerControlZone;
-    public TiledMapTileLayer layerPath;
-    public TiledMapTileLayer layerWall;
 
 
     /* Constructor */
 
     /**
-     * The constructor loads the graphic layers of the tmx-Mapfile and sets them up into a Maprenderer
-     * Additionaly it loads all graphic layers for the on screen controller (initially they are invisible).
+     * The constructor loads the graphic layers of the tmx-map-file and sets them up into a map-renderer
+     * Additionally it loads all graphic layers for the on screen controller (initially they are invisible).
      * It generates a matrix of the Map which contains a Tile for each cell.
      * It provides methods for generating and collecting Collectables which should be implemented as needed by the child class.
-     * @param path String value which contains the path to a tmx-Mapfile.
-     * @param assets provide the Assetsmanager instance of the game.
+     * @param path String value which contains the path to a tmx-map-file.
+     * @param assets provide the assets manager instance of the game.
      */
     public Map(String path, Assets assets){
         this.ASSETS = assets;
-        firstMap = path.equals("maps/map.tmx");
+        firstMap = path.equals("maps/map_1.tmx");
         TmxMapLoader tmxMapLoader = new TmxMapLoader();
         TMX_MAP = tmxMapLoader.load(path);
         TiledMap TMX_CONTROL = assets.manager.get(assets.CONTROL);
-        renderer = new OrthogonalTiledMapRenderer(TMX_MAP);
+        RENDERER = new OrthogonalTiledMapRenderer(TMX_MAP);
 
         mapWidth = Integer.parseInt(TMX_MAP.getProperties().get("width").toString());
         mapHeight = Integer.parseInt(TMX_MAP.getProperties().get("height").toString());
@@ -73,6 +73,12 @@ public abstract class Map {
     }
 
     /* Accessors */
+
+    public OrthogonalTiledMapRenderer getRenderer() { return RENDERER; }
+
+    public TiledMapTileLayer getLayerControlButton() { return layerControlButton; }
+
+    public TiledMapTileLayer getLayerControlZone() { return layerControlZone; }
 
     public static int getMapHeight(){ return mapHeight; }
 
@@ -148,6 +154,7 @@ public abstract class Map {
     /**
      * Generates all simple dots/score-points which can be collected by Pac-Man.
      * Should be implemented in child classes.
+     * @param item the kind of item that will be generated (At the moment it's only dots, but there is the option for more)
      * @param amount the total amount of Dots/Points generated on the map
      */
     protected abstract void generateCollectables(Tile.Item item, int amount);
@@ -184,8 +191,8 @@ public abstract class Map {
                 region.setRegionY(0);
                 region.setRegionHeight(32);
                 break;
-            case SLOWMO:
-                Texture tex2 = ASSETS.manager.get(ASSETS.ITEM_SLOWMO);
+            case SLO_MO:
+                Texture tex2 = ASSETS.manager.get(ASSETS.ITEM_SLO_MO);
                 region = new TextureRegion(tex2);
                 region.setRegionX(0);
                 region.setRegionWidth(32);
@@ -215,12 +222,10 @@ public abstract class Map {
         return cell;
     }
 
-    public void generateSpecialItem(){
-
-    }
+    public void generateSpecialItem(){ }
 
     /**
-     * this will delete a collectable from the map and plays a sound
+     * This will delete a collectable from the map and plays a sound.
      * @param tile specify the tile from which you want to collect an item
      */
     public void collect(Tile tile){

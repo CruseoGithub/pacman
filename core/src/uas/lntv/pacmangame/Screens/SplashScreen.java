@@ -29,16 +29,16 @@ public class SplashScreen implements Screen {
 
     private boolean touchEvent = false;
     private final Assets ASSETS;
-    private final OrthographicCamera CAM;
-    private final OrthogonalTiledMapRenderer renderer;
-    private final PacManGame GAME;
-    private final Sprite SPRITE;
-    private final Viewport gamePort;
     private final int MAP_HEIGHT;
     private final int MAP_WIDTH;
     private final int TILE_SIZE;
-    private final TiledMapTileLayer layerGDX;
-    private final TiledMapTileLayer layerLNTV;
+    private final OrthographicCamera CAM;
+    private final OrthogonalTiledMapRenderer RENDERER;
+    private final PacManGame GAME;
+    private final Sprite SPRITE;
+    private final TiledMapTileLayer LAYER_GDX;
+    private final TiledMapTileLayer LAYER_LNTV;
+    private final Viewport GAME_PORT;
     private float alpha = 0;
     private float checkpoint = 0.04f;
     private float progress = 0;
@@ -51,42 +51,42 @@ public class SplashScreen implements Screen {
     /* Constructor */
 
     /**
-     * Main constructor of the SplashScreen
-     * @param GAME running game
-     * @param ASSETS asset management
+     * Main constructor of the SplashScreen.
+     * @param game running game
+     * @param assets asset management
      */
-    public SplashScreen(final PacManGame GAME, final Assets ASSETS){
+    public SplashScreen(PacManGame game, Assets assets){
         //sets height and width of the desktop window (16:9-format)
         if (Gdx.app.getType().equals(Application.ApplicationType.Desktop)) {
             Gdx.graphics.setWindowedMode(450, 800);
         }
 
-        this.GAME = GAME;
-        this.ASSETS = ASSETS;
+        this.GAME = game;
+        this.ASSETS = assets;
 
         TmxMapLoader tmxMapLoader = new TmxMapLoader();
-        TiledMap TMX_MAP = tmxMapLoader.load(ASSETS.SPLASH);
+        TiledMap TMX_MAP = tmxMapLoader.load(assets.SPLASH);
 
         this.MAP_WIDTH = Integer.parseInt(TMX_MAP.getProperties().get("width").toString());
         this.MAP_HEIGHT = Integer.parseInt(TMX_MAP.getProperties().get("height").toString());
         this.TILE_SIZE = Integer.parseInt(TMX_MAP.getProperties().get("tilewidth").toString());
-        this.renderer = new OrthogonalTiledMapRenderer(TMX_MAP);
+        this.RENDERER = new OrthogonalTiledMapRenderer(TMX_MAP);
         this.CAM = new OrthographicCamera();
-        this.gamePort = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, CAM);
+        this.GAME_PORT = new FitViewport(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, CAM);
         this.CAM.position.set((MAP_WIDTH * TILE_SIZE) / 2f, (MAP_WIDTH * TILE_SIZE) / 2f, 0);
 
-        this.layerLNTV = (TiledMapTileLayer) TMX_MAP.getLayers().get("Walls");
-        this.layerGDX = (TiledMapTileLayer) TMX_MAP.getLayers().get("Path");
-        this.visibleLayer = layerLNTV;
+        this.LAYER_LNTV = (TiledMapTileLayer) TMX_MAP.getLayers().get("Walls");
+        this.LAYER_GDX = (TiledMapTileLayer) TMX_MAP.getLayers().get("Path");
+        this.visibleLayer = LAYER_LNTV;
 
-        this.layerLNTV.setOpacity(0f);
+        this.LAYER_LNTV.setOpacity(0f);
 
-        this.layerLNTV.setVisible(true);
+        this.LAYER_LNTV.setVisible(true);
 
         this.ASSETS.manager.get(this.ASSETS.DIAL_UP).play(0.4f);
 
         this.ASSETS.load();
-        this.SPRITE = new Sprite(this.ASSETS.manager.get(ASSETS.LOADING));
+        this.SPRITE = new Sprite(this.ASSETS.manager.get(assets.LOADING));
 
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
@@ -113,8 +113,8 @@ public class SplashScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        renderer.setView(CAM);
-        renderer.render();
+        RENDERER.setView(CAM);
+        RENDERER.render();
 
         update();
 
@@ -122,19 +122,19 @@ public class SplashScreen implements Screen {
     }
 
     /**
-     * rizises the splashscreen to the new values
+     * Resize the splashscreen to the new values
      * @param width new width of the screen
      * @param height new height of the screen
      */
     @Override
     public void resize(int width, int height) {
-        gamePort.update(width, height, false);
-        gamePort.getCamera().position.set(MAP_WIDTH * TILE_SIZE / 2f, MAP_HEIGHT * TILE_SIZE / 2f, 0);
-        gamePort.getCamera().update();
+        GAME_PORT.update(width, height, false);
+        GAME_PORT.getCamera().position.set(MAP_WIDTH * TILE_SIZE / 2f, MAP_HEIGHT * TILE_SIZE / 2f, 0);
+        GAME_PORT.getCamera().update();
     }
 
     /**
-     * displays the the logos and then moves on to displaying the loading pacman icon
+     * Displays the the logos and then moves on to displaying the loading pacman icon.
      */
     private void update(){
         time = Gdx.graphics.getDeltaTime();
@@ -190,9 +190,9 @@ public class SplashScreen implements Screen {
      * It changes the used logo and simulates the fade-effects.
      */
     private void updateSplash() {
-        if(timer>=5 && visibleLayer == layerLNTV){
+        if(timer>=5 && visibleLayer == LAYER_LNTV){
             visibleLayer.setVisible(false);
-            visibleLayer = layerGDX;
+            visibleLayer = LAYER_GDX;
             visibleLayer.setOpacity(0f);
             visibleLayer.setVisible(true);
         }
@@ -207,7 +207,7 @@ public class SplashScreen implements Screen {
         if(timer > 8 && timer < 10) alpha -= time / 2;
     }
 
-    /* Unused methods that needed to be adopted from libGDX' Screen class. */
+    /* Unused methods that needed to be overridden from libGDX' Screen class. */
 
     @Override
     public void dispose() {  }

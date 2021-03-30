@@ -20,7 +20,7 @@ public class Joystick extends Actor {
 
     /**
      * The constructor initializes the textures for the joystick circle and knob
-     * @param assets provide the assetsmanager instance
+     * @param assets provide the assets manager instance
      * @param screen instance of a screen which will contain the controller
      */
     public Joystick(Assets assets, MapScreen screen){
@@ -48,4 +48,5 @@ public class Joystick extends Actor {
         );
         PacManGame.batch.draw(TEXTURE_KNOB, xPositionKnob, yPositionKnob);
     }
+
 }

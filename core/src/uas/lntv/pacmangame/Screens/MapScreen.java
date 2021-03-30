@@ -110,7 +110,7 @@ public abstract class MapScreen implements Screen {
         this.GAME_PORT = new FitViewport(Map.getMapWidth() * TILE_SIZE, Map.getMapHeight() * TILE_SIZE, GAME_CAM);
         this.GAME_CAM.position.set(this.GAME_PORT.getWorldWidth() / 2, this.GAME_PORT.getWorldHeight() / 2, 0);
 
-        if(PrefManager.isJoystick()) this.controller = new ControllerJoystick(assets, this);
+        if(PrefManager.isJoystick()) this.controller = new ControllerJoystick(assets,this);
         else this.controller = new ControllerButtons(assets,this);
     }
 
@@ -213,8 +213,8 @@ public abstract class MapScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        map.renderer.setView(GAME_CAM);
-        map.renderer.render();
+        map.getRenderer().setView(GAME_CAM);
+        map.getRenderer().render();
 
         PacManGame.batch.begin();
         pacman.draw();
@@ -236,6 +236,19 @@ public abstract class MapScreen implements Screen {
     }
 
     /**
+     * Method, that's automatically called when resizing the screen.
+     * @param width new width
+     * @param height new height
+     */
+    @Override
+    public void resize(int width, int height) {
+        GAME_PORT.update(width, height, false);
+        GAME_PORT.getCamera().position.set(Map.getMapWidth() * TILE_SIZE / 2f, Map.getMapHeight() * TILE_SIZE / 2f, 0);
+        GAME_PORT.getCamera().update();
+        controller.resize(width, height);
+    }
+
+    /**
      * Checks the state of the game and updates the textures and positions of the sprites.
      * This method is always called in the render-methods of the child classes.
      * @param dt time parameter used by libGDX
@@ -251,24 +264,16 @@ public abstract class MapScreen implements Screen {
         }
 
         GAME_CAM.update();
-        map.renderer.setView(GAME_CAM);
+        map.getRenderer().setView(GAME_CAM);
     }
 
-
-    /* Unused methods that needed to be adopted from libGDX' Screen class. */
+    /* Unused methods that needed to be overridden from libGDX' Screen class. */
 
     @Override
     public void hide() {  }
 
     @Override
     public void pause() { }
-
-    @Override
-    public void resize(int width, int height) {
-        GAME_PORT.update(width, height, false);
-        GAME_PORT.getCamera().position.set(Map.getMapWidth() * TILE_SIZE / 2f, Map.getMapHeight() * TILE_SIZE / 2f, 0);
-        GAME_PORT.getCamera().update();
-    }
 
     @Override
     public void resume() {  }

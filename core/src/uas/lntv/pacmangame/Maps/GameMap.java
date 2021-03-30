@@ -1,6 +1,5 @@
 package uas.lntv.pacmangame.Maps;
 
-
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -23,12 +22,13 @@ public class GameMap extends Map {
     private final ArrayList<Vector2> ITEM_POSITIONS = new ArrayList<>();
     private final MapScreen SCREEN;
     private static int collectedDots;
+
     public final static int TOTAL_DOTS = 150;
 
 	/* Constructor */
 
     /**
-     * does the same as the parent constructor.
+     * Does the same as the parent constructor.
      * Additionally it generates collectables and provides a method to collect them.
      * @param assets instance of the assets manager
      * @param path  string value which contains the path to a tmx-map-file.
@@ -72,7 +72,7 @@ public class GameMap extends Map {
     }
 
     /**
-     * it calculates a percentage portion for each item based on the golden ration. (it wont amount to exactly 100% though)
+     * It calculates a percentage portion for each item based on the golden ration. (it wont amount to exactly 100% though)
      * Any left over percentages will be distributed equally to every item
      * @param items total number of items
      * @return returns a list of percentages for each item
@@ -121,6 +121,7 @@ public class GameMap extends Map {
     /**
      * It will generate an array that represents a percentage cake that includes every item based on its specific priority
      * From this array it will choose a random item.
+     * @param existingItems the ArrayList that contains which kinds of items are already on the map
      * @return returns a random item based on percentage ( percentage is based on the golden ratio )
      */
     private Tile.Item newItem(ArrayList<Tile.Item> existingItems){
@@ -190,7 +191,7 @@ public class GameMap extends Map {
     }
 
     /**
-     * generates all simple dots/scorepoints which can be collected by Pac-Man. (would also work for special items)
+     * Generates all simple dots/score-points which can be collected by Pac-Man. (would also work for special items)
      * It does this by iterating through the tile matrix and placing items by chance (default: 50% chance) until it reaches a total amount of items.
      * @param amount the total amount of Dots/Points generated on the map
      */
@@ -202,7 +203,7 @@ public class GameMap extends Map {
                         if (layerPath.getCell(x, y) != null & !matrix[x][y].isItem() && x > 0 && x < (mapWidth - 2)) { //X-Abfrage: Dots sollen nicht im Teleportgang spawnen
                             int max = 1;
                             int min = 0;
-                            int random = (int) (Math.random() * (max - min + 1) + min); // random ist entweder 0 oder 1
+                            int random = (int) (Math.random() * (max - min + 1) + min); // random is either 0 or 1
                             if (random > 0) {
                                 layerCollect.setCell(x, y, createItem(item));
                                 matrix[x][y].placeItem(item);
@@ -216,7 +217,7 @@ public class GameMap extends Map {
     }
 
     /**
-     * this will delete a collectable from the map and plays a sound
+     * This will delete a collectable from the map and plays a sound
      * additionally it will in increase Pac-Mans score value.
      * If the collectable is a hunter item it will evolve Pac-Man to SuperPacMan and set the ghosts to a frightened state.
      * @param tile specify the tile from which you want to collect an item
@@ -238,19 +239,19 @@ public class GameMap extends Map {
                     ghost.setDifficulty(Enemy.Difficulty.RUNAWAY);
                 }
                 break;
-            case SLOWMO:
+            case SLO_MO:
                 tile.takeItem();
-                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
-                SCREEN.activateBuff(Tile.Item.SLOWMO);
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.SLO_MO).play(0.1f);
+                SCREEN.activateBuff(Tile.Item.SLO_MO);
                 break;
             case TIME:
                 tile.takeItem();
-                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.TIME).play(0.1f);
                 SCREEN.activateBuff(Tile.Item.TIME);
                 break;
             case LIFE:
                 tile.takeItem();
-                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.POWER_UP).play(0.1f);
+                if(PrefManager.isSfxOn()) ASSETS.manager.get(ASSETS.LIFE_UP).play(0.1f);
                 SCREEN.activateBuff(Tile.Item.LIFE);
                 break;
         }
@@ -258,8 +259,8 @@ public class GameMap extends Map {
     }
 
     /**
-     * counts the number of items that are placed on the map already (no dots)
-     * @return number of items (0-4)
+     * Counts the number of items that are placed on the map already. (no dots)
+     * @return number of buff items (0-4)
      */
     @Override
     public int countItems(){
@@ -271,7 +272,7 @@ public class GameMap extends Map {
     }
 
     /**
-     * This method looks for special Items on the map an will generate a new special item in a free slot
+     * This method looks for special Items on the map an will generate a new special item in a free slot.
      * The selection of which item to generate will be decided via an algorithm which is loosely based on the golden ratio.
      * if a certain item already exists the likelihood of it spawning will decrease further.
      */

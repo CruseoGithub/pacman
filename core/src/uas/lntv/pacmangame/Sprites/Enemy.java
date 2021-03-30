@@ -33,6 +33,7 @@ public class Enemy extends Actor {
      * Create a new ghost
      * @param initX starting x-coordinate
      * @param initY starting y-coordinate
+     * @param assets the assets management of the game
      * @param screen the screen in which the ghost will be created
      * @param ghost name or path of the png-file that makes the ghost look beautiful
      */
@@ -197,7 +198,7 @@ public class Enemy extends Actor {
     private Direction runAway(Actor hunter){
         if(collisionTest(hunter)){
             this.state = State.HOMING;
-            this.texture = assets.manager.get(assets.BLUE_DEAD);
+            this.texture = ASSETS.manager.get(ASSETS.BLUE_DEAD);
             home = false;
             MAP.getTile(xPosition, yPosition).leave(this);
             return Direction.RIGHT;
@@ -333,7 +334,7 @@ public class Enemy extends Actor {
         if(pacman.getState() == State.DIEING){
             if(state != Actor.State.BOXED) {
                 if (!home) getHome();
-                else if (LIVING_BODY == assets.manager.get(assets.GHOST_1)) setState(Actor.State.RUNNING);
+                else if (LIVING_BODY == ASSETS.manager.get(ASSETS.GHOST_1)) setState(Actor.State.RUNNING);
                 else enterBox();
             }
         } else{

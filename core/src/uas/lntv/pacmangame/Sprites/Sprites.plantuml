@@ -1,0 +1,192 @@
+@startuml
+
+title __SPRITES's Class Diagram__\n
+
+  namespace uas.lntv.pacmangame {
+    namespace Sprites {
+      abstract class uas.lntv.pacmangame.Sprites.Actor {
+          # TILE_SIZE : int
+          # animationSpeed : float
+          # homeX : int
+          # homeY : int
+          # mouthOpen : boolean
+          # region : TextureRegion
+          # rotation : float
+          # speed : int
+          # sprite : Sprite
+          # texture : Texture
+          # texturePositionX : int
+          # texturePositionY : int
+          # xPosition : int
+          # yPosition : int
+          + Actor()
+          + collide()
+          + correctPosition()
+          + draw()
+          + getAnimation()
+          + getDirection()
+          + getHomeX()
+          + getHomeY()
+          + getSpeed()
+          + getState()
+          + getXCoordinate()
+          + getXPosition()
+          + getYCoordinate()
+          + getYPosition()
+          + move()
+          + resetTexturePosition()
+          + setNextDirection()
+          + setRotation()
+          + setSpeed()
+          + setState()
+          + setTexture()
+          + setXPosition()
+          + setYPosition()
+          + update()
+      }
+    }
+  }
+  
+
+  namespace uas.lntv.pacmangame {
+    namespace Sprites {
+      enum Direction {
+        DOWN
+        LEFT
+        RIGHT
+        UP
+      }
+    }
+  }
+  
+
+  namespace uas.lntv.pacmangame {
+    namespace Sprites {
+      enum State {
+        BOXED
+        DIEING
+        HOMING
+        RUNNING
+      }
+    }
+  }
+  
+
+  namespace uas.lntv.pacmangame {
+    namespace Sprites {
+      class uas.lntv.pacmangame.Sprites.Animation {
+          - FRAME_WIDTH : int
+          - animationSpeed : float
+          - tmp : int
+          - tmpTimerAnimation : float
+          + Animation()
+          + animate()
+          + resetTmp()
+          + update()
+      }
+    }
+  }
+  
+
+  namespace uas.lntv.pacmangame {
+    namespace Sprites {
+      class uas.lntv.pacmangame.Sprites.Enemy {
+          - LIVING_BODY : Texture
+          - boxTimer : float
+          - home : boolean
+          + Enemy()
+          + enterBox()
+          + findNextDirection()
+          + getDifficulty()
+          + getHome()
+          + leaveBox()
+          + notHome()
+          + resetDifficulty()
+          + setBoxTimer()
+          + setDifficulty()
+          + update()
+          - LeftOrRight()
+          - UpOrDown()
+          - collisionTest()
+          - findHome()
+          - findNextDirectionEasy()
+          - findNextDirectionHard()
+          - findNextDirectionMedium()
+          - runAway()
+      }
+    }
+  }
+  
+
+  namespace uas.lntv.pacmangame {
+    namespace Sprites {
+      enum Difficulty {
+        EASY
+        HARD
+        MEDIUM
+        RANDOM
+        RUNAWAY
+      }
+    }
+  }
+  
+
+  namespace uas.lntv.pacmangame {
+    namespace Sprites {
+      class uas.lntv.pacmangame.Sprites.Joystick {
+          # xPositionKnob : int
+          # yPositionKnob : int
+          - TEXTURE_KNOB : Texture
+          + Joystick()
+          + draw()
+          + setXPositionKnob()
+          + setYPositionKnob()
+      }
+    }
+  }
+  
+
+  namespace uas.lntv.pacmangame {
+    namespace Sprites {
+      class uas.lntv.pacmangame.Sprites.PacMan {
+          + PacMan()
+          + collide()
+          + drawLife()
+          + move()
+          + update()
+      }
+    }
+  }
+  
+
+  uas.lntv.pacmangame.Sprites.Actor o-- uas.lntv.pacmangame.Managers.Assets : ASSETS
+  uas.lntv.pacmangame.Sprites.Actor o-- uas.lntv.pacmangame.Maps.Map : MAP
+  uas.lntv.pacmangame.Sprites.Actor o-- uas.lntv.pacmangame.Screens.MapScreen : SCREEN
+  uas.lntv.pacmangame.Sprites.Actor o-- uas.lntv.pacmangame.Sprites.Animation : animation
+  uas.lntv.pacmangame.Sprites.Actor o-- uas.lntv.pacmangame.Sprites.Actor.Direction : direction
+  uas.lntv.pacmangame.Sprites.Actor o-- uas.lntv.pacmangame.Sprites.Actor.Direction : nextDirection
+  uas.lntv.pacmangame.Sprites.Actor o-- uas.lntv.pacmangame.Sprites.Actor.Direction : prevDirection
+  uas.lntv.pacmangame.Sprites.Actor o-- uas.lntv.pacmangame.Sprites.Actor.State : state
+  uas.lntv.pacmangame.Sprites.Actor +-down- uas.lntv.pacmangame.Sprites.Actor.Direction
+  uas.lntv.pacmangame.Sprites.Actor +-down- uas.lntv.pacmangame.Sprites.Actor.State
+  uas.lntv.pacmangame.Sprites.Animation o-- uas.lntv.pacmangame.Sprites.Actor : ACTOR
+  uas.lntv.pacmangame.Sprites.Animation o-- uas.lntv.pacmangame.Managers.Assets : ASSETS
+  uas.lntv.pacmangame.Sprites.Animation o-- uas.lntv.pacmangame.Screens.MapScreen : SCREEN
+  uas.lntv.pacmangame.Sprites.Enemy -up-|> uas.lntv.pacmangame.Sprites.Actor
+  uas.lntv.pacmangame.Sprites.Enemy o-- uas.lntv.pacmangame.AI.Pathfinder : aStar
+  uas.lntv.pacmangame.Sprites.Enemy o-- uas.lntv.pacmangame.Sprites.Enemy.Difficulty : difficulty
+  uas.lntv.pacmangame.Sprites.Enemy o-- uas.lntv.pacmangame.Sprites.Enemy.Difficulty : levelDiff
+  uas.lntv.pacmangame.Sprites.Enemy +-down- uas.lntv.pacmangame.Sprites.Enemy.Difficulty
+  uas.lntv.pacmangame.Sprites.Joystick -up-|> uas.lntv.pacmangame.Sprites.Actor
+  uas.lntv.pacmangame.Sprites.PacMan -up-|> uas.lntv.pacmangame.Sprites.Actor
+  uas.lntv.pacmangame.Sprites.PacMan o-- uas.lntv.pacmangame.PacManGame : GAME
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

@@ -8,7 +8,7 @@ import uas.lntv.pacmangame.Sprites.Enemy;
 import uas.lntv.pacmangame.Sprites.PacMan;
 
 /**
- * The Menuscreen is the first screen you will see when inside the game.
+ * The MenuScreen is the first screen you will see when inside the game.
  * After a game you will always return back to the menu.
  */
 public class MenuScreen extends MapScreen {
@@ -16,7 +16,7 @@ public class MenuScreen extends MapScreen {
     /* Constructor */
 
     /**
-     * Main constructor of the MenuScreen
+     * Main constructor of the MenuScreen.
      * @param game the running game
      * @param assets the asset management
      * @param path the path where the needed map is located in the assets
@@ -36,7 +36,7 @@ public class MenuScreen extends MapScreen {
     }
 
     /**
-     * When in certain area you will either start a game or go to settings.
+     * When you are in a certain area you will either start a game or go to settings.
      */
     @Override
     public void render(float delta) {

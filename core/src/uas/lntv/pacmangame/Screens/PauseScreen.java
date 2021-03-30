@@ -28,10 +28,11 @@ public class PauseScreen extends MapScreen {
     /* Constructor */
 
     /**
-     * Main constructor of the PauseScreen
+     * Main constructor of the PauseScreen.
      * @param game running game
      * @param assets asset management
      * @param mapPath the path where the map is stored
+     * @param screen the GameScreen that will be returned to or disposed if you leave the game
      * @param hud hud from the game paused
      */
     public PauseScreen(PacManGame game, Assets assets, String mapPath, GameScreen screen, Hud hud){
@@ -234,4 +235,5 @@ public class PauseScreen extends MapScreen {
             ((MenuMap)map).getHighlightLayers().get(5).setVisible(true);
         }
     }
+
 }

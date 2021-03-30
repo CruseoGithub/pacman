@@ -36,6 +36,7 @@ public class Pathfinder {
      * It generates a matrix of the whole map and also calculates the heuristics to the target.
      * It also prepares to search by creating a 'open' list with all tiles of the map, setting the
      * cost of the starting tile to 0 and creating a yet empty 'closed' list.
+     * @param screen the screen on which you are searching the path
      * @param hunter actor that wants to find a shortest path
      * @param prey target of the actor
      */
@@ -47,36 +48,17 @@ public class Pathfinder {
         this.HUNTER = hunter;
         this.TARGET_X = prey.getXCoordinate();
         this.TARGET_Y = prey.getYCoordinate();
-        int i = 0;
 
-        //Putting all tiles of the map into the 'open'-list
-        for(int x = 0; x < MAP_WIDTH; x++){
-            for(int y = 0; y < MAP_HEIGHT; y++){
-                OPEN.add(this.MATRIX[x][y]);
-                OPEN.get(i++)
-                        .setCost(1000000)
-                        .setTotal(1000000)
-                        .setPrev(null)
-                        .setHeuristics(calcHeuristics(
-                                x,
-                                y,
-                                this.TARGET_X,
-                                this.TARGET_Y
-                                )
-                        );
-            }
-        }
-
-        // Preparing the starting tile for the A*-Algorithm
-        OPEN.get(searchHunter())
-                .setCost(0)
-                .setTotal(
-                        OPEN.get(searchHunter()).getHeuristics()
-                );
+        setupOpenList();
+        prepareHunterTile();
     }
 
     /**
      * Does the same as the first constructor, but uses x-/y-coordinates instead of an actor.
+     * @param screen the screen on which you are searching the path
+     * @param hunter actor that wants to find a shortest path
+     * @param targetX x-position of the aimed tile
+     * @param targetY y-position of the aimed tile
      * @see Pathfinder
      */
     public Pathfinder(MapScreen screen, Enemy hunter, int targetX, int targetY){
@@ -87,32 +69,9 @@ public class Pathfinder {
         this.HUNTER = hunter;
         this.TARGET_X = targetX / TILE_SIZE;
         this.TARGET_Y = targetY / TILE_SIZE;
-        int i = 0;
 
-        //Putting all tiles of the map into the 'open'-list
-        for(int x = 0; x < MAP_WIDTH; x++){
-            for(int y = 0; y < MAP_HEIGHT; y++){
-                OPEN.add(this.MATRIX[x][y]);
-                OPEN.get(i++)
-                        .setCost(1000000)
-                        .setTotal(1000000)
-                        .setPrev(null)
-                        .setHeuristics(calcHeuristics(
-                                x,
-                                y,
-                                this.TARGET_X,
-                                this.TARGET_Y
-                                )
-                        );
-            }
-        }
-
-        // Preparing the starting tile for the A*-Algorithm
-        OPEN.get(searchHunter())
-                .setCost(0)
-                .setTotal(
-                        OPEN.get(searchHunter()).getHeuristics()
-                );
+        setupOpenList();
+        prepareHunterTile();
     }
 
     /* Methods */
@@ -244,6 +203,43 @@ public class Pathfinder {
         }
         OPEN.remove(tempPos);
         return temp;
+    }
+
+    /**
+     * Preparing the starting tile for the A*-Algorithm
+     * Cost = 0
+     * Total = Heuristics
+     */
+    private void prepareHunterTile(){
+        OPEN.get(searchHunter())
+                .setCost(0)
+                .setTotal(
+                        OPEN.get(searchHunter()).getHeuristics()
+                );
+    }
+
+    /**
+     * Putting all tiles of the map into the 'open'-list
+     */
+    private void setupOpenList(){
+        int i = 0;
+
+        for(int x = 0; x < MAP_WIDTH; x++){
+            for(int y = 0; y < MAP_HEIGHT; y++){
+                OPEN.add(this.MATRIX[x][y]);
+                OPEN.get(i++)
+                        .setCost(1000000)
+                        .setTotal(1000000)
+                        .setPrev(null)
+                        .setHeuristics(calcHeuristics(
+                                x,
+                                y,
+                                this.TARGET_X,
+                                this.TARGET_Y
+                                )
+                        );
+            }
+        }
     }
 
     /**

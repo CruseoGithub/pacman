@@ -19,6 +19,7 @@ import uas.lntv.pacmangame.Screens.GameScreen;
 import uas.lntv.pacmangame.Screens.MapScreen;
 import uas.lntv.pacmangame.Sprites.Actor;
 import uas.lntv.pacmangame.Sprites.PacMan;
+
 /**
  * (Jabba)The HUD shows: Score, Time, Lives and functions as a Pause-button.
  */
@@ -28,7 +29,6 @@ public class Hud {
 
     private boolean warned = false;
     private boolean red = false;
-
     private final Assets assets;
     private final ArrayList<PacMan> LIVE_PAC_MEN = new ArrayList<>();
     private final ArrayList<String> STAGES = new ArrayList<>();
@@ -39,10 +39,8 @@ public class Hud {
     private final Label SCORE_LABEL;
     private final MapScreen SCREEN;
     private final Stage STAGE;
-
     private float time;
     private float timeStamp;
-
 
     /* Constructor */
 
@@ -119,11 +117,11 @@ public class Hud {
 
     public void updateTime(float delta){ this.time -= delta; }
 
-
     /* Methods */
 
     /**
-     * Animates the images according to the lives of PacMan
+     * Animates the images according to the lives of PacMan.
+     * @param dt time parameter used by libGDX
      */
     public void animateLives(float dt) {
         if (PacManGame.getLives() == 1) {
@@ -136,7 +134,9 @@ public class Hud {
     }
 
     /**
-     * Animation of dying
+     * Animation of dying.
+     * @param pacman one of the drawn lives
+     * @param dt time parameter used by libGDX
      */
     private void animate(PacMan pacman, float dt){
         pacman.setState(Actor.State.DIEING);
@@ -145,7 +145,8 @@ public class Hud {
     }
 
     /**
-     * Function for redrawing the PacMans in the HUD
+     * Ends the dying animation and sets PacMan back to the displayable state he used to have.
+     * @param pacman one of the drawn lives
      */
     private void reset(PacMan pacman){
         pacman.getAnimation().resetTmp();
@@ -159,7 +160,7 @@ public class Hud {
      * Checks the level of the game and returns the according path to the map.
      * @return path of map as a String
      */
-    public final String getMap(){ return STAGES.get(PacManGame.getLevel() % 5); }
+    public String getMap(){ return STAGES.get(PacManGame.getLevel() % 5); }
 
     /**
      * Disposes the created stage.
@@ -241,4 +242,5 @@ public class Hud {
             }
         }
     }
+
 }

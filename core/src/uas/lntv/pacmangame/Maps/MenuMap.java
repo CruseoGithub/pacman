@@ -42,7 +42,7 @@ public class MenuMap extends Map {
     /* Methods */
 
     /**
-     * searches for collectables in the tmx-map file layer and adds them to the tile matrix
+     * Searches for collectables in the tmx-map file layer and adds them to the tile matrix.
      * @param amount the total amount of Dots/Points generated on the map
      */
     @Override
